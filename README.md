@@ -4,6 +4,7 @@ React frontend and nodejs backend servers for web application of media feed, tex
 
 The project is based on the code of online web development courses which creator finished.
 
+
 Contributions are welcome to improve the project.
 ([Please look at contributing section](#Contributing))
 
