@@ -1,6 +1,6 @@
-# mediafeed-talk-group-front-test
+# mediafeed talk group 
 
-React frontend and nodejs backend servers for web application of media feed, text talk, group text talk.
+React frontend and nodejs backend servers for web application of media feed, text talk, and group text talk.
 
 The project is based on the code of online web development courses which creator finished.
 
