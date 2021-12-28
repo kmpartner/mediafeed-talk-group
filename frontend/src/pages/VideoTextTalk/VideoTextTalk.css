@@ -1,0 +1,434 @@
+/* body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafc;
+  color: #595354;
+}
+
+.header {
+  background-color: #ffffff;
+  padding: 10px 40px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header > .logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.header > .logo-container > .logo-img {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.header > .logo-container > .logo-text {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.header > .logo-container > .logo-text > .logo-highlight {
+  color: #65a9e5;
+}
+
+.content-container {
+  width: 100%;
+  height: calc(100vh - 89px);
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.active-users-panel {
+  width: 300px;
+  height: 100%;
+  border-right: 1px solid #cddfe7;
+}
+
+.panel-title {
+  margin: 10px 0 0 0;
+  padding-left: 30px;
+  font-weight: 500;
+  font-size: 18px;
+  border-bottom: 1px solid #cddfe7;
+  padding-bottom: 10px;
+}
+
+.active-user {
+  padding: 10px 30px;
+  border-bottom: 1px solid #cddfe7;
+  cursor: pointer;
+  user-select: none;
+}
+
+.active-user:hover {
+  background-color: #e8e9eb;
+  transition: background-color 0.5s ease;
+}
+
+.active-user--selected {
+  background-color: #fff;
+  border-right: 5px solid #65a9e5;
+  font-weight: 500;
+  transition: all 0.5s ease;
+}
+
+.video-chat-container {
+  padding: 0 20px;
+  flex: 1;
+  position: relative;
+} */
+
+.talk-appContainer {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100%;
+}
+
+.talk-info {
+  font-weight: 500;
+  font-size: 21px;
+}
+
+.remote-videoContainer {
+  cursor: pointer;
+  position: fixed;
+  top: 170px;
+  left: 0px;
+  left: 2px;
+  right: 2px;
+  /* width: 100%; */
+  /* height: 400px; */
+}
+
+.remote-video {
+  /* border: 0.25px solid #cddfe7; */
+  width: 100%; 
+  /* height: 100%; */
+  height: 60vh;
+  /* height:60%; */
+  /* box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); */
+  transition: all 1s ease;
+
+  /* top: 170px;
+  left: 0px;
+  right: 0px;
+  width: 100% */
+}
+
+.remote-video-small {
+  position: absolute;
+  position: fixed;
+  top: 65px;
+  right: 10px;
+  /* right: 70px; */
+  border: 1px solid #cddfe7;
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  /* width: 100px; */
+  /* height: 75px; */
+  width: 75px;
+  width: 50px;
+  /* height: 50%; */
+  /* margin-left: 75% */
+  transition: all 1s ease;
+}
+
+.local-video {
+  position: absolute;
+  position: fixed;
+  border: 1px solid #cddfe7;
+  bottom: 10px;
+  /* top: 70px; */
+  right: 10px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  /* width: 300px;
+  width: 100px; */
+  /* height: 75px; */
+  width: 50px;
+  /* margin-left: 75%; */
+}
+
+.textTalk-list {
+  list-style-type: none;
+  padding: 0px;
+}
+
+.textTalk-listElement-container {
+  display:flex; 
+  justify-content: space-between;
+}
+
+.textTalk-listElement-local {
+  /* text-align: right; */
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
+  /* background-color: whitesmoke;  */
+  background: var(--textTalk-textBackground);
+  border-radius: 0.5rem;
+  max-width: 80%;
+  font-size: 1.1rem;
+}
+
+.textTalk-listElement-remote {
+  /* text-align: left; */
+  padding-right: 1rem;
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  margin-left:0.25rem;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
+  /* background-color: whitesmoke;  */
+  background: var(--textTalk-textBackground);
+  border-radius: 0.5rem;
+  max-width: 80%;
+  font-size: 1.1rem;
+}
+
+.textTalk-container {
+  position: fixed;
+  bottom: 100px;
+  top: 110px;
+  left: 0px;
+  right: 0px;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-between; */
+  overflow-y: auto;
+  /* height: 60vh; */
+  /* width:100%; */
+  /* margin-left:5%; */
+  background: var(--textTalk-textContainerBackground);
+  /* background-color: ghostwhite */
+}
+
+.textTalk-listElement-text {
+  white-space: pre-line;
+}
+
+.textTalk-listElement-time {
+  font-size: 0.75rem;
+}
+
+.textTalk-InputElement {
+  /* position: fixed;
+  bottom: 1px;
+  left:1px; */
+  width: 70%;
+  position: fixed;
+  bottom: 1px;
+  left: 1px;
+}
+
+.textTalk-InputButton {
+  position: fixed;
+  left: 72%;
+  bottom: 30px;
+  width: 25%;
+}
+
+
+/* .textTalk-InputElement-container {
+  display: flex;
+  align-items: center;
+} */
+
+.textTalk-OnlineUser-Container {
+  /* height: 60vh; */
+  overflow-y: auto;
+  position: fixed;
+  top: 220px;
+  top: 170px;
+  bottom: 20px;
+  width: 100%;
+}
+
+.textTalk-OnlineUser-list {
+  list-style-type: none;
+  padding: 0px;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center
+  /* cursor: pointer; */
+}
+
+.textTalk__UserImageContainer {
+  width: 4.5rem;
+  height: 3rem;
+  text-align: center;
+  margin-right: 1rem;
+}
+
+.textTalk__UserImageElement {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.textTalk__UserName {
+  margin-right: 1rem;
+}
+
+.textTalk__ConnectButton {
+  position: fixed;
+  top: 60px;
+  /* top: 150px; */
+  left: 1%;
+  font-size: 0.75rem;
+  font-weight: bolder;
+}
+
+.textTalk__ConnectUserInfo {
+  position: fixed;
+  top: 110px;
+  /* left: 30% */
+}
+
+.textTalk__UserTalkListButton {
+  position: fixed;
+  top: 120px;
+  right: 1px;
+  /* left: 30% */
+}
+
+.textTalk__UserTalkList-Container {
+  /* height: 60vh; */
+  overflow-y: auto;
+  position: fixed;
+  top: 200px;
+  top: 170px;
+  bottom: 20px;
+  width: 100%
+}
+
+.textTalk__UserTalkListSuggest {
+  /* height: 60vh; */
+  overflow-y: auto;
+  position: fixed;
+  top: 170px;
+  top: 125px;
+  bottom: 20px;
+  width: 95%
+}
+
+.textTalk__UserTalkListNoSuggest {
+  /* height: 60vh; */
+  overflow-y: auto;
+  position: fixed;
+  top: 170px;
+  top: 125px;
+  width: 95%;
+  width: 50%;
+}
+
+.textTalk_NoconnectMessage {
+  position: fixed;
+  top: 70px;
+  right: 5px;
+  z-index: 10;
+  background: var(--textTalk-textBackground);
+  padding: 0.2rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.textTalk__loader {
+  /* font-size: 1rem; */
+  text-align: center;
+   margin-top: 1rem;
+}
+
+.textTalk__bottomElement {
+  position: fixed;
+  bottom: 5px;
+  left: 50%;
+  margin-left: -150px;
+  border: 0.5px solid gray;
+}
+
+ul {
+  padding-left: 0px
+}
+
+@media (min-width: 768px) {
+  /* .single-post {
+    width: 40rem;
+  }; */
+
+  .talk-appContainer {
+    margin-right: 300px;
+    margin-left: 0px;
+  }
+
+  .textTalk-container {
+    /* width: 35rem; */
+    margin-right: 300px;
+  };
+
+  .remote-videoContainer {
+    width: 35rem; 
+    height: 60vh;
+  }
+
+  .remote-video {
+    width: 33rem;
+    height: 60vh;
+  }
+
+  .remote-video-small {
+    left: 30rem;
+  }
+
+  .local-video {
+    left: 30rem;
+  }
+
+  .textTalk-OnlineUser-Container {
+    width: 35rem;
+  }
+
+  .textTalk__ConnectButton {
+    /* left: 10rem; */
+    left: 1rem;
+  }
+
+  .textTalk__UserTalkList-Container {
+    /* width: 35rem; */
+    width: 450px;
+  }
+  .textTalk__UserTalkListButton {
+    left: 25rem;
+    top: 70px
+  }
+
+  .textTalk-InputElement {
+    width: 28rem;
+  }
+
+  .textTalk-InputButton {
+    left: 29rem;
+  }
+
+  .textTalk__UserTalkListSuggest {
+    width: 28rem;
+  }
+
+  .textTalk__UserTalkListSuggest {
+    width: 28rem;
+  }
+
+  .textTalk__UserTalkListNoSuggest {
+    width: 28rem;
+  }
+
+}

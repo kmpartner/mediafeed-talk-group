@@ -1,0 +1,19 @@
+.listElement {
+  margin-top: 1rem;
+  /* cursor: pointer */
+}
+
+.listElementContent {
+  font-weight: bolder;
+  margin-left: 1rem;
+}
+
+.smallButtons {
+  /* text-align: right; */
+  font-size: 0.75rem;
+  font-weight: bolder;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  overflow: auto;
+}

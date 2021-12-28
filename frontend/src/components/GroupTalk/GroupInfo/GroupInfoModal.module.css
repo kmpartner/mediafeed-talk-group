@@ -1,0 +1,21 @@
+.confirmModal {
+  position: fixed;
+  width: 90%;
+  /* max-width: 70%; */
+  /* height: 50%; */
+  max-height:80%;
+  overflow: auto;
+  left: 5%;
+  top: 5%;
+  background: var(--background-color);
+  border: 0.5px solid rgb(110, 110, 110);
+  border-radius: 5px;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+@media (min-width: 768px) {
+  .confirmModal {
+    width: 28rem;
+  }
+}

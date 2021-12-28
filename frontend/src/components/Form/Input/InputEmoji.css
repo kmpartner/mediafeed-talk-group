@@ -1,0 +1,103 @@
+.inputEmoji {
+  margin: 1rem 0;
+  width: 100%;
+  position:relative;
+}
+
+.inputEmoji label {
+  display: block;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.inputEmoji input,
+.inputEmoji textarea {
+  display: block;
+  font: inherit;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  background: var(--input-background);
+  color: var(--color);
+}
+
+.inputEmoji .touched.invalid {
+    border-color: red;
+    /* background: #ffc2c2; */
+}
+
+.inputEmoji input:focus,
+.inputEmoji textarea:focus {
+  outline: none;
+  border-color: #3b0062;
+  color: #3b0062;
+  color: var(--color);
+}
+
+.input__filePickElement {
+  margin-bottom: 0.25rem;
+}
+
+
+
+
+
+
+.inputEmoji__container {
+  position:relative;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.inputEmoji__input {
+  width: 100%;
+}
+
+.inputEmoji__input:focus {
+  outline: none;
+}
+
+.inputEmoji__emojiButton {
+  position:absolute;
+  right: 0.5rem;
+  bottom: 0.25rem;
+  cursor: pointer;
+  /* top: 30px; */
+  /* width: 60px; */
+}
+
+
+
+
+.inputEmoji__textareaContainer {
+  position:relative;
+  /* width: 300px; */
+  /* height: 100px; */
+  /* border: 1px solid #ddd; */
+}
+
+.inputEmoji__textarea {
+  width: 100%;
+  height: 5rem;
+  /* position:relative; */
+  /* border:none; */
+  /* resize: none; */
+  /* outline: none; add this to stop highlight on focus */
+}
+
+.inputEmoji__textareaButton {
+  position:absolute;
+  /* left: 0.5rem; */
+  right: 3rem;
+  bottom: 0.1rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  /* top: 30px; */
+  /* width: 60px; */
+}
+
+.inputEmoji__textarea:focus {
+  /* removing the input focus blue box. Put this on the form if you like. */
+  outline: none;
+}

@@ -1,0 +1,90 @@
+.feed__status {
+  width: 90%;
+  margin: 1rem auto;
+}
+
+.feed__status form {
+  display: flex;
+  align-items: center;
+}
+
+.feed__status form * {
+  margin: 0 0.5rem;
+}
+
+.feed__control {
+  text-align: center;
+}
+
+.feed__favoriteButton {
+  text-align: right;
+}
+
+.feed__selectButtons {
+  text-align: right;
+}
+
+.new-post__preview-image {
+  width: 15rem;
+  height: 7rem;
+  margin-top:0.25rem;
+}
+
+.feedImages__row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.feedImages__column {
+  float: left;
+  /* width: 100px; */
+  padding: 5px;
+}
+
+.feedImages__link {
+  text-decoration: none;
+}
+
+.feedImages__link:hover .feedImages__postTitle {
+  display: block;
+}
+.feedImages__link:hover .feedImages__postTitleEmp {
+  display: none;
+}
+
+.feedImages__postTitle {
+  /* display: none; */
+  color: #999
+}
+
+.feedImages__postCreateDate {
+  /* display: none; */
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.feedImages__postTitleEmp {
+  display: block;
+  /* color: white; */
+}
+
+.feed-container {
+  /* width: 40rem; */
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100%;
+}
+
+
+
+@media (min-width: 768px) {
+  .feed__status {
+    width: 30rem;
+  }
+
+  .feed-container {
+    margin-right: 300px;
+    margin-left: 0px;
+  }
+}

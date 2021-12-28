@@ -1,0 +1,50 @@
+.auth-form {
+  width: 90%;
+  margin: auto;
+  padding: 1rem;
+  border: 1px solid #3b0062;
+  border-radius: 5px;
+}
+
+.auth-form__loader {
+  display: flex; 
+  justify-content: center;
+}
+
+.auth-form__passwordLength {
+  margin-top: 20px;
+}
+
+.auth-form__foregtPassword {
+  margin-top: 30px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-form__signupLink {
+  margin-top: 30px;
+  text-decoration: underline;
+  color: var(--color);
+}
+
+.auth-form__showPasword {
+  margin-bottom: 30px;
+  /* text-decoration: underline; */
+}
+
+.auth-form__emailVerifyMessage {
+  margin-top: 1rem;
+  font-weight: bolder;
+  /* text-decoration: underline; */
+}
+
+.auth-form__passwordResetMessage {
+  margin-top: 1rem;
+  font-weight: bolder;
+}
+
+@media (min-width: 768px) {
+  .auth-form {
+    width: 40rem;
+  }
+}

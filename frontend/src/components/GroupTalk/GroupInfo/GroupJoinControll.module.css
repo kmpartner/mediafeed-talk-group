@@ -1,0 +1,15 @@
+
+.infoButton {
+  position: fixed;
+  top: 50px;
+  right: 5%;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .infoButton {
+    left: 33rem;
+  }
+}

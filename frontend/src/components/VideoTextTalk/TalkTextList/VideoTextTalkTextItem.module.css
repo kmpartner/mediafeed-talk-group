@@ -1,0 +1,48 @@
+.groupTalkTextItmeName {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.groupTalkTextItmeNameElement {
+  margin-left: 0.25rem;
+}
+
+.groupTalkTextItmeTimeElement {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.groupTalkTextItemReactionButtonsContainer {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.groupTalkTextItemReactionButton {
+  cursor: pointer;
+  color: transparent; 
+  text-shadow: 0 0 0 var(--color);
+}
+
+.groupTalkTextItemSettingButtonContainer {
+  font-weight: bolder;
+  text-align: right; 
+  margin-top: 1rem;
+  /* text-shadow: 0 0 0 var(--color); */
+}
+
+.groupTalkTextItemSettingButton {
+  cursor: pointer;
+  width: 2rem;
+}
+
+.groupTalkTextItemSettingSeparator {
+  border-bottom: 1px solid gray;
+  margin-top: 0.5rem,
+}
+
+.groupTalkTextItemTextDeleteButton {
+  cursor: pointer;
+  margin-top: 1rem;
+}

@@ -1,0 +1,49 @@
+.feedEdit__deleteImageElements {
+  /* float: right; */
+  text-align: right;
+}
+.feedEdit__deleteConfirm {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.feedEdit__aboutMediaFile {
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.feedEdit__imagePreviews {
+  display: flex;
+  margin-top: 5px;
+}
+
+.feedEdit__imagePreviews span {
+  height: 75px;
+  margin-left: 2.5px;
+}
+
+.feedEdit__imagePreviews img {
+  height: 100%;
+  /* width: 100%; */
+}
+
+.feedEdit__previousImagesTitle {
+  margin-top: 2rem;
+}
+
+.feedEdit__previousImages {
+  display: flex;
+  margin-top: 5px;
+}
+
+.feedEdit__previousImages span {
+  /* height: 50px; */
+  max-height: 75x;
+  margin-left: 2.5px;
+}
+
+.feedEdit__previousImages img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
