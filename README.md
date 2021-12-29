@@ -9,7 +9,7 @@ Contributions are welcome to improve the project.
 ([Please look at contributing section](#Contributing))
 
 ### Demo
-[demo page](https://ud-gqlapi-front.firebaseapp.com)
+[demo page](https://ud-restapi-front.web.app)
 
 ## Getting started
 
