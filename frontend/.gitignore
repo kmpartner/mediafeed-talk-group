@@ -27,3 +27,5 @@ k8s-files
 .yaml
 .yml
 
+package-lock.json
+##
