@@ -8,8 +8,8 @@ The project is based on the code of online web development courses which creator
 Contributions are welcome to improve the project.
 ([Please look at contributing section](#Contributing))
 
-### Demo
-[demo page](https://ud-restapi-front.web.app)
+### Web site
+[web site](https://ud-restapi-front.web.app) based on this repository
 
 ## Getting started
 
@@ -26,6 +26,7 @@ For frontend app, feed and auth backend server is required to run.
 
 To login or logout as test user in frontend app, please use buttons in bottom part of top page
 
+If vulnerbility issue during installing dependency happens (that is probably not problems for running and testing), and 'npm audit fix' command doesn't solve problems, please try to use lower version of nodejs (such as v12.22.8) after deleting node_modules and package-lock.json.
 
 ### backend 
 
