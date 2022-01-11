@@ -26,13 +26,13 @@ For frontend app, feed and auth backend server is required to run.
 
 To login or logout as test user in frontend app, please use buttons in bottom part of top page
 
-If vulnerbility issue during installing dependency happens (that is probably not problems for running and testing), and 'npm audit fix' command doesn't solve problems, please try to use lower version of nodejs (such as v12.22.8) after deleting node_modules and package-lock.json.
+If higher level of vulnerbility issue happens during installing dependency (that is probably not problems for testing), and 'npm audit fix' command doesn't solve problems, please try to use lower version of nodejs (such as v12.22.8) after deleting node_modules and package-lock.json.
 
 ### backend 
 
 feed and auth backend server 
 
-(currently image upload does not work becase of storage issue)
+(uploaded feed images are stored locally in images folder)
 ```
 cd backend/ud-rest-gql-nodejs-api
 npm install
@@ -51,7 +51,7 @@ npm run dev
 talk server will start on port 4011
 ```
 
-group backend server (server for group page)
+group backend server (server for group page, currently image upload not work because of storage issue)
 ```
 cd backend/socket-rtc-group-nodejs
 npm install

@@ -11,6 +11,8 @@ import FilePicker from "../../Form/Input/FilePicker";
 import Loader from "../../Loader/Loader";
 // import Image from '../../Image/Image';
 import { isVideoFile, isImageFile } from "../../../util/image";
+import { BASE_URL } from '../../../App';
+
 import "./FeedEdit.css";
 
 const ImagePreviews = (props) => {
@@ -81,7 +83,11 @@ const ImagePreviews = (props) => {
             {
               previousPreviewBody = (
                 <span>
-                  <img src={imageUrl} height="" alt="previously uploaded picthres" />
+                  <img 
+                  // src={imageUrl}
+                  src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                  height="" alt="previously uploaded picthres" 
+                  />
                 </span>
               );
             }

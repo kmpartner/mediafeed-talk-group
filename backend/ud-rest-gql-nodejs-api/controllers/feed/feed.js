@@ -152,9 +152,10 @@ exports.getPosts = async (req, res, next) => {
                             Expires: 60 * 60
                           }) 
                         : null,
-                    imageUrls: imageUrls,
-                    modifiedImageUrls: modifiedImageUrls,
-                    thumbnailImageUrls: thumbnailImageUrls,
+                    //// change imageUrls depend on S3 (cloud storage) usage
+                    imageUrls: process.env.S3NOTUSE ? post.imageUrls : imageUrls,
+                    modifiedImageUrls: process.env.S3NOTUSE ? post.modifiedImageUrls : modifiedImageUrls,
+                    thumbnailImageUrls: process.env.S3NOTUSE ? post.thumbnailImageUrls : thumbnailImageUrls,
                 }
             });
 
@@ -288,9 +289,10 @@ exports.getPosts = async (req, res, next) => {
                             Expires: 60 * 60
                           }) 
                         : null,
-                    imageUrls: imageUrls,
-                    modifiedImageUrls: modifiedImageUrls,
-                    thumbnailImageUrls: thumbnailImageUrls,
+                    //// change imageUrls depend on S3 (cloud storage) usage
+                    imageUrls: process.env.S3NOTUSE ? post.imageUrls : imageUrls,
+                    modifiedImageUrls: process.env.S3NOTUSE ? post.modifiedImageUrls : modifiedImageUrls,
+                    thumbnailImageUrls: process.env.S3NOTUSE ? post.thumbnailImageUrls : thumbnailImageUrls,
 
                 }
             });
@@ -604,7 +606,8 @@ exports.getPost = async (req, res, next) => {
                       Expires: 60 * 60
                     }) 
                     : null,
-                    imageUrls: imageUrls,
+                    // imageUrls: imageUrls,
+                    imageUrls: process.env.S3NOTUSE ? post.imageUrls : imageUrls,
                     // modifiedImageUrls: modifiedImageUrls,
                     // thumbnailImageUrls: thumbnailImageUrls,
 

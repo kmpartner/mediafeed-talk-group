@@ -14,6 +14,7 @@ import SmallModal from '../../../components/Modal/SmallModal';
 // import Loader from "../../Loader/Loader";
 // import Image from '../../Image/Image';
 import { isVideoFile, isImageFile } from "../../../util/image";
+import { BASE_URL } from '../../../App';
 
 // import "./FeedEdit.css";
 
@@ -239,7 +240,9 @@ const SinglePostImages = (props) => {
                     // style={{height: "100%", width: "100%", maxWidth:"40rem"}}
                     // style={{height: "", width: "", maxWidth:"40rem"}}
                     className="single-post__Video"
-                    src={imageUrl} height="" width="" alt="pictures of previews" 
+                    // src={imageUrl} 
+                    src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    height="" width="" alt="pictures of previews" 
                     controls
                   />
                 </span>
@@ -255,7 +258,9 @@ const SinglePostImages = (props) => {
                     }}
                     // style={{width: `${imageWidth}`}}
                     style={imagesStyle}
-                    src={imageUrl} height="" alt="pictures of previews" 
+                    // src={imageUrl} 
+                    src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    height="" alt="pictures of previews" 
                   />
                 </span>
               );
@@ -302,7 +307,11 @@ const SinglePostImages = (props) => {
           <SmallModal style="fullImageModal">
             {/* image modal */}
             <div id="fullimage" className="single-post__FullImageContainer">
-              <Img src={selectedImageUrl} alt="selected full size" />
+              <Img 
+                // src={selectedImageUrl}
+                src={selectedImageUrl.startsWith('https://') ? selectedImageUrl : BASE_URL + '/' + selectedImageUrl}
+                alt="selected full size" 
+              />
             </div>
           </SmallModal>
         </div>

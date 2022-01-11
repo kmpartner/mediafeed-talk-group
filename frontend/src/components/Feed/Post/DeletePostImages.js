@@ -246,7 +246,11 @@ const deletePostImages = (props) => {
             >
               {/* <div>{pathUrl.crid}</div> */}
               <span className={classes.deletePostImagesImageContainer}>
-                <Img src={pathUrl.thumbnailImageUrl} alt="post videos"/>
+                <Img 
+                  // src={pathUrl.thumbnailImageUrl} 
+                  src={pathUrl.thumbnailImageUrl.startsWith('https://') ? pathUrl.thumbnailImageUrl : BASE_URL + '/' + pathUrl.thumbnailImageUrl}
+                  alt="post videos"
+                />
                 {/* <video src={pathUrl.modifiedImageUrl} height="100" alt="small post video"/> */}
                 <span className={classes.deletePostImagesVideoMark} 
                   // role="img" aria-label="video indicator"
@@ -266,7 +270,11 @@ const deletePostImages = (props) => {
             >
               {/* <div>{pathUrl.crid}</div> */}
               <span className={classes.deletePostImagesImageContainer}>
-                <Img src={pathUrl.modifiedImageUrl} alt="small post image"/>
+                <Img 
+                  // src={pathUrl.modifiedImageUrl} 
+                  src={pathUrl.modifiedImageUrl.startsWith('https://') ? pathUrl.modifiedImageUrl : BASE_URL + '/' + pathUrl.modifiedImageUrl}
+                  alt="small post image"
+                />
                 {isSelected && <div>selected &#10003;</div>}
               </span>
             </span>
