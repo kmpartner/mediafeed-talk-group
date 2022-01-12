@@ -32,15 +32,14 @@ If higher level of vulnerbility issue happens during installing dependency (that
 
 feed and auth backend server 
 
-(uploaded feed images are stored locally in images folder)
 ```
 cd backend/ud-rest-gql-nodejs-api
 npm install
 npm start
 
 feed and auth server will start on port 8093
+uploaded feed images are stored locally in images folder
 ```
-
 
 talk backend server (server for talk page)
 ```
