@@ -130,13 +130,13 @@ const post = props => {
       if (isVideoFile(fileType)) {
         return (
           <span className="post__SmallVideos">
-            {/* <Img src={props.thumbnailImageUrls[0]} alt="post videos"/> */}
+            <Img src={props.thumbnailImageUrls[0]} alt="post videos"/>
             {/* <video src={url} autoPlay height={imageHeight} alt="post videos"/> */}
 
-            {url.startsWith('https://')
+            {/* {url.startsWith('https://')
               ? <Img src={props.thumbnailImageUrls[0]} alt="post videos"/>
               : <Img src={BASE_URL + '/' + props.thumbnailImageUrls[0]} alt="post videos"/>
-            }
+            } */}
             <span className="post__SmallVideosVideoMark"
               // role="img" aria-label="video indicator"
             >
@@ -148,12 +148,12 @@ const post = props => {
       else {
         return (
           <span className="post__SmallImages">
-            {/* <Img src={url} height={imageHeight} alt="post images"/> */}
+            <Img src={url} height={imageHeight} alt="post images"/>
 
-            {url.startsWith('https://')
+            {/* {url.startsWith('https://')
               ? <Img src={url} height={imageHeight} alt="post images"/>
               : <Img src={BASE_URL + '/' + url} height="50" alt="" />
-            }
+            } */}
           </span>
         );
       }

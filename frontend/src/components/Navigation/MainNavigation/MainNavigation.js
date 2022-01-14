@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
+import Img from "react-cool-img";
 
 import Button from '../../Button/Button';
 import MobileToggle from '../MobileToggle/MobileToggle';
@@ -107,9 +108,14 @@ const mainNavigation = props => {
         // <img className="userImage" src={BASE_URL + '/' + userData.imageUrl} alt="" height="25"
         //   onClick={props.onOpenMobileNav}
         // /> 
-        <img className="userImage" src={userData.imageUrl} alt="" height="25"
-        onClick={props.onOpenMobileNav}
-        /> 
+        // <img className="userImage" src={userData.imageUrl} alt="" height="25"
+        // onClick={props.onOpenMobileNav}
+        // /> 
+        <Img className="userInfo__userImage" 
+          src={userData.imageUrl}
+          // src={userData.imageUrl && userData.imageUrl.startsWith('https://') ? userData.imageUrl : BASE_URL + '/' + userData.imageUrl}
+          alt="" height="25" 
+        />
       : <span className="name" onClick={props.onOpenMobileNav}>{userData.name}</span>
       }
     </span>

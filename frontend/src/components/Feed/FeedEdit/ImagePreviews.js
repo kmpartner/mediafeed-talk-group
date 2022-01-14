@@ -84,8 +84,8 @@ const ImagePreviews = (props) => {
               previousPreviewBody = (
                 <span>
                   <img 
-                  // src={imageUrl}
-                  src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                  src={imageUrl}
+                  // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
                   height="" alt="previously uploaded picthres" 
                   />
                 </span>

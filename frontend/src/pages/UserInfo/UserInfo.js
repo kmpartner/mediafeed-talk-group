@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
+import Img from "react-cool-img";
 
 import i18n from '../../i18n';
 import Input from '../../components/Form/Input/Input';
@@ -424,8 +425,27 @@ const UserInfo = props => {
             {t('userInfo.text3')}:
           </span>
           <span>
+            {userImageUrl
+              ? (
+                  <Img className="userInfo__userImage" 
+                    src={userImageUrl}
+                    // src={userImageUrl && userImageUrl.startsWith('https://') ? userImageUrl : BASE_URL + '/' + userImageUrl}
+                    alt="" height="25" 
+                  />
+                )
+              : (
+                  <Img className="userInfo__userImage" 
+                    src={SampleImage}
+                    alt="" height="25" 
+                  />
+                )
+            }
             {/* <img className="userInfo__userImage" src={BASE_URL + '/' + userImageUrl} alt="" height="25" ></img> */}
-            <img className="userInfo__userImage" src={userImageUrl} alt="" height="25" ></img>
+            {/* <Img className="userInfo__userImage" 
+              // src={userImageUrl}
+              src={userImageUrl && userImageUrl.startsWith('https://') ? userImageUrl : BASE_URL + '/' + userImageUrl}
+              alt="" height="25" 
+            /> */}
           </span>
           <span className="userInfo__editText" onClick={() => { setIsImageUpdate(!isImageUpdate) }}>
             <Button mode="flat" type="submit">

@@ -240,8 +240,8 @@ const SinglePostImages = (props) => {
                     // style={{height: "100%", width: "100%", maxWidth:"40rem"}}
                     // style={{height: "", width: "", maxWidth:"40rem"}}
                     className="single-post__Video"
-                    // src={imageUrl} 
-                    src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    src={imageUrl} 
+                    // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
                     height="" width="" alt="pictures of previews" 
                     controls
                   />
@@ -258,8 +258,8 @@ const SinglePostImages = (props) => {
                     }}
                     // style={{width: `${imageWidth}`}}
                     style={imagesStyle}
-                    // src={imageUrl} 
-                    src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    src={imageUrl} 
+                    // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
                     height="" alt="pictures of previews" 
                   />
                 </span>
@@ -308,8 +308,8 @@ const SinglePostImages = (props) => {
             {/* image modal */}
             <div id="fullimage" className="single-post__FullImageContainer">
               <Img 
-                // src={selectedImageUrl}
-                src={selectedImageUrl.startsWith('https://') ? selectedImageUrl : BASE_URL + '/' + selectedImageUrl}
+                src={selectedImageUrl}
+                // src={selectedImageUrl.startsWith('https://') ? selectedImageUrl : BASE_URL + '/' + selectedImageUrl}
                 alt="selected full size" 
               />
             </div>

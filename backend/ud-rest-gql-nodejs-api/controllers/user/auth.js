@@ -341,10 +341,22 @@ exports.getUserData = async (req, res, next) => {
             );
         }
 
-        console.log(user);
+        // console.log(user);
+        const port = process.env.PORT || 8083;
+
+        let returnImageUrl = null;
+        if (process.env.S3NOTUSE && user.imageUrl) {
+            returnImageUrl = `http://localhost:${port}/${user.imageUrl}`;
+        }
+        if (!process.env.S3NOTUSE && user.imageUrl) {
+            returnImageUrl = doUrl;
+        }
+
         const returnUser = {
             ...user._doc,
-            imageUrl: doUrl,
+            // imageUrl: doUrl,
+            // imageUrl: process.env.S3NOTUSE ? user.imageUrl : doUrl,
+            imageUrl: returnImageUrl,
         }
 
         res.status(200).json({ message: 'get user data successfully.', data: returnUser });
@@ -463,17 +475,28 @@ exports.createUserImage = async (req, res, next) => {
                 Key: `${imageUrl}`
             };
 
-            await s3Upload(params);
-            clearImage(req.file.path);
-            // fs.unlinkSync(req.file.path);
+            //// store in cloud when s3 use and delete local
+            if (!process.env.S3NOTUSE) {
+                await s3Upload(params);
+                clearImage(req.file.path);
+                // fs.unlinkSync(req.file.path);
+            }
 
             if (imageCreator.imageUrl) {
                 const deleteParams = {
                     Bucket: process.env.DO_SPACE_BUCKET_NAME,
                     Key: imageCreator.imageUrl
                 }
-                await s3DeleteOne(deleteParams);
-                clearImage(imageCreator.imageUrl);
+
+                //// delete old image depend on storage location
+                if (!process.env.S3NOTUSE) {
+                    await s3DeleteOne(deleteParams);
+                    clearImage(imageCreator.imageUrl);
+                }
+                if (process.env.S3NOTUSE) {
+                    clearImage(imageCreator.imageUrl);
+                }
+
             }
 
 
@@ -535,8 +558,16 @@ exports.deleteUserImage = async (req, res, next) => {
             Bucket: process.env.DO_SPACE_BUCKET_NAME,
             Key: user.imageUrl
         }
-        await s3DeleteOne(deleteParams);
-        clearImage(user.imageUrl);
+
+
+        //// delete image depend on storage location
+        if (!process.env.S3NOTUSE) {
+            await s3DeleteOne(deleteParams);
+            clearImage(user.imageUrl);
+        }
+        if (process.env.S3NOTUSE) {
+            clearImage(user.imageUrl);
+        }
 
         
         user.imageUrl = null;
