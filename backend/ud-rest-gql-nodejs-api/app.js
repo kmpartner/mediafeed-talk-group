@@ -47,6 +47,8 @@ const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
 
 const db = require('./db');
 
+const { allowedOriginList } = require('./allowed-origin-list');
+
 // const fileStorage = multer.diskStorage({
 //     destination: (req, file, cb) => {
 //         cb(null, 'images');
@@ -93,10 +95,7 @@ app.use(bodyParser.json()); //application/json
 
 app.use((req, res, next) => {
 
-    var allowedOrigins = [
-        'https://example.com',
-        // 'http://localhost'
-    ];
+    var allowedOrigins = allowedOriginList;
 
     var origin = req.headers.origin;
     console.log(origin);

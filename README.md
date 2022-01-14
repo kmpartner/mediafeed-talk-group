@@ -5,7 +5,7 @@ React frontend and nodejs backend servers for web application of media feed, tex
 The project is based on the code of online web development courses which creator finished.
 
 
-Contributions are welcome to improve the project.
+Contributions are welcome to improve the project and looking for contributor.
 ([Please look at contributing section](#Contributing))
 
 ### Web site
@@ -66,7 +66,7 @@ talk or group sever is required to use talk or group page.
 ## Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. 
+email (kmpartner@outlook.com), or any other method with the owners of this repository before making a change. 
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
