@@ -40,19 +40,34 @@ export const acceptableFile = value => {
   }
 }
 
+
+
+export const acceptImageType = ['png', 'jpg', 'jpeg', 'webp'];
+export const acceptVideoType = ['mp4', 'webm'];
+
 export const acceptableFiles = fileList => {
   const passlist = [];
 
   for (const file of fileList) {
     const fileType = file.name.split('.')[file.name.split('.').length -1].toLowerCase();
     console.log(fileType);
+
+    const acceptTypes = acceptImageType.concat(acceptVideoType);
+    
+    let matchType;
+    if (fileType) {
+      matchType = acceptTypes.find(type => type === fileType.toLowerCase());
+    }
+    console.log(matchType);
+
     if (
-      fileType === 'png' || 
-      fileType === 'jpg' || 
-      fileType === 'jpeg' ||
-      fileType === 'webp' ||
-      fileType === 'mp4' ||  
-      fileType === 'webm' 
+      // fileType === 'png' || 
+      // fileType === 'jpg' || 
+      // fileType === 'jpeg' ||
+      // fileType === 'webp' ||
+      // fileType === 'mp4' ||  
+      // fileType === 'webm' 
+      matchType
     ) {
       // return true;
       passlist.push(file.name);

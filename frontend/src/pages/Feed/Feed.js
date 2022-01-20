@@ -826,6 +826,10 @@ class Feed extends Component {
     this.setState({ imageDeleted: input });
   };
 
+  getStoreCurrentPage = (storeCurrentPage) => {
+    this.setState({ postPage: storeCurrentPage });
+  }
+
   render() {
 
     //// start edit direction from mainNavigation smallmodal
@@ -1062,6 +1066,7 @@ class Feed extends Component {
               onNext={this.loadPosts.bind(this, 'searchNext')}
               lastPage={Math.ceil(this.state.searchPosts.length / this.state.maxPagePostNumber)}
               currentPage={this.state.searchPostPage}
+              getStoreCurrentPage={this.getStoreCurrentPage}
             >
               {feedPost2}
             </Paginator>
@@ -1071,6 +1076,7 @@ class Feed extends Component {
             onNext={this.loadPosts.bind(this, 'next')}
             lastPage={Math.ceil(this.state.posts.length / this.state.maxPagePostNumber)}
             currentPage={this.state.postPage}
+            getStoreCurrentPage={this.getStoreCurrentPage}
           >
             {feedPost2}
           </Paginator>
@@ -1144,6 +1150,7 @@ class Feed extends Component {
               onNext={this.loadPosts.bind(this, 'searchNext')}
               lastPage={Math.ceil(this.state.searchPosts.length / this.state.maxPagePostNumber)}
               currentPage={this.state.searchPostPage}
+              getStoreCurrentPage={this.getStoreCurrentPage}
             >
               {feedPost2}
             </Paginator>
@@ -1153,6 +1160,7 @@ class Feed extends Component {
             onNext={this.loadPosts.bind(this, 'next')}
             lastPage={Math.ceil(this.state.posts.length / this.state.maxPagePostNumber)}
             currentPage={this.state.postPage}
+            getStoreCurrentPage={this.getStoreCurrentPage}
           >
             {feedPost2}
           </Paginator>

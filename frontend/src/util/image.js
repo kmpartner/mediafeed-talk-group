@@ -2,6 +2,8 @@ import QRCode from 'qrcode';
 // import Resizer from "react-image-file-resizer";
 import Compressor from 'compressorjs';
 
+import { acceptImageType, acceptVideoType } from './validators';
+
 export const generateBase64FromImage = imageFile => {
   const reader = new FileReader();
   const promise = new Promise((resolve, reject) => {
@@ -53,11 +55,19 @@ export const generateBase64ImageData = imageFile => {
 };
 
 export const isImageFile = (fileType) => {
+  // console.log(fileType)
+  let matchType;
+  if (fileType) {
+    matchType = acceptImageType.find(type => type === fileType.toLowerCase());
+  }
+  // console.log(matchType);
+
   if (
-    fileType === 'png' ||
-    fileType === 'jpg' ||
-    fileType === 'jpeg' ||
-    fileType === 'webp'
+    // fileType === 'png' ||
+    // fileType === 'jpg' ||
+    // fileType === 'jpeg' ||
+    // fileType === 'webp'
+    matchType
   ) {
     return true
   } else {
@@ -66,9 +76,17 @@ export const isImageFile = (fileType) => {
 }
 
 export const isVideoFile = (fileType) => {
+  // console.log(fileType)
+  let matchType;
+  if (fileType) {
+    matchType = acceptVideoType.find(type => type === fileType.toLowerCase());
+  }
+  // console.log(matchType);
+
   if (
-    fileType === 'mp4' ||
-    fileType === 'webm'
+    // fileType === 'mp4' ||
+    // fileType === 'webm'
+    matchType
   ) {
     return true;
   } else {

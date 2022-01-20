@@ -7,6 +7,8 @@ import Button from '../../Button/Button';
 // import Paginator from '../../components/Paginator/Paginator';
 import AutoSuggestHook from '../../AutoSuggest/AutoSuggestHook';
 import Paginator from '../../Paginator/Paginator';
+import { acceptImageType, acceptVideoType } from '../../../util/validators';
+
 import { BASE_URL } from '../../../App';
 
 import classes from './FeedImages.module.css';
@@ -19,7 +21,8 @@ const FeedImages = props => {
   // console.log(t);
 
   const showImagesNumber = props.perPage;
-  const maxPageImageNumber = props.maxPagePostNumber;
+  // const maxPageImageNumber = props.maxPagePostNumber;
+  const maxPageImageNumber = props.posts.length;
 
   // const [showImages, setShowImages] = useState(true);
   const [moreUImageClickNum, setMoreUImageClickNum] = useState(0);
@@ -123,10 +126,21 @@ const FeedImages = props => {
       const imagePath = element.imagePaths.length > 0 ? element.imagePaths[0] : null;
       const type = imagePath ? imagePath.split('.')[imagePath.split('.').length - 1].toLowerCase(): null;
 
-      return type === 'png' ||
-        type === 'jpg' ||
-        type === 'jpeg' ||
-        type === 'webp'
+      let matchType;
+      if (type) {
+        matchType = acceptImageType.find(ty => ty === type.toLowerCase());
+      }
+
+      if (matchType) {
+        return element;
+      } else {
+        return null;
+      }
+      
+      // return type === 'png' ||
+      //   type === 'jpg' ||
+      //   type === 'jpeg' ||
+      //   type === 'webp'
     });
   }
 
@@ -137,8 +151,19 @@ const FeedImages = props => {
       const imagePath = element.imagePaths.length > 0 ? element.imagePaths[0] : null;
       const type = imagePath ? imagePath.split('.')[imagePath.split('.').length - 1].toLowerCase(): null;
 
-      return type === 'mp4' ||
-        type === 'webm' 
+      let matchType;
+      if (type) {
+        matchType = acceptVideoType.find(ty => ty === type.toLowerCase());
+      }
+
+      if (matchType) {
+        return element;
+      } else {
+        return null;
+      }
+
+      // return type === 'mp4' ||
+      //   type === 'webm' 
     });
   }
 

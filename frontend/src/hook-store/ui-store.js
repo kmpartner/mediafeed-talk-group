@@ -63,6 +63,12 @@ const configureStore = () => {
         groupListData: payload,
       }
     },
+    SET_VIEW_PAGE: (state, payload) => {
+      return {
+        ...state,
+        viewPage: payload,
+      }
+    }
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -79,6 +85,8 @@ const configureStore = () => {
     groupImageUrls: [],
     groupListData: [],
     userData: null,
+    viewPage: 1,
+    // lastPage: 0,
     // notification: {
     //   status: null,
     //   title: null,

@@ -3,8 +3,8 @@
 }
 
 .feedImagesImageNumber {
-  background-color: rgba(0,0,0,0.05);
-  color: gray; 
+  background-color: rgba(0,0,0,0.2); 
+  color: whitesmoke;
   position: absolute;           
   right: 5px; 
   bottom: 5px;

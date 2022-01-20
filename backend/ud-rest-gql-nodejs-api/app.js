@@ -44,6 +44,7 @@ const groupPushRoute = require('./routes/push-notification/group-push');
 const userReactionRoute = require('./routes/feed/user-reaction');
 const groupImageRoute = require('./routes/group-image/group-image');
 const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
+const feedFilterRoute = require('./routes/feed/feed-filter');
 
 const db = require('./db');
 
@@ -151,6 +152,7 @@ app.use('/group-push', groupPushRoute);
 app.use('/user-reaction', userReactionRoute);
 app.use('/group-image', groupImageUpload, groupImageRoute);
 app.use('/feed-images', imagesUpload, feedMultiImageRoute);
+app.use('/feed-filter', feedFilterRoute);
 
 app.use(auth);
 app.use('', imageForGqlRoutes);
@@ -283,12 +285,14 @@ var httpServer = http.createServer(app);
 var httpsServer = https.createServer(options, app);
 
 // console.log('user', process.env.MONGO_USERNAME);
-const dbName = process.env.MONGO_DB;
+// const dbName = process.env.MONGO_DB;
+// const mongoHost = process.env.MONGO_HOSTNAME;
 mongoose.connect(
-    `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.9nwqj.mongodb.net/${dbName}?retryWrites=true&w=majority`
-)
+    // `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${mongoHost}/${dbName}?retryWrites=true&w=majority`
+    db.mongoDbUrl
+    )
 .then(result => {
-    console.log(`Connected to mongoDB, ${dbName}, waiting initDb...`);
+    console.log(`Connected to mongoDB, ${process.env.MONGO_DB}, waiting initDb...`);
     // app.listen(8083);
     // httpServer.listen(process.env.HTTPSERVER_PORT, () => console.log("App http listening on port 8083!"));
     // httpsServer.listen(process.env.HTTPSSERVER_PORT, () => console.log("App https listening on port 8084!"));

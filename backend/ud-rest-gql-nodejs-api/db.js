@@ -31,8 +31,12 @@ require('dotenv').config();
 
 const MongoClient = mongodb.MongoClient;
 
+const dbName = process.env.MONGO_DB;
+const mongoHost = process.env.MONGO_HOSTNAME;
 // var serviceAccount = require("../credentials/credentials.json");
-const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.9nwqj.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+
+// const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-t2qe0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${mongoHost}/${dbName}?retryWrites=true&w=majority`
 
 let _db;
 
@@ -61,5 +65,6 @@ const getDb = () => {
 
 module.exports = {
   initDb,
-  getDb
+  getDb,
+  mongoDbUrl,
 };
