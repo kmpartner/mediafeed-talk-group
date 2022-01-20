@@ -292,7 +292,7 @@ mongoose.connect(
     db.mongoDbUrl
     )
 .then(result => {
-    console.log(`Connected to mongoDB, ${process.env.MONGO_DB}, waiting initDb...`);
+    console.log(`Connected to mongoDB, ${process.env.MONGO_DB} ${process.env.MONGO_HOSTNAME}, waiting initDb...`);
     // app.listen(8083);
     // httpServer.listen(process.env.HTTPSERVER_PORT, () => console.log("App http listening on port 8083!"));
     // httpsServer.listen(process.env.HTTPSSERVER_PORT, () => console.log("App https listening on port 8084!"));
