@@ -44,13 +44,13 @@ class Feed extends Component {
     moreClickNum: 0,
     searchPosts: [],
 
-    perPage: 20,
-    maxPagePostNumber: 20,
-    maxSearchPostNumber: 20, // less than maxPagePostNumber
+    // perPage: 20,
+    // maxPagePostNumber: 20,
+    // maxSearchPostNumber: 20, // less than maxPagePostNumber
     
-    // perPage: 2,
-    // maxPagePostNumber: 2,
-    // maxSearchPostNumber: 2, // less than maxPagePostNumber
+    perPage: 2,
+    maxPagePostNumber: 2,
+    maxSearchPostNumber: 2, // less than maxPagePostNumber
     
     searchPostPage: 1,
     searchMoreClickNum: 0,
