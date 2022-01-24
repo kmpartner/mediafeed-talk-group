@@ -38,16 +38,20 @@ class Feed extends Component {
     userPostPage: 1,
     perUserPostPage: 2,
     userPosts: [],
-    perPage: 2,
     geolocation: '',
     imageDeleted: null,
     userPageSelect: 'posts',
     moreClickNum: 0,
     searchPosts: [],
+
+    perPage: 20,
     maxPagePostNumber: 20,
     maxSearchPostNumber: 20, // less than maxPagePostNumber
+    
+    // perPage: 2,
     // maxPagePostNumber: 2,
     // maxSearchPostNumber: 2, // less than maxPagePostNumber
+    
     searchPostPage: 1,
     searchMoreClickNum: 0,
     selectedCreatorId: '',
@@ -240,14 +244,49 @@ class Feed extends Component {
     let page = this.state.postPage;
     let searchPage = this.state.searchPostPage;
 
+    console.log('before previous before next totalPosts', this.state.totalPosts)
     if (direction === 'next') {
+      console.log('before previous posts postPage maxPagePostNumber', this.state.posts, this.state.postPage, this.state.maxPagePostNumber)
+      console.log('before previous totalPosts', this.state.totalPosts)
+      
+    // const lastPage = Math.ceil(this.state.posts.length / this.state.perPage);
+    // console.log('before previous lastPage', lastPage)
+    // if (this.state.postPage > 1 
+    //     && lastPage > this.state.postPage + 1
+    //   ) {
+    //   this.setState({ postsLoading: false });
+ 
+    //   return;
+    // }
+
       page++;
       this.setState({ postPage: page });
     }
     if (direction === 'previous') {
+
+      //// page is greater than 2, use store gotPosts for posts (paginator.js previousHandler)
+      if (this.state.postPage > 2) {
+        this.setState({ postsLoading: false });
+        return;
+      }
+
       page--;
       this.setState({ postPage: page });
+      
     }
+
+
+    // const lastPage = Math.ceil(this.state.totalPosts / this.state.perPage);
+      
+    // if (this.state.postPage > 1 
+    //     && lastPage > this.state.postPage + 1
+    //   ) {
+    //   this.setState({ postsLoading: false });
+    //   return;
+    // }
+
+
+    console.log('after previous');
 
     if (this.state.searchPosts.length > 0) {
       if (direction === 'searchNext') {
@@ -259,6 +298,8 @@ class Feed extends Component {
         this.setState({ searchPostPage: searchPage });
       }
     }
+
+
 
     const lsUserId = localStorage.getItem('userId');
     let queryEnd;
@@ -826,8 +867,11 @@ class Feed extends Component {
     this.setState({ imageDeleted: input });
   };
 
-  getStoreCurrentPage = (storeCurrentPage) => {
-    this.setState({ postPage: storeCurrentPage });
+  getStoreCurrentPage = (storeCurrentPage, posts) => {
+    this.setState({ 
+      postPage: storeCurrentPage,
+      posts: posts
+    });
   }
 
   render() {
@@ -1067,6 +1111,7 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.searchPosts.length / this.state.maxPagePostNumber)}
               currentPage={this.state.searchPostPage}
               getStoreCurrentPage={this.getStoreCurrentPage}
+              posts={this.state.posts}
             >
               {feedPost2}
             </Paginator>
@@ -1077,6 +1122,7 @@ class Feed extends Component {
             lastPage={Math.ceil(this.state.posts.length / this.state.maxPagePostNumber)}
             currentPage={this.state.postPage}
             getStoreCurrentPage={this.getStoreCurrentPage}
+            posts={this.state.posts}
           >
             {feedPost2}
           </Paginator>
@@ -1151,6 +1197,7 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.searchPosts.length / this.state.maxPagePostNumber)}
               currentPage={this.state.searchPostPage}
               getStoreCurrentPage={this.getStoreCurrentPage}
+              posts={this.state.posts}
             >
               {feedPost2}
             </Paginator>
@@ -1161,6 +1208,7 @@ class Feed extends Component {
             lastPage={Math.ceil(this.state.posts.length / this.state.maxPagePostNumber)}
             currentPage={this.state.postPage}
             getStoreCurrentPage={this.getStoreCurrentPage}
+            posts={this.state.posts}
           >
             {feedPost2}
           </Paginator>

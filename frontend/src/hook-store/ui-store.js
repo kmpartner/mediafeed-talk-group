@@ -68,6 +68,12 @@ const configureStore = () => {
         ...state,
         viewPage: payload,
       }
+    },
+    SET_GOT_POSTS: (state, payload) => {
+      return {
+        ...state,
+        gotPosts: payload,
+      }
     }
     // SET_I18NEXT: (state, payload) => {
     //   return { 
@@ -86,6 +92,7 @@ const configureStore = () => {
     groupListData: [],
     userData: null,
     viewPage: 1,
+    gotPosts: [],
     // lastPage: 0,
     // notification: {
     //   status: null,
