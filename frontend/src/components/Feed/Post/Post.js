@@ -64,7 +64,7 @@ const post = props => {
   if (isImageFile(fileType)) {
     smallImage = (
       <div>
-        <Link to={linkToPost}>
+        <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
           {/* <img src={BASE_URL + '/' + props.modifiedImageUrl} height="50" alt=""></img> */}
           {/* <img src={props.modifiedImageUrl} height="100" alt="post-image"></img> */}
           <Img src={props.modifiedImageUrl} height="100" alt="post-image"></Img>
@@ -77,7 +77,7 @@ const post = props => {
   if (isVideoFile(fileType)) {
     smallImage = (
       <div>
-        <Link to={linkToPost}>
+        <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
           {/* <video src={BASE_URL + '/' + props.modifiedImageUrl} height="50" autoPlay muted={true} ></video> */}
           <video src={props.modifiedImageUrl} height="50" autoPlay muted={true}></video>
 
@@ -164,15 +164,20 @@ const post = props => {
     <article className="post">
       {smallImage}
 
-      <Link to={linkToPost}>
+      <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
       {postImagesBody}
       </Link>
 
       <header className="post__header">
-        <Link to={linkToPost} className="post__title">{props.title}</Link>
+        <Link to={linkToPost} target="_blank" rel="noopener noreferrer"
+          className="post__title"
+          >
+            {props.title}
+          </Link>
       </header>
       <div className="post__contentContainer">
-        <Link to={linkToPost} className="post__content">
+        <Link to={linkToPost} target="_blank" rel="noopener noreferrer" 
+        className="post__content">
           {props.content.length > 50 ? 
             props.content.slice(0,50) + '.....'
           : props.content
@@ -191,10 +196,10 @@ const post = props => {
       {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>
       <img src={BASE_URL + '/' + props.image} width="50" alt="videofile"></img> */}
       <div className="post__actions">
-        <Button mode="flat" link={props.id} action="viewpost">
-          {/* View  */}
+        {/* <Button mode="flat" link={props.id} action="viewpost">
+          View 
           {t('feed.text4')}
-        </Button>
+        </Button> */}
         {props.postCreatorUserId === localStorage.getItem('userId') ?
           <span>
             <Button mode="flat" onClick={props.onStartEdit}>

@@ -191,7 +191,7 @@ const FeedImages = props => {
         // console.log('searchpost map', post);
         return (
           <div className="feedImages__column" key={post._id} >
-            <Link className="feedImages__link" to={post._id}>
+            <Link className="feedImages__link" to={post._id} target="_blank" rel="noopener noreferrer" >
               {props.fileType === 'images' &&
                 // <img src={post.imageUrl} height="200" maxwidth="" alt="not-img"></img>
                 // <img src={post.modifiedImageUrl} height="100" maxwidth="" alt="no-img"></img>
@@ -225,7 +225,7 @@ const FeedImages = props => {
         console.log('start, end', start, pageEnd);
         return (
           <div className="feedImages__column" key={post._id} >
-            <Link className="feedImages__link" to={post._id}>
+            <Link className="feedImages__link" to={post._id} target="_blank" rel="noopener noreferrer" >
               {props.fileType === 'images' &&
                 // <img src={post.imageUrl} height="200" maxwidth="" alt="not-img"></img>
                 // <img src={post.modifiedImageUrl} height="100" maxwidth="" alt="no-img"></img>
@@ -263,7 +263,7 @@ const FeedImages = props => {
         if (post.modifiedImageUrls.length > 0) {
           return (
             <div className="feedImages__column" key={post._id} >
-              <Link className="feedImages__link" to={post._id}>
+              <Link className="feedImages__link" to={post._id} target="_blank" rel="noopener noreferrer" >
                 {props.fileType === 'images' &&
                   <span className={classes.feedImagesImage}>
                     <Img src={post.modifiedImageUrls[0]} height="100" maxwidth="" alt="no-img" />
@@ -305,7 +305,7 @@ const FeedImages = props => {
         console.log('start, end', start, pageEnd);
         return (
           <div className="feedImages__column" key={post._id} >
-            <Link className="feedImages__link" to={post._id}>
+            <Link className="feedImages__link" to={post._id} target="_blank" rel="noopener noreferrer" >
               {props.fileType === 'images' &&
                 <span className={classes.feedImagesImage}>
                   <Img src={post.modifiedImageUrls[0]} height="100" maxwidth="" alt="no-img" />
