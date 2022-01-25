@@ -30,18 +30,20 @@ const paginator = props => {
     pageNumber = props.currentPage;
   }
 
-  // const previousHandler = () => {
-  //     //// when back to page 1, set store viewPage 1
-  //     if (store.viewPage === 2) {
-  //       dispatch('SET_VIEW_PAGE', props.currentPage - 1);
-  //     }
+  const previousHandler = () => {
+      //// when back to page 1, set store viewPage 1
+      // if (store.viewPage === 2) {
+      //   dispatch('SET_VIEW_PAGE', props.currentPage - 1);
+      // }
       
-  //     props.onPrevious();
-  // }
+      props.onPrevious();
+      window.scrollTo(0, 0);
+  }
 
-  // const nextHandler = () => {
-  //   props.onNext();
-  // }
+  const nextHandler = () => {
+    props.onNext();
+    window.scrollTo(0, 0);
+  }
  
   return (
     <div className="paginator">
@@ -49,8 +51,8 @@ const paginator = props => {
       <div className="paginator__controls">
         {props.currentPage > 1 && (
           <button className="paginator__control" 
-            onClick={props.onPrevious}
-            // onClick={previousHandler}
+            // onClick={props.onPrevious}
+            onClick={previousHandler}
           >
             Previous
           </button>
@@ -60,8 +62,8 @@ const paginator = props => {
   
         {props.currentPage < props.lastPage && (
           <button className="paginator__control" 
-            onClick={props.onNext}
-            // onClick={nextHandler}
+            // onClick={props.onNext}
+            onClick={nextHandler}
           >
             Next
           </button>

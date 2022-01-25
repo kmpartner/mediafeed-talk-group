@@ -44,13 +44,13 @@ class Feed extends Component {
     moreClickNum: 0,
     searchPosts: [],
 
-    // perPage: 20,
-    // maxPagePostNumber: 20,
-    // maxSearchPostNumber: 20, // less than maxPagePostNumber
+    perPage: 20,
+    maxPagePostNumber: 20,
+    maxSearchPostNumber: 20, // less than maxPagePostNumber
     
-    perPage: 2,
-    maxPagePostNumber: 2,
-    maxSearchPostNumber: 2, // less than maxPagePostNumber
+    // perPage: 2,
+    // maxPagePostNumber: 2,
+    // maxSearchPostNumber: 2, // less than maxPagePostNumber
     
     searchPostPage: 1,
     searchMoreClickNum: 0,
@@ -246,44 +246,14 @@ class Feed extends Component {
 
     console.log('before previous before next totalPosts', this.state.totalPosts)
     if (direction === 'next') {
-      console.log('before previous posts postPage maxPagePostNumber', this.state.posts, this.state.postPage, this.state.maxPagePostNumber)
-      console.log('before previous totalPosts', this.state.totalPosts)
-      
-    // const lastPage = Math.ceil(this.state.posts.length / this.state.perPage);
-    // console.log('before previous lastPage', lastPage)
-    // if (this.state.postPage > 1 
-    //     && lastPage > this.state.postPage + 1
-    //   ) {
-    //   this.setState({ postsLoading: false });
- 
-    //   return;
-    // }
-
       page++;
       this.setState({ postPage: page });
     }
     if (direction === 'previous') {
-
-      //// page is greater than 2, use store gotPosts for posts (paginator.js previousHandler)
-      if (this.state.postPage > 2) {
-        this.setState({ postsLoading: false });
-        return;
-      }
-
       page--;
       this.setState({ postPage: page });
-      
     }
 
-
-    // const lastPage = Math.ceil(this.state.totalPosts / this.state.perPage);
-      
-    // if (this.state.postPage > 1 
-    //     && lastPage > this.state.postPage + 1
-    //   ) {
-    //   this.setState({ postsLoading: false });
-    //   return;
-    // }
 
 
     console.log('after previous');
