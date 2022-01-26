@@ -31,6 +31,9 @@ import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
 import './SinglePost.css';
 
+import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
+import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
+
 class SinglePost extends Component {
   state = {
     title: '',
@@ -517,6 +520,10 @@ class SinglePost extends Component {
             resetPostPage={() => { }}
             showSmallModalHandler={this.showSmallModalHandler}
           />
+        </div>
+        
+        <div className="single__post__adBar">
+          <GroupTopElements />
         </div>
 
 

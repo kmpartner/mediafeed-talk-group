@@ -46,7 +46,8 @@
 }
 
 .single-post__FavoriteUserTitle {
-  margin: 2rem 1rem;
+  /* margin: 2rem 1rem; */
+  padding: 2rem 0;
   /* margin-bottom: 1rem;
   margin */
   /* margin-left: 1rem; */
@@ -169,6 +170,9 @@ img {
   max-width: 40rem;
 }
 
+.single__post__adBar {
+  padding-top: 2rem;
+}
 
 @media (min-width: 768px) {
   .single-post {

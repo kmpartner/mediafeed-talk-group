@@ -112,12 +112,12 @@ const AutosuggestHook = (props) => {
       const inputLength = inputValue.length;
     
       let titleNameContain = _.filter(props.posts, function(post) {
-        if (inputValue && inputValue.length <= 2) {
-          return post.title === inputValue;
+        if (post.title && inputValue && inputValue.length <= 2) {
+          return post.title.toLowerCase() === inputValue;
         }
         
-        if (inputValue && inputValue.length > 2) {
-          return (post.title.indexOf(inputValue) > -1);
+        if (post.title && inputValue && inputValue.length > 2) {
+          return (post.title.toLowerCase().indexOf(inputValue) > -1);
         }
         return [];
         // return indexOfWord(post.title) > -1;
