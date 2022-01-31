@@ -61,6 +61,8 @@ class SinglePost extends Component {
     imagePaths: [],
     modifiedImagePaths: [],
     thumbnailImagePaths: [],
+
+    postData: null,
   };
 
   componentDidMount() {
@@ -83,7 +85,9 @@ class SinglePost extends Component {
       this.getPost();
     }
     
+    //// delete selectedPostId when singlePost page loaded
     localStorage.removeItem('selectedPostId');
+    localStorage.removeItem('selectedPostData');
     
   }
 
@@ -127,6 +131,8 @@ class SinglePost extends Component {
           imagePaths: resData.post.imagePaths,
           modifiedImagePaths: resData.post.modifiedImagePaths,
           thumbnailImagePaths: resData.post.thumbnailImagePaths,
+        
+          postData: resData.post,
         },
           () => {
             console.log(this.state);
@@ -144,6 +150,7 @@ class SinglePost extends Component {
 
   storePostIdHandler = () => {
     localStorage.setItem('selectedPostId', this.props.match.params.postId);
+    localStorage.setItem('selectedPostData', JSON.stringify(this.state.postData));
     // this.props.history.replace('/');
     this.props.history.push('/feed/posts');
   }

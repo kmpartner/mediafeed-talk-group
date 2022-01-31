@@ -411,11 +411,12 @@ class FeedEdit extends Component {
       imagePreviews: [],
     });
 
-    // delete selectedId, edit from single postpage
-    const selectedPostId = localStorage.getItem('selectedPostId');
-    if (selectedPostId) {
-      localStorage.removeItem('selectedPostId');
-    }
+    // //move to feed.js finisheditHandler  delete selectedId, edit from single postpage 
+    // const selectedPostId = localStorage.getItem('selectedPostId');
+    // if (selectedPostId) {
+    //   // localStorage.removeItem('selectedPostId');
+    //   // localStorage.removeItem('selectedPostData');
+    // }
   };
 
   showDeleteModalHandler = () => {
@@ -561,9 +562,12 @@ class FeedEdit extends Component {
     //     })}
     //   </ul>)
     // }
-
+    console.log(this.state.postForm);
     let imageDeleteElement;
     if (
+      this.state.postForm.image.value &&
+
+
       !this.state.postForm.image.value.name &&
       this.state.postForm.image.value  &&
       this.state.postForm.image.value !== 'undefined' &&

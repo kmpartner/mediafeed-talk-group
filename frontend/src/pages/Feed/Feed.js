@@ -134,8 +134,28 @@ class Feed extends Component {
 
   selectedPostEditHandler = (postId) => {
     // const pId = localStorage.getItem('selectedPostId');
-    this.startEditPostHandler(postId);
+    // this.startEditPostHandler(postId);
     // localStorage.removeItem('selectedPostId');
+
+    this.setState(prevState => {
+      // const loadedPost = { ...prevState.posts.find(p => p._id === postId) };
+      const loadedPost = JSON.parse(localStorage.getItem('selectedPostData'));
+      console.log(loadedPost);
+
+      getUserLocation()
+        .then(result => {
+          console.log(result);
+        })
+        .catch(err => {
+          console.log(err);
+          this.catchError(err);
+        })
+
+      return {
+        isEditing: true,
+        editPost: loadedPost
+      };
+    });
   }
 
   morePostHandler = () => {
@@ -508,7 +528,7 @@ class Feed extends Component {
     this.setState({
       editLoading: true
     });
-    console.log(postData);
+    console.log('postData in Feed.js', postData);
 
     const formData = new FormData();
     // formData.append('title', postData.title);
@@ -527,16 +547,25 @@ class Feed extends Component {
     formData.append('public', postData.public);
 
 
-    if (postData.image.length > 1 || postData.image.length === 1 || !postData.image) {
+    if (!postData.image || postData.image.length > 1 || postData.image.length === 1) {
       
-      if (postData.image.length > 0) {
+      if (postData.image && postData.image.length > 0) {
         for (const file of postData.image) {
           formData.append('images', file)
         }
       }
 
       if (this.state.editPost && postData.imagePaths.length > 0) {
-        formData.append('totalFileNumber', postData.image.length + postData.imagePaths.length);
+        
+        let totalFileNumber = 0;
+
+        if (postData.image && postData.image !== 'undefined') {
+          totalFileNumber = postData.image.length + postData.imagePaths.length;
+        } else {
+          totalFileNumber = postData.imagePaths.length;
+        }
+        console.log('totalFileNumber in Feed.js', totalFileNumber);
+        formData.append('totalFileNumber', totalFileNumber);
       }
       // formData.append('images', postData.image);
 
@@ -582,7 +611,16 @@ class Feed extends Component {
               editLoading: false
             };
           }, () => {
-            this.loadPosts();
+            
+            //// // delete selectedId, postData edit from single postpage
+            const selectedPostId = localStorage.getItem('selectedPostId');
+            if (selectedPostId) {
+              localStorage.removeItem('selectedPostId');
+              localStorage.removeItem('selectedPostData');
+              this.props.history.push(`/feed/${selectedPostId}`);
+            } else {
+              this.loadPosts();
+            }
           })
   
           if (updatedPostData.public === 'public') {
@@ -608,7 +646,18 @@ class Feed extends Component {
             editLoading: false,
             error: err
           });
-        })
+
+          //// // delete selectedId, postData edit from single postpage
+          const selectedPostId = localStorage.getItem('selectedPostId');
+          if (selectedPostId) {
+            localStorage.removeItem('selectedPostId');
+            localStorage.removeItem('selectedPostData');
+            
+            setTimeout(() => {
+              this.props.history.push(`/feed/${selectedPostId}`);
+            }, 1000*5);
+          }
+        });
     
     }
 
