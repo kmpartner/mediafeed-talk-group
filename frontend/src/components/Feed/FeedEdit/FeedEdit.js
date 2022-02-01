@@ -201,9 +201,15 @@ class FeedEdit extends Component {
       const b64Images = [];
 
       for (const file of files) {
+        image =file;
 
-        if (file.type.split('/')[0] === 'image' 
-          && file.size > 1000 * 10**3) {
+        const fileType = file.name.split('.')[file.name.split('.').length -1].toLowerCase();
+
+        if (
+          file.type.split('/')[0] === 'image' 
+          && file.size > 1000 * 10**3 
+          && fileType !== 'gif'
+          ) {
           // const fileType = file.type.split('/')[1];
           // const imageBlob = await resizeImageFile(file, fileType);
           // image = new File([imageBlob], file.name, {type: file.type, lastModified: Date.now()});
@@ -224,8 +230,6 @@ class FeedEdit extends Component {
             image = file;
           }
 
-        } else {
-          image = file;
         }
 
         imageFiles.push(image);
