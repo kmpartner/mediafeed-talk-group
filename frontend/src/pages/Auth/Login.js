@@ -12,11 +12,16 @@ import { getTokenForPasswordReset } from '../../util/user';
 import { setCaretPosition } from '../../util/style';
 import Auth from './Auth';
 
-import * as firebase from "firebase/app";
+// import * as firebase from "firebase/app";
 
-// Add the Firebase services that you want to use
-import "firebase/auth";
-import "firebase/firestore";
+// // Add the Firebase services that you want to use
+// import "firebase/auth";
+// import "firebase/firestore";
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 import { BASE_URL } from '../../App';
 
 console.log('in login.js');

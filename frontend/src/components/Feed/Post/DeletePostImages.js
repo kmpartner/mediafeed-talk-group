@@ -18,7 +18,7 @@ import { BASE_URL } from "../../../App";
 
 import classes from './DeletePostImages.module.css';
 
-const deletePostImages = (props) => {
+const DeletePostImages = (props) => {
   console.log("deleteImages-prop.js", props);
 
   const {
@@ -344,5 +344,5 @@ const deletePostImages = (props) => {
   );
 };
 
-export default withI18n()(deletePostImages);
+export default withI18n()(DeletePostImages);
 // export default post;

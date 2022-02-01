@@ -6,7 +6,7 @@ import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import './Modal.css';
 
-const modal = props => {
+const Modal = props => {
   // console.log('Modal.js-Props', props);
   const [t] = useTranslation('translation');
 
@@ -59,4 +59,4 @@ const modal = props => {
   );
 }
 
-export default modal;
+export default Modal;

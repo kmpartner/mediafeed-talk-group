@@ -5,7 +5,7 @@ import { useStore } from '../../hook-store/store';
 
 import './Layout.css';
 
-const layout = props => {
+const Layout = props => {
 
   const [state, dispatch] = useStore();
   console.log(state);
@@ -51,4 +51,4 @@ const layout = props => {
   );
 };
 
-export default layout;
+export default Layout;

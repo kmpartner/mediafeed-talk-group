@@ -22,7 +22,7 @@ import HomeIcon from '../../../images/icons/homeIcon-48.png';
 //   // { id: 'othernav2', text: 'othernav2', link: '/feed/posts', auth: true },
 // ];
 
-const navigationItems = props => {
+const NavigationItems = props => {
 
   const [t] = useTranslation('translation');
   
@@ -226,4 +226,4 @@ const navigationItems = props => {
 
 }
 
-export default navigationItems;
+export default NavigationItems;

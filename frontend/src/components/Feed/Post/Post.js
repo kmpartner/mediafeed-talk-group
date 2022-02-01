@@ -20,7 +20,7 @@ import './Post.css';
 import { BASE_URL } from '../../../App';
 
 
-const post = props => {
+const Post = props => {
   // console.log('prop-Post.js', props, window.location)
   
   const { t } = props;
@@ -283,5 +283,5 @@ const post = props => {
   )
 };
 
-export default withI18n()(post);
+export default withI18n()(Post);
 // export default post;

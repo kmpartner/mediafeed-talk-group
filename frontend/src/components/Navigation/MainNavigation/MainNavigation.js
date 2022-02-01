@@ -16,7 +16,7 @@ import { useStore } from '../../../hook-store/store';
 import { GQL_URL, BASE_URL } from '../../../App';
 import './MainNavigation.css';
 
-const mainNavigation = props => {
+const MainNavigation = props => {
   // console.log('mainNavigation-props', props);
 
   const currentUrl = new URL(window.location.href);
@@ -152,4 +152,4 @@ const mainNavigation = props => {
   </nav>
 };
 
-export default mainNavigation;
+export default MainNavigation;

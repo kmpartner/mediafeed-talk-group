@@ -19,7 +19,7 @@ import { Picker } from 'emoji-mart'
 // let difference = patienceDiff( a.split(""), b.split("") );
 // console.log('difference', difference);
 
-const inputEmoji = props => {
+const InputEmoji = props => {
 
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -245,4 +245,4 @@ const inputEmoji = props => {
 }
 
 
-export default inputEmoji;
+export default InputEmoji;

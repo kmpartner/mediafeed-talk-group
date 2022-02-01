@@ -12,7 +12,7 @@ import { useStore } from '../../../hook-store/store';
 
 import { GQL_URL, BASE_URL } from '../../../App';
 
-const mobileNavigation = props => {
+const MobileNavigation = props => {
   // console.log('mobileNavigation-props', props)
   const [t] = useTranslation('translation');
 
@@ -104,4 +104,4 @@ const mobileNavigation = props => {
   );
 }
 
-export default mobileNavigation;
+export default MobileNavigation;
