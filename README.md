@@ -9,7 +9,7 @@ Contributions are welcome to improve the project and looking for contributor.
 ([Please look at contributing section](#Contributing))
 
 ### Web site
-[web site](https://ud-restapi-front.web.app) based on this repository
+[web site](https://watakura.xyz) based on this repository
 
 ## Getting started
 

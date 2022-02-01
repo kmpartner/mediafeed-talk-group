@@ -164,6 +164,39 @@ exports.createMultiImagesPost = async (req, res, next) => {
         if (fileMimetype === 'video') {
             thumbnailImageUrl = 'images/' + forFileFileName
             thumbnailImageUrls.push(thumbnailImageUrl);
+
+
+
+
+
+            //// resize video when more than 600 width
+            var stats = fs.statSync(image.path);
+            var fileSizeInBytes = stats.size;
+            // Convert the file size to megabytes (optional)
+            // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
+            console.log('fileSizeInbytes',fileSizeInBytes);
+
+            const videoInfo = await getVideoInfo(image.path);
+            // console.log('videoInfo', videoInfo);
+            
+            if (videoInfo.width > 600) {
+                await resizeVideo(image.path, modifiedImageUrl, 640);
+                var rsStats = fs.statSync(modifiedImageUrl);
+                var rsfileSizeInBytes = rsStats.size;
+                // Convert the file size to megabytes (optional)
+                // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+                console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+    
+                if (rsfileSizeInBytes < fileSizeInBytes) {
+                    console.log('in copyfile')
+                    await copyFile(modifiedImageUrl, image.path);
+                }
+            }
+
+
+
+
+
             const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
             const thumbnail = await createThumbnail(image.path, forFileFileName);
         }
@@ -309,6 +342,36 @@ exports.updateMutiImagesPost = async (req, res, next) => {
             if (fileMimetype === 'video') {
                 thumbnailImageUrl = 'images/' + forFileFileName
                 thumbnailImageUrls.push(thumbnailImageUrl);
+
+
+
+                // //// resize video when more than 600 width
+                // var stats = fs.statSync(image.path);
+                // var fileSizeInBytes = stats.size;
+                // // Convert the file size to megabytes (optional)
+                // // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
+                // console.log('fileSizeInbytes',fileSizeInBytes);
+
+                // const videoInfo = await getVideoInfo(image.path);
+                // // console.log('videoInfo', videoInfo);
+                
+                // if (videoInfo.width > 600) {
+                //     await resizeVideo(image.path, modifiedImageUrl, 640);
+                //     var rsStats = fs.statSync(modifiedImageUrl);
+                //     var rsfileSizeInBytes = rsStats.size;
+                //     // Convert the file size to megabytes (optional)
+                //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+                //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+        
+                //     if (rsfileSizeInBytes < fileSizeInBytes) {
+                //         console.log('in copyfile')
+                //         await copyFile(modifiedImageUrl, image.path);
+                //     }
+                // }
+
+
+
+
                 const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
                 const thumbnail = await createThumbnail(image.path, forFileFileName);
             }
@@ -730,7 +793,9 @@ exports.deletePostImages = async (req, res, next) => {
 const createSmallImage = (imageUrl, modifiedImageUrl) => {
     return new Promise((resolve, reject) => {
         gm(imageUrl)
-            .resize(100, 100)
+            // .resize(100, 100)
+            // .resize(null, 100)
+            .resize(null, 100)
             // .noProfile()
             .write(modifiedImageUrl, function (err) {
                 if (err) {
@@ -765,6 +830,7 @@ const trimVideo = (imageUrl, modifiedImageUrl) => {
             .on('codecData', function (data) {
                 console.log('Input is ' + data.audio_details + ' AUDIO ' +
                     'WITH ' + data.video_details + ' VIDEO');
+
             })
             .on("error", function (err) {
                 console.log("error: ", err);
@@ -805,6 +871,66 @@ const createThumbnail = (imageUrl, filename) => {
             }, './images');
     })
 }
+
+
+const getVideoInfo = (imageUrl) => {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(imageUrl, (error, videoInfo) => {
+            if (error) {
+                console.log(error)
+              return reject(error);
+            }
+            // console.log('videoInfo', videoInfo.streams[0]);
+            resolve(videoInfo.streams[0]);
+        })
+    })
+};
+
+const copyFile = (path, distPath) => {
+    return new Promise((resolve, reject) => {
+        // File destination.txt will be created or overwritten by default.
+        fs.copyFile(path, distPath, (err) => {
+            if (err) {
+                reject(err);
+                // throw err;
+            }
+            console.log(`file was copied to ${distPath}`);
+            resolve(`file was copied to ${distPath}`);
+        });
+    })
+};
+
+
+const resizeVideo = (imageUrl, modifiedImageUrl, width) => {
+    return new Promise((resolve, reject) => {
+        ffmpeg(imageUrl)
+        .setFfmpegPath(ffmpeg_static)
+        // .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
+        // .setDuration(3)
+        .size(`${width}x?`).autopad()
+        .on("start", function (commandLine) {
+            console.log("Spawned FFmpeg with command: " + commandLine);
+        })
+        .on('codecData', function (data) {
+            console.log('Input is ' + data.audio_details + ' AUDIO ' +
+                'WITH ' + data.video_details + ' VIDEO');
+
+        })
+        .on("error", function (err) {
+            console.log("error: ", err);
+            reject({ message: "error occured " + err });
+        })
+        .on("end", function (err) {
+            if (!err) {
+                console.log("video resize conversion Done");
+                resolve({ message: 'video resize conversion Done' })
+            }
+        })
+        .saveToFile(modifiedImageUrl);
+        // .saveToFile('images/resize.mp4');
+    });
+
+};
 
     // var CreateSmallImage = gm(imageUrl)
     //     .resize(50, 50)
