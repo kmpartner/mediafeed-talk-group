@@ -29,3 +29,7 @@ k8s-files
 
 package-lock.json
 ##
+
+/build
+firebase.json
+.firebaserc

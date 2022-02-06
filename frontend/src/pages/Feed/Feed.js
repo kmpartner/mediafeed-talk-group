@@ -11,6 +11,7 @@ import FeedImages from '../../components/Feed/UserPost/FeedImages';
 // import FeedVideos from '../../components/Feed/UserPost/FeedVideos';
 // import Input from '../../components/Form/Input/Input';
 import Paginator from '../../components/Paginator/Paginator';
+import PostSelect from '../../components/Feed/PostSelect/PostSelect';
 import Loader from '../../components/Loader/Loader';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import { getUserLocation, getFavoritePosts } from '../../util/user';
@@ -257,6 +258,14 @@ class Feed extends Component {
         })
   }
 
+  showFavoritePostsHandler = () => {
+    this.setState({ 
+      isFavoritePosts: true 
+    }, () => { 
+      this.getFavoritePostsHandler(); 
+    });
+  }
+
   loadPosts = direction => {
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
@@ -450,6 +459,28 @@ class Feed extends Component {
     this.setState({
       userOnly: !this.state.userOnly,
       isFavoritePosts: false
+    }, () => { this.loadPosts(); }
+    );
+  }
+
+  showUserPostsHandler = () => {
+    this.setState({
+      userOnly: true,
+      isFavoritePosts: false,
+
+      selectedCreatorId: '',
+      postPage: 1,
+    }, () => { this.loadPosts(); }
+    );
+  }
+
+  showRecentPostsHandler = () => {
+    this.setState({
+      userOnly: false,
+      isFavoritePosts: false,
+
+      selectedCreatorId: '',
+      postPage: 1
     }, () => { this.loadPosts(); }
     );
   }
@@ -1068,20 +1099,20 @@ class Feed extends Component {
 
       let favoriteButton;
       if (this.props.isAuth && this.state.isFavoritePosts) {
-       favoriteButton = (
-        <Button mode="flat" type="submit" onClick={this.favoritePostsClickHandler}>
-          {/* posts */}
-          {t('general.text19')}
-        </Button>
-       );
+      //  favoriteButton = (
+      //   <Button mode="flat" type="submit" onClick={this.favoritePostsClickHandler}>
+      //     posts
+      //     {t('general.text19')}
+      //   </Button>
+      //  );
       }
       if (this.props.isAuth && !this.state.isFavoritePosts) {
-        favoriteButton = (
-          <Button mode="flat" type="submit" onClick={this.favoritePostsClickHandler}>
-            {/* favorite posts */}
-            {t('general.text18')}
-          </Button>
-        );
+        // favoriteButton = (
+        //   <Button mode="flat" type="submit" onClick={this.favoritePostsClickHandler}>
+        //     favorite posts
+        //     {t('general.text18')}
+        //   </Button>
+        // );
       }
 
       // console.log(this.state.postsLoading, this.state.userOnly)
@@ -1101,7 +1132,6 @@ class Feed extends Component {
           <div className="feed__favoriteButton">
             {favoriteButton}
           </div>
-
 
           {/* <AutoSuggestHook
               posts={this.state.posts}
@@ -1310,20 +1340,22 @@ class Feed extends Component {
               </Button>
             </form>
           </section> */}
+
             <section className="feed__control">
               <Button mode="raised" design="accent" onClick={this.newPostHandler}>
                 {/* New Post */}
                 {t('feed.text1')}
               </Button>
             </section>
-            <Button mode="flat" design="" onClick={() => {
+
+            {/* <Button mode="flat" design="" onClick={() => {
                 this.onlyUserHandler();
                 this.resetSelectedCreatorId();
               }}
             >
-              {/* {this.state.userOnly ? 'Show Posts' : 'Show User Posts'} */}
+              {this.state.userOnly ? 'Show Posts' : 'Show User Posts'}
               {this.state.userOnly ? t('feed.text3') : t('feed.text2')}
-            </Button>
+            </Button> */}
 
             {/* <AutoSuggestHook
               posts={this.state.posts}
@@ -1336,6 +1368,15 @@ class Feed extends Component {
           </div>
           : null
         }
+
+
+        <PostSelect
+          showRecentPostsHandler={this.showRecentPostsHandler}
+          showUserPostsHandler={this.showUserPostsHandler}
+          showFavoritePostsHandler={this.showFavoritePostsHandler}
+          isAuth={this.props.isAuth}
+        />
+     
 
         <section className="feed">
           {this.state.postsLoading && (

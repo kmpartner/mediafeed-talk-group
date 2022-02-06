@@ -25,7 +25,9 @@ import {
   checkFileNumberLimit,
   checkFileSizesLimit,
   isVideoUploaded,
-  isPerviousVideoExist,
+  isPreviousVideoExist,
+  isGifFileUploaded,
+  isPreviousGifFileExist,
   generateBase64ImageData,
   createCompressedImage,
 }
@@ -42,7 +44,8 @@ const POST_FORM = {
   },
   image: {
     value: '',
-    valid: false,
+    // valid: false,
+    valid: true,
     touched: false,
     // validators: [required, acceptableFile]
     validators: [acceptableFile]
@@ -272,14 +275,14 @@ class FeedEdit extends Component {
         },
       };
       // console.log(updatedForm);
-      let formIsValid = true;
-      for (const inputName in updatedForm) {
-        formIsValid = formIsValid && updatedForm[inputName].valid;
-      }
+      // let formIsValid = true;
+      // for (const inputName in updatedForm) {
+      //   formIsValid = formIsValid && updatedForm[inputName].valid;
+      // }
 
 
       // console.log(input, value, files, acceptableFile(value));
-      updatedForm.image.valid = true;
+      // updatedForm.image.valid = false;
 
       if (files) {
         updatedForm.image.valid = acceptableFile(value);
@@ -299,22 +302,46 @@ class FeedEdit extends Component {
           updatedForm.image.valid = false;
         }
 
-        //// video file case, only 1 file accept
+        //// video file or gif image case, only 1 file accept
         const isVideoExist = isVideoUploaded(files);
-        
+        const isGifFileExist = isGifFileUploaded(files);
+        // console.log('isGifFileExist', isGifFileExist);
 
         let isPreviousVideo = false;
+        let isPreviousGifFile = false;
+
+        let isPreviousFiles = false;
 
         if (updatedForm.imagePaths && updatedForm.imagePaths.value.length > 0) {
-          isPreviousVideo = isPerviousVideoExist(updatedForm.imagePaths.value);
+          isPreviousVideo = isPreviousVideoExist(updatedForm.imagePaths.value);
+          isPreviousGifFile = isPreviousGifFileExist(updatedForm.imagePaths.value);
+
+          isPreviousFiles = true;
         }
 
         console.log('isPreviousVideo', isPreviousVideo);
+        console.log('isPreviousGifFile', isPreviousGifFile);
 
         if ((isVideoExist && files.length > 1) || isPreviousVideo) {
           updatedForm.image.valid = false;
         }
+
+        if ((isGifFileExist && files.length > 1) || isPreviousGifFile) {
+          updatedForm.image.valid = false;
+        }
+
+        if ((isVideoExist || isGifFileExist) && isPreviousFiles) {
+          updatedForm.image.valid = false;
+        }
+
       }
+
+      let formIsValid = true;
+      for (const inputName in updatedForm) {
+        formIsValid = formIsValid && updatedForm[inputName].valid;
+      }
+
+
 
       console.log(updatedForm);
       // formIsValid = true
@@ -657,7 +684,7 @@ class FeedEdit extends Component {
         <Backdrop onClick={this.cancelPostChangeHandler} />
         <Modal
           title=""
-          acceptEnabled={this.state.formIsValid}
+          acceptEnabled={this.state.formIsValid && !this.state.imageUploading}
           onCancelModal={this.cancelPostChangeHandler}
           onAcceptModal={this.acceptPostChangeHandler}
           isLoading={this.props.loading}

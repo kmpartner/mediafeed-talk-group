@@ -74,6 +74,19 @@ export const authPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/login?fro
 export const authSignupPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
 
 
+//// test-deploy urls (use canary services in backend)  
+//// Don't Forget update servicewoker file for build
+// export const BASE_URL = process.env.REACT_APP_TEST_BASE_URL;
+// export const GQL_URL = process.env.REACT_APP_TEST_GQL_URL;
+// export const SOCKET_URL = process.env.REACT_APP_TEST_SOCKET_URL;
+// export const SOCKET_GROUP_URL = process.env.REACT_APP_TEST_SOCKET_GROUP_URL;
+// export const SOCKET_SURL = process.env.REACT_APP_TEST_SOCKET_SURL;
+// export const SOCKET_GROUP_SURL = process.env.REACT_APP_TEST_SOCKET_GROUP_SURL;
+// export const PUSH_URL = process.env.REACT_APP_TEST_PUSH_URL;
+// export const authPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
+// export const authSignupPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
+
+
 //// do urls deploy  Don't Forget update servicewoker file for build
 // export const BASE_URL = process.env.REACT_APP_BASE_URL;
 // export const GQL_URL = process.env.REACT_APP_GQL_URL;

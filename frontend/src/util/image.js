@@ -204,17 +204,51 @@ export const isVideoUploaded = fileList => {
 };
 
 
-export const isPerviousVideoExist = pathList => {
+export const isPreviousVideoExist = pathList => {
   const videoFiles = [];
 
   for (const path of pathList) {
-    const fileType = path.split('.')[path.split('.').length -1];
+    const fileType = path.split('.')[path.split('.').length -1].toLowerCase();
     if (fileType === 'mp4' || fileType === 'webm') {
       videoFiles.push(path);
     }
   }
 
   if (videoFiles.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const isGifFileUploaded = fileList => {
+  const gifFiles = [];
+
+  for (const file of fileList) {
+    if (file.type === 'image/gif') {
+      gifFiles.push(file.type);
+    }
+    // console.log(file);
+  }
+
+  if (gifFiles.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const isPreviousGifFileExist = pathList => {
+  const gifFiles = [];
+
+  for (const path of pathList) {
+    const fileType = path.split('.')[path.split('.').length -1].toLowerCase();
+    if (fileType === 'gif') {
+      gifFiles.push(path);
+    }
+  }
+
+  if (gifFiles.length > 0) {
     return true;
   } else {
     return false;

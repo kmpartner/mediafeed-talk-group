@@ -42,7 +42,7 @@ export const acceptableFile = value => {
 
 
 
-export const acceptImageType = ['png', 'jpg', 'jpeg', 'webp'];
+export const acceptImageType = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
 export const acceptVideoType = ['mp4', 'webm'];
 
 export const acceptableFiles = fileList => {
