@@ -10,6 +10,7 @@ import InputEmoji from '../../Form/Input/InputEmoji';
 import FilePicker from '../../Form/Input/FilePicker';
 import Loader from '../../Loader/Loader';
 // import Image from '../../Image/Image';
+import FeedEditSelectFile from './FeedEditSelectFile/FeedEditSelectFile';
 import ImagePreviews from './ImagePreviews';
 import { 
   required, 
@@ -74,7 +75,13 @@ const POST_FORM = {
     valid: true,
     touched: false,
     validators: [required]
-  }
+  },
+  embedUrl: {
+    value: '',
+    valid: true,
+    touched: false,
+    validators: []
+  },
 };
 
 class FeedEdit extends Component {
@@ -92,6 +99,7 @@ class FeedEdit extends Component {
     previousPostForm: POST_FORM,
     formInputChanged: false,
     imageUploading: false,
+    embedUrlValue: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -133,7 +141,12 @@ class FeedEdit extends Component {
           ...prevState.postForm.imagePaths,
           value: this.props.selectedPost.imagePaths,
           valid: true,
-        }
+        },
+        embedUrl: {
+          ...prevState.postForm.embedUrl,
+          value: this.props.selectedPost.embedUrl,
+          valid: true,
+        },
       };
       // console.log(postForm);
       this.setState({ 
@@ -163,6 +176,15 @@ class FeedEdit extends Component {
     });
   }
 
+  embedUrlChangeHandler = (embedUrl) => {
+    // console.log(event.target);
+    this.setState({
+      embedUrlValue: embedUrl
+    }, () => {
+      this.postInputChangeHandler('embedUrl', this.state.embedUrlValue);
+    });
+  }
+
   postInputChangeHandler = async (input, value, files) => {
     console.log(input, value, files);
 
@@ -175,31 +197,8 @@ class FeedEdit extends Component {
 
     if (files) {
       console.log('files', files);
-      // if (files[0].type.split('/')[0] === 'image' 
-      //   && files[0].size > 300 * 10**3) {
-      //   const fileType = files[0].type.split('/')[1];
-      //   const imageBlob = await resizeImageFile(files[0], fileType);
-      //   image = new File([imageBlob], files[0].name, {type: files[0].type, lastModified: Date.now()});
-      // } else {
-      //   image = files[0];
-      // }
-      // console.log(image, files[0]);
-
-      // generateBase64ImageData(image)
-      // // generateBase64FromImage(files[0])
-      //   .then(data => {
-      //     // console.log(data);
-      //     this.setState({ imagePreview: data.base64 });
-      //   })
-      //   .catch(e => {
-      //     this.setState({ imagePreview: null });
-      //   });
-
 
       this.setState({ imageUploading : true });
-
-
-
 
       const b64Images = [];
 
@@ -213,12 +212,7 @@ class FeedEdit extends Component {
           && file.size > 1000 * 10**3 
           && fileType !== 'gif'
           ) {
-          // const fileType = file.type.split('/')[1];
-          // const imageBlob = await resizeImageFile(file, fileType);
-          // image = new File([imageBlob], file.name, {type: file.type, lastModified: Date.now()});
-          // console.log('resized image', image);
-
-
+ 
           const compImg = await createCompressedImage(file);
           
           if (compImg && compImg.size < file.size) {
@@ -227,8 +221,6 @@ class FeedEdit extends Component {
             // console.log('compFile', compFile);
           }
 
-          
-          
           if (image && image.size >= file.size) {
             image = file;
           }
@@ -274,15 +266,7 @@ class FeedEdit extends Component {
           value: imageFiles.length > 0 ? imageFiles : value
         },
       };
-      // console.log(updatedForm);
-      // let formIsValid = true;
-      // for (const inputName in updatedForm) {
-      //   formIsValid = formIsValid && updatedForm[inputName].valid;
-      // }
 
-
-      // console.log(input, value, files, acceptableFile(value));
-      // updatedForm.image.valid = false;
 
       if (files) {
         updatedForm.image.valid = acceptableFile(value);
@@ -336,17 +320,52 @@ class FeedEdit extends Component {
 
       }
 
+
+      ///// handle form validity when embedUrl exist
+      if (input === 'embedUrl') {
+        updatedForm.embedUrl.valid = true;
+
+        if (value && 
+            (updatedForm.image.value || 
+            updatedForm.imagePaths.value.length > 0)
+          ) {
+          updatedForm.embedUrl.valid = false;
+        }
+
+        if (value && updatedForm.image.value === 'undefined' &&
+          updatedForm.imagePaths.value.length === 0
+        ) {
+          updatedForm.embedUrl.valid = true;
+        }
+      }
+
+      if (files) {
+        if (updatedForm.embedUrl.value) {
+          updatedForm.image.valid = false;
+        }
+      }
+
+      if (updatedForm.imagePaths.value.length > 0) {
+        if (updatedForm.embedUrl.value) {
+          updatedForm.imagePaths.valid = false;
+        } else {
+          updatedForm.imagePaths.valid = true;
+        }
+      }
+
       let formIsValid = true;
       for (const inputName in updatedForm) {
         formIsValid = formIsValid && updatedForm[inputName].valid;
       }
+
+      
 
 
 
       console.log(updatedForm);
       // formIsValid = true
 
-      this.checkInputChanges(updatedForm);
+      // this.checkInputChanges(updatedForm);
 
       return {
         postForm: updatedForm,
@@ -433,6 +452,7 @@ class FeedEdit extends Component {
       content: this.state.postForm.content.value,
       public: this.state.postForm.public.value,
       imagePaths: this.state.postForm.imagePaths.value,
+      embedUrl: this.state.postForm.embedUrl.value,
     };
     this.props.onFinishEdit(post);
     this.setState({
@@ -703,25 +723,13 @@ class FeedEdit extends Component {
               touched={this.state.postForm['title'].touched}
               value={this.state.postForm['title'].value}
             />
-            <FilePicker
-              id="image"
-              label="Media File"
-              // label={t('feed.text11')}
-              control="input"
-              onChange={this.postInputChangeHandler}
-              onBlur={this.inputBlurHandler.bind(this, 'image')}
-              valid={this.state.postForm['image'].valid}
-              touched={this.state.postForm['image'].touched}
-            />
 
-            <span className="feedEdit__aboutMediaFile">
-              {/* think about later about size video and web thing */}
-              {/* (Media File should be jpg, jpeg, png, mp4 file, and less than 3MB) */}
-              {/* (Media File should be jpg, jpeg, png, mp4 file) */}
-              {/* (Media File should be jpg, jpeg, png file, less than 1MB, up to 6 files) */}
-              {/* (Image files should be jpg, jpeg, png file, up to 6 files (Image will be resized when file size exceed 1MB)) */}
-              (Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files (Images with more than 1400px of width or height will be resized))
-            </span>
+            <FeedEditSelectFile 
+              postInputChangeHandler={this.postInputChangeHandler}
+              inputBlurHandler={this.inputBlurHandler}
+              state={this.state}
+              embedUrlChangeHandler={this.embedUrlChangeHandler}
+            />
 
             {/* <div className="new-post__preview-image">
               {imagePreviewBody}

@@ -21,11 +21,12 @@ import { BASE_URL } from '../../../App';
 import CanvasTouchDraw from "../../../components/Canvas/CanvasTouchDraw";
 
 const SinglePostImages = (props) => {
-  // console.log('SinglePostImages.js-props', props);
+  console.log('SinglePostImages.js-props', props);
 
   const { 
     imageUrls,
     modifiedImagePaths,
+    postData,
   } = props;
 
   const [showFullImageModal, setShowFullImageModal] = useState(false);
@@ -248,7 +249,7 @@ const SinglePostImages = (props) => {
                 </span>
               );
             }
-            else {
+            if (isImageFile(fileType)) {
               return (
                 <span>
                   <Img 
@@ -265,6 +266,7 @@ const SinglePostImages = (props) => {
                 </span>
               );
             }
+
 
 
             // let imagesBody;
@@ -350,6 +352,16 @@ const SinglePostImages = (props) => {
     <div>{singlePostImagesBody}</div>
     <span >{selectedImageModalBody}</span>
 
+    {postData && postData.embedUrl &&      
+        <div className='videoWrapper'>
+          <iframe width="" height=""
+            src={postData.embedUrl}
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+          >
+          </iframe>
+          {/* <img src="http://img.youtube.com/vi/Xt9Hk7zCItM/0.jpg" /> */}
+        </div>
+      }
 
     </Fragment>;
 };

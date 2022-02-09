@@ -31,7 +31,14 @@ const Post = props => {
   const fileType = imagePlace.split('.')[imagePlace.split('.').length - 1].toLowerCase();
   const linkToPost = `/feed/${props.id}`;
 
-  // console.log(imagePlace, fileType);
+  // console.log('embedUrl', props.embedUrl)
+  let youTubeThumbnailUrl;
+  if (props.embedUrl) {
+    const ytId = props.embedUrl.split('/').pop();
+    youTubeThumbnailUrl = 'http://img.youtube.com/vi/' + ytId + '/0.jpg';
+  }
+  // http://img.youtube.com/vi/Xt9Hk7zCItM/0.jpg
+
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSmallModal, setShowSmallModal] = useState(false);
@@ -145,7 +152,7 @@ const Post = props => {
           </span>
         );
       } 
-      else {
+      if (isImageFile(fileType)) {
         return (
           <span className="post__SmallImages">
             <Img src={url} height={imageHeight} alt="post images"/>
@@ -157,16 +164,37 @@ const Post = props => {
           </span>
         );
       }
-    })}</ul>
+    })
+    }</ul>
   }
 
   return (
     <article className="post">
-      {smallImage}
-
       <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
-      {postImagesBody}
+        {postImagesBody}
       </Link>
+
+      {props.embedUrl &&
+        <div>
+          {/* <iframe width="160" height="90" 
+            src={props.embedUrl}
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+          >
+          </iframe> */}
+          <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
+            <span className="post__SmallVideos">
+              <Img src={youTubeThumbnailUrl} alt="post videos" width="160" />
+              <span className="post__SmallVideosYouTubeMark"
+                // role="img" aria-label="video indicator"
+              >
+                &#9654;
+              </span>
+            </span>
+          </Link>
+        </div>
+      }
+
+      {smallImage}
 
       <header className="post__header">
         <Link to={linkToPost} target="_blank" rel="noopener noreferrer"

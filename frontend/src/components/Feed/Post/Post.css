@@ -95,6 +95,15 @@
   font-size: 1.5rem;
 }
 
+.post__SmallVideosYouTubeMark {
+  background-color: rgba(0,0,0,0.01);
+  color: red;
+  position: absolute;
+  /* top: 0; */
+  right: 5px;
+  font-size: 1.5rem;
+}
+
 @media (min-width: 768px) {
   .post {
     padding: 1rem;

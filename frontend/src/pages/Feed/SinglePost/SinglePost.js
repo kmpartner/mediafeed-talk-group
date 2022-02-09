@@ -433,12 +433,13 @@ class SinglePost extends Component {
 
           <div>
             <SinglePostImages 
-                imageUrls={this.state.imageUrls}
-                modifiedImageUrls={this.state.modifiedImageUrls}
-                thumbnailImageUrls={this.state.thumbnailImageUrls}
-                imagePaths={this.state.imagePaths}
-                modifiedImagePaths={this.state.modifiedImagePaths}
-                thumbnailImagePaths={this.state.thumbnailImagePaths}
+              imageUrls={this.state.imageUrls}
+              modifiedImageUrls={this.state.modifiedImageUrls}
+              thumbnailImageUrls={this.state.thumbnailImageUrls}
+              imagePaths={this.state.imagePaths}
+              modifiedImagePaths={this.state.modifiedImagePaths}
+              thumbnailImagePaths={this.state.thumbnailImagePaths}
+              postData={this.state.postData}
             />
           </div>
 

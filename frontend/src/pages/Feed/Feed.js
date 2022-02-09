@@ -586,6 +586,10 @@ class Feed extends Component {
         }
       }
 
+      if (postData.embedUrl) {
+        formData.append('embedUrl', postData.embedUrl)
+      }
+
       if (this.state.editPost && postData.imagePaths.length > 0) {
         
         let totalFileNumber = 0;
@@ -1019,6 +1023,7 @@ class Feed extends Component {
               imagePaths={post.imagePaths}
               modifiedImagePaths={post.modifiedImagePaths}
               thumbnailImagePaths={post.thumbnailImagePaths}
+              embedUrl={post.embedUrl}
               content={post.content}
               b64Simage={post.b64Simage}
               postCreatorUserId={post.creatorId}
@@ -1065,6 +1070,7 @@ class Feed extends Component {
               imagePaths={post.imagePaths}
               modifiedImagePaths={post.modifiedImagePaths}
               thumbnailImagePaths={post.thumbnailImagePaths}
+              embedUrl={post.embedUrl}
               content={post.content}
               b64Simage={post.b64Simage}
               postCreatorUserId={post.creatorId}
