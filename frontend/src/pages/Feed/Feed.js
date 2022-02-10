@@ -63,6 +63,8 @@ class Feed extends Component {
 
     postDeleteResult: '',
     isPostDeleting: false,
+
+    postFilter: '',
   };
 
   componentDidMount() {
@@ -258,13 +260,7 @@ class Feed extends Component {
         })
   }
 
-  showFavoritePostsHandler = () => {
-    this.setState({ 
-      isFavoritePosts: true 
-    }, () => { 
-      this.getFavoritePostsHandler(); 
-    });
-  }
+
 
   loadPosts = direction => {
     if (direction) {
@@ -303,6 +299,11 @@ class Feed extends Component {
     const lsUserId = localStorage.getItem('userId');
     let queryEnd;
     queryEnd = BASE_URL + '/feed/posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&userId=${lsUserId}`;
+    
+    if (this.state.postFilter === 'most-visit-posts') {
+      queryEnd = BASE_URL + '/feed-filter/most-visit-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&userId=${lsUserId}`;
+    }
+    
     fetch(queryEnd, {
       headers: {
         Authorization: 'Bearer ' + this.props.token
@@ -470,6 +471,8 @@ class Feed extends Component {
 
       selectedCreatorId: '',
       postPage: 1,
+
+      postFilter: '',
     }, () => { this.loadPosts(); }
     );
   }
@@ -480,9 +483,33 @@ class Feed extends Component {
       isFavoritePosts: false,
 
       selectedCreatorId: '',
-      postPage: 1
+      postPage: 1,
+
+      postFilter: '',
     }, () => { this.loadPosts(); }
     );
+  }
+
+  showFavoritePostsHandler = () => {
+    this.setState({ 
+      isFavoritePosts: true,
+
+      postFilter: '',
+    }, () => { 
+      this.getFavoritePostsHandler(); 
+    });
+  }
+
+  showMostViewedPostsHandler = () => {
+    this.setState({ 
+      postFilter: 'most-visit-posts',
+
+      userOnly: false,
+      isFavoritePosts: false,
+
+      selectedCreatorId: '',
+      postPage: 1
+    }, () => { this.loadPosts(); });
   }
 
   userPostPageHandler = (input) => {
@@ -1035,6 +1062,7 @@ class Feed extends Component {
               postDeleteResult={this.state.postDeleteResult}
               setSelectedCreatorId={this.setSelectedCreatorId}
               resetPostPage={this.resetPostPage}
+              postData={post}
             />
           );
   
@@ -1082,6 +1110,7 @@ class Feed extends Component {
               postDeleteResult={this.state.postDeleteResult}
               setSelectedCreatorId={this.setSelectedCreatorId}
               resetPostPage={this.resetPostPage}
+              postData={post}
             />
           );
   
@@ -1380,6 +1409,7 @@ class Feed extends Component {
           showRecentPostsHandler={this.showRecentPostsHandler}
           showUserPostsHandler={this.showUserPostsHandler}
           showFavoritePostsHandler={this.showFavoritePostsHandler}
+          showMostViewedPostsHandler={this.showMostViewedPostsHandler}
           isAuth={this.props.isAuth}
         />
      

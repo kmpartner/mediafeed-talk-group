@@ -221,6 +221,9 @@ const Post = props => {
         {/* {props.postDate && getDateTime(props.postDate)} */}
 
       </h3>
+
+      <div>visits: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
+
       {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>
       <img src={BASE_URL + '/' + props.image} width="50" alt="videofile"></img> */}
       <div className="post__actions">
