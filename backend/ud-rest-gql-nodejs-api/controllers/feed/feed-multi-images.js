@@ -60,7 +60,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
     const language = req.headers['accept-language'];
     const headers = req.headers;
     const location = JSON.parse(req.query.userLocation);
-
+    const embedUrl = req.body.embedUrl;
 
     if (!req.files) {
         const error = new Error('files not found.');
@@ -68,6 +68,13 @@ exports.createMultiImagesPost = async (req, res, next) => {
         throw error;
     }
 
+    if (req.files.length > 0 && embedUrl) {
+        const error = new Error('embedUrl is not accepted when files exist');
+        error.statusCode = 400;
+        throw error;
+    }
+
+    // console.log('req.body, req.files', req.body, req.files);
 
 
 
@@ -88,6 +95,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
             imagePaths: imageUrls,
             modifiedImagePaths: modifiedImageUrls,
             thumbnailImagePaths: thumbnailImageUrls,
+            embedUrl: embedUrl,
             // creator: req.userId,
             // creatorId: req.userId,
             creatorId: req.userId,
@@ -298,135 +306,149 @@ exports.updateMutiImagesPost = async (req, res, next) => {
     const location = JSON.parse(req.query.userLocation);
     // console.log('LOCATION', location);
     const headers = req.headers;
+    const embedUrl = req.body.embedUrl;
     // const imagePaths = req.body.imagePaths || [];
 
     let imageUrls = post.imageUrls || [];
     let modifiedImageUrls = post.modifiedImageUrls || [];
     let thumbnailImageUrls = post.thumbnailImageUrls || [];
 
+    console.log('req.body, req.files', req.body, req.files);
+    console.log('parseInt(req.body.totalFileNumber)', parseInt(req.body.totalFileNumber))
     // console.log(post.imageUrls);
     try {
 
-    if (req.files && req.files.length > 0) {
-        const imageLimitNum = 6;
-
-        if (req.body.totalFileNumber && parseInt(req.body.totalFileNumber) > imageLimitNum) {
-            for (const image of req.files) {
-                clearImage(image.path);
-            }
-
-            const error = new Error('uploaded more than limit number');
+        if (
+            req.body.totalFileNumber 
+            && parseInt(req.body.totalFileNumber) > 0
+            && embedUrl
+        ) {
+            const error = new Error('embedUrl is not accepted when image exist');
             error.statusCode = 400;
             throw error;
         }
 
-        for (const image of req.files) {
-            imageUrls.push(image.path);
+        if (req.files && req.files.length > 0) {
+            const imageLimitNum = 6;
 
-            let thumbnailImageUrl;
-    
-            const modifiedImageUrl = imageModify.makeModifiedUrl(image.path);
-            modifiedImageUrls.push(modifiedImageUrl);
-            
-            const ForFile = image.path.split('/')[1];
-            const ForFileArray = ForFile.split('.');
-            const forFileFileType = ForFileArray.pop();
-            const forFileWithoutFileType = ForFileArray.join('');
-            const forFileFileName = forFileWithoutFileType + '.jpeg';
-            // thumbnailImageUrl = 'images/' + forFileFileName;
-    
-            const fileMimetype = image.mimetype.split('/')[0];
-            if (fileMimetype === 'image') {
-                const smallImage = await createSmallImage(image.path, modifiedImageUrl);
+            if (req.body.totalFileNumber && parseInt(req.body.totalFileNumber) > imageLimitNum) {
+                for (const image of req.files) {
+                    clearImage(image.path);
+                }
+
+                const error = new Error('uploaded more than limit number');
+                error.statusCode = 400;
+                throw error;
             }
-            if (fileMimetype === 'video') {
-                thumbnailImageUrl = 'images/' + forFileFileName
-                thumbnailImageUrls.push(thumbnailImageUrl);
 
 
+            for (const image of req.files) {
+                imageUrls.push(image.path);
 
-                // //// resize video when more than 600 width
-                // var stats = fs.statSync(image.path);
-                // var fileSizeInBytes = stats.size;
-                // // Convert the file size to megabytes (optional)
-                // // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
-                // console.log('fileSizeInbytes',fileSizeInBytes);
-
-                // const videoInfo = await getVideoInfo(image.path);
-                // // console.log('videoInfo', videoInfo);
-                
-                // if (videoInfo.width > 600) {
-                //     await resizeVideo(image.path, modifiedImageUrl, 640);
-                //     var rsStats = fs.statSync(modifiedImageUrl);
-                //     var rsfileSizeInBytes = rsStats.size;
-                //     // Convert the file size to megabytes (optional)
-                //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-                //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+                let thumbnailImageUrl;
         
-                //     if (rsfileSizeInBytes < fileSizeInBytes) {
-                //         console.log('in copyfile')
-                //         await copyFile(modifiedImageUrl, image.path);
-                //     }
-                // }
+                const modifiedImageUrl = imageModify.makeModifiedUrl(image.path);
+                modifiedImageUrls.push(modifiedImageUrl);
+                
+                const ForFile = image.path.split('/')[1];
+                const ForFileArray = ForFile.split('.');
+                const forFileFileType = ForFileArray.pop();
+                const forFileWithoutFileType = ForFileArray.join('');
+                const forFileFileName = forFileWithoutFileType + '.jpeg';
+                // thumbnailImageUrl = 'images/' + forFileFileName;
+        
+                const fileMimetype = image.mimetype.split('/')[0];
+                if (fileMimetype === 'image') {
+                    const smallImage = await createSmallImage(image.path, modifiedImageUrl);
+                }
+                if (fileMimetype === 'video') {
+                    thumbnailImageUrl = 'images/' + forFileFileName
+                    thumbnailImageUrls.push(thumbnailImageUrl);
+
+
+
+                    // //// resize video when more than 600 width
+                    // var stats = fs.statSync(image.path);
+                    // var fileSizeInBytes = stats.size;
+                    // // Convert the file size to megabytes (optional)
+                    // // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
+                    // console.log('fileSizeInbytes',fileSizeInBytes);
+
+                    // const videoInfo = await getVideoInfo(image.path);
+                    // // console.log('videoInfo', videoInfo);
+                    
+                    // if (videoInfo.width > 600) {
+                    //     await resizeVideo(image.path, modifiedImageUrl, 640);
+                    //     var rsStats = fs.statSync(modifiedImageUrl);
+                    //     var rsfileSizeInBytes = rsStats.size;
+                    //     // Convert the file size to megabytes (optional)
+                    //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+                    //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+            
+                    //     if (rsfileSizeInBytes < fileSizeInBytes) {
+                    //         console.log('in copyfile')
+                    //         await copyFile(modifiedImageUrl, image.path);
+                    //     }
+                    // }
 
 
 
 
-                const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
-                const thumbnail = await createThumbnail(image.path, forFileFileName);
-            }
-    
-    
-            var params = {
-                ACL: 'private',
-                // ACL: 'public-read',
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Body: fs.createReadStream(image.path),
-                //   ContentType: 'image/jpeg',
-                // Key: `images/${req.file.originalname}`
-                Key: `${image.path}`
-            };
-    
-            var paramsModify = {
-                ACL: 'private',
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Body: fs.createReadStream(modifiedImageUrl),
-                //   ContentType: 'image/jpeg',
-                Key: `${modifiedImageUrl}`
-            };
-    
-            if (thumbnailImageUrl) {
-                var paramsThumb = {
+                    const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
+                    const thumbnail = await createThumbnail(image.path, forFileFileName);
+                }
+        
+        
+                var params = {
+                    ACL: 'private',
+                    // ACL: 'public-read',
+                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    Body: fs.createReadStream(image.path),
+                    //   ContentType: 'image/jpeg',
+                    // Key: `images/${req.file.originalname}`
+                    Key: `${image.path}`
+                };
+        
+                var paramsModify = {
                     ACL: 'private',
                     Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                    Body: fs.createReadStream(thumbnailImageUrl),
+                    Body: fs.createReadStream(modifiedImageUrl),
                     //   ContentType: 'image/jpeg',
-                    Key: `${thumbnailImageUrl}`
+                    Key: `${modifiedImageUrl}`
                 };
-            }
+        
+                if (thumbnailImageUrl) {
+                    var paramsThumb = {
+                        ACL: 'private',
+                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                        Body: fs.createReadStream(thumbnailImageUrl),
+                        //   ContentType: 'image/jpeg',
+                        Key: `${thumbnailImageUrl}`
+                    };
+                }
 
-            if (fileMimetype === 'image') {
-                //// upload images to cloud storage if s3 use
-                if (!process.env.S3NOTUSE) {
-                    await s3Upload(params);
-                    await s3Upload(paramsModify);
-                    clearImage(image.path);
-                    clearImage(modifiedImageUrl);
+                if (fileMimetype === 'image') {
+                    //// upload images to cloud storage if s3 use
+                    if (!process.env.S3NOTUSE) {
+                        await s3Upload(params);
+                        await s3Upload(paramsModify);
+                        clearImage(image.path);
+                        clearImage(modifiedImageUrl);
+                    }
                 }
+                if (fileMimetype === 'video') {
+                    //// upload video to cloud storage if s3 use
+                    if (!process.env.S3NOTUSE) {
+                        await s3Upload(params);
+                        await s3Upload(paramsModify);
+                        await s3Upload(paramsThumb);
+        
+                        clearImage(image.path);
+                        clearImage(modifiedImageUrl);
+                        clearImage(thumbnailImageUrl);
+                    }
+                }       
             }
-            if (fileMimetype === 'video') {
-                //// upload video to cloud storage if s3 use
-                if (!process.env.S3NOTUSE) {
-                    await s3Upload(params);
-                    await s3Upload(paramsModify);
-                    await s3Upload(paramsThumb);
-    
-                    clearImage(image.path);
-                    clearImage(modifiedImageUrl);
-                    clearImage(thumbnailImageUrl);
-                }
-            }       
-        }
 
     }
 
@@ -452,7 +474,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         post.modifiedImagePaths = modifiedImageUrls;
         post.thumbnailImageUrls = thumbnailImageUrls;
         post.thumbnailImagePaths = thumbnailImageUrls;
-
+        post.embedUrl = embedUrl;
         // const updateTime = Date.now();
         // post.lastUpdateTime = updateTime;
         // if (!post.updateTimes) {
