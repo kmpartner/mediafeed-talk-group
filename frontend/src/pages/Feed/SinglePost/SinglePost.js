@@ -88,7 +88,7 @@ class SinglePost extends Component {
     //// delete selectedPostId when singlePost page loaded
     localStorage.removeItem('selectedPostId');
     localStorage.removeItem('selectedPostData');
-    
+
   }
 
   getPost = () => {
@@ -139,6 +139,8 @@ class SinglePost extends Component {
             if (this.props.isAuth) {
               // this.getFavoritePostHandler();
             }
+
+            this.setLsRecentVisitPosts();
           });
       })
       .catch(err => {
@@ -218,6 +220,50 @@ class SinglePost extends Component {
   //     })
 
   // }
+
+  setLsRecentVisitPosts = () => {
+    let listForLs = [];
+    const lsRecentVisitPosts = localStorage.getItem('recentVisitPosts');
+    
+    if (lsRecentVisitPosts) {
+      const listLimit = 20;
+      const list = JSON.parse(lsRecentVisitPosts);
+
+      const isInList = list.find(ele => {
+        return ele._id === this.state.postData._id
+      });
+
+      if (!isInList) {
+        list.push(this.state.postData);
+
+        if (list.length > listLimit) {
+          list.shift();
+        }
+
+        localStorage.setItem('recentVisitPosts', JSON.stringify(list));
+        return;
+      } 
+      else {
+        const otherElList = list.filter(ele => {
+          return ele._id !== this.state.postData._id;
+        });
+
+        otherElList.push(this.state.postData);
+
+        if (otherElList.length > listLimit) {
+          otherElList.shift();
+        }
+        localStorage.setItem('recentVisitPosts', JSON.stringify(otherElList));
+        return;
+      }
+
+    } 
+    else {
+      listForLs.push(this.state.postData);
+    }
+
+    localStorage.setItem('recentVisitPosts', JSON.stringify(listForLs));
+  }
 
   showFullImageModalHandler = () => {
     this.setState({ showFullImageModal: !this.state.showFullImageModal });

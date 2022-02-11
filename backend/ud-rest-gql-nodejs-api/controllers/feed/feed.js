@@ -518,7 +518,7 @@ exports.getPost = async (req, res, next) => {
                             s3.getSignedUrl('getObject', {
                                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
                                 Key: imageUrl,
-                                Expires: 60 * 60
+                                Expires: 60 * 60 * 24 * 365
                             })
                         );
                     }
@@ -540,7 +540,7 @@ exports.getPost = async (req, res, next) => {
                             s3.getSignedUrl('getObject', {
                                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
                                 Key: imageUrl,
-                                Expires: 60 * 60
+                                Expires: 60 * 60 * 24 * 365
                             })
                         );
                     }    
@@ -562,7 +562,7 @@ exports.getPost = async (req, res, next) => {
                             s3.getSignedUrl('getObject', {
                                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
                                 Key: imageUrl,
-                                Expires: 60 * 60
+                                Expires: 60 * 60 * 24 * 365
                             })
                         );
                     }

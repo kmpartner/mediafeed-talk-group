@@ -11,14 +11,24 @@ function PostSelect(props) {
     showUserPostsHandler,
     showFavoritePostsHandler,
     showMostViewedPostsHandler,
+    showRecentVisitPostsHandler,
     isAuth
   } = props;
 
   const customStyles = {
-    control: (styles) => ({ 
-      ...styles, 
-      backgroundColor: 'var(--background-color)',
-    }),
+    // control: (styles) => ({ 
+    //   ...styles, 
+    //   backgroundColor: 'var(--background-color)',
+    // }),
+    control: (styles, state) => {
+      console.log('styles, state', styles, state)
+      return {
+        ...styles, 
+        backgroundColor: 'rgb(219, 219, 219)',
+        // backgroundColor:  'var(--background-color)',
+        cursor: 'pointer',
+      }
+    },
     option: (provided, state) => {
       return {
         ...provided,
@@ -27,6 +37,7 @@ function PostSelect(props) {
         color: 'var(--color)',
         backgroundColor: 'var(--background-color)',
         padding: '1rem',
+        cursor: 'pointer',
       }
     },
     // control: () => ({
@@ -44,6 +55,7 @@ function PostSelect(props) {
   let options = [
     { value: 'posts', label: `${t('feed.text3')}` },
     { value: 'most-visit-posts', label: `Most Viewed Posts` },
+    { value: 'recent-visit-posts', label: `Recent Visit Posts` },
     // { value: 'other-post-select', label: 'other-post1' },
     // { value: 'other-post-select2', label: 'other-post2' },
   ];
@@ -54,6 +66,7 @@ function PostSelect(props) {
       { value: 'user-posts', label: `${t('feed.text2')}` },
       { value: 'favorite-posts', label: `${t('general.text18')}` },
       { value: 'most-visit-posts', label: `Most Viewed Posts` },
+      { value: 'recent-visit-posts', label: `Recent Visit Posts` },
       // { value: 'other-post-select', label: 'other-post1' },
       // { value: 'other-post-select2', label: 'other-post2' },
     ]
@@ -81,6 +94,10 @@ function PostSelect(props) {
 
       if (selectedOption.value === 'most-visit-posts') {
         showMostViewedPostsHandler();
+      }
+
+      if (selectedOption.value === 'recent-visit-posts') {
+        showRecentVisitPostsHandler();
       }
 
     }

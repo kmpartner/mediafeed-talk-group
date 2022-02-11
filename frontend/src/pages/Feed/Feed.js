@@ -303,7 +303,8 @@ class Feed extends Component {
     if (this.state.postFilter === 'most-visit-posts') {
       queryEnd = BASE_URL + '/feed-filter/most-visit-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&userId=${lsUserId}`;
     }
-    
+
+
     fetch(queryEnd, {
       headers: {
         Authorization: 'Bearer ' + this.props.token
@@ -510,6 +511,25 @@ class Feed extends Component {
       selectedCreatorId: '',
       postPage: 1
     }, () => { this.loadPosts(); });
+  }
+
+  showRecentVisitPostsHandler = () => {
+    const lsRecentVisitPosts = localStorage.getItem('recentVisitPosts');
+    
+    this.setState({ 
+      postFilter: 'recent-visit-posts',
+
+      posts: lsRecentVisitPosts ? JSON.parse(lsRecentVisitPosts).reverse() : [],
+      totalPosts: lsRecentVisitPosts ? JSON.parse(lsRecentVisitPosts).length : 0,
+
+      userOnly: false,
+      isFavoritePosts: false,
+
+      selectedCreatorId: '',
+      postPage: 1
+    }, () => { 
+      // this.loadPosts(); 
+    });
   }
 
   userPostPageHandler = (input) => {
@@ -1410,6 +1430,7 @@ class Feed extends Component {
           showUserPostsHandler={this.showUserPostsHandler}
           showFavoritePostsHandler={this.showFavoritePostsHandler}
           showMostViewedPostsHandler={this.showMostViewedPostsHandler}
+          showRecentVisitPostsHandler={this.showRecentVisitPostsHandler}
           isAuth={this.props.isAuth}
         />
      
