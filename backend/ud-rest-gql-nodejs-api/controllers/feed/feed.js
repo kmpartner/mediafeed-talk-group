@@ -641,55 +641,60 @@ exports.getPost = async (req, res, next) => {
     }
 
 
-    post.totalVisit = post.totalVisit + 1;
-    await post.save();
+    //// store post visit info in public post
+    if (post.public === 'public') {
 
-
-    let postVisit = await PostVisit.findOne({ postId: postId });
-    // console.log('POSTVISIT', postVisit);
-
-    if (!postVisit) {
-        postVisit = new PostVisit({
-            postId: post._id.toString(),
-            visit: null
+        post.totalVisit = post.totalVisit + 1;
+        await post.save();
+    
+    
+        let postVisit = await PostVisit.findOne({ postId: postId });
+        // console.log('POSTVISIT', postVisit);
+    
+        if (!postVisit) {
+            postVisit = new PostVisit({
+                postId: post._id.toString(),
+                visit: null
+            });
+            await postVisit.save();
+        }
+    
+        const acceptLanguageList = postVisit.visit.acceptLanguage;
+        const index = acceptLanguageList.findIndex(element => {
+            return element.name === req.headers['accept-language'].split(',')[0];
         });
+        // console.log('INDEX of NAME', index);
+        if (index > -1) {
+            acceptLanguageList[index].number = acceptLanguageList[index].number + 1;
+        } else {
+            acceptLanguageList.push({
+                name: req.headers['accept-language'].split(',')[0],
+                number: 1
+            });
+        }
+    
+        const userId = req.query.userId;
+        const location = JSON.parse(req.query.userLocation);
+    
+        if (userId) {
+            // const user = await User.findById(userId);
+            postVisit.visit.details.push({
+                userId: userId,
+                geolocation: location,
+                headers: req.headers,
+            });
+        } else {
+            postVisit.visit.details.push({
+                userId: '',
+                geolocation: location,
+                headers: req.headers,
+            });
+        }
+    
         await postVisit.save();
+        // console.log('updated post', post);
     }
 
-    const acceptLanguageList = postVisit.visit.acceptLanguage;
-    const index = acceptLanguageList.findIndex(element => {
-        return element.name === req.headers['accept-language'].split(',')[0];
-    });
-    // console.log('INDEX of NAME', index);
-    if (index > -1) {
-        acceptLanguageList[index].number = acceptLanguageList[index].number + 1;
-    } else {
-        acceptLanguageList.push({
-            name: req.headers['accept-language'].split(',')[0],
-            number: 1
-        });
-    }
-
-    const userId = req.query.userId;
-    const location = JSON.parse(req.query.userLocation);
-
-    if (userId) {
-        // const user = await User.findById(userId);
-        postVisit.visit.details.push({
-            userId: userId,
-            geolocation: location,
-            headers: req.headers,
-        });
-    } else {
-        postVisit.visit.details.push({
-            userId: '',
-            geolocation: location,
-            headers: req.headers,
-        });
-    }
-
-    await postVisit.save();
-    // console.log('updated post', post);
 }
 
 exports.updatePost = async (req, res, next) => {

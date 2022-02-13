@@ -473,7 +473,7 @@ class Feed extends Component {
       selectedCreatorId: '',
       postPage: 1,
 
-      postFilter: '',
+      postFilter: 'user-posts',
     }, () => { this.loadPosts(); }
     );
   }
@@ -486,7 +486,7 @@ class Feed extends Component {
       selectedCreatorId: '',
       postPage: 1,
 
-      postFilter: '',
+      postFilter: 'posts',
     }, () => { this.loadPosts(); }
     );
   }
@@ -495,7 +495,11 @@ class Feed extends Component {
     this.setState({ 
       isFavoritePosts: true,
 
-      postFilter: '',
+      userOnly: false,
+      selectedCreatorId: '',
+      postPage: 1,
+
+      postFilter: 'favorite-posts',
     }, () => { 
       this.getFavoritePostsHandler(); 
     });
@@ -515,18 +519,27 @@ class Feed extends Component {
 
   showRecentVisitPostsHandler = () => {
     const lsRecentVisitPosts = localStorage.getItem('recentVisitPosts');
+    let displayPosts = [];
     
+    if (lsRecentVisitPosts) {
+      displayPosts = JSON.parse(lsRecentVisitPosts).filter(post => {
+        // return post.public === 'public' || post.creatorId === localStorage.getItem('userId');
+        return post.public === 'public';
+      });
+    }
+
     this.setState({ 
       postFilter: 'recent-visit-posts',
-
-      posts: lsRecentVisitPosts ? JSON.parse(lsRecentVisitPosts).reverse() : [],
-      totalPosts: lsRecentVisitPosts ? JSON.parse(lsRecentVisitPosts).length : 0,
 
       userOnly: false,
       isFavoritePosts: false,
 
       selectedCreatorId: '',
-      postPage: 1
+      postPage: 1,
+
+      //// may handle in loadPosts()
+      posts: displayPosts.reverse(),
+      totalPosts: displayPosts.length,
     }, () => { 
       // this.loadPosts(); 
     });
@@ -1200,9 +1213,9 @@ class Feed extends Component {
           {this.state.selectedCreatorId ? 
             <div>
               {this.state.selectedCreatorName}'s posts     
-              <Button mode="flat" type="submit" onClick={this.resetSelectedCreatorId}>
+              {/* <Button mode="flat" type="submit" onClick={this.resetSelectedCreatorId}>
                 back to posts
-              </Button>
+              </Button> */}
             </div>
           : null
           }

@@ -105,7 +105,7 @@ class SinglePost extends Component {
     })
       .then(res => {
         if (res.status !== 200) {
-          throw new Error('Failed to fetch post');
+          throw new Error('Failed to fetch post, or post is not public');
         }
         return res.json();
       })
@@ -146,7 +146,7 @@ class SinglePost extends Component {
       .catch(err => {
         console.log(err);
         this.setState({ isLoading: false });
-        // this.catchError(err);
+        this.catchError(err);
       });
   }
 
