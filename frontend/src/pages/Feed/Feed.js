@@ -524,6 +524,7 @@ class Feed extends Component {
     if (lsRecentVisitPosts) {
       displayPosts = JSON.parse(lsRecentVisitPosts).filter(post => {
         // return post.public === 'public' || post.creatorId === localStorage.getItem('userId');
+        return post;
         return post.public === 'public';
       });
     }

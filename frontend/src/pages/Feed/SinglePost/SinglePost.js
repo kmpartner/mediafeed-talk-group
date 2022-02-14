@@ -104,6 +104,11 @@ class SinglePost extends Component {
       }
     })
       .then(res => {
+        if (res.status === 403 || res.status === 404) {
+          // console.log('postId', postId);
+          this.deleteFromRecentVisitPosts(postId);
+          throw new Error('Failed to fetch post, or post is not public');
+        }
         if (res.status !== 200) {
           throw new Error('Failed to fetch post, or post is not public');
         }
@@ -220,6 +225,18 @@ class SinglePost extends Component {
   //     })
 
   // }
+
+  deleteFromRecentVisitPosts = (postId) => {
+    const lsRecentVisitPosts = localStorage.getItem('recentVisitPosts');
+
+    if (lsRecentVisitPosts) {
+      const deletedList = JSON.parse(lsRecentVisitPosts).filter(post => {
+        return post._id !== postId;
+      });
+
+      localStorage.setItem('recentVisitPosts', JSON.stringify(deletedList));
+    }
+  }
 
   setLsRecentVisitPosts = () => {
     let listForLs = [];
@@ -410,7 +427,7 @@ class SinglePost extends Component {
 
     return (
       <div>
-    
+        <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
         {this.state.isLoading ?
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
             <Loader />
@@ -418,177 +435,183 @@ class SinglePost extends Component {
           : null
         }
 
-        <section className="single-post">
-          <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
-
-          {this.state.showSmallModal ?
-            <div>
-              <TransBackdrop onClick={this.showSmallModalHandler} />
-              <SmallModal style="modal2">
-                <UserModalContents
-                  // {...props}
-                  postCreatorUserId={this.state.selectedUserId}
-                  author={this.state.selectedUserName}
-                  creatorImageUrl={this.state.selectedUserImageUrl}
-                  setSelectedCreatorId={this.showSelectedUserPosts}
-                  resetPostPage={() => { }}
-                  showSmallModalHandler={this.showSmallModalHandler}
-                />
-              </SmallModal>
-            </div>
-            : null
-          }
-
-
-          {this.state.showFullImageModal ?
-              <div>
-                <TransBackdrop onClick={this.showFullImageModalHandler} />
-                <SmallModal style="fullImageModal">
-                  {/* image modal */}
-                  <div className="single-post__FullImageContainer">
-                    <img src={this.state.image} />
-                  </div>
-                </SmallModal>
-              </div>
-            : null  
-          }
-
-          {/* <button onClick={() => {
-            getFavoritePosts(
-              localStorage.getItem('userId'), 
-              BASE_URL,
-              this.props.token
-            )
-          }}>get-favoritePosts-test</button> */}
-
-          {/* <button onClick={() => {
-            getFavoritePost( 
-              this.props.match.params.postId,
-              '',
-              GQL_URL,
-              this.props.token
-            )
-          }}>get-favoritePost-test</button> */}
-
-          {/* {this.state.isPublic === 'public' && this.state.isFavorite ?
-            <div>favorite-indicate-test</div>
-            : null
-          } */}
-
-          {mediaField}
-
+        
+        {this.state.postData &&
           <div>
-            <SinglePostImages 
-              imageUrls={this.state.imageUrls}
-              modifiedImageUrls={this.state.modifiedImageUrls}
-              thumbnailImageUrls={this.state.thumbnailImageUrls}
-              imagePaths={this.state.imagePaths}
-              modifiedImagePaths={this.state.modifiedImagePaths}
-              thumbnailImagePaths={this.state.thumbnailImagePaths}
-              postData={this.state.postData}
-            />
-          </div>
+            <section className="single-post">
+              {/* <ErrorHandler error={this.state.error} onHandle={this.errorHandler} /> */}
 
-          {this.state.isLoading ?
-            <Loader />
-            : null}
-
-          <h1>{this.state.title}</h1>
-          <h2 onClick={() => {
-            this.selectPostAuthorHandler({
-              userId: this.state.authorId,
-              name: this.state.author,
-              imageUrl: this.state.creatorImageUrl
-            })
-          }}
-          >
-            {/* Created by {this.state.author} on {this.state.date} */}
-            {t('feed.text9')} {this.state.author} 
-            <br/>
-            {/* ({this.state.date}) */}
-            ({getDate(this.state.postDate)})
-          {/* <img src={BASE_URL + '/' + this.state.creatorImageUrl} alt="" height="20"></img> */}
-          </h2>
-          
-          {this.state.content.split("\n").length >1 ?
-            <p className="single-post__content">
-              <Linkify componentDecorator={this.componentDecorator}>
-                {this.state.content}
-              </Linkify>
-            </p>
-          :  
-            <p>
-              <Linkify componentDecorator={this.componentDecorator}>
-                {this.state.content}
-              </Linkify>
-            </p>
-          }
-
-          {/* smartyads */}
-          <div id="block_22581"></div>
-
-        </section>
+              {this.state.showSmallModal ?
+                <div>
+                  <TransBackdrop onClick={this.showSmallModalHandler} />
+                  <SmallModal style="modal2">
+                    <UserModalContents
+                      // {...props}
+                      postCreatorUserId={this.state.selectedUserId}
+                      author={this.state.selectedUserName}
+                      creatorImageUrl={this.state.selectedUserImageUrl}
+                      setSelectedCreatorId={this.showSelectedUserPosts}
+                      resetPostPage={() => { }}
+                      showSmallModalHandler={this.showSmallModalHandler}
+                    />
+                  </SmallModal>
+                </div>
+                : null
+              }
 
 
-        <section className="single-post-notcenter">
-        {this.props.isAuth && localStorage.getItem('userId') === this.state.authorId ?
-          <div className="single-post__editButton">
-            <Button
-              mode="raised" design="" type="submit"
-              onClick={this.storePostIdHandler}
-            >
-              Edit Post
-              </Button>
-          </div>
-          : null
-        }
+              {this.state.showFullImageModal ?
+                  <div>
+                    <TransBackdrop onClick={this.showFullImageModalHandler} />
+                    <SmallModal style="fullImageModal">
+                      {/* image modal */}
+                      <div className="single-post__FullImageContainer">
+                        <img src={this.state.image} />
+                      </div>
+                    </SmallModal>
+                  </div>
+                : null  
+              }
 
-        <PostReaction
-          userId={localStorage.getItem('userId')}
-          postId={this.props.match.params.postId}
-          token={this.props.token}
-          isAuth={this.props.isAuth}
-        />
+              {/* <button onClick={() => {
+                getFavoritePosts(
+                  localStorage.getItem('userId'), 
+                  BASE_URL,
+                  this.props.token
+                )
+              }}>get-favoritePosts-test</button> */}
 
-        {shareElement}
+              {/* <button onClick={() => {
+                getFavoritePost( 
+                  this.props.match.params.postId,
+                  '',
+                  GQL_URL,
+                  this.props.token
+                )
+              }}>get-favoritePost-test</button> */}
+
+              {/* {this.state.isPublic === 'public' && this.state.isFavorite ?
+                <div>favorite-indicate-test</div>
+                : null
+              } */}
+
+              {mediaField}
+
+              <div>
+                <SinglePostImages 
+                  imageUrls={this.state.imageUrls}
+                  modifiedImageUrls={this.state.modifiedImageUrls}
+                  thumbnailImageUrls={this.state.thumbnailImageUrls}
+                  imagePaths={this.state.imagePaths}
+                  modifiedImagePaths={this.state.modifiedImagePaths}
+                  thumbnailImagePaths={this.state.thumbnailImagePaths}
+                  postData={this.state.postData}
+                />
+              </div>
+
+              {this.state.isLoading ?
+                <Loader />
+                : null}
+
+              <h1>{this.state.title}</h1>
+              <h2 onClick={() => {
+                this.selectPostAuthorHandler({
+                  userId: this.state.authorId,
+                  name: this.state.author,
+                  imageUrl: this.state.creatorImageUrl
+                })
+              }}
+              >
+                {/* Created by {this.state.author} on {this.state.date} */}
+                {t('feed.text9')} {this.state.author} 
+                <br/>
+                {/* ({this.state.date}) */}
+                ({getDate(this.state.postDate)})
+              {/* <img src={BASE_URL + '/' + this.state.creatorImageUrl} alt="" height="20"></img> */}
+              </h2>
+              
+              {this.state.content.split("\n").length >1 ?
+                <p className="single-post__content">
+                  <Linkify componentDecorator={this.componentDecorator}>
+                    {this.state.content}
+                  </Linkify>
+                </p>
+              :  
+                <p>
+                  <Linkify componentDecorator={this.componentDecorator}>
+                    {this.state.content}
+                  </Linkify>
+                </p>
+              }
+
+              {/* smartyads */}
+              <div id="block_22581"></div>
+
+            </section>
 
 
-          <div className="single-post__FavoriteButton">
-            <AddFavoritePost
+            <section className="single-post-notcenter">
+            {this.props.isAuth && localStorage.getItem('userId') === this.state.authorId ?
+              <div className="single-post__editButton">
+                <Button
+                  mode="raised" design="" type="submit"
+                  onClick={this.storePostIdHandler}
+                >
+                  Edit Post
+                  </Button>
+              </div>
+              : null
+            }
+
+            <PostReaction
+              userId={localStorage.getItem('userId')}
               postId={this.props.match.params.postId}
               token={this.props.token}
+              isAuth={this.props.isAuth}
             />
+
+            {shareElement}
+
+
+              <div className="single-post__FavoriteButton">
+                <AddFavoritePost
+                  postId={this.props.match.params.postId}
+                  token={this.props.token}
+                />
+              </div>
+            
+
+            {/* {this.state.isPublic === 'public' && this.state.isFavorite ?
+                <div>favorite-indicate-test</div>
+              : null
+              } */}
+
+
+            <div className="single-post__FavoriteUserTitle">
+              <PostFavoriteUsersList
+                postId={this.props.match.params.postId}
+                setSelectedCreatorId={this.showSelectedUserPosts}
+                resetPostPage={() => { }}
+                showSmallModalHandler={this.showSmallModalHandler}
+              />
+            </div>
+            
+            <div className="single__post__adBar">
+              <GroupTopElements />
+            </div>
+
+
+            <PostComments
+              token={this.props.token}
+              postId={this.props.match.params.postId}
+              postCreatorId={this.state.authorId}
+              isAuth={this.props.isAuth}
+            />
+
+            </section>
           </div>
-        
+        }
 
-        {/* {this.state.isPublic === 'public' && this.state.isFavorite ?
-            <div>favorite-indicate-test</div>
-          : null
-          } */}
-
-
-        <div className="single-post__FavoriteUserTitle">
-          <PostFavoriteUsersList
-            postId={this.props.match.params.postId}
-            setSelectedCreatorId={this.showSelectedUserPosts}
-            resetPostPage={() => { }}
-            showSmallModalHandler={this.showSmallModalHandler}
-          />
-        </div>
-        
-        <div className="single__post__adBar">
-          <GroupTopElements />
-        </div>
-
-
-        <PostComments
-          token={this.props.token}
-          postId={this.props.match.params.postId}
-          postCreatorId={this.state.authorId}
-          isAuth={this.props.isAuth}
-        />
-
-        </section>
 
       </div>
     );
