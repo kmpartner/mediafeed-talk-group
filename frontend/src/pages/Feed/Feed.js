@@ -1097,6 +1097,7 @@ class Feed extends Component {
               setSelectedCreatorId={this.setSelectedCreatorId}
               resetPostPage={this.resetPostPage}
               postData={post}
+              postFilter={this.state.postFilter}
             />
           );
   
@@ -1145,6 +1146,7 @@ class Feed extends Component {
               setSelectedCreatorId={this.setSelectedCreatorId}
               resetPostPage={this.resetPostPage}
               postData={post}
+              postFilter={this.state.postFilter}
             />
           );
   
