@@ -19,6 +19,7 @@ import { postUpdatePushHandler } from '../../util/pushNotification'
 
 import GroupRightElements from '../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
 import GroupTopElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
+import TopLargeAdElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopLargeAdElements';
 
 import './Feed.css';
 
@@ -1379,7 +1380,14 @@ class Feed extends Component {
         <div className="feed-container">
         <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
 
-        <GroupTopElements />
+        <GroupTopElements 
+          adType='300x65' 
+          adPlaceId='feedpage-top' 
+        />
+        <TopLargeAdElements 
+          adType='inPosts' 
+          adPlaceId='feedpage-top' 
+        />
         <GroupRightElements />
 
         <FeedEdit

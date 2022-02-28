@@ -27,7 +27,8 @@ import UserInfo from './pages/UserInfo/UserInfo';
 import NotPageFound from './pages/NotPageFound/NotPageFound';
 import DarkModeToggle from './components/DarkModeToggle/DarkModeToggle';
 import AppStorage from './util/appStorage';
-import { updateEmailVerified, updateUserInfo, getAuthInfo } from './util/user';
+import AuthCheck from './components/Auth/AuthCheck';
+import { updateEmailVerified, updateUserInfo, getAuthInfo, getUserData } from './util/user';
 import { putBrowserHistory } from './util/history';
 
 import VideoTextTalk from './pages/VideoTextTalk/VideoTextTalk';
@@ -72,7 +73,7 @@ export const SOCKET_GROUP_SURL = process.env.REACT_APP_DEV_SOCKET_GROUP_SURL;
 export const PUSH_URL = process.env.REACT_APP_DEV_PUSH_URL;
 export const authPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 export const authSignupPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
-
+export const ADNETWORK_URL = process.env.REACT_APP_DEV_ADNETWORK_URL;
 
 //// test-deploy urls (use canary services in backend)  
 //// Don't Forget update servicewoker file for build
@@ -85,7 +86,7 @@ export const authSignupPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/sig
 // export const PUSH_URL = process.env.REACT_APP_TEST_PUSH_URL;
 // export const authPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const authSignupPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
-
+// export const ADNETWORK_URL = process.env.REACT_APP_ADNETWORK_URL;
 
 //// do urls deploy  Don't Forget update servicewoker file for build
 // export const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -97,7 +98,7 @@ export const authSignupPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/sig
 // export const PUSH_URL = process.env.REACT_APP_PUSH_URL;
 // export const authPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const authSignupPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
-
+// export const ADNETWORK_URL = process.env.REACT_APP_ADNETWORK_URL;
 
 
 
@@ -211,41 +212,6 @@ class App extends Component {
         });
       })
 
-
-    // const token = localStorage.getItem('token');
-    // const expiryDate = localStorage.getItem('expiryDate');
-    // if (!token || !expiryDate) {
-    //   return;
-    // }
-    // if (new Date(expiryDate) <= new Date()) {
-    //   this.logoutHandler();
-    //   return;
-    // }
-    // const userId = localStorage.getItem('userId');
-    // const name = localStorage.getItem('name');
-    // const remainingMilliseconds =
-    //   new Date(expiryDate).getTime() - new Date().getTime();
-    // this.setState({
-    //   isAuth: true,
-    //   token: token,
-    //   userId: userId,
-    //   name: name,
-    // });
-    // this.setAutoLogout(remainingMilliseconds);
-
-    // //firebase user
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     // User is signed in.
-    //     console.log('fb user', user);
-    //     this.setState({
-    //       firebaseUser: user
-    //     })
-    //   } else {
-    //     // User is signed out.
-    //     console.log('no fb user')
-    //   }
-    // });
 
     this.props.history.listen((location, action) => {
       console.log(
@@ -394,6 +360,22 @@ class App extends Component {
     localStorage.removeItem('TGTexp');
     this.props.history.push('/');
     window.location.reload();
+  };
+
+  logoutHandler2 = () => {
+
+    this.setState({ isAuth: false, token: null, name: '' });
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiryDate');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('name');
+    localStorage.removeItem('userLocation');
+
+    localStorage.removeItem('casTGT');
+    localStorage.removeItem('tokenForCasTGT');
+    localStorage.removeItem('TGTexp');
+    this.props.history.push('/');
+    // window.location.reload();
   };
 
   loginHandler = (event, authData) => {
@@ -954,6 +936,11 @@ class App extends Component {
                 <div style={{display: 'none'}}>
                   <DarkModeToggle 
                     setDarkMode={this.setDarkMode}
+                />
+                
+                <AuthCheck 
+                  isAuth={this.state.isAuth}
+                  logoutHandler2={this.logoutHandler2}
                 />
 
                 </div>

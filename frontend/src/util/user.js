@@ -27,7 +27,7 @@ export const getUserData = (url, token) => {
         return res.json();
       })
       .then(resData => {
-        // console.log(resData);
+        console.log(resData);
         resolve({ message: 'Get User Data.', userData: resData.data });
 
       })

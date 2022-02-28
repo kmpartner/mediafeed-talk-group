@@ -33,6 +33,7 @@ import './SinglePost.css';
 
 import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
 import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
+import InPostsAdElements from '../../../components/GroupTalk/GroupAdElements/InPostsAdElements/InPostsAdElements';
 
 class SinglePost extends Component {
   state = {
@@ -435,7 +436,6 @@ class SinglePost extends Component {
           : null
         }
 
-        
         {this.state.postData &&
           <div>
             <section className="single-post">
@@ -597,7 +597,14 @@ class SinglePost extends Component {
             </div>
             
             <div className="single__post__adBar">
-              <GroupTopElements />
+              <GroupTopElements 
+                adType='300x65' 
+                adPlaceId='singlepost-comment-top'
+              />
+              <InPostsAdElements 
+                adType='inPosts' 
+                adPlaceId='singlepost-comment-top' 
+              />
             </div>
 
 

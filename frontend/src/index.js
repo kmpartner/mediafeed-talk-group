@@ -6,8 +6,10 @@ import './index.css';
 import App from './App';
 
 import configureUiStore from './hook-store/ui-store';
+import configureAdStore from './hook-store/ad-store';
 
 configureUiStore();
+configureAdStore();
 
 ReactDOM.render(
   <BrowserRouter>

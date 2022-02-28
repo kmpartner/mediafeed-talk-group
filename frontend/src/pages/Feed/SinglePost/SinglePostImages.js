@@ -19,6 +19,7 @@ import { BASE_URL } from '../../../App';
 // import "./FeedEdit.css";
 
 import CanvasTouchDraw from "../../../components/Canvas/CanvasTouchDraw";
+import { getFixedT } from "i18next";
 
 const SinglePostImages = (props) => {
   console.log('SinglePostImages.js-props', props);
@@ -32,8 +33,21 @@ const SinglePostImages = (props) => {
   const [showFullImageModal, setShowFullImageModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState();
-  
+  const [videoStyleChange ,setVideoStyleChange] = useState(false);
+
   // console.log(selectedImageIndex);
+  const smallVideoStyle = {
+    position: 'fixed',
+    bottom: '5px',
+    right: '15px',
+    width: '300px',
+    maxWidth: '90vw',
+  };
+
+  const smallVideoShadow = {
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.26)',
+  }
+
 
   useEffect(() => {
     // detectSwipe('idtest');
@@ -234,8 +248,17 @@ const SinglePostImages = (props) => {
 
             if (isVideoFile(fileType)) {
               return (
-                <span>
-                  <video 
+                <span style={videoStyleChange ? smallVideoStyle : null}>
+                  {videoStyleChange &&
+                    (<div
+                      className="changeStyleButton"
+                        onClick={() => {setVideoStyleChange(!videoStyleChange); }}
+                    >
+                      &#8689;
+                    </div>)
+                  }
+                  <video
+                    style={videoStyleChange ? smallVideoShadow : null}
                     // onClick={() => { showFullImageModalHandler(imageUrl); }}
                     // style={{width: `${imageWidth}`}}
                     // style={{height: "100%", width: "100%", maxWidth:"40rem"}}
@@ -246,6 +269,14 @@ const SinglePostImages = (props) => {
                     height="" width="" alt="pictures of previews" 
                     controls
                   />
+                  {!videoStyleChange && (
+                    <div className="changeStyleButton"
+                      onClick={() => {setVideoStyleChange(!videoStyleChange); }}
+                    >
+                      &#8690;
+                    </div>
+                  )}
+
                 </span>
               );
             }
@@ -340,7 +371,8 @@ const SinglePostImages = (props) => {
 
       </div>
     );   
-}
+  }
+
 
   return <Fragment>
 
@@ -352,15 +384,34 @@ const SinglePostImages = (props) => {
     <div>{singlePostImagesBody}</div>
     <span >{selectedImageModalBody}</span>
 
-    {postData && postData.embedUrl &&      
-        <div className='videoWrapper'>
+    {postData && postData.embedUrl && (
+      <div>
+        <div
+          className={videoStyleChange ? '' : 'videoWrapper'} 
+          style={videoStyleChange ? smallVideoStyle : null}
+        >
+          <div className="changeStyleButton"
+            onClick={() => {setVideoStyleChange(!videoStyleChange); }}>
+              &#8689;
+          </div>
           <iframe width="" height=""
-            src={postData.embedUrl}
-            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+            src={postData.embedUrl + '?controls=1&mute=0&showinfo=0&rel=0&autoplay=0&loop=0'}
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            mute="1"
           >
           </iframe>
+          
           {/* <img src="http://img.youtube.com/vi/Xt9Hk7zCItM/0.jpg" /> */}
         </div>
+        {!videoStyleChange && (
+          <div className="changeStyleButton" 
+            onClick={() => {setVideoStyleChange(!videoStyleChange); }}>
+              &#8690;
+          </div>
+        )}
+      </div>
+    )     
       }
 
     </Fragment>;

@@ -8,7 +8,7 @@ import './Layout.css';
 const Layout = props => {
 
   const [state, dispatch] = useStore();
-  console.log(state);
+  // console.log(state);
 
   const notification = state.notification;
 

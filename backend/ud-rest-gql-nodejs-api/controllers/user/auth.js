@@ -121,7 +121,7 @@ exports.login = async (req, res, next) => {
 
 exports.getUserStatus = async (req, res, next) => {
     try {
-
+        console.log('in getUserStatus');
         // const user = await User.findById(req.userId);
         const user = await User.findOne({ userId: req.userId });
 

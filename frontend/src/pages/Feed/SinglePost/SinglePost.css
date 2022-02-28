@@ -189,6 +189,14 @@ img {
   height: 100%;
 }
 
+.changeStyleButton {
+  cursor: pointer;
+  font-size: 2rem;
+  /* font-weight: bold; */
+  text-align: right;
+}
+
+
 @media (min-width: 768px) {
   .single-post {
     width: 40rem;

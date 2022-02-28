@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next/hooks';
 
 
 import Loader from '../../../Loader/Loader';
-import TopBarContents from './TopBarContents';
+// import TopBarContents from './TopBarContents';
 import RightContents from '../GroupRightElements/RightContents';
 
 import AdItems from '../AdItems/AdItems';
@@ -15,12 +15,12 @@ import { useStore } from '../../../../hook-store/store';
 
 import { ADNETWORK_URL } from '../../../../App';
 
-import classes from './GroupTopElements.module.css';
+import classes from './TopLargeAdElements.module.css';
 
 // import remeetImage1 from '../../../images/webinar-100.png';
 // import remeetImage2 from '../../../images/remeet-crop2-100.png';
 
-const GroupTopElements = (props) => {
+const TopLargeAdElements = (props) => {
   // console.log('GroupTopElements-props', props);
 
   const { adElementId, adType } = props;
@@ -35,38 +35,17 @@ const GroupTopElements = (props) => {
   const topElementRef = useRef(null);
 
   const [store, dispatch] = useStore();
-  console.log('store-in groupTopElements.js', store);
 
-  
   // const [adList, setAdList] = useState([]);
   const adList = store.adStore.adList;
 
-  const activeList = adList.filter(ad => {
-    return ad.start < Date.now() && ad.end > Date.now();
-  });
-  console.log('activeList', activeList);
+  useEffect(() => {
+    if (topElementRef) {
+      // topElementRef.current.setAttribute('adType', 'topBar300x65');
+      // console.log("topElementRef..", topElementRef.current, topElementRef.current.id);
+    }
 
-
-  const createDisplayAdElement = (list) => {
-
-    //// weight, other factors filter...
-    const randomIndex = Math.floor(Math.random() * list.length);
-    const randomValue = list[randomIndex];
-
-    return randomValue;
-  };
-
-  const displayAdElement = createDisplayAdElement(activeList);
-
-  // console.log('randomIndex, randomValue', randomIndex, randomValue);
-
-  // useEffect(() => {
-  //   if (topElementRef) {
-  //     // topElementRef.current.setAttribute('adType', 'topBar300x65');
-  //     // console.log("topElementRef..", topElementRef.current, topElementRef.current.id);
-  //   }
-
-  // },[]);
+  },[]);
 
   // useEffect(() => {
   //   // if (window.innerWidth <= 768) {
@@ -93,30 +72,28 @@ const GroupTopElements = (props) => {
 
   rightElementsBody = (
     <div>
-      {!roomIdParam && activeList.length === 0 && (
-        <a className={classes.groupTalkRightElementLink}
-          id={adElementId}
+      {!roomIdParam && adList.length === 0 && (
+        <div></div>
+        // <a className={classes.groupTalkRightElementLink}
+        //   id={adElementId}
 
-          href="https://remeet.watakura.xyz/your-room-from-above-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div className={classes.groupTalkTopBarElementContainer}>
-            <div className={classes.groupTalkTopBarElement}>
-              <TopBarContents />
-            </div>
-          </div>
-        </a>
+        //   href="https://remeet.watakura.xyz/your-room-from-above-link"
+        //   target="_blank"
+        //   rel="noopener noreferrer"
+        // >
+        //   <div className={classes.groupTalkTopBarElementContainer}>
+        //     <div className={classes.groupTalkTopBarElement}>
+        //       <TopBarContents />
+        //     </div>
+        //   </div>
+        // </a>
       )}
       
-      {!roomIdParam && activeList.length > 0 && (
-        <div className={classes.topAdElementContainer}
+      {!roomIdParam && adList.length > 0 && (
+        <div className={classes.topLargeAdElementContainer}
           // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
         > 
-          <AdItems 
-            ad={adList[0]} 
-            // ad={displayAdElement}
-            adType={adType ? adType : '300x65'} />
+          <AdItems ad={adList[2]} adType={adType ? adType : 'inPosts'} />
         </div>
       )}
 
@@ -152,4 +129,4 @@ const GroupTopElements = (props) => {
   );
 }
 
-export default GroupTopElements;
+export default TopLargeAdElements;

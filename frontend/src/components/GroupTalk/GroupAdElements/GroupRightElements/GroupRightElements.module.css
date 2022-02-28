@@ -1,3 +1,11 @@
+.rightAdsContainer {
+  display: none;
+}
+
+.rightAdsItem {
+  display: none;
+}
+
 .groupTalkRightElements {
   display: none;
 }
@@ -32,6 +40,26 @@
 }
 
 @media (min-width: 768px) {
+  .rightAdsContainer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 55px;
+    /* border: 3px solid red; */
+    height: 700px;
+    max-height: calc(100vh - 70px);
+    width: 330px;
+    overflow-y: auto;
+  }
+
+  .rightAdsItem {
+    display: block;
+    width: 305px;
+    /* border: 3px solid green; */
+  }
+
   .groupTalkRightElements {
     display: block;
     position: fixed;
