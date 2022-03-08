@@ -85,6 +85,7 @@
 
   .feed-container {
     margin-right: 340px;
-    margin-left: 0px;
+    margin-left: auto;
+    max-width: 40rem;
   }
 }

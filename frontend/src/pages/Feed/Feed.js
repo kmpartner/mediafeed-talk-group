@@ -16,10 +16,8 @@ import Loader from '../../components/Loader/Loader';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import { getUserLocation, getFavoritePosts } from '../../util/user';
 import { postUpdatePushHandler } from '../../util/pushNotification'
-
-import GroupRightElements from '../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
-import GroupTopElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
-import TopLargeAdElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopLargeAdElements';
+import { createWithAdIndexList } from '../../util/ad-visit';
+import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import './Feed.css';
 
@@ -54,6 +52,11 @@ class Feed extends Component {
     // maxPagePostNumber: 2,
     // maxSearchPostNumber: 2, // less than maxPagePostNumber
     
+    // perPage: 5,
+    // maxPagePostNumber: 5,
+    // maxSearchPostNumber: 5, // less than maxPagePostNumber
+    
+
     searchPostPage: 1,
     searchMoreClickNum: 0,
     selectedCreatorId: '',
@@ -1062,7 +1065,14 @@ class Feed extends Component {
       console.log(start2, showPostNumber, this.state.searchPostPage, this.state.postPage);
     }
 
+
     
+    const adIndexList = createWithAdIndexList();
+    const topAdPlaceId = `feedPage-top-page-${this.state.postPage}`;
+    const rightAdPlaceId = `feedPage-right-page-${this.state.postPage}`;
+
+
+
     let feedPost2 
     if (this.state.searchPosts.length > 0) {
       feedPost2 = (
@@ -1113,9 +1123,21 @@ class Feed extends Component {
         })
       );
 
-    } else {
+    } else { 
       feedPost2 = (
-        this.state.posts.slice(start2, start2 + showPostNumber).map(post => {
+        this.state.posts.slice(start2, start2 + showPostNumber).map((post, index) => {
+          console.log('start2, showPostNumber', start2, showPostNumber, index);
+
+          console.log('adIndexList', adIndexList);
+          // const adIndexList = [2, 4];
+          //// var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+          
+          const isAdIndex = adIndexList.find(ix => {
+            return ix === index;
+          });
+          const indexValue = isAdIndex && `page-${this.state.postPage}-${index}`;
+          console.log('withIndex', isAdIndex, index, indexValue);
+
           const postElement = (
             <Post
               key={post._id}
@@ -1148,9 +1170,10 @@ class Feed extends Component {
               resetPostPage={this.resetPostPage}
               postData={post}
               postFilter={this.state.postFilter}
+              withAdIndex={isAdIndex && indexValue}
             />
           );
-  
+
           if (post.creatorId === localStorage.getItem('userId')) {
             return postElement;
           } else {
@@ -1380,15 +1403,15 @@ class Feed extends Component {
         <div className="feed-container">
         <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
 
-        <GroupTopElements 
+        <AdElementDisplay 
           adType='300x65' 
-          adPlaceId='feedpage-top' 
+          adPlaceId={topAdPlaceId}
         />
-        <TopLargeAdElements 
-          adType='inPosts' 
-          adPlaceId='feedpage-top' 
+        <AdElementDisplay 
+          adType='300x300' 
+          adPlaceId={rightAdPlaceId}
         />
-        <GroupRightElements />
+
 
         <FeedEdit
           editing={this.state.isEditing}

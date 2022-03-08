@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { withI18n } from "react-i18next";
 import { Link } from 'react-router-dom';
 import Img from "react-cool-img";
@@ -12,6 +12,7 @@ import TransBackdrop from '../../Backdrop/TransBackdrop';
 import UserModalContents from '../../Modal/UserModalContents';
 
 import DeletePostImages from './DeletePostImages';
+import AdElementDisplay from '../../GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import { getUserLocation } from '../../../util/user';
 import { isImageFile, isVideoFile } from '../../../util/image';
 import { getDate, getDateTime } from '../../../util/timeFormat';
@@ -21,7 +22,7 @@ import { BASE_URL } from '../../../App';
 
 
 const Post = props => {
-  // console.log('prop-Post.js', props, window.location)
+  // console.log('prop-Post.js', props)
   
   const { t } = props;
   // console.log(t);
@@ -39,6 +40,10 @@ const Post = props => {
   }
   // http://img.youtube.com/vi/Xt9Hk7zCItM/0.jpg
 
+  const adPlaceId = props.withAdIndex ? `feedList-${props.withAdIndex}-${props.id}` : null;
+  
+  // const postLinkTarget = window.innerWidth < 768 && '_blank';
+  const postLinkTarget = '_blank';
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSmallModal, setShowSmallModal] = useState(false);
@@ -71,7 +76,7 @@ const Post = props => {
   if (isImageFile(fileType)) {
     smallImage = (
       <div>
-        <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
+        <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
           {/* <img src={BASE_URL + '/' + props.modifiedImageUrl} height="50" alt=""></img> */}
           {/* <img src={props.modifiedImageUrl} height="100" alt="post-image"></img> */}
           <Img src={props.modifiedImageUrl} height="100" alt="post-image"></Img>
@@ -84,7 +89,7 @@ const Post = props => {
   if (isVideoFile(fileType)) {
     smallImage = (
       <div>
-        <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
+        <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
           {/* <video src={BASE_URL + '/' + props.modifiedImageUrl} height="50" autoPlay muted={true} ></video> */}
           <video src={props.modifiedImageUrl} height="50" autoPlay muted={true}></video>
 
@@ -169,150 +174,166 @@ const Post = props => {
   }
 
   return (
-    <article className="post">
-      <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
-        {postImagesBody}
-      </Link>
+    <Fragment>
 
-      {props.embedUrl &&
-        <div>
-          {/* <iframe width="160" height="90" 
-            src={props.embedUrl}
-            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-          >
-          </iframe> */}
-          <Link to={linkToPost} target="_blank" rel="noopener noreferrer">
-            <span className="post__SmallVideos">
-              <Img src={youTubeThumbnailUrl} alt="post videos" width="160" />
-              <span className="post__SmallVideosYouTubeMark"
-                // role="img" aria-label="video indicator"
-              >
-                &#9654;
+      <article className="post">
+        {/* <Link to={linkToPost} target="_blank" rel="noopener noreferrer"> */}
+        <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
+          {postImagesBody}
+        </Link>
+
+        {props.embedUrl &&
+          <div>
+            {/* <iframe width="160" height="90" 
+              src={props.embedUrl}
+              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+            >
+            </iframe> */}
+            <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
+              <span className="post__SmallVideos">
+                <Img src={youTubeThumbnailUrl} alt="post videos" width="160" />
+                <span className="post__SmallVideosYouTubeMark"
+                  // role="img" aria-label="video indicator"
+                >
+                  &#9654;
+                </span>
               </span>
-            </span>
-          </Link>
+            </Link>
+          </div>
+        }
+
+        {smallImage}
+
+        <header className="post__header">
+          <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer"
+            className="post__title"
+            >
+              {props.title}
+            </Link>
+        </header>
+        <div className="post__contentContainer">
+          <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer" 
+          className="post__content">
+            {props.content.length > 50 ? 
+              props.content.slice(0,50) + '.....'
+            : props.content
+            }</Link>
         </div>
+        <h3 className="post__meta" onClick={showSmallModalHandler}>
+          {/* Posted by {props.author} on {props.date} {props.public === 'private' &&  props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null} */}
+          {t('feed.text8')} {props.author} 
+          <br/> 
+          ({props.postDate && getDate(props.postDate)}) {props.public === 'private' && props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null}
+          {/* <img src={BASE_URL + '/' + props.creatorImageUrl} alt="" height="20"></img> */}
+          
+          {/* {props.postDate && getDateTime(props.postDate)} */}
+
+        </h3>
+
+        {props.postFilter !== 'recent-visit-posts' && (
+          <div>visits: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
+        )}
+
+        {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>
+        <img src={BASE_URL + '/' + props.image} width="50" alt="videofile"></img> */}
+        <div className="post__actions">
+          {/* <Button mode="flat" link={props.id} action="viewpost">
+            View 
+            {t('feed.text4')}
+          </Button> */}
+          {props.postCreatorUserId === localStorage.getItem('userId') ?
+            <span>
+              <Button mode="flat" onClick={props.onStartEdit}>
+                {/* Edit */}
+                {t('feed.text5')}
+              </Button>
+              <Button mode="flat" design="danger" onClick={showDeleteModalHandler}>
+                {/* Delete */}
+                {t('feed.text6')}
+              </Button>
+
+              {props.modifiedImageUrls && props.modifiedImageUrls.length > 0
+                &&
+                <Button mode="flat" design="danger" onClick={() => {setShowDeleteImagesModal(!showDeleteImagesModal)}}>
+                  Delete Images
+                </Button>
+              }
+              
+            </span>
+            : null
+          }
+        </div>
+        {showDeleteModal ?
+          <div>
+            {/* <Modal
+              acceptEnabled={true}
+              onCancelModal={hideDeleteModalHandler}
+              // onAcceptModal={!props.imageUrls || props.imageUrls.length === 0 ? props.onDelete : props.deleteMultiImagePostHandler}
+              onAcceptModal={props.deleteMultiImagePostHandler}
+              // isLoading={this.props.postsLoading}
+              title="Delete Post"
+            // style="confirmModal"
+            >
+              <div className="userImageUpload__confirmContent">
+                Is is no problem to delete post completely?
+                {t('feed.text7')}
+              </div>
+            </Modal> */}
+            <SmallModal style="modal2">
+              <div>
+                <div className="userImageUpload__confirmContent">
+                    {t('feed.text7', 'Is is no problem to delete post completely?')}
+                </div>
+                <Button mode="flat" design=""
+                  disabled={props.isPostDeleting}
+                  onClick={hideDeleteModalHandler}
+                >
+                  {/* Cancel */}
+                  {t('general.text1')}
+                </Button>
+                <Button mode="raised" design=""
+                  disabled={props.isPostDeleting}
+                  onClick={props.deleteMultiImagePostHandler}
+                >
+                  {/* Delete */}
+                  {t('feed.text17')}
+                </Button>
+
+                <div>{props.isPostDeleting && <Loader />}</div>
+                <div>{props.postDeleteResult}</div>
+              </div>
+            </SmallModal>
+          </div>
+          : null}
+
+          {showSmallModal ? authorModalBody : null}
+          
+          {showDeleteImagesModal && 
+            <DeletePostImages
+              id={props.id}
+              imageUrls={props.imageUrls}
+              modifiedImageUrls={props.modifiedImageUrls}
+              thumbnailImageUrls={props.thumbnailImageUrls}
+              imagePaths={props.imagePaths}
+              modifiedImagePaths={props.modifiedImagePaths}
+              thumbnailImagePaths={props.thumbnailImagePaths}
+              setShowDeleteImagesModal={setShowDeleteImagesModal}
+            />
+          }
+      </article>
+
+      {props.withAdIndex && (
+        <div>
+          {/* with-index-content {props.withAdIndex}  */}
+          <AdElementDisplay 
+            adType='feedList'
+            adPlaceId={adPlaceId}
+          />
+        </div>
+      )
       }
 
-      {smallImage}
-
-      <header className="post__header">
-        <Link to={linkToPost} target="_blank" rel="noopener noreferrer"
-          className="post__title"
-          >
-            {props.title}
-          </Link>
-      </header>
-      <div className="post__contentContainer">
-        <Link to={linkToPost} target="_blank" rel="noopener noreferrer" 
-        className="post__content">
-          {props.content.length > 50 ? 
-            props.content.slice(0,50) + '.....'
-          : props.content
-          }</Link>
-      </div>
-      <h3 className="post__meta" onClick={showSmallModalHandler}>
-        {/* Posted by {props.author} on {props.date} {props.public === 'private' &&  props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null} */}
-        {t('feed.text8')} {props.author} 
-        <br/> 
-        ({props.postDate && getDate(props.postDate)}) {props.public === 'private' && props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null}
-        {/* <img src={BASE_URL + '/' + props.creatorImageUrl} alt="" height="20"></img> */}
-        
-        {/* {props.postDate && getDateTime(props.postDate)} */}
-
-      </h3>
-
-      {props.postFilter !== 'recent-visit-posts' && (
-        <div>visits: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
-      )}
-
-      {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>
-      <img src={BASE_URL + '/' + props.image} width="50" alt="videofile"></img> */}
-      <div className="post__actions">
-        {/* <Button mode="flat" link={props.id} action="viewpost">
-          View 
-          {t('feed.text4')}
-        </Button> */}
-        {props.postCreatorUserId === localStorage.getItem('userId') ?
-          <span>
-            <Button mode="flat" onClick={props.onStartEdit}>
-              {/* Edit */}
-              {t('feed.text5')}
-            </Button>
-            <Button mode="flat" design="danger" onClick={showDeleteModalHandler}>
-              {/* Delete */}
-              {t('feed.text6')}
-            </Button>
-
-            {props.modifiedImageUrls && props.modifiedImageUrls.length > 0
-              &&
-              <Button mode="flat" design="danger" onClick={() => {setShowDeleteImagesModal(!showDeleteImagesModal)}}>
-                Delete Images
-              </Button>
-            }
-            
-          </span>
-          : null
-        }
-      </div>
-      {showDeleteModal ?
-        <div>
-          {/* <Modal
-            acceptEnabled={true}
-            onCancelModal={hideDeleteModalHandler}
-            // onAcceptModal={!props.imageUrls || props.imageUrls.length === 0 ? props.onDelete : props.deleteMultiImagePostHandler}
-            onAcceptModal={props.deleteMultiImagePostHandler}
-            // isLoading={this.props.postsLoading}
-            title="Delete Post"
-          // style="confirmModal"
-          >
-            <div className="userImageUpload__confirmContent">
-              Is is no problem to delete post completely?
-              {t('feed.text7')}
-            </div>
-          </Modal> */}
-          <SmallModal style="modal2">
-            <div>
-              <div className="userImageUpload__confirmContent">
-                  {t('feed.text7', 'Is is no problem to delete post completely?')}
-              </div>
-              <Button mode="flat" design=""
-                disabled={props.isPostDeleting}
-                onClick={hideDeleteModalHandler}
-              >
-                {/* Cancel */}
-                {t('general.text1')}
-              </Button>
-              <Button mode="raised" design=""
-                disabled={props.isPostDeleting}
-                onClick={props.deleteMultiImagePostHandler}
-              >
-                {/* Delete */}
-                {t('feed.text17')}
-              </Button>
-
-              <div>{props.isPostDeleting && <Loader />}</div>
-              <div>{props.postDeleteResult}</div>
-            </div>
-          </SmallModal>
-        </div>
-        : null}
-
-        {showSmallModal ? authorModalBody : null}
-        
-        {showDeleteImagesModal && 
-          <DeletePostImages
-            id={props.id}
-            imageUrls={props.imageUrls}
-            modifiedImageUrls={props.modifiedImageUrls}
-            thumbnailImageUrls={props.thumbnailImageUrls}
-            imagePaths={props.imagePaths}
-            modifiedImagePaths={props.modifiedImagePaths}
-            thumbnailImagePaths={props.thumbnailImagePaths}
-            setShowDeleteImagesModal={setShowDeleteImagesModal}
-          />
-        }
-    </article>
+    </Fragment>
   )
 };
 

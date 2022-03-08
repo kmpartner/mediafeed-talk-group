@@ -8,9 +8,9 @@ import TopBarContents from './TopBarContents';
 import RightContents from '../GroupRightElements/RightContents';
 
 import AdItems from '../AdItems/AdItems';
-import GetAdList from '../GetAdList/GetAdList';
+import GetAdList from '../GetAds/GetAdList';
 
-import { storeClickData, getNearAdElements } from '../../../../util/ad-visit';
+import { storeClickData, getNearAdElements, createDisplayAd } from '../../../../util/ad-visit';
 import { useStore } from '../../../../hook-store/store';
 
 import { ADNETWORK_URL } from '../../../../App';
@@ -36,10 +36,26 @@ const GroupTopElements = (props) => {
 
   const [store, dispatch] = useStore();
   console.log('store-in groupTopElements.js', store);
-
-  
-  // const [adList, setAdList] = useState([]);
   const adList = store.adStore.adList;
+
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000* 10);
+
+    // if (adList.length > 0) {
+    //   setIsLoading(false);
+    // }
+  },[adList]);
+
+  useEffect(() => {
+    if (adList.length > 0) {
+      setIsLoading(false);
+    }
+  },[adList]);
+
 
   const activeList = adList.filter(ad => {
     return ad.start < Date.now() && ad.end > Date.now();
@@ -47,108 +63,54 @@ const GroupTopElements = (props) => {
   console.log('activeList', activeList);
 
 
-  const createDisplayAdElement = (list) => {
+  const displayAd = createDisplayAd(activeList);
 
-    //// weight, other factors filter...
-    const randomIndex = Math.floor(Math.random() * list.length);
-    const randomValue = list[randomIndex];
-
-    return randomValue;
-  };
-
-  const displayAdElement = createDisplayAdElement(activeList);
-
-  // console.log('randomIndex, randomValue', randomIndex, randomValue);
-
-  // useEffect(() => {
-  //   if (topElementRef) {
-  //     // topElementRef.current.setAttribute('adType', 'topBar300x65');
-  //     // console.log("topElementRef..", topElementRef.current, topElementRef.current.id);
-  //   }
-
-  // },[]);
-
-  // useEffect(() => {
-  //   // if (window.innerWidth <= 768) {
-  //   //   getNearAdElementsHandler();
-  //   // }
-  //   if (store.adStore.adList.length === 0) {
-  //     getNearAdElementsHandler();
-  //   }
-  // },[]);
-
-  // const getNearAdElementsHandler = async () => {
-  //   try {
-  //     const adsData = await getNearAdElements(ADNETWORK_URL, 'token');
-  //     console.log(adsData);
-  //     // setAdList(adsData.data.ads);
-
-  //     dispatch('SET_ADLIST', adsData.data.ads);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   let rightElementsBody;
 
-  rightElementsBody = (
-    <div>
-      {!roomIdParam && activeList.length === 0 && (
-        <a className={classes.groupTalkRightElementLink}
-          id={adElementId}
-
-          href="https://remeet.watakura.xyz/your-room-from-above-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div className={classes.groupTalkTopBarElementContainer}>
-            <div className={classes.groupTalkTopBarElement}>
-              <TopBarContents />
+  if (isLoading) {
+    rightElementsBody = <div>...loading...</div>;
+  }
+  else {
+    rightElementsBody = (
+      <div>
+        <GetAdList />
+        {!roomIdParam && activeList.length === 0 && (
+          <a className={classes.groupTalkRightElementLink}
+            id={adElementId}
+  
+            href="https://remeet.watakura.xyz/your-room-from-above-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className={classes.groupTalkTopBarElementContainer}>
+              <div className={classes.groupTalkTopBarElement}>
+                <TopBarContents />
+              </div>
             </div>
+          </a>
+        )}
+        
+        {!roomIdParam && activeList.length > 0 && (
+          <div className={classes.topAdElementContainer}
+            // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
+          > 
+            <AdItems 
+              // ad={adList[0]} 
+              ad={displayAd}
+              adType={adType ? adType : '300x65'} 
+            />
           </div>
-        </a>
-      )}
-      
-      {!roomIdParam && activeList.length > 0 && (
-        <div className={classes.topAdElementContainer}
-          // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
-        > 
-          <AdItems 
-            ad={adList[0]} 
-            // ad={displayAdElement}
-            adType={adType ? adType : '300x65'} />
-        </div>
-      )}
-
-      {/* <div className={classes.groupTalkRightElements}>
-        <a className={classes.groupTalkRightElementLink} 
-          href="https://remeet.watakura.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <RightContents />
-        </a>
-      </div> */}
-
-      {/* <div className={classes.groupTalkRightElements2}
-        >
-        aaa-bbb-ccc-content
-      </div> */}
-    
-      
-
-
-
-      
-      
-    </div>
-  );
+        )}
+  
+      </div>
+    );
+  }
 
   return (
     <Fragment>
-      <GetAdList />
       {rightElementsBody}
-      </Fragment>
+    </Fragment>
   );
 }
 

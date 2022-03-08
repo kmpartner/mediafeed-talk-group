@@ -1,7 +1,8 @@
 
 .infoButton {
   position: fixed;
-  top: 50px;
+  /* top: 50px; */
+  top: 60px;
   right: 5%;
   right: 20px;
   font-size: 1.25rem;
@@ -12,7 +13,8 @@
 @media (min-width: 768px) {
   .infoButton {
     /* left: 33rem; */
-    right: 30px;
+    /* right: 30px; */
+    right: 60px;
     margin-right:300px;
   }
 }

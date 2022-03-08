@@ -281,7 +281,8 @@
 
 .textTalk__ConnectButton {
   position: fixed;
-  top: 60px;
+  /* top: 60px; */
+  top: 80px;
   /* top: 150px; */
   left: 1%;
   font-size: 0.75rem;
@@ -353,7 +354,7 @@
   bottom: 5px;
   left: 50%;
   margin-left: -150px;
-  border: 0.5px solid gray;
+  /* border: 0.5px solid gray; */
 }
 
 ul {
@@ -372,7 +373,7 @@ ul {
 
   .textTalk-container {
     /* width: 35rem; */
-    margin-right: 300px;
+    margin-right: 350px;
   };
 
   .remote-videoContainer {

@@ -18,7 +18,7 @@
 
 .groupTalk__BackToListButton {
   position: fixed;
-  top: 95px;
+  top: 115px;
   left: 2%;
 }
 
@@ -194,14 +194,14 @@
 
 .groupTalkTextList__joinGroupButton {
   position: fixed;
-  top: 95px;
+  top: 115px;
   /* right: 1%; */
   right: 1px;
 }
 
 .groupTalkTextList-groupNameContainer {
   position: fixed;
-  top: 45px
+  top: 60px
 }
 
 .groupTalkTextList-groupName {
@@ -251,18 +251,19 @@
   }
   .groupTalkTextList-container {
     /* width: 35rem; */
-    margin-right: 300px;
+    margin-right: 350px;
   }
 
   .groupTalkTextList__joinGroupButton {
     /* left: 25rem; */
-    margin-right: 300px;
+    margin-right: 350px;
   }
 
   .groupTalk__showGroupCreate {
     /* position: fixed; */
     /* left: 25rem; */
     /* margin-right: 300px; */
+    margin-right: 2rem;
   }
 
   .groupTalk__groupEditContainer {
@@ -270,11 +271,16 @@
   }
 
   .groupTalk__textInputContainer {
-    width: 35rem;
+    /* width: 35rem; */
+  }
+
+  .groupTalk__textInputElements {
+    margin-right: 350px;
   }
 
   .groupTalk__showInputButton {
-    left: 28rem
+    /* left: 28rem; */
+    margin-right: 350px;
   }
   /* .single-post {
     width: 40rem;

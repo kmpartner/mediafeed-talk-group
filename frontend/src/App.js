@@ -34,6 +34,8 @@ import { putBrowserHistory } from './util/history';
 import VideoTextTalk from './pages/VideoTextTalk/VideoTextTalk';
 import GroupTalk from './pages/GroupTalk/GroupTalk';
 
+import GetAd from './components/GroupTalk/GroupAdElements/GetAds/GetAds';
+
 import './App.css';
 
 // import * as firebase from "firebase/app";
@@ -943,6 +945,8 @@ class App extends Component {
                   logoutHandler2={this.logoutHandler2}
                 />
 
+                <GetAd />
+                
                 </div>
                   <div></div>
                   <div>-</div>

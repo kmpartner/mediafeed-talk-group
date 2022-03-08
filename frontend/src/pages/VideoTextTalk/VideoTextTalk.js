@@ -39,6 +39,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import TalkRightElements from '../../components/VideoTextTalk/TalkRightElements/TalkRightElements';
 
 let isAlreadyCalling = false;
@@ -1418,7 +1419,11 @@ const VideoTextTalk = (props) => {
         </Button>
 
         <div className="textTalk__bottomElement">
-          <TopBarContents />
+          {/* <TopBarContents /> */}
+          <AdElementDisplay 
+            adType='300x65'
+            adPlaceId='talkpage-bottom'
+          />
         </div>
         
       </div>
@@ -1497,10 +1502,14 @@ const VideoTextTalk = (props) => {
     <div className="talk-appContainer">
       <div>
 
-        <TalkRightElements
+        <AdElementDisplay 
+          adType='300x300'
+          adPlaceId='talkpage-right' 
+        />
+        {/* <TalkRightElements
           userSocketId={userSocketId}
           showNoconnectTextTalk={showNoconnectTextTalk}
-        />
+        /> */}
 
 
         {/* <TalkUserListControll 

@@ -1,9 +1,8 @@
 import React, { Fragment } from "react";
 import { withI18n } from "react-i18next";
 
-import Input from "../../../Form/Input/Input";
-
-import { isImageFile } from "../../../../util/image";
+import RightContents from "../GroupRightElements/RightContents";
+import TopBarContents from "../GroupTopElements/TopBarContents";
 
 import classes from "./AdItems.module.css";
 // import "../FeedEdit.css";
@@ -11,10 +10,10 @@ import classes from "./AdItems.module.css";
 
 const AdItems = (props) => {
   // console.log("AdItems.js-props", props);
-  const { ad, adType } = props;
+  const { ad, adType, activeList } = props;
 
   let body300x65;
-  if (ad) {
+  if (ad && activeList && activeList.length > 0) {
     body300x65 = (
       <a className={classes.adLink}
         href={ad.linkUrl}
@@ -41,10 +40,29 @@ const AdItems = (props) => {
         </div>
       </a>
     );
+  } 
+  else {
+    // some fallback
+
+      body300x65 = (
+      <a className={classes.groupTalkRightElementLink}
+        href="https://remeet.watakura.xyz/your-room-from-above-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div className={classes.groupTalkTopBarElementContainer}>
+          <div className={classes.groupTalkTopBarElement}>
+            <TopBarContents />
+          </div>
+        </div>
+      </a>
+    );
+    
+
   }
 
   let body300x300;
-  if (ad) {
+  if (ad && activeList && activeList.length > 0) {
     body300x300 = (
       <a className={classes.adLink}
         href={ad.linkUrl}
@@ -69,10 +87,23 @@ const AdItems = (props) => {
        </div>
      </a>
    );
+  } else {
+    // some fallback
+    body300x300 = (
+      <div className={classes.groupTalkRightElements}>
+        <a className={classes.groupTalkRightElementLink} 
+          href="https://remeet.watakura.xyz/your-room-from-above-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <RightContents />
+        </a>
+      </div>
+    );
   }
   
   let bodyInPosts;
-  if (ad) {
+  if (ad && activeList && activeList.length > 0) {
     bodyInPosts = (
       <a className={classes.adLink}
         href={ad.linkUrl}
@@ -97,43 +128,62 @@ const AdItems = (props) => {
         </div>
       </a>
     );
+  } else {
+    // some fallback
+    bodyInPosts = (
+      <a className={classes.groupTalkRightElementLink}
+      href="https://remeet.watakura.xyz/your-room-from-above-link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className={classes.groupTalkTopBarElementContainer}>
+        <div className={classes.groupTalkTopBarElement}>
+          <TopBarContents />
+        </div>
+      </div>
+    </a>
+    )
   }
 
 
 
-  let imagePreviewContentsBody;
+  let adItemsBody;
   if (adType === '300x65') {
-    imagePreviewContentsBody = (
-        <div className={classes.bodyContainer}>
+    adItemsBody = (
+        <div className={classes.topAdElementContainer}>
           {body300x65}
-          {/* {body300x300} */}
-          {/* {bodyInPosts} */}
         </div>
     );
   }
 
   if (adType === '300x300') {
-    imagePreviewContentsBody = (
-        <div className={classes.bodyContainer}>
-          {/* {body300x65} */}
+    adItemsBody = (
+      <div className={classes.rightAdsContainer}>
+        <div className={classes.rightAdsItem}>
           {body300x300}
-          {/* {bodyInPosts} */}
         </div>
+      </div>
     );
   }
 
   if (adType === 'inPosts') {
-    imagePreviewContentsBody = (
-        <div className={classes.bodyContainer}>
-          {/* {body300x65} */}
-          {/* {body300x300} */}
+    adItemsBody = (
+        <div className={classes.inPostsAdElementContainer}>
+          {bodyInPosts}
+        </div>
+    );
+  }
+
+  if (adType === 'feedList' && activeList.length > 0) {
+    adItemsBody = (
+        <div className={classes.inPostsAdElementContainer}>
           {bodyInPosts}
         </div>
     );
   }
   
 
-  return <Fragment>{imagePreviewContentsBody}</Fragment>;
+  return <Fragment>{adItemsBody}</Fragment>;
 };
 
 export default withI18n()(AdItems);

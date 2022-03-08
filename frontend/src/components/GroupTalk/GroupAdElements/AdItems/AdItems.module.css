@@ -7,6 +7,132 @@
   color: var(--color);
 }
 
+.groupTalkRightElementLink {
+  text-decoration: none;
+  color: var(--color);
+
+}
+
+.groupTalkTopBarElementContainer {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: -35px; */
+  margin-top: 0px;
+  margin-bottom: 15px;
+    /* width: 200px; */
+}
+
+.groupTalkTopBarElement {
+  width: 300px;
+  height: 100%;
+  border: 0.2px solid gray;
+}
+
+
+
+
+.groupTalkRightElements {
+  display: none;
+}
+
+.groupTalkRightElementLink {
+  text-decoration: none;
+  color: var(--color);
+}
+
+
+
+
+
+
+.rightAdsContainer {
+  display: none;
+}
+
+.rightAdsItem {
+  display: none;
+}
+
+.topAdElementContainer {
+  /* text-decoration: none;
+  color: var(--color); */
+
+  height: 65px;
+  /* display: none; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: -35px; */
+  margin-top: 0px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.inPostsAdElementContainer {
+  text-align: left;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .groupTalkRightElements {
+    display: block;
+    position: fixed;
+    /* left: 34rem; */
+    right: 5px;
+    top: 75px;
+    border: 0.2px solid gray;
+    height: 300px;
+    width: 300px;
+  }
+
+
+  .groupTalkTopBarElementContainer {
+    display: none;
+  }
+
+  .groupTalkTopBarElement {
+    display: none;
+  }
+
+
+
+  
+
+  .rightAdsContainer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 65px;
+    /* border: 3px solid red; */
+    height: 700px;
+    max-height: calc(100vh - 70px);
+    width: 330px;
+    overflow-y: auto;
+  }
+
+  .rightAdsItem {
+    display: block;
+    width: 305px;
+    /* border: 3px solid green; */
+  }
+
+  .topAdElementContainer {
+    display: none;
+  }
+
+}
+
+
+
+
+
+
+/* from adnet-frontend keep sync original*/
+
 .body300x65Container {
   width: 300px; 
   height: 65px;

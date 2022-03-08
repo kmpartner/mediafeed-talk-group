@@ -112,6 +112,7 @@ function PostSelect(props) {
           options={options}
           placeholder={placeholder}
           styles={customStyles}
+          isSearchable={false}
         />
     </div>
   );

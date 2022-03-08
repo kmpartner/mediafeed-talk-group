@@ -31,9 +31,10 @@ import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
 import './SinglePost.css';
 
-import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
-import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
-import InPostsAdElements from '../../../components/GroupTalk/GroupAdElements/InPostsAdElements/InPostsAdElements';
+import AdElementDisplay from '../../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+// import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
+// import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
+// import InPostsAdElements from '../../../components/GroupTalk/GroupAdElements/InPostsAdElements/InPostsAdElements';
 
 class SinglePost extends Component {
   state = {
@@ -351,6 +352,8 @@ class SinglePost extends Component {
     const { t } = this.props;
     // console.log(t);
 
+    const adPlaceId = `singlepost-comment-top-${this.props.match.params.postId}`
+    // console.log('adPlaceId', adPlaceId);
 
     // console.log('singlepost-props', this.props);
     let mediaField;
@@ -597,13 +600,9 @@ class SinglePost extends Component {
             </div>
             
             <div className="single__post__adBar">
-              <GroupTopElements 
-                adType='300x65' 
-                adPlaceId='singlepost-comment-top'
-              />
-              <InPostsAdElements 
+              <AdElementDisplay
                 adType='inPosts' 
-                adPlaceId='singlepost-comment-top' 
+                adPlaceId={adPlaceId}
               />
             </div>
 

@@ -19,6 +19,8 @@ import CreateGroupForm from '../../components/GroupTalk/EditGroup/CreateGroupFor
 import EditGroupForm from '../../components/GroupTalk/EditGroup/EditGroupForm';
 
 // import GroupAdElements from '../../components/GroupTalk/GroupAdElements/GroupAdElements';
+import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+
 import GroupList from '../../components/GroupTalk/GroupList/GroupList';
 import GroupListControll from '../../components/GroupTalk/GroupList/GroupListControll';
 import GroupInfoMemberList from '../../components/GroupTalk/GroupInfo/GroupInfoMemberList';
@@ -80,6 +82,12 @@ const peerConnection = new RTCPeerConnection();
 const GroupTalk = (props) => {
   // console.log('GroupTalk.js-props', props);
   // const videoRef = React.createRef();
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  const roomIdParam = queryParams.get('groupRoomId');
+  // console.log('query grouproomid', roomIdParam);
+
+
   let socket
 
   const lsToken = localStorage.getItem('token');
@@ -2069,14 +2077,25 @@ const GroupTalk = (props) => {
     <div className="groupTalk__appContainer">
       <div>
 
-        <GroupTopElements 
+      {!roomIdParam && (
+        <AdElementDisplay
+          adType='300x65' 
+          adPlaceId='grouppage-top' 
+        />
+      )}
+      <AdElementDisplay 
+        adType='300x300'
+        adPlaceId='grouppage-right' 
+      />
+        {/* <GroupTopElements 
           adPlaceId={'adPlaceid-group-top-place'}
           adSize={'300x65'}
-        />
+        /> */}
         
-        <GroupRightElements 
+        {/* <GroupRightElements 
           adPlaceId={'adelementid-for-group-right'}
-        />
+        /> */}
+
         {/* <GroupAdElements /> */}
 
       {/* <div style={{textAlign:"center"}}>

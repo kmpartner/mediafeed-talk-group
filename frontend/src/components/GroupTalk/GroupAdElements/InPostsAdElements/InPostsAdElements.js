@@ -8,9 +8,9 @@ import Loader from '../../../Loader/Loader';
 // import RightContents from '../GroupRightElements/RightContents';
 
 import AdItems from '../AdItems/AdItems';
-import GetAdList from '../GetAdList/GetAdList';
+import GetAdList from '../GetAds/GetAdList';
 
-import { storeClickData, getNearAdElements } from '../../../../util/ad-visit';
+import { storeClickData, getNearAdElements, createDisplayAd } from '../../../../util/ad-visit';
 import { useStore } from '../../../../hook-store/store';
 
 import { ADNETWORK_URL } from '../../../../App';
@@ -36,95 +36,78 @@ const InPostsAdElements = (props) => {
 
   const [store, dispatch] = useStore();
 
+  const [isLoading, setIsLoading] = useState(true);
   // const [adList, setAdList] = useState([]);
   const adList = store.adStore.adList;
 
-  // useEffect(() => {
-  //   if (topElementRef) {
-  //     // topElementRef.current.setAttribute('adType', 'topBar300x65');
-  //     // console.log("topElementRef..", topElementRef.current, topElementRef.current.id);
-  //   }
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000* 10);
 
-  // },[]);
+    // if (adList.length > 0) {
+    //   setIsLoading(false);
+    // }
+  },[adList]);
 
-  // useEffect(() => {
-  //   // if (window.innerWidth <= 768) {
-  //   //   getNearAdElementsHandler();
-  //   // }
-  //   if (store.adStore.adList.length === 0) {
-  //     getNearAdElementsHandler();
-  //   }
-  // },[]);
-
-  // const getNearAdElementsHandler = async () => {
-  //   try {
-  //     const adsData = await getNearAdElements(ADNETWORK_URL, 'token');
-  //     console.log(adsData);
-  //     // setAdList(adsData.data.ads);
-
-  //     dispatch('SET_ADLIST', adsData.data.ads);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  let rightElementsBody;
-
-  rightElementsBody = (
-    <div>
-      {!roomIdParam && adList.length === 0 && (
-        <div></div>
-        // <a className={classes.groupTalkRightElementLink}
-        //   id={adElementId}
-
-        //   href="https://remeet.watakura.xyz/your-room-from-above-link"
-        //   target="_blank"
-        //   rel="noopener noreferrer"
-        // >
-        //   <div className={classes.groupTalkTopBarElementContainer}>
-        //     <div className={classes.groupTalkTopBarElement}>
-        //       <TopBarContents />
-        //     </div>
-        //   </div>
-        // </a>
-      )}
-      
-      {!roomIdParam && adList.length > 0 && (
-        <div className={classes.inPostsAdElementContainer}
-          // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
-        > 
-          <AdItems ad={adList[2]} adType={adType ? adType : 'inPosts'} />
-        </div>
-      )}
-
-      {/* <div className={classes.groupTalkRightElements}>
-        <a className={classes.groupTalkRightElementLink} 
-          href="https://remeet.watakura.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <RightContents />
-        </a>
-      </div> */}
-
-      {/* <div className={classes.groupTalkRightElements2}
-        >
-        aaa-bbb-ccc-content
-      </div> */}
-    
-      
+  useEffect(() => {
+    if (adList.length > 0) {
+      setIsLoading(false);
+    }
+  },[adList]);
 
 
+  const activeList = adList.filter(ad => {
+    return ad.start < Date.now() && ad.end > Date.now();
+  });
+  console.log('activeList', activeList);
 
-      
-      
-    </div>
-  );
+
+  const displayAd = createDisplayAd(activeList);
+
+  let inPostsElementBody;
+
+  if(isLoading) {
+    inPostsElementBody = <div>...Loading...</div>
+  } else {
+    inPostsElementBody = (
+      <div>
+        <GetAdList />
+        {!roomIdParam && activeList.length === 0 && (
+          <div></div>
+          // <a className={classes.groupTalkRightElementLink}
+          //   id={adElementId}
+  
+          //   href="https://remeet.watakura.xyz/your-room-from-above-link"
+          //   target="_blank"
+          //   rel="noopener noreferrer"
+          // >
+          //   <div className={classes.groupTalkTopBarElementContainer}>
+          //     <div className={classes.groupTalkTopBarElement}>
+          //       <TopBarContents />
+          //     </div>
+          //   </div>
+          // </a>
+        )}
+        
+        {!roomIdParam && activeList.length > 0 && (
+          <div className={classes.inPostsAdElementContainer}
+            // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
+          > 
+            <AdItems 
+              ad={displayAd} 
+              adType={adType ? adType : 'inPosts'} 
+            />
+          </div>
+        )}
+  
+      </div>
+    );
+  }
 
   return (
     <Fragment>
-      <GetAdList />
-      {rightElementsBody}
+      {inPostsElementBody}
       </Fragment>
   );
 }

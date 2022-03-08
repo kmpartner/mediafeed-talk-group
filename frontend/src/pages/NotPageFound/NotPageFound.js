@@ -8,9 +8,7 @@ import Loader from '../../components/Loader/Loader';
 import { useStore } from '../../hook-store/store';
 import { getUserDataForStore } from '../../util/user';
 
-import GroupRightElements from '../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
-import GroupTopElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
-import TopLargeAdElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopLargeAdElements';
+import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
 import './NotPageFound.css';
@@ -131,17 +129,6 @@ const NotPageFound = props => {
   else {
     body = ( 
     <div className="notPageFound__container">
-      <GroupTopElements 
-        adType='300x65' 
-        adPlaceId='toppage-top' 
-      />
-      <TopLargeAdElements
-        adType='inPosts' 
-        adPlaceId='toppage-top'  
-      />
-
-      <GroupRightElements />
-      
       {props.isAuth ?
           <div>
             <div className="notPageFound__textLink">
@@ -281,8 +268,21 @@ const NotPageFound = props => {
 
   return (
     <div>
+      
+      <AdElementDisplay
+        adType='300x65' 
+        adPlaceId='toppage-top' 
+      />
+      <AdElementDisplay 
+        adType='300x300'
+        adPlaceId='toppage-right' 
+      />
+
+
+
       {body}
       
+
       <div>
       
       <div>
