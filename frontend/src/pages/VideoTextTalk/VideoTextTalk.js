@@ -1420,10 +1420,12 @@ const VideoTextTalk = (props) => {
 
         <div className="textTalk__bottomElement">
           {/* <TopBarContents /> */}
-          <AdElementDisplay 
-            adType='300x65'
-            adPlaceId='talkpage-bottom'
-          />
+          {store.windowValues && (store.windowValues.width < 768) && (
+            <AdElementDisplay 
+              adType='300x65'
+              adPlaceId='talkpage-bottom'
+            />
+          )}
         </div>
         
       </div>
@@ -1502,10 +1504,12 @@ const VideoTextTalk = (props) => {
     <div className="talk-appContainer">
       <div>
 
+      {store.windowValues && (store.windowValues.width >= 768) && (
         <AdElementDisplay 
           adType='300x300'
           adPlaceId='talkpage-right' 
         />
+      )}
         {/* <TalkRightElements
           userSocketId={userSocketId}
           showNoconnectTextTalk={showNoconnectTextTalk}

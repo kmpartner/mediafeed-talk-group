@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import Img from "react-cool-img";
 
 import Button from '../../Button/Button';
+import MenuButton from '../MobileToggle/MenuButton';
 import MobileToggle from '../MobileToggle/MobileToggle';
 import SmallModal from '../../Modal/SmallModal';
 import TransBackdrop from '../../Backdrop/TransBackdrop';
@@ -146,9 +147,12 @@ const MainNavigation = props => {
     }
     
     <div className="spacer" />
-    <ul className="main-nav__items">
+    {/* <ul className="main-nav__items">
       <NavigationItems isAuth={props.isAuth} onLogout={props.onLogout} />
-    </ul>
+    </ul> */}
+
+    <MenuButton onOpen={props.onOpenMobileNav} />
+
   </nav>
 };
 

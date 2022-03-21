@@ -19,6 +19,8 @@ import { postUpdatePushHandler } from '../../util/pushNotification'
 import { createWithAdIndexList } from '../../util/ad-visit';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
+import GetWindowData from '../../components/UI/getWindowData';
+
 import './Feed.css';
 
 import { BASE_URL, PUSH_URL } from '../../App';
@@ -52,9 +54,9 @@ class Feed extends Component {
     // maxPagePostNumber: 2,
     // maxSearchPostNumber: 2, // less than maxPagePostNumber
     
-    // perPage: 5,
-    // maxPagePostNumber: 5,
-    // maxSearchPostNumber: 5, // less than maxPagePostNumber
+    // perPage: 6,
+    // maxPagePostNumber: 6,
+    // maxSearchPostNumber: 6, // less than maxPagePostNumber
     
 
     searchPostPage: 1,
@@ -69,6 +71,8 @@ class Feed extends Component {
     isPostDeleting: false,
 
     postFilter: '',
+
+    windowValues: null,
   };
 
   componentDidMount() {
@@ -370,18 +374,18 @@ class Feed extends Component {
         // localStorage.removeItem('selectedPostId');
 
 
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-          console.log(window.innerHeight + window.scrollY, document.body.offsetHeight);
-          this.morePostHandler();
-          this.moreSearchPostHandler();
-        }
-        window.onscroll = (ev) => {
-          if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-            // console.log(window.innerHeight + window.scrollY, document.body.offsetHeight);
-            this.morePostHandler();
-            this.moreSearchPostHandler();
-          }
-        };
+        // if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        //   console.log(window.innerHeight + window.scrollY, document.body.offsetHeight);
+        //   this.morePostHandler();
+        //   this.moreSearchPostHandler();
+        // }
+        // window.onscroll = (ev) => {
+        //   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        //     // console.log(window.innerHeight + window.scrollY, document.body.offsetHeight);
+        //     this.morePostHandler();
+        //     this.moreSearchPostHandler();
+        //   }
+        // };
 
       })
       .catch(err => {
@@ -1066,8 +1070,10 @@ class Feed extends Component {
     }
 
 
+    // const lastPage = Math.ceil(this.state.totalPosts / this.state.perPage);
+    // console.log('totalPost, postPage, perPage, lastPage', this.state.totalPosts, this.state.postPage, this.state.perPage, lastPage)
     
-    const adIndexList = createWithAdIndexList();
+    let adIndexList = createWithAdIndexList();
     const topAdPlaceId = `feedPage-top-page-${this.state.postPage}`;
     const rightAdPlaceId = `feedPage-right-page-${this.state.postPage}`;
 
@@ -1126,9 +1132,19 @@ class Feed extends Component {
     } else { 
       feedPost2 = (
         this.state.posts.slice(start2, start2 + showPostNumber).map((post, index) => {
-          console.log('start2, showPostNumber', start2, showPostNumber, index);
+          console.log('start2, showPostNumber, index', start2, showPostNumber, index);
 
-          console.log('adIndexList', adIndexList);
+          const pagePostNum = this.state.posts.slice(start2, start2 + showPostNumber).length;
+          // console.log('adIndexList pagePostNum', adIndexList, pagePostNum);
+          
+          if (pagePostNum > 0 && pagePostNum < 5) {
+            adIndexList = [pagePostNum - 1];
+          }
+
+          if (pagePostNum === 1) {
+            adIndexList = [];
+          }
+
           // const adIndexList = [2, 4];
           //// var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
           
@@ -1136,7 +1152,7 @@ class Feed extends Component {
             return ix === index;
           });
           const indexValue = isAdIndex && `page-${this.state.postPage}-${index}`;
-          console.log('withIndex', isAdIndex, index, indexValue);
+          console.log('withIndex', isAdIndex, index, indexValue, adIndexList);
 
           const postElement = (
             <Post
@@ -1403,14 +1419,27 @@ class Feed extends Component {
         <div className="feed-container">
         <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
 
-        <AdElementDisplay 
-          adType='300x65' 
-          adPlaceId={topAdPlaceId}
+        <GetWindowData 
+          setWindowValues={(windowValues) => {
+              this.setState({ windowValues: windowValues }, 
+              // () => {console.log('windowvalues', this.state.windowValues)}
+              );
+          }}
         />
-        <AdElementDisplay 
-          adType='300x300' 
-          adPlaceId={rightAdPlaceId}
-        />
+
+        {this.state.windowValues && (this.state.windowValues.width < 768) && (
+          <AdElementDisplay 
+            adType='300x65' 
+            adPlaceId={topAdPlaceId}
+          />
+        )}
+        
+        {this.state.windowValues && (this.state.windowValues.width >= 768) && (
+          <AdElementDisplay 
+            adType='300x300' 
+            adPlaceId={rightAdPlaceId}
+          />
+        )}
 
 
         <FeedEdit

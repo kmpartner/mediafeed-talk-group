@@ -171,7 +171,8 @@ img {
 }
 
 .single__post__adBar {
-  padding-top: 2rem;
+  /* padding-top: 2rem; */
+  padding-bottom: 2rem;
 }
 
 .videoWrapper {

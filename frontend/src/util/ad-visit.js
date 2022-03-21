@@ -39,7 +39,12 @@ export const storeClickData = (url, token, adElementId, adPlaceId, type,) => {
 export const getNearAdElements = (url, token) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(url + `/ad-filter-element/near-ad-elements?userLocation=${localStorage.getItem('userLocation')}`, {
+      const lsUserLocation = localStorage.getItem('userLocation') ? localStorage.getItem('userLocation') : '';
+      const lsUserSelectLng = localStorage.getItem('userSelectLng') 
+        ? localStorage.getItem('userSelectLng') 
+        : navigator.language;
+      
+      const response = await fetch(url + `/ad-filter-element/near-ad-elements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + token,
@@ -72,35 +77,39 @@ export const createDisplayAd = (list) => {
 };
 
 export const createWithAdIndexList = () => {
-  const oneToFive = [];
-  const fiveToTen = [];
-  const tenToFifteen = [];
-  const fifteenToTwenty = [];
+  const zeroToFour = [];
+  const fiveToNine = [];
+  const tenToFourteen = [];
+  const fifteenToNineteen = [];
   for (let i=0; i<20; i++) {
     // numArray.push(i);
-    if (i < 5 ) {
-      oneToFive.push(i);
+    if (i>=1 && i < 5 ) {
+      zeroToFour.push(i);
     }
     if (i >= 5 && i < 10) {
-      fiveToTen.push(i);
+      fiveToNine.push(i);
     }
     if (i >= 10 && i < 15) {
-      tenToFifteen.push(i);
+      tenToFourteen.push(i);
     }
     if (i >= 15) {
-      fifteenToTwenty.push(i);
+      fifteenToNineteen.push(i);
     }
   }
   // console.log(numArray);
 
-  // console.log('oneToFive', oneToFive, fiveToTen, tenToFifteen, fifteenToTwenty);
-  const sample1 = _.sample(oneToFive);
-  const sample2 = _.sample(fiveToTen);
-  const sample3 = _.sample(tenToFifteen);
-  const sample4 = _.sample(fifteenToTwenty);
+  // console.log('zeroToFour', zeroToFour, fiveToNine, tenToFourteen, fifteenToNineteen);
+  const sample1 = _.sample(zeroToFour);
+  const sample2 = _.sample(fiveToNine);
+  const sample3 = _.sample(tenToFourteen);
+  const sample4 = _.sample(fifteenToNineteen);
 
   const numArray = [sample1, sample2, sample3, sample4];
   // console.log('numArray', numArray);
 
   return numArray;
+}
+
+const testFunction = () => {
+  console.log('test function called!!')
 }

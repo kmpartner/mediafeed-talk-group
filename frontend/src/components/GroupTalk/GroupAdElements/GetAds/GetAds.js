@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next/hooks";
 
 import GetAdList from "./GetAdList";
 
-import { getNearAdElements } from "../../../../util/ad-visit";
+// import { getNearAdElements } from "../../../../util/ad-visit";
 import { useStore } from "../../../../hook-store/store";
-
+import * as adVisitUtils from "../../../../util/ad-visit"
 import { ADNETWORK_URL } from "../../../../App";
 
 const GetAd = (props) => {
@@ -51,7 +51,8 @@ const GetAd = (props) => {
 
   const getNearAdElementsHandler = async () => {
     try {
-      const adsData = await getNearAdElements(ADNETWORK_URL, "token");
+      // const adsData = await getNearAdElements(ADNETWORK_URL, "token");
+      const adsData = await adVisitUtils.getNearAdElements(ADNETWORK_URL, "token");
       console.log(adsData);
       // setAdList(adsData.data.ads);
 

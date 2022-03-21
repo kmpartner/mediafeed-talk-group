@@ -74,7 +74,13 @@ const configureStore = () => {
         ...state,
         gotPosts: payload,
       }
-    }
+    },
+    SET_WINDOW_VALUES: (state, payload) => {
+      return {
+        ...state,
+        windowValues: payload,
+      }
+    },
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -93,6 +99,7 @@ const configureStore = () => {
     userData: null,
     viewPage: 1,
     gotPosts: [],
+    windowValues: null,
     // lastPage: 0,
     // notification: {
     //   status: null,

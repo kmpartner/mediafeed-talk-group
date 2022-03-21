@@ -35,6 +35,7 @@ import VideoTextTalk from './pages/VideoTextTalk/VideoTextTalk';
 import GroupTalk from './pages/GroupTalk/GroupTalk';
 
 import GetAd from './components/GroupTalk/GroupAdElements/GetAds/GetAds';
+import GetWindowData from './components/UI/getWindowData';
 
 import './App.css';
 
@@ -946,6 +947,9 @@ class App extends Component {
                 />
 
                 <GetAd />
+                <GetWindowData 
+                  setWindowValues={() => {}}
+                />
                 
                 </div>
                   <div></div>

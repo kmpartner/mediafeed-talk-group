@@ -11,16 +11,19 @@ import AdItems from '../AdItems/AdItems';
 // import GetAdList from '../GetAds/GetAdList';
 
 import { storeClickData, getNearAdElements, createDisplayAd } from '../../../../util/ad-visit';
-import { useStore } from '../../../../hook-store/store';
+import { storeAdDisplay } from '../../../../util/ad-display';
 
-// import { ADNETWORK_URL } from '../../../../App';
+import { useStore } from '../../../../hook-store/store';
+import { useOnScreen } from '../../../../custom-hooks/useOnScreen';
+
+import { ADNETWORK_URL } from '../../../../App';
 
 // import classes from './GroupTopElements.module.css';
 
 const AdElementDisplay = (props) => {
-  // console.log('GroupTopElements-props', props);
+  // console.log('AdElementDisplay-props', props);
 
-  const { adElementId, adType } = props;
+  const { adType, adPlaceId } = props;
 
   const currentUrl = new URL(window.location.href);
   const queryParams = currentUrl.searchParams;
@@ -29,14 +32,19 @@ const AdElementDisplay = (props) => {
 
   const [t] = useTranslation('translation');
 
-  const topElementRef = useRef(null);
-
   const [store, dispatch] = useStore();
   console.log('store-in AdElementDisplay.js', store);
   const adList = store.adStore.adList;
 
+  const ref = useRef();
+  const isVisible = useOnScreen(ref);
+
   const [isLoading, setIsLoading] = useState(true);
+  const [activeList, setActiveList] = useState([]);
+  const [displayAd, setDisplayAd] = useState();
   
+  const [isDisplayed, setIsDisplayed] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -47,15 +55,69 @@ const AdElementDisplay = (props) => {
     }
   },[adList]);
 
+  // useEffect(() => {
+  //   console.log('AdElementDisplay-props', props);
+  //   //// send display info
+  // },[]);
 
+  
+  useEffect(() => {
+    // console.log('isVisible', isVisible, displayAd)
+    if (isVisible && activeList.length > 0 && displayAd && adType) {
+      console.log('isVisible displayAd', displayAd);
+      console.log('isVisible, displayAd exists ...');
 
-  const activeList = adList.filter(ad => {
-    return ad.start < Date.now() && ad.end > Date.now();
-  });
-  console.log('activeList', activeList);
+      if (!isDisplayed) {
+        console.log('isVisible, now displayed, adplaceId', adPlaceId);
+        setIsDisplayed(true);
 
+        storeAdDisplay(ADNETWORK_URL, 'token', displayAd.adElementId, adPlaceId);
+        
+      } else {
+        console.log('isVisible, already displayed, adplaceId', adPlaceId);
+      }
 
-  const displayAd = createDisplayAd(activeList);
+      // if (adType === 'feedList') {
+      //   dispatch('SET_FEEDLIST_DISPLAYED_ADLIST', displayAd);
+
+      //   const feedListDiplayedAdList = store.adStore.feedListDisplayedAdList;
+
+      //   const isExistInList = feedListDiplayedAdList.find(ad => {
+      //     return ad.adElementId === displayAd.adElementId;
+      //   });
+
+      //   if (!isExistInList) {
+      //     console.log('not displayed feedList ads');
+      //   }
+
+      // }
+    }
+  },[isVisible, activeList, displayAd, adType])
+
+  useEffect(() => {
+    if (adList.length > 0) {
+      const activeList = adList.filter(ad => {
+        return ad.start < Date.now() && ad.end > Date.now();
+      });
+      console.log('activeList', activeList);
+      setActiveList(activeList);
+    
+      if (activeList.length > 0) {
+        const displayAd = createDisplayAd(activeList);
+        setDisplayAd(displayAd);
+        console.log('displayAd', displayAd);
+      }
+    }
+  },[adList]);
+
+  // const activeList = adList.filter(ad => {
+  //   return ad.start < Date.now() && ad.end > Date.now();
+  // });
+  // console.log('activeList', activeList);
+
+  // const displayAd = createDisplayAd(activeList);
+  // console.log('displayAd', displayAd);
+
 
 
   let adElementDisplayBody;
@@ -126,6 +188,8 @@ const AdElementDisplay = (props) => {
 
   return (
     <Fragment>
+      {/* <div ref={ref}>{isVisible && `Yep, I'm on screen`}</div> */}
+      <div ref={ref}>{isVisible && ``}</div>
       {adElementDisplayBody}
     </Fragment>
   );

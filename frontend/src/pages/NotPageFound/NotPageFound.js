@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
 
@@ -8,6 +8,7 @@ import Loader from '../../components/Loader/Loader';
 import { useStore } from '../../hook-store/store';
 import { getUserDataForStore } from '../../util/user';
 
+import GetWindowData from '../../components/UI/getWindowData';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
@@ -27,6 +28,10 @@ const NotPageFound = props => {
   const [store, dispatch] = useStore();
 
   // console.log('store in NotPageFound.js', store);
+
+
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -269,14 +274,23 @@ const NotPageFound = props => {
   return (
     <div>
       
-      <AdElementDisplay
-        adType='300x65' 
-        adPlaceId='toppage-top' 
+      <GetWindowData 
+        setWindowValues={() => {}}
       />
-      <AdElementDisplay 
-        adType='300x300'
-        adPlaceId='toppage-right' 
-      />
+
+      {store.windowValues && (store.windowValues.width < 768) && (
+        <AdElementDisplay
+          adType='300x65' 
+          adPlaceId='toppage-top' 
+        />
+      )}
+      {store.windowValues && (store.windowValues.width >= 768) && (
+        <AdElementDisplay 
+          adType='300x300'
+          adPlaceId='toppage-right' 
+        />
+      )}
+      
 
 
 

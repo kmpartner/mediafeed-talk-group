@@ -323,8 +323,7 @@ const Post = props => {
       </article>
 
       {props.withAdIndex && (
-        <div>
-          {/* with-index-content {props.withAdIndex}  */}
+        <div className="post__adContainer">
           <AdElementDisplay 
             adType='feedList'
             adPlaceId={adPlaceId}

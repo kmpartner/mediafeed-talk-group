@@ -2077,26 +2077,20 @@ const GroupTalk = (props) => {
     <div className="groupTalk__appContainer">
       <div>
 
-      {!roomIdParam && (
+      {!roomIdParam && store.windowValues && (store.windowValues.width < 768) && (
         <AdElementDisplay
           adType='300x65' 
           adPlaceId='grouppage-top' 
         />
       )}
+      {store.windowValues && (store.windowValues.width >= 768) && (
       <AdElementDisplay 
-        adType='300x300'
-        adPlaceId='grouppage-right' 
-      />
-        {/* <GroupTopElements 
-          adPlaceId={'adPlaceid-group-top-place'}
-          adSize={'300x65'}
-        /> */}
-        
-        {/* <GroupRightElements 
-          adPlaceId={'adelementid-for-group-right'}
-        /> */}
+          adType='300x300'
+          adPlaceId='grouppage-right' 
+        />
+      )}
 
-        {/* <GroupAdElements /> */}
+
 
       {/* <div style={{textAlign:"center"}}>
       <button onClick={() => {

@@ -1,3 +1,5 @@
+// import _ from 'lodash';
+
 import { initStore } from "./store";
 
 const configureStore = () => {
@@ -24,6 +26,20 @@ const configureStore = () => {
         }
       };
     },
+    // SET_FEEDLIST_DISPLAYED_ADLIST: (state, payload) => {
+    //   let addedList = state.adStore.feedListDisplayedAdList.concat(payload);
+    //   addedList = _.uniqBy(addedList, function(element) {
+    //     return element.adElementId
+    //   });
+
+    //   return {
+    //     ...state,
+    //     adStore: {
+    //       ...state.adStore,
+    //       feedListDisplayedAdList: addedList,
+    //     }
+    //   };
+    // },
   };
 
   initStore(actions, {
@@ -31,6 +47,7 @@ const configureStore = () => {
     adStore: {
       adList: [],
       adListGetDate: null,
+      // feedListDisplayedAdList: [],
     }
   });
 };

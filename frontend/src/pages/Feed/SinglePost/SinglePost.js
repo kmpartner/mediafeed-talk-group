@@ -31,7 +31,9 @@ import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
 import './SinglePost.css';
 
+import SinglePostAd from './SinglePostAd';
 import AdElementDisplay from '../../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+// import GetWindowData from '../../../components/UI/getWindowData';
 // import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
 // import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
 // import InPostsAdElements from '../../../components/GroupTalk/GroupAdElements/InPostsAdElements/InPostsAdElements';
@@ -65,6 +67,7 @@ class SinglePost extends Component {
     thumbnailImagePaths: [],
 
     postData: null,
+    adElementBody: null,
   };
 
   componentDidMount() {
@@ -148,6 +151,11 @@ class SinglePost extends Component {
             }
 
             this.setLsRecentVisitPosts();
+
+            const adPlaceId = `singlepost-comment-top-${this.props.match.params.postId}`
+            this.setState({ 
+              adElementBody : <SinglePostAd adPlaceId={adPlaceId} postData={this.state.postData} /> 
+            });
           });
       })
       .catch(err => {
@@ -352,7 +360,8 @@ class SinglePost extends Component {
     const { t } = this.props;
     // console.log(t);
 
-    const adPlaceId = `singlepost-comment-top-${this.props.match.params.postId}`
+    // const adPlaceId = `singlepost-comment-top-${this.props.match.params.postId}`
+    const adPlaceId = `singlepost-top-${this.props.match.params.postId}`
     // console.log('adPlaceId', adPlaceId);
 
     // console.log('singlepost-props', this.props);
@@ -433,7 +442,7 @@ class SinglePost extends Component {
       <div>
         <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
         {this.state.isLoading ?
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div style={{ textAlign: 'center', marginTop: '2rem', height: '100vh' }}>
             <Loader />
           </div>
           : null
@@ -498,6 +507,15 @@ class SinglePost extends Component {
                 : null
               } */}
 
+            {/* <div className="single__post__adBar">
+              {!this.state.isLoading && (
+                <AdElementDisplay
+                  adType='inPosts' 
+                  adPlaceId={adPlaceId}
+                />
+              )}
+            </div> */}
+              
               {mediaField}
 
               <div>
@@ -599,11 +617,12 @@ class SinglePost extends Component {
               />
             </div>
             
+
+
+            {/* <div style={{width:"100%", height:"600px"}}>some-content</div> */}
+            
             <div className="single__post__adBar">
-              <AdElementDisplay
-                adType='inPosts' 
-                adPlaceId={adPlaceId}
-              />
+              {!this.state.isLoading && this.state.adElementBody}
             </div>
 
 
