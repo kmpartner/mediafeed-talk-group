@@ -16,6 +16,7 @@ const Post = require("../../models/feed/post.js");
 const User = require("../../models/user/user");
 const Comment = require("../../models/feed/comment");
 const PostVisit = require("../../models/feed/post-visit");
+const PostUserVisit = require('../../models/feed/post-user-visit');
 const FavoritePost = require("../../models/feed/favarite-post");
 const imageModify = require("../../util/image");
 const { s3Upload, s3DeleteOne, s3DeleteMany } = require("../../util/image");
@@ -671,6 +672,23 @@ exports.getPost = async (req, res, next) => {
 
     await postVisit.save();
     // console.log('updated post', post);
+
+    //// store postUserVisit
+    if (userId && userId !== 'null') {
+      // console.log('req.headers', req.headers);
+      const postUserVisit = new PostUserVisit({
+        postId: post._id.toString(),
+        userId: userId, 
+        language: req.headers["accept-language"].split(",")[0],
+        userAgent: req.headers["user-agent"],
+        geolocation: location,
+        time: Date.now(),
+      });
+      await postUserVisit.save();
+    }
+  
+
+
   }
 
 } catch (err) {

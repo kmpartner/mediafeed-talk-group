@@ -16,6 +16,10 @@
   display: none;
 }
 
+.main-nav__user {
+  display: none
+}
+
 .name {
   color: white;
   margin-left: 1rem;
@@ -36,8 +40,20 @@
   cursor: pointer;
 }
 
+.main-nav__logo {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .main-nav__items {
     display: flex;
+  }
+
+  .main-nav__user {
+    display: block;
+  }
+
+  .main-nav__logo {
+    display: block;
   }
 }

@@ -19,6 +19,12 @@
   background: white;
 }
 
+.menuButton {
+  /* display: none; */
+  color: white;
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
     .mobile-toggle {
         /* display: none; */

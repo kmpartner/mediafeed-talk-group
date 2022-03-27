@@ -104,7 +104,7 @@ const MainNavigation = props => {
     </div>
 
     {props.isAuth ? 
-    <span>
+    <span className="main-nav__user">
       {userData.imageUrl ? 
         // <img className="userImage" src={BASE_URL + '/' + userData.imageUrl} alt="" height="25"
         //   onClick={props.onOpenMobileNav}

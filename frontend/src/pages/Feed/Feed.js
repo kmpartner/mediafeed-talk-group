@@ -312,6 +312,10 @@ class Feed extends Component {
       queryEnd = BASE_URL + '/feed-filter/most-visit-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&userId=${lsUserId}`;
     }
 
+    if (this.state.postFilter === 'most-like-posts') {
+      queryEnd = BASE_URL + '/feed-filter/most-reaction-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&type=Like`;
+    }
+
 
     fetch(queryEnd, {
       headers: {
@@ -516,6 +520,18 @@ class Feed extends Component {
   showMostViewedPostsHandler = () => {
     this.setState({ 
       postFilter: 'most-visit-posts',
+
+      userOnly: false,
+      isFavoritePosts: false,
+
+      selectedCreatorId: '',
+      postPage: 1
+    }, () => { this.loadPosts(); });
+  }
+
+  showMostLikedPostsHandler = () => {
+    this.setState({ 
+      postFilter: 'most-like-posts',
 
       userOnly: false,
       isFavoritePosts: false,
@@ -1506,6 +1522,7 @@ class Feed extends Component {
           showUserPostsHandler={this.showUserPostsHandler}
           showFavoritePostsHandler={this.showFavoritePostsHandler}
           showMostViewedPostsHandler={this.showMostViewedPostsHandler}
+          showMostLikedPostsHandler={this.showMostLikedPostsHandler}
           showRecentVisitPostsHandler={this.showRecentVisitPostsHandler}
           isAuth={this.props.isAuth}
         />

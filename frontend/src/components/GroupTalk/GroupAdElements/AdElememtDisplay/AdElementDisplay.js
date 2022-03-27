@@ -118,6 +118,17 @@ const AdElementDisplay = (props) => {
   // const displayAd = createDisplayAd(activeList);
   // console.log('displayAd', displayAd);
 
+  const adClickHandler = () => {
+    if (isVisible && activeList.length > 0 && displayAd && adType) {
+      storeClickData(
+        ADNETWORK_URL, 
+        localStorage.getItem('token'), 
+        displayAd.adElementId, 
+        adPlaceId, 
+        adType,
+      );
+    }
+  };
 
 
   let adElementDisplayBody;
@@ -189,8 +200,10 @@ const AdElementDisplay = (props) => {
   return (
     <Fragment>
       {/* <div ref={ref}>{isVisible && `Yep, I'm on screen`}</div> */}
-      <div ref={ref}>{isVisible && ``}</div>
-      {adElementDisplayBody}
+      <span ref={ref}>{isVisible && ``}</span>
+      <div onClick={adClickHandler}>
+        {adElementDisplayBody}
+      </div>
     </Fragment>
   );
 }

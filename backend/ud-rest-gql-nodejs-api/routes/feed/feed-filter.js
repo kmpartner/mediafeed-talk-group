@@ -18,4 +18,6 @@ router.get(
     feedFilterController.getMostVisitPosts
 );
 
+router.get('/most-reaction-posts', feedFilterController.getMostReactionPosts);
+
 module.exports = router;

@@ -11,6 +11,7 @@ function PostSelect(props) {
     showUserPostsHandler,
     showFavoritePostsHandler,
     showMostViewedPostsHandler,
+    showMostLikedPostsHandler,
     showRecentVisitPostsHandler,
     isAuth
   } = props;
@@ -55,6 +56,7 @@ function PostSelect(props) {
   let options = [
     { value: 'posts', label: `${t('feed.text3')}` },
     { value: 'most-visit-posts', label: `Most Viewed Posts` },
+    { value: 'most-like-posts', label: `Most Liked Posts` },
     { value: 'recent-visit-posts', label: `Recent Visit Posts` },
     // { value: 'other-post-select', label: 'other-post1' },
     // { value: 'other-post-select2', label: 'other-post2' },
@@ -66,6 +68,7 @@ function PostSelect(props) {
       { value: 'user-posts', label: `${t('feed.text2')}` },
       { value: 'favorite-posts', label: `${t('general.text18')}` },
       { value: 'most-visit-posts', label: `Most Viewed Posts` },
+      { value: 'most-like-posts', label: `Most Liked Posts` },
       { value: 'recent-visit-posts', label: `Recent Visit Posts` },
       // { value: 'other-post-select', label: 'other-post1' },
       // { value: 'other-post-select2', label: 'other-post2' },
@@ -94,6 +97,10 @@ function PostSelect(props) {
 
       if (selectedOption.value === 'most-visit-posts') {
         showMostViewedPostsHandler();
+      }
+
+      if (selectedOption.value === 'most-like-posts') {
+        showMostLikedPostsHandler();
       }
 
       if (selectedOption.value === 'recent-visit-posts') {
