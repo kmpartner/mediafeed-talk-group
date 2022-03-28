@@ -236,26 +236,48 @@ class Feed extends Component {
   //     () => console.log(this.state.selectedCreatorPosts));
   // }
 
+
   getFavoritePostsHandler = () => {
     this.setState({ postsLoading: true });
 
-    getFavoritePosts(localStorage.getItem('userId'), BASE_URL, this.props.token)
-      .then(result => {
-        console.log(result);
-        this.setState({ 
-          posts: result.data,
-          totalPosts: result.data.length,
-          postsLoading: false
+    const lsUserId = localStorage.getItem('userId');
+    let lsUserFavoritePosts = localStorage.getItem('userFavoritePosts');
+    if (lsUserFavoritePosts) {
+      lsUserFavoritePosts = JSON.parse(lsUserFavoritePosts);
+    }
+
+    if (lsUserId) {
+      if (lsUserFavoritePosts 
+          && lsUserId === lsUserFavoritePosts.userId 
+          && lsUserFavoritePosts.getDate > Date.now() - 1000 * 60 * 60 * 24 * 30
+        ) {
+          this.setState({ 
+            posts: lsUserFavoritePosts.posts,
+            totalPosts: lsUserFavoritePosts.posts.length,
+            postsLoading: false
+          });
+      } 
+      else {
+        getFavoritePosts(lsUserId, BASE_URL, this.props.token)
+        .then(result => {
+          console.log(result);
+          this.setState({ 
+            posts: result.data,
+            totalPosts: result.data.length,
+            postsLoading: false
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          this.setState({
+            posts: [],
+            totalPosts: 0, 
+            postsLoading: false 
+          });
         });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({
-          posts: [],
-          totalPosts: 0, 
-          postsLoading: false 
-        });
-      })
+      }
+      
+    }
   }
 
   favoritePostsClickHandler = () => {

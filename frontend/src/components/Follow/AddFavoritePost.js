@@ -43,6 +43,8 @@ const AddFavoritePost = props => {
         console.log(result);
         setIsFavorite(true);
         setIsLoading(false);
+
+
       })
       .catch(err => {
         console.log(err);
@@ -64,6 +66,12 @@ const AddFavoritePost = props => {
         console.log(result);
         setIsFavorite(true);
         setIsLoading(false);
+
+        return getFavoritePosts(
+          localStorage.getItem('userId'),
+          BASE_URL,
+          props.token 
+        );
       })
       .catch(err => {
         console.log(err);
@@ -85,6 +93,12 @@ const AddFavoritePost = props => {
         console.log(result);
         setIsFavorite(false);
         setIsLoading(false);
+
+        return getFavoritePosts(
+          localStorage.getItem('userId'),
+          BASE_URL,
+          props.token 
+        );
       })
       .catch(err => {
         console.log(err);

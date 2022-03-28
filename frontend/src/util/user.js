@@ -514,6 +514,14 @@ export const getFavoritePosts = (userId, url, token) => {
       .then(resData => {
         console.log(resData);
 
+        const lsData = {
+          userId: localStorage.getItem('userId'),
+          posts: resData.data,
+          getDate: Date.now(),
+        };
+
+        localStorage.setItem('userFavoritePosts', JSON.stringify(lsData));
+
         resolve({ message: 'favoritePosts get success', data: resData.data });
       })
       .catch(err => {

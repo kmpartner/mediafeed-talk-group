@@ -17,7 +17,7 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
-exports.getMostVisitPosts = async (req, res, next) => {
+const getMostVisitPosts = async (req, res, next) => {
   // console.log("req.query in getPosts", req.query);
   // const currentPage = req.query.page || 1;
   // const perPage = 20;
@@ -236,7 +236,7 @@ const createReturnPosts = (posts) => {
 };
 
 
-exports.getMostReactionPosts = async (req, res, next) => {
+const getMostReactionPosts = async (req, res, next) => {
   try {
       const type = req.query.type;
       // console.log('type', type);
@@ -364,4 +364,11 @@ const createMostReactionPosts = async (req, res, next) => {
     }
     next(err);
   }
+}
+
+
+module.exports = {
+  getMostReactionPosts: getMostReactionPosts,
+  getMostVisitPosts: getMostVisitPosts,
+  createReturnPosts: createReturnPosts,
 }
