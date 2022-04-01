@@ -79,6 +79,9 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
 
     const savePost = async () => {
+
+
+
         // const user = await User.findById(req.userId);
         const user = await User.findOne({ userId: req.userId });
         
@@ -109,6 +112,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
             headers: headers
         });
         try {
+
             await post.save();
             // const user = await User.findById(req.userId);
             // user.posts.push(post);
@@ -259,7 +263,22 @@ exports.createMultiImagesPost = async (req, res, next) => {
                 // savePost();
             }
         }
+
+        //// send update data
+        io.getIO().emit('posts', { 
+            action: 'create-action',
+            message: `image-upload-finish ${image.filename}`,
+            imageData: image,
+        });
     }
+
+
+    io.getIO().emit('posts', { 
+        action: 'upload-finish',
+        message: `images-upload-finish`,
+    });
+
+
     // const imageUrl = req.file.path;
 
 
@@ -366,34 +385,6 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                     thumbnailImageUrls.push(thumbnailImageUrl);
 
 
-
-                    // //// resize video when more than 600 width
-                    // var stats = fs.statSync(image.path);
-                    // var fileSizeInBytes = stats.size;
-                    // // Convert the file size to megabytes (optional)
-                    // // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
-                    // console.log('fileSizeInbytes',fileSizeInBytes);
-
-                    // const videoInfo = await getVideoInfo(image.path);
-                    // // console.log('videoInfo', videoInfo);
-                    
-                    // if (videoInfo.width > 600) {
-                    //     await resizeVideo(image.path, modifiedImageUrl, 640);
-                    //     var rsStats = fs.statSync(modifiedImageUrl);
-                    //     var rsfileSizeInBytes = rsStats.size;
-                    //     // Convert the file size to megabytes (optional)
-                    //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-                    //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
-            
-                    //     if (rsfileSizeInBytes < fileSizeInBytes) {
-                    //         console.log('in copyfile')
-                    //         await copyFile(modifiedImageUrl, image.path);
-                    //     }
-                    // }
-
-
-
-
                     const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
                     const thumbnail = await createThumbnail(image.path, forFileFileName);
                 }
@@ -447,8 +438,20 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                         clearImage(modifiedImageUrl);
                         clearImage(thumbnailImageUrl);
                     }
-                }       
+                }    
+                
+                
+                io.getIO().emit('posts', { 
+                    action: 'update-action',
+                    message: `image-upload-finish ${image.filename}`,
+                    imageData: image,
+                });
             }
+
+            io.getIO().emit('posts', { 
+                action: 'upload-finish',
+                message: `images-upload-finish`,
+            });
 
     }
 
@@ -936,7 +939,9 @@ const resizeVideo = (imageUrl, modifiedImageUrl, width) => {
         .on('codecData', function (data) {
             console.log('Input is ' + data.audio_details + ' AUDIO ' +
                 'WITH ' + data.video_details + ' VIDEO');
-
+        })
+        .on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
         })
         .on("error", function (err) {
             console.log("error: ", err);

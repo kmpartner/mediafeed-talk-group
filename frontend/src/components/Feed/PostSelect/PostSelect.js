@@ -107,6 +107,11 @@ function PostSelect(props) {
         showRecentVisitPostsHandler();
       }
 
+      //// set default posts path if pathname is diffrent from '/feed/posts'
+      if (window.location.pathname !== '/feed/posts') {
+        props.history.push(`/feed/posts`);
+      }
+
     }
 
   },[selectedOption]);

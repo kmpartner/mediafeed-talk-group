@@ -8,6 +8,7 @@ import Post from '../../components/Feed/Post/Post';
 import Button from '../../components/Button/Button';
 import FeedEdit from '../../components/Feed/FeedEdit/FeedEdit';
 import FeedImages from '../../components/Feed/UserPost/FeedImages';
+import FeedSocketAction from '../../components/Feed/FeedSocketAction/FeedSocketAction';
 // import FeedVideos from '../../components/Feed/UserPost/FeedVideos';
 // import Input from '../../components/Form/Input/Input';
 import Paginator from '../../components/Paginator/Paginator';
@@ -111,7 +112,11 @@ class Feed extends Component {
         console.log('IN SOCKET.ON action');
         this.loadPosts();
       }
+
+       //// other actions in FeedSocketAction.js
+       
     })
+
   }
 
   addPost = post => {
@@ -293,6 +298,12 @@ class Feed extends Component {
 
 
   loadPosts = direction => {
+
+
+    this.setState({ postsLoading: true });
+
+
+
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -417,6 +428,8 @@ class Feed extends Component {
       .catch(err => {
         console.log(err);
         // this.catchError;
+
+        this.setState({ postsLoading: false });
       })
   };
 
@@ -1170,7 +1183,7 @@ class Feed extends Component {
     } else { 
       feedPost2 = (
         this.state.posts.slice(start2, start2 + showPostNumber).map((post, index) => {
-          console.log('start2, showPostNumber, index', start2, showPostNumber, index);
+          // console.log('start2, showPostNumber, index', start2, showPostNumber, index);
 
           const pagePostNum = this.state.posts.slice(start2, start2 + showPostNumber).length;
           // console.log('adIndexList pagePostNum', adIndexList, pagePostNum);
@@ -1190,7 +1203,7 @@ class Feed extends Component {
             return ix === index;
           });
           const indexValue = isAdIndex && `page-${this.state.postPage}-${index}`;
-          console.log('withIndex', isAdIndex, index, indexValue, adIndexList);
+          // console.log('withIndex', isAdIndex, index, indexValue, adIndexList);
 
           const postElement = (
             <Post
@@ -1547,6 +1560,7 @@ class Feed extends Component {
           showMostLikedPostsHandler={this.showMostLikedPostsHandler}
           showRecentVisitPostsHandler={this.showRecentVisitPostsHandler}
           isAuth={this.props.isAuth}
+          history={this.props.history}
         />
      
 
@@ -1570,6 +1584,8 @@ class Feed extends Component {
           token={this.props.token}
         />
         </div> */}
+
+        <FeedSocketAction />
       </div>
       </Fragment>
     );

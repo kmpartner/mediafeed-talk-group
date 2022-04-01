@@ -35,7 +35,11 @@ function Notification(props) {
     >
       {/* <h2>{title}</h2>
       <p>{message}</p> */}
-
+      <div className={classes.notificationCloseButton}>
+        <strong className={classes.notificationCloseButtonX}
+          onClick={() => { dispatch('CLEAR_NOTIFICATION'); }}
+        >X</strong>
+      </div>
       <p>{title}</p>
       <p>{message}</p>
     </div>

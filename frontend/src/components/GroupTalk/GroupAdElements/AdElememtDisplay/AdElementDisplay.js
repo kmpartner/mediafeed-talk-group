@@ -33,7 +33,7 @@ const AdElementDisplay = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  console.log('store-in AdElementDisplay.js', store);
+  // console.log('store-in AdElementDisplay.js', store);
   const adList = store.adStore.adList;
 
   const ref = useRef();
