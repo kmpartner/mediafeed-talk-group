@@ -507,13 +507,16 @@ exports.getFavoritePosts = async (req, res, next) => {
 
         //// get from favoritePost
         const favoritePostElements = await FavoritePost.find({ userId: req.userId });
-        // console.log('favoritePostElements', favoritePostElements);
+        // console.log('favoritePostElements.length', favoritePostElements.length);
 
         const favoritePostElementList = [];
         for (const element of favoritePostElements) {
             const favoritePostElement = await Post.findById(element.postId);
             
-            if (favoritePostElement && favoritePostElement.public === 'public') {
+            if (favoritePostElement &&
+                (favoritePostElement.creatorId === req.userId || favoritePostElement.public === 'public')
+            ) {
+            // if (favoritePostElement) {
                 favoritePostElementList.push(favoritePostElement);
             }
         }
@@ -560,7 +563,7 @@ exports.getFavoritePost = async (req, res, next) => {
         
         const favoritePostData = await Post.findById(favoritePostElement.postId);
         // console.log('favoritePostElements', favoritePostElement);
-        if (favoritePostData && favoritePostData.public !== 'public') {
+        if (favoritePostData && favoritePostData.public !== 'public' && favoritePostData.creatorId !== req.userId) {
             const error = new Error('post could not find.');
             error.statusCode = 404;
             throw error;

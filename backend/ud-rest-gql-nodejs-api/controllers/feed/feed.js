@@ -33,19 +33,20 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
-exports.feedAction = async (req, res, next) => {
+const feedAction = async (req, res, next) => {
   // console.log(req.body);
   io.getIO().emit("posts", { action: "action" });
   res.json({ message: "response from getPosts controllers for socket" });
 };
 
-exports.getPosts = async (req, res, next) => {
+const getPosts = async (req, res, next) => {
   console.log("req.query in getPosts", req.query);
   const currentPage = req.query.page || 1;
   const perPage = 20;
   const loadLimit = 10000;
 
-  let loadNumber = perPage + 1 + (currentPage - 1) * perPage;
+  // let loadNumber = perPage + 1 + (currentPage - 1) * perPage;
+  let loadNumber = perPage + 20 + (currentPage - 1) * perPage;
 
   if (loadNumber > loadLimit) {
     loadNumber = loadLimit;
@@ -62,132 +63,145 @@ exports.getPosts = async (req, res, next) => {
   // console.log('allPosts', allPosts);
   // console.log('allPosts num ', allPosts.length);
 
-  const createReturnPosts = (posts) => {
-    return posts.map((post) => {
-      const port = process.env.PORT || 8083;
 
-      const imageUrls = [];
-      if (post.imageUrls && post.imageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.imageUrls) {
-            imageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.imageUrls) {
-            imageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      const modifiedImageUrls = [];
-      if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.modifiedImageUrls) {
-            modifiedImageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.modifiedImageUrls) {
-            modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      const thumbnailImageUrls = [];
-      if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.thumbnailImageUrls) {
-            thumbnailImageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.thumbnailImageUrls) {
-            thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      let creatorImageUrl = null;
-      if (!process.env.S3NOTUSE && post.creatorImageUrl) {
-        creatorImageUrl = s3.getSignedUrl("getObject", {
-          Bucket: process.env.DO_SPACE_BUCKET_NAME,
-          Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
-          Expires: 60 * 60,
-        });
-      }
 
-      if (process.env.S3NOTUSE && post.creatorImageUrl) {
-        creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
-      }
 
-      return {
-        ...post._doc,
-        imagePath: post.imageUrl,
-        imageUrl:
-          post.imageUrl &&
-          post.imageUrl !== "undefined" &&
-          post.imageUrl !== "deleted"
-            ? s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: post.imageUrl,
-                Expires: 60 * 60,
-              })
-            : "undefined",
-        modifiedImageUrl:
-          post.modifiedImageUrl &&
-          post.imageUrl &&
-          post.imageUrl !== "undefined" &&
-          post.imageUrl !== "deleted"
-            ? s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: post.modifiedImageUrl,
-                Expires: 60 * 60,
-              })
-            : undefined,
-        thumbnailImageUrl:
-          post.thumbnailImageUrl &&
-          post.imageUrl &&
-          post.imageUrl !== "undefined" &&
-          post.imageUrl !== "deleted"
-            ? s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: post.thumbnailImageUrl,
-                Expires: 60 * 60,
-              })
-            : undefined,
-        // creatorImageUrl: post.creatorImageUrl
-        //     ? s3.getSignedUrl('getObject', {
-        //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
-        //         Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
-        //         Expires: 60 * 60
-        //       })
-        //     : null,
-        creatorImageUrl: creatorImageUrl,
-        imageUrls: imageUrls,
-        modifiedImageUrls: modifiedImageUrls,
-        thumbnailImageUrls: thumbnailImageUrls,
-      };
-    });
-  };
+  // const createReturnPosts = (posts) => {
+  //   return posts.map((post) => {
+  //     const port = process.env.PORT || 8083;
+
+  //     const imageUrls = [];
+  //     if (post.imageUrls && post.imageUrls.length > 0) {
+  //       if (!process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.imageUrls) {
+  //           imageUrls.push(
+  //             s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: imageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           );
+  //         }
+  //       }
+  //       if (process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.imageUrls) {
+  //           imageUrls.push(`http://localhost:${port}/${imageUrl}`);
+  //         }
+  //       }
+  //     }
+
+  //     const modifiedImageUrls = [];
+  //     if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
+  //       if (!process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.modifiedImageUrls) {
+  //           modifiedImageUrls.push(
+  //             s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: imageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           );
+  //         }
+  //       }
+  //       if (process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.modifiedImageUrls) {
+  //           modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+  //         }
+  //       }
+  //     }
+
+  //     const thumbnailImageUrls = [];
+  //     if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
+  //       if (!process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.thumbnailImageUrls) {
+  //           thumbnailImageUrls.push(
+  //             s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: imageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           );
+  //         }
+  //       }
+  //       if (process.env.S3NOTUSE) {
+  //         for (const imageUrl of post.thumbnailImageUrls) {
+  //           thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+  //         }
+  //       }
+  //     }
+
+  //     let creatorImageUrl = null;
+  //     if (!process.env.S3NOTUSE && post.creatorImageUrl) {
+  //       creatorImageUrl = s3.getSignedUrl("getObject", {
+  //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //         Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
+  //         Expires: 60 * 60,
+  //       });
+  //     }
+
+  //     if (process.env.S3NOTUSE && post.creatorImageUrl) {
+  //       creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
+  //     }
+
+  //     return {
+  //       ...post._doc,
+  //       imagePath: post.imageUrl,
+  //       imageUrl:
+  //         post.imageUrl &&
+  //         post.imageUrl !== "undefined" &&
+  //         post.imageUrl !== "deleted"
+  //           ? s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: post.imageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           : "undefined",
+  //       modifiedImageUrl:
+  //         post.modifiedImageUrl &&
+  //         post.imageUrl &&
+  //         post.imageUrl !== "undefined" &&
+  //         post.imageUrl !== "deleted"
+  //           ? s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: post.modifiedImageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           : undefined,
+  //       thumbnailImageUrl:
+  //         post.thumbnailImageUrl &&
+  //         post.imageUrl &&
+  //         post.imageUrl !== "undefined" &&
+  //         post.imageUrl !== "deleted"
+  //           ? s3.getSignedUrl("getObject", {
+  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //               Key: post.thumbnailImageUrl,
+  //               Expires: 60 * 60,
+  //             })
+  //           : undefined,
+  //       // creatorImageUrl: post.creatorImageUrl
+  //       //     ? s3.getSignedUrl('getObject', {
+  //       //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //       //         Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
+  //       //         Expires: 60 * 60
+  //       //       })
+  //       //     : null,
+  //       creatorImageUrl: creatorImageUrl,
+  //       imageUrls: imageUrls,
+  //       modifiedImageUrls: modifiedImageUrls,
+  //       thumbnailImageUrls: thumbnailImageUrls,
+  //     };
+  //   });
+  // };
+
+
+
+
+
+
+
 
   if (req.query.userpost === "true" || req.query.userpost === "userPosts") {
     try {
@@ -277,7 +291,7 @@ exports.getPosts = async (req, res, next) => {
   }
 };
 
-exports.createPost = async (req, res, next) => {
+const createPost = async (req, res, next) => {
   console.log("req.body", req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -454,7 +468,7 @@ exports.createPost = async (req, res, next) => {
   }
 };
 
-exports.getPost = async (req, res, next) => {
+const getPost = async (req, res, next) => {
   try {
     const postId = req.params.postId;
     const post = await Post.findById(postId);
@@ -497,122 +511,134 @@ exports.getPost = async (req, res, next) => {
     ) {
       const port = process.env.PORT || 8083;
 
-      const imageUrls = [];
-      if (post.imageUrls && post.imageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.imageUrls) {
-            imageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60 * 24 * 365,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.imageUrls) {
-            imageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      const modifiedImageUrls = [];
-      if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.modifiedImageUrls) {
-            modifiedImageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60 * 24 * 365,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.modifiedImageUrls) {
-            modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      const thumbnailImageUrls = [];
-      if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
-        if (!process.env.S3NOTUSE) {
-          for (const imageUrl of post.thumbnailImageUrls) {
-            thumbnailImageUrls.push(
-              s3.getSignedUrl("getObject", {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: imageUrl,
-                Expires: 60 * 60 * 24 * 365,
-              })
-            );
-          }
-        }
-        if (process.env.S3NOTUSE) {
-          for (const imageUrl of post.thumbnailImageUrls) {
-            thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-          }
-        }
-      }
 
-      let creatorImageUrl = null;
-      if (!process.env.S3NOTUSE && post.creatorImageUrl) {
-        creatorImageUrl = s3.getSignedUrl("getObject", {
-          Bucket: process.env.DO_SPACE_BUCKET_NAME,
-          Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
-          Expires: 60 * 60,
-        });
-      }
 
-      if (process.env.S3NOTUSE && post.creatorImageUrl) {
-        creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
-      }
+      // const imageUrls = [];
+      // if (post.imageUrls && post.imageUrls.length > 0) {
+      //   if (!process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.imageUrls) {
+      //       imageUrls.push(
+      //         s3.getSignedUrl("getObject", {
+      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //           Key: imageUrl,
+      //           Expires: 60 * 60 * 24 * 365,
+      //         })
+      //       );
+      //     }
+      //   }
+      //   if (process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.imageUrls) {
+      //       imageUrls.push(`http://localhost:${port}/${imageUrl}`);
+      //     }
+      //   }
+      // }
 
+      // const modifiedImageUrls = [];
+      // if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
+      //   if (!process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.modifiedImageUrls) {
+      //       modifiedImageUrls.push(
+      //         s3.getSignedUrl("getObject", {
+      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //           Key: imageUrl,
+      //           Expires: 60 * 60 * 24 * 365,
+      //         })
+      //       );
+      //     }
+      //   }
+      //   if (process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.modifiedImageUrls) {
+      //       modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+      //     }
+      //   }
+      // }
+
+      // const thumbnailImageUrls = [];
+      // if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
+      //   if (!process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.thumbnailImageUrls) {
+      //       thumbnailImageUrls.push(
+      //         s3.getSignedUrl("getObject", {
+      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //           Key: imageUrl,
+      //           Expires: 60 * 60 * 24 * 365,
+      //         })
+      //       );
+      //     }
+      //   }
+      //   if (process.env.S3NOTUSE) {
+      //     for (const imageUrl of post.thumbnailImageUrls) {
+      //       thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+      //     }
+      //   }
+      // }
+
+      // let creatorImageUrl = null;
+      // if (!process.env.S3NOTUSE && post.creatorImageUrl) {
+      //   creatorImageUrl = s3.getSignedUrl("getObject", {
+      //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //     Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
+      //     Expires: 60 * 60 * 24 * 365,
+      //   });
+      // }
+
+      // if (process.env.S3NOTUSE && post.creatorImageUrl) {
+      //   creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
+      // }
+
+      // res.status(200).json({
+      //   message: "Post fetched.",
+      //   post: {
+      //     ...post._doc,
+      //     imageUrl: doUrl ? doUrl : post.imageUrl,
+
+      //     modifiedImageUrl:
+      //       post.modifiedImageUrl &&
+      //       post.imageUrl &&
+      //       post.imageUrl !== "undefined" &&
+      //       post.imageUrl !== "deleted"
+      //         ? s3.getSignedUrl("getObject", {
+      //             Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //             Key: post.modifiedImageUrl,
+      //             Expires: 60 * 60,
+      //             // Expires: 10
+      //           })
+      //         : undefined,
+      //     thumbnailImageUrl:
+      //       post.thumbnailImageUrl &&
+      //       post.imageUrl &&
+      //       post.imageUrl !== "undefined" &&
+      //       post.imageUrl !== "deleted"
+      //         ? s3.getSignedUrl("getObject", {
+      //             Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //             Key: post.thumbnailImageUrl,
+      //             Expires: 60 * 60,
+      //           })
+      //         : undefined,
+
+      //     // creatorImageUrl: post.creatorImageUrl
+      //     // ? s3.getSignedUrl('getObject', {
+      //     //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //     //   Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
+      //     //   Expires: 60 * 60
+      //     // })
+      //     // : null,
+      //     creatorImageUrl: creatorImageUrl,
+
+      //     imageUrls: imageUrls,
+      //     modifiedImageUrls: modifiedImageUrls,
+      //     thumbnailImageUrls: thumbnailImageUrls,
+      //   },
+      // });
+
+
+      const returnPost = createReturnPost(post);
+      // console.log(returnPost);
       res.status(200).json({
         message: "Post fetched.",
-        post: {
-          ...post._doc,
-          imageUrl: doUrl ? doUrl : post.imageUrl,
-
-          modifiedImageUrl:
-            post.modifiedImageUrl &&
-            post.imageUrl &&
-            post.imageUrl !== "undefined" &&
-            post.imageUrl !== "deleted"
-              ? s3.getSignedUrl("getObject", {
-                  Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                  Key: post.modifiedImageUrl,
-                  Expires: 60 * 60,
-                  // Expires: 10
-                })
-              : undefined,
-          thumbnailImageUrl:
-            post.thumbnailImageUrl &&
-            post.imageUrl &&
-            post.imageUrl !== "undefined" &&
-            post.imageUrl !== "deleted"
-              ? s3.getSignedUrl("getObject", {
-                  Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                  Key: post.thumbnailImageUrl,
-                  Expires: 60 * 60,
-                })
-              : undefined,
-
-          // creatorImageUrl: post.creatorImageUrl
-          // ? s3.getSignedUrl('getObject', {
-          //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
-          //   Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
-          //   Expires: 60 * 60
-          // })
-          // : null,
-          creatorImageUrl: creatorImageUrl,
-
-          imageUrls: imageUrls,
-          modifiedImageUrls: modifiedImageUrls,
-          thumbnailImageUrls: thumbnailImageUrls,
-        },
+        post: returnPost,
       });
     } else {
         const error = new Error("Not Authorized");
@@ -699,7 +725,7 @@ exports.getPost = async (req, res, next) => {
   }
 };
 
-exports.updatePost = async (req, res, next) => {
+const updatePost = async (req, res, next) => {
   console.log("req.body", req.body, "req.file", req.file);
 
   const postId = req.params.postId;
@@ -887,7 +913,7 @@ exports.updatePost = async (req, res, next) => {
   }
 };
 
-exports.deletePost = async (req, res, next) => {
+const deletePost = async (req, res, next) => {
   const postId = req.params.postId;
 
   // try {
@@ -974,7 +1000,7 @@ exports.deletePost = async (req, res, next) => {
   }
 };
 
-exports.deletePostImage = async (req, res, next) => {
+const deletePostImage = async (req, res, next) => {
   const postId = req.params.postId;
 
   try {
@@ -1054,7 +1080,7 @@ exports.deletePostImage = async (req, res, next) => {
   }
 };
 
-exports.getPostForMap = async (req, res, next) => {
+const getPostForMap = async (req, res, next) => {
   const postId = req.params.postId;
   const post = await Post.findById(postId);
   console.log("req.body", req.body);
@@ -1148,6 +1174,271 @@ exports.getPostForMap = async (req, res, next) => {
 //     fs.unlink(filePath, err => console.log(err));
 //     // console.log('Image Deleted, filePath: ', filePath );
 // }
+
+
+const createReturnPost = (post) => {
+
+  let doUrl;
+  if (
+    post.imageUrl &&
+    post.imageUrl !== "undefined" &&
+    post.imageUrl !== "deleted"
+  ) {
+    doUrl = s3.getSignedUrl("getObject", {
+      Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      Key: `${post.imageUrl}`,
+      Expires: 60 * 60,
+    });
+  }
+  
+  const port = process.env.PORT || 8083;
+
+      const imageUrls = [];
+      if (post.imageUrls && post.imageUrls.length > 0) {
+        if (!process.env.S3NOTUSE) {
+          for (const imageUrl of post.imageUrls) {
+            imageUrls.push(
+              s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: imageUrl,
+                Expires: 60 * 60 * 24 * 365,
+              })
+            );
+          }
+        }
+        if (process.env.S3NOTUSE) {
+          for (const imageUrl of post.imageUrls) {
+            imageUrls.push(`http://localhost:${port}/${imageUrl}`);
+          }
+        }
+      }
+
+      const modifiedImageUrls = [];
+      if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
+        if (!process.env.S3NOTUSE) {
+          for (const imageUrl of post.modifiedImageUrls) {
+            modifiedImageUrls.push(
+              s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: imageUrl,
+                Expires: 60 * 60 * 24 * 365,
+              })
+            );
+          }
+        }
+        if (process.env.S3NOTUSE) {
+          for (const imageUrl of post.modifiedImageUrls) {
+            modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+          }
+        }
+      }
+
+      const thumbnailImageUrls = [];
+      if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
+        if (!process.env.S3NOTUSE) {
+          for (const imageUrl of post.thumbnailImageUrls) {
+            thumbnailImageUrls.push(
+              s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: imageUrl,
+                Expires: 60 * 60 * 24 * 365,
+              })
+            );
+          }
+        }
+        if (process.env.S3NOTUSE) {
+          for (const imageUrl of post.thumbnailImageUrls) {
+            thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+          }
+        }
+      }
+
+      let creatorImageUrl = null;
+      if (!process.env.S3NOTUSE && post.creatorImageUrl) {
+        creatorImageUrl = s3.getSignedUrl("getObject", {
+          Bucket: process.env.DO_SPACE_BUCKET_NAME,
+          Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
+          Expires: 60 * 60 * 24 * 365,
+        });
+      }
+
+      if (process.env.S3NOTUSE && post.creatorImageUrl) {
+        creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
+      }
+
+      return {
+        ...post._doc,
+        imageUrl: doUrl ? doUrl : post.imageUrl,
+
+        modifiedImageUrl:
+          post.modifiedImageUrl &&
+          post.imageUrl &&
+          post.imageUrl !== "undefined" &&
+          post.imageUrl !== "deleted"
+            ? s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: post.modifiedImageUrl,
+                Expires: 60 * 60 * 24 * 365,
+                // Expires: 10
+              })
+            : undefined,
+        thumbnailImageUrl:
+          post.thumbnailImageUrl &&
+          post.imageUrl &&
+          post.imageUrl !== "undefined" &&
+          post.imageUrl !== "deleted"
+            ? s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: post.thumbnailImageUrl,
+                Expires: 60 * 60 * 24 * 365,
+              })
+            : undefined,
+
+        // creatorImageUrl: post.creatorImageUrl
+        // ? s3.getSignedUrl('getObject', {
+        //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
+        //   Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
+        //   Expires: 60 * 60
+        // })
+        // : null,
+        creatorImageUrl: creatorImageUrl,
+
+        imageUrls: imageUrls,
+        modifiedImageUrls: modifiedImageUrls,
+        thumbnailImageUrls: thumbnailImageUrls,
+      }
+};
+
+
+const createReturnPosts = (posts) => {
+  return posts.map((post) => {
+    // console.log(post);
+    const port = process.env.PORT || 8083;
+
+    const imageUrls = [];
+    if (post.imageUrls && post.imageUrls.length > 0) {
+      if (!process.env.S3NOTUSE) {
+        for (const imageUrl of post.imageUrls) {
+          imageUrls.push(
+            s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: imageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          );
+        }
+      }
+      if (process.env.S3NOTUSE) {
+        for (const imageUrl of post.imageUrls) {
+          imageUrls.push(`http://localhost:${port}/${imageUrl}`);
+        }
+      }
+    }
+
+    const modifiedImageUrls = [];
+    if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
+      if (!process.env.S3NOTUSE) {
+        for (const imageUrl of post.modifiedImageUrls) {
+          modifiedImageUrls.push(
+            s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: imageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          );
+        }
+      }
+      if (process.env.S3NOTUSE) {
+        for (const imageUrl of post.modifiedImageUrls) {
+          modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+        }
+      }
+    }
+
+    const thumbnailImageUrls = [];
+    if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
+      if (!process.env.S3NOTUSE) {
+        for (const imageUrl of post.thumbnailImageUrls) {
+          thumbnailImageUrls.push(
+            s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: imageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          );
+        }
+      }
+      if (process.env.S3NOTUSE) {
+        for (const imageUrl of post.thumbnailImageUrls) {
+          thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
+        }
+      }
+    }
+
+    let creatorImageUrl = null;
+    if (!process.env.S3NOTUSE && post.creatorImageUrl) {
+      creatorImageUrl = s3.getSignedUrl("getObject", {
+        Bucket: process.env.DO_SPACE_BUCKET_NAME,
+        Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
+        Expires: 60 * 60 * 24 * 365,
+      });
+    }
+
+    if (process.env.S3NOTUSE && post.creatorImageUrl) {
+      creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
+    }
+
+    return {
+      ...post._doc,
+      imagePath: post.imageUrl,
+      imageUrl:
+        post.imageUrl &&
+        post.imageUrl !== "undefined" &&
+        post.imageUrl !== "deleted"
+          ? s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: post.imageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          : "undefined",
+      modifiedImageUrl:
+        post.modifiedImageUrl &&
+        post.imageUrl &&
+        post.imageUrl !== "undefined" &&
+        post.imageUrl !== "deleted"
+          ? s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: post.modifiedImageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          : undefined,
+      thumbnailImageUrl:
+        post.thumbnailImageUrl &&
+        post.imageUrl &&
+        post.imageUrl !== "undefined" &&
+        post.imageUrl !== "deleted"
+          ? s3.getSignedUrl("getObject", {
+              Bucket: process.env.DO_SPACE_BUCKET_NAME,
+              Key: post.thumbnailImageUrl,
+              Expires: 60 * 60 * 24 * 365,
+            })
+          : undefined,
+      // creatorImageUrl: post.creatorImageUrl
+      //     ? s3.getSignedUrl('getObject', {
+      //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      //         Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
+      //         Expires: 60 * 60
+      //       })
+      //     : null,
+      creatorImageUrl: creatorImageUrl,
+      imageUrls: imageUrls,
+      modifiedImageUrls: modifiedImageUrls,
+      thumbnailImageUrls: thumbnailImageUrls,
+    };
+  });
+};
+
+
 
 const createSmallImage = (imageUrl, modifiedImageUrl) => {
   return new Promise((resolve, reject) => {
@@ -1298,3 +1589,16 @@ const createThumbnail = (imageUrl, filename) => {
 // console.log('imageUrl ft', fileType);
 // console.log('img',withoutFileType);
 // console.log('mod', modifiedImageUrl);
+
+module.exports = {
+  feedAction: feedAction,
+  getPosts: getPosts,
+  getPost: getPost,
+  createPost: createPost,
+  updatePost: updatePost,
+  deletePost: deletePost,
+  deletePostImage: deletePostImage,
+  getPostForMap: getPostForMap,
+  createReturnPost: createReturnPost,
+  createReturnPosts: createReturnPosts,
+}

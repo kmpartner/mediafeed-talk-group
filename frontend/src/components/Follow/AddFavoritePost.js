@@ -11,6 +11,7 @@ import {
   getFavoritePosts,
   getFavoritePost
 } from '../../util/user';
+import { addLsFavoritePost, deleteLsFavoritePost } from '../../util/feed/favorite-post'
 
 import { BASE_URL, GQL_URL } from '../../App';
 
@@ -67,6 +68,7 @@ const AddFavoritePost = props => {
         setIsFavorite(true);
         setIsLoading(false);
 
+        // addLsFavoritePost(props.postData, localStorage.getItem('userId'))
         return getFavoritePosts(
           localStorage.getItem('userId'),
           BASE_URL,
@@ -94,6 +96,7 @@ const AddFavoritePost = props => {
         setIsFavorite(false);
         setIsLoading(false);
 
+        // deleteLsFavoritePost(props.postId);
         return getFavoritePosts(
           localStorage.getItem('userId'),
           BASE_URL,

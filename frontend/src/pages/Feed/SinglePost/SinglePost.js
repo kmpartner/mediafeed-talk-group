@@ -26,6 +26,7 @@ import {
 } from '../../../util/user';
 // import { getPostFavoriteUserList } from '../../../util/follow';
 import { isImageFile, isVideoFile } from '../../../util/image';
+import * as favoritePostUtils from '../../../util/feed/favorite-post';
 import { getDate } from '../../../util/timeFormat';
 import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
@@ -112,6 +113,15 @@ class SinglePost extends Component {
         if (res.status === 403 || res.status === 404) {
           // console.log('postId', postId);
           this.deleteFromRecentVisitPosts(postId);
+
+          deleteFavoritePost(
+            postId,
+            localStorage.getItem('userId'),
+            BASE_URL,
+            this.props.token,
+          );
+          favoritePostUtils.deleteLsFavoritePost(postId);
+
           throw new Error('Failed to fetch post, or post is not public');
         }
         if (res.status !== 200) {
@@ -151,6 +161,8 @@ class SinglePost extends Component {
             }
 
             this.setLsRecentVisitPosts();
+
+            favoritePostUtils.updateLsFavoritePosts(this.state.postData);
 
             const adPlaceId = `singlepost-comment-top-${this.props.match.params.postId}`
             this.setState({ 

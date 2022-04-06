@@ -21,6 +21,7 @@ const imageModify = require('../../util/image');
 const { s3Upload, s3DeleteOne, s3DeleteMany } = require('../../util/image');
 const { testAuth } = require('../../util/auth');
 const { clearImage} = require('../../util/file');
+const { createReturnPost } = require('./feed');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -130,9 +131,13 @@ exports.createMultiImagesPost = async (req, res, next) => {
                     // } 
                 }
             });
+
+            const returnPost = createReturnPost(post);
+
             res.status(201).json({
                 message: 'Post multi-images created Successfully',
-                post: post,
+                // post: post,
+                post: returnPost,
                 // creator: { 
                 //     _id: user._id,
                 //     userId: req.userId,
@@ -488,7 +493,13 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         const result = await post.save();
 
         io.getIO().emit('posts', { action: 'update', post: result });
-        res.status(200).json({ message: 'Post updated', post: result });
+        
+        const returnPost = createReturnPost(post);
+        res.status(200).json({ 
+            message: 'Post updated', 
+            // post: result 
+            post: returnPost,
+        });
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

@@ -18,6 +18,7 @@ import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import { getUserLocation, getFavoritePosts } from '../../util/user';
 import { postUpdatePushHandler } from '../../util/pushNotification'
 import { createWithAdIndexList } from '../../util/ad-visit';
+import { deleteLsFavoritePost, updateLsFavoritePosts } from '../../util/feed/favorite-post';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import GetWindowData from '../../components/UI/getWindowData';
@@ -103,11 +104,11 @@ class Feed extends Component {
     const socket = openSocket(BASE_URL);
     socket.on('posts', data => {
       if (data.action === 'create') {
-        this.addPost(data.post);
+        // this.addPost(data.post);
       } else if (data.action === 'update') {
-        this.updatePost(data.post);
+        // this.updatePost(data.post);
       } else if (data.action === 'delete') {
-        this.loadPosts();
+        // this.loadPosts();
       } else if (data.action === 'action') {
         console.log('IN SOCKET.ON action');
         this.loadPosts();
@@ -122,12 +123,15 @@ class Feed extends Component {
   addPost = post => {
     this.setState(prevState => {
       const updatedPosts = [...prevState.posts];
-      if (prevState.postPage === 1) {
-        if (prevState.posts.length >= 2) {
-          updatedPosts.pop();
-        }
-        updatedPosts.unshift(post);
-      }
+      // if (prevState.postPage === 1) {
+      //   if (prevState.posts.length >= 2) {
+      //     updatedPosts.pop();
+      //   }
+      //   updatedPosts.unshift(post);
+      // }
+
+      updatedPosts.unshift(post);
+      console.log(prevState.totalPosts);
       return {
         posts: updatedPosts,
         totalPosts: prevState.totalPosts + 1
@@ -145,7 +149,8 @@ class Feed extends Component {
       return {
         posts: updatedPosts
       }
-    })
+    });
+
   }
 
   selectedPostEditHandler = (postId) => {
@@ -249,12 +254,22 @@ class Feed extends Component {
     let lsUserFavoritePosts = localStorage.getItem('userFavoritePosts');
     if (lsUserFavoritePosts) {
       lsUserFavoritePosts = JSON.parse(lsUserFavoritePosts);
+
+      //// check update of ls favarite posts in loaded posts
+      // if (lsUserFavoritePosts.posts.length > 0) {
+      //   for (const post of this.state.posts) {
+      //     // console.log(post);
+      //     // updateLsFavoritePosts(post);
+      //   }
+      // }
+
     }
 
     if (lsUserId) {
       if (lsUserFavoritePosts 
           && lsUserId === lsUserFavoritePosts.userId 
-          && lsUserFavoritePosts.getDate > Date.now() - 1000 * 60 * 60 * 24 * 30
+          && lsUserFavoritePosts.getDate > Date.now() - 1000 * 60 * 60 * 24 * 7
+          // && lsUserFavoritePosts.getDate > Date.now() - 1000
         ) {
           this.setState({ 
             posts: lsUserFavoritePosts.posts,
@@ -751,6 +766,14 @@ class Feed extends Component {
           const updatedPostData = resData.post;
           // console.log(updatedPostData);
   
+          // console.log('this.state.editPost', this.state.editPost);
+          
+          if (this.state.editPost) {
+            this.updatePost(updatedPostData);
+          } else {
+            this.addPost(updatedPostData);
+          }
+
           // const post = {
           //   _id: resData.post._id,
           //   title: resData.post.title,
@@ -774,7 +797,7 @@ class Feed extends Component {
               localStorage.removeItem('selectedPostData');
               this.props.history.push(`/feed/${selectedPostId}`);
             } else {
-              this.loadPosts();
+              // this.loadPosts();
             }
           })
   
@@ -959,6 +982,10 @@ class Feed extends Component {
       })
       .then(resData => {
         console.log(resData);
+        //// load post when total post is less than perpage (to show pagination)
+        if (this.state.totalPosts <= this.state.perPage + 1) {
+          this.loadPosts();
+        }
 
         this.setState({ isPostDeleting: false });
 
@@ -967,16 +994,27 @@ class Feed extends Component {
           this.setState({ postDeleteResult: '' });
         },1000*5);
 
-        return fetch(BASE_URL + '/feed/action', {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + this.props.token,
-          },
-        })
+        this.setState(prevState => {
+          const updatedPosts = prevState.posts.filter(p => p._id !== postId);
+          return { 
+            posts: updatedPosts, 
+            totalPosts: updatedPosts.length,
+            postsLoading: false,
+          };
+        });
+
+        deleteLsFavoritePost(postId);
+        
+        // return fetch(BASE_URL + '/feed/action', {
+        //   method: 'GET',
+        //   headers: {
+        //     Authorization: 'Bearer ' + this.props.token,
+        //   },
+        // })
       })
-      .then(res => {
-        console.log(res);
-      })
+      // .then(res => {
+      //   console.log(res);
+      // })
       .catch(err => {
         console.log(err);
         this.setState({ isPostDeleting: false });
