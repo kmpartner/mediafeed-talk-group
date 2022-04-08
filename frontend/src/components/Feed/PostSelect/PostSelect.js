@@ -55,9 +55,9 @@ function PostSelect(props) {
 
   let options = [
     { value: 'posts', label: `${t('feed.text3')}` },
-    { value: 'most-visit-posts', label: `Most Viewed Posts` },
-    { value: 'most-like-posts', label: `Most Liked Posts` },
-    { value: 'recent-visit-posts', label: `Recent Visit Posts` },
+    { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
+    { value: 'most-like-posts', label: `${t('feed.text27', 'Most Liked Posts')}` },
+    { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
     // { value: 'other-post-select', label: 'other-post1' },
     // { value: 'other-post-select2', label: 'other-post2' },
   ];
@@ -67,9 +67,9 @@ function PostSelect(props) {
       { value: 'posts', label: `${t('feed.text3')}` },
       { value: 'user-posts', label: `${t('feed.text2')}` },
       { value: 'favorite-posts', label: `${t('general.text18')}` },
-      { value: 'most-visit-posts', label: `Most Viewed Posts` },
-      { value: 'most-like-posts', label: `Most Liked Posts` },
-      { value: 'recent-visit-posts', label: `Recent Visit Posts` },
+      { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
+      { value: 'most-like-posts', label: `${t('feed.text27', 'Most Liked Posts')}` },
+      { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
       // { value: 'other-post-select', label: 'other-post1' },
       // { value: 'other-post-select2', label: 'other-post2' },
     ]

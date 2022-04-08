@@ -19,9 +19,9 @@ function EmbedMedia(props) {
   const [embedUrlInput, setEmbedUrlInput] = useState('');
   const [embedMediaUrl, setEmbedMediaUrl] = useState(embedUrl);
 
-  const inputLabel = 'Embed youTube video';
-  const inputPlaceholder = 'Copy YouTube url here';
-  const previewTitle = 'Preview';
+  const inputLabel = `${t('feed.text36', 'Embed youTube video')}`;
+  const inputPlaceholder = `${t('feed.text37', 'Copy YouTube Video Embed URL Here...')}`;
+  const previewTitle = `${t('feed.text38', 'Preview')}`;
 
   function getYouTubeId(url) {
     var regExp =

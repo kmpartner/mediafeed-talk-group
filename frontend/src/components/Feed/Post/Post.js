@@ -231,7 +231,7 @@ const Post = props => {
         </h3>
 
         {props.postFilter !== 'recent-visit-posts' && (
-          <div>visits: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
+          <div>{t('feed.29', 'Visits')}: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
         )}
 
         {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next/hooks';
 
 import Loader from '../../../Loader/Loader';
 
@@ -14,6 +15,8 @@ import { BASE_URL, GQL_URL } from '../../../../App';
 import './PostReaction.css';
 
 const PostResponse = (props) => {
+
+  const [t] = useTranslation('translation');
 
   const [likeReactionNum, setLikeReactionNum] = useState('');
   const [isUserLike, setIsUserLike] = useState(true);
@@ -119,7 +122,7 @@ const PostResponse = (props) => {
         <span className="post-reaction__reactionButton"
           onClick={() => { createPostReactionHandler('like') }}
         >
-          Like &#128077; {likeReactionNum} {isUserLike && '(already liked)'}
+          {t('feed.text31', 'Likes')} &#128077; {likeReactionNum} {isUserLike && '(already liked)'}
         </span>
 
         {/* {isUserLike ? <div>

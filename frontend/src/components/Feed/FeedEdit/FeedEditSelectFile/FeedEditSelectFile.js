@@ -52,8 +52,8 @@ function FeedEditSelectFile(props) {
       <div>
         <FilePicker
           id="image"
-          label="Media File"
-          // label={t('feed.text11')}
+          // label="Media File"
+          label={t('feed.text32', 'Media Files')}
           control="input"
           onChange={postInputChangeHandler}
           onBlur={inputBlurHandler.bind(this, 'image')}
@@ -67,7 +67,8 @@ function FeedEditSelectFile(props) {
           {/* (Media File should be jpg, jpeg, png, mp4 file) */}
           {/* (Media File should be jpg, jpeg, png file, less than 1MB, up to 6 files) */}
           {/* (Image files should be jpg, jpeg, png file, up to 6 files (Image will be resized when file size exceed 1MB)) */}
-          (Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files (Images with more than 1400px of width or height will be resized))
+          {/* (Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files (Images with more than 1400px of width or height will be resized)) */}
+          {t('feed.text34', 'Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files')} ({t('feed.text35', 'Images with more than 1400px of width or height will be resized')})
         </span>
       </div>
       }
@@ -76,7 +77,9 @@ function FeedEditSelectFile(props) {
         <div className={classes.feedEditselectFileOpen}>
           <span onClick={showEmbedHandler}>
             {/* {!showEmbed && <span>OR,</span>}  */}
-            <br/>Embed Media &#9662;
+            <br/>
+            {/* {t('feed.text33', 'Embed Media')}  */}
+            Embed Media &#9662;
           </span>
         </div>
       }

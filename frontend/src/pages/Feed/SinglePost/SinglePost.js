@@ -422,7 +422,7 @@ class SinglePost extends Component {
       shareElement = (
         <div>
             <div className="single-post__shareElementTitle" onClick={this.showShareElementHandler}>
-              Share This Post &#9662;
+              {t('feed.text30', 'Share This Post')} &#9662;
             </div>
             <div className="single-post__shareElementContainer">
               {this.state.showShareElement ? 
@@ -590,7 +590,7 @@ class SinglePost extends Component {
                   mode="raised" design="" type="submit"
                   onClick={this.storePostIdHandler}
                 >
-                  Edit Post
+                  {t('general.text5', 'Edit')}
                   </Button>
               </div>
               : null

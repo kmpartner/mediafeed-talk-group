@@ -111,7 +111,7 @@ class Feed extends Component {
         // this.loadPosts();
       } else if (data.action === 'action') {
         console.log('IN SOCKET.ON action');
-        this.loadPosts();
+        // this.loadPosts();
       }
 
        //// other actions in FeedSocketAction.js

@@ -44,6 +44,12 @@
   display: none;
 }
 
+.main-nav__authLink {
+  margin-left: 1rem;
+  color: white;
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   .main-nav__items {
     display: flex;

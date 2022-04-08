@@ -14,11 +14,16 @@ import NavigationItems from '../NavigationItems/NavigationItems';
 import { getUserData, getUserDataForStore } from '../../../util/user';
 import { useStore } from '../../../hook-store/store';
 
+import { authSignupPageLink, authPageLink } from '../../../App';
 import { GQL_URL, BASE_URL } from '../../../App';
+
+import LoginIcon from '../../../images/icons/loginIcon-48.png';
+import SignupIcon from '../../../images/icons/signupIcon-48.png';
+
 import './MainNavigation.css';
 
 const MainNavigation = props => {
-  // console.log('mainNavigation-props', props);
+  console.log('mainNavigation-props', props);
 
   const currentUrl = new URL(window.location.href);
   const firstPath = currentUrl.pathname.split('/')[1];
@@ -150,6 +155,31 @@ const MainNavigation = props => {
     {/* <ul className="main-nav__items">
       <NavigationItems isAuth={props.isAuth} onLogout={props.onLogout} />
     </ul> */}
+
+    {!props.isAuth && (
+      <a className="navigation-item-mobile-titleContainer"
+        href={authPageLink}
+      >
+        {/* <img className="navigation-item-mobile-titleIcon"
+          src={LoginIcon} alt='icon'
+        />  */}
+        <div className="main-nav__authLink">
+          {t('nav.text2', 'Login')}
+        </div>
+      </a>
+    )}
+    {!props.isAuth && (
+      <a className="navigation-item-mobile-titleContainer"
+        href={authSignupPageLink}
+      >
+        {/* <img className="navigation-item-mobile-titleIcon"
+          src={SignupIcon} alt='icon'
+        />  */}
+        <div className="main-nav__authLink">
+          {t('nav.text3', 'Signup')}
+        </div>
+      </a>
+    )}
 
     <MenuButton onOpen={props.onOpenMobileNav} />
 
