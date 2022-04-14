@@ -44,6 +44,7 @@ const AdElementDisplay = (props) => {
   const [displayAd, setDisplayAd] = useState();
   
   const [isDisplayed, setIsDisplayed] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,6 +120,11 @@ const AdElementDisplay = (props) => {
   // console.log('displayAd', displayAd);
 
   const adClickHandler = () => {
+    if (isClicked) {
+      console.log('already clicked');
+      return;
+    }
+
     if (isVisible && activeList.length > 0 && displayAd && adType) {
       storeClickData(
         ADNETWORK_URL, 
@@ -127,6 +133,8 @@ const AdElementDisplay = (props) => {
         adPlaceId, 
         adType,
       );
+
+      setIsClicked(true);
     }
   };
 

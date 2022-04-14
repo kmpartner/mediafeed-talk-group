@@ -47,11 +47,11 @@ const PostComments = props => {
     socket.on('comments', data => {
       if (data.action === 'comment-add') {
         console.log('IN SOCKET.ON comment-add', data);
-        addComment(data.comment);
+        // addComment(data.comment);
       }
       if (data.action === 'comment-action') {
         console.log('IN SOCKET.ON comment-action', data);
-        commentsGetHandler();
+        // commentsGetHandler();
       }
     })
   }, []);
@@ -131,13 +131,22 @@ const PostComments = props => {
         postId: props.postId
       }
     };
-    fetch(GQL_URL, {
+
+    // fetch(GQL_URL, {
+    //   headers: {
+    //     Authorization: 'Bearer ' + props.token,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   method: 'POST',
+    //   body: JSON.stringify(graphqlQuery),
+    // })
+
+    fetch(BASE_URL + `/comment/comments?postId=${props.postId}`, {
       headers: {
         Authorization: 'Bearer ' + props.token,
         'Content-Type': 'application/json'
       },
-      method: 'POST',
-      body: JSON.stringify(graphqlQuery),
+      method: 'GET',
     })
       .then(res => {
         if (res.status !== 200) {
@@ -150,7 +159,9 @@ const PostComments = props => {
         // if (resData.errors) {
         //   throw new Error('Fetching comment failed!')
         // }
-        setPostCommentList(resData.data.comments);
+        // setPostCommentList(resData.data.comments);
+
+        setPostCommentList(resData.comments);
         setCommentLoading(false);
       })
       .catch(err => {
@@ -198,16 +209,34 @@ const PostComments = props => {
       }
     };
 
-    fetch(GQL_URL, {
+    // fetch(GQL_URL, {
+    //   method: 'POST',
+    //   headers: {
+    //     Authorization: 'Bearer ' + props.token,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(graphqlQuery),
+    // })
+
+    fetch(BASE_URL + `/comment?postId=${props.postId}`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + props.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(graphqlQuery),
+      body: JSON.stringify({
+        content: commentContent,
+        postId: props.postId,
+        parentCommentId: parentCommentId,
+        locationData: localStorage.getItem('userLocation'),
+      }),
     })
       .then(res => {
         console.log(res);
+
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("create poct comment failed!");
+        }
 
         return res.json();
       })
@@ -227,30 +256,43 @@ const PostComments = props => {
         setReplyInput('');
         setCommentLoading(false);
 
-        const commentData = resData.data.createPostComment;
+        // const commentData = resData.data.createPostComment;
+        const commentData = resData.data;
 
-        return fetch(BASE_URL + '/comment/action', {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + props.token,
-          },
-        })
-          .then(res => {
-            console.log(res);
-            return res.json()
-          })
-          .then(resData => {
-            console.log(resData);
+        const addedCommentList = [commentData].concat(postCommentList);
+        setPostCommentList(addedCommentList);
 
-            return commentPushHandler(
-              // BASE_URL,
-              PUSH_URL,
-              localStorage.getItem('token'),
-              localStorage.getItem('userId'),
-              props.postCreatorId, 
-              commentData
-            )
-          })
+        return commentPushHandler(
+          // BASE_URL,
+          PUSH_URL,
+          localStorage.getItem('token'),
+          localStorage.getItem('userId'),
+          props.postCreatorId, 
+          commentData
+        );
+
+        // return fetch(BASE_URL + '/comment/action', {
+        //   method: 'GET',
+        //   headers: {
+        //     Authorization: 'Bearer ' + props.token,
+        //   },
+        // })
+        // .then(res => {
+        //   console.log(res);
+        //   return res.json()
+        // })
+        // .then(resData => {
+        //   console.log(resData);
+
+        //   // return commentPushHandler(
+        //   //   // BASE_URL,
+        //   //   PUSH_URL,
+        //   //   localStorage.getItem('token'),
+        //   //   localStorage.getItem('userId'),
+        //   //   props.postCreatorId, 
+        //   //   commentData
+        //   // );
+        // })
       })
       .catch(err => {
         console.log(err);
@@ -272,18 +314,26 @@ const PostComments = props => {
       `
     };
 
-    fetch(GQL_URL, {
-      method: 'POST',
+    // fetch(GQL_URL, {
+    //   method: 'POST',
+    //   headers: {
+    //     Authorization: 'Bearer ' + props.token,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(graphqlQuery),
+    // })
+
+    fetch(BASE_URL + `/comment/${commentId}?postId=${props.postId}`, {
+      method: 'DELETE',
       headers: {
         Authorization: 'Bearer ' + props.token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(graphqlQuery),
     })
       .then(res => {
-        // if (res.status !== 200 && res.status !== 201) {
-        //   throw new Error('Deleting a post failed!');
-        // }
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Deleting a post comment failed!');
+        }
         return res.json();
       })
       .then(resData => {
@@ -295,19 +345,27 @@ const PostComments = props => {
         setCommentLoading(false);
         hideDeleteModalHandler();
 
-        return fetch(BASE_URL + '/comment/action', {
-          method: 'GET',
-          headers: {
-            Authorization: 'Bearer ' + props.token,
-          },
-        })
-          .then(res => {
-            console.log(res);
-            return res.json()
-          })
-          .then(resData => {
-            console.log(resData);
-          })
+
+        const deletedCommentList = postCommentList.filter(comment => {
+          return comment._id !== commentId;
+        });
+
+        setPostCommentList(deletedCommentList);
+
+
+        // return fetch(BASE_URL + '/comment/action', {
+        //   method: 'GET',
+        //   headers: {
+        //     Authorization: 'Bearer ' + props.token,
+        //   },
+        // })
+        // .then(res => {
+        //   console.log(res);
+        //   return res.json()
+        // })
+        // .then(resData => {
+        //   console.log(resData);
+        // })
 
       })
       .catch(err => {

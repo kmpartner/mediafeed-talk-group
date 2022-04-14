@@ -22,7 +22,7 @@ function PostSelect(props) {
     //   backgroundColor: 'var(--background-color)',
     // }),
     control: (styles, state) => {
-      console.log('styles, state', styles, state)
+      // console.log('styles, state', styles, state)
       return {
         ...styles, 
         backgroundColor: 'rgb(219, 219, 219)',

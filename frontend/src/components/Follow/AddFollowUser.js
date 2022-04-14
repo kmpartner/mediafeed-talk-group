@@ -32,24 +32,24 @@ const FollowUser = props => {
       
   },[]);
 
-  const getFollowIdsHandler = () => {
-    setIsLoading(true);
+  // const getFollowIdsHandler = () => {
+  //   setIsLoading(true);
 
-    getFollowingUsers(
-      localStorage.getItem('userId'), 
-      BASE_URL, 
-      localStorage.getItem('token')
-    )
-    .then(result => {
-      console.log(result);
-      setIsLoading(false);
-    })
-    .catch(err => {
-      console.log(err);
-      catchError(err);
-      setIsLoading(false);
-    });
-  };
+  //   getFollowingUsers(
+  //     localStorage.getItem('userId'), 
+  //     BASE_URL, 
+  //     localStorage.getItem('token')
+  //   )
+  //   .then(result => {
+  //     console.log(result);
+  //     setIsLoading(false);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     catchError(err);
+  //     setIsLoading(false);
+  //   });
+  // };
 
   const getFollowUserHandler = () => {
     setIsLoading(true);
@@ -85,6 +85,8 @@ const FollowUser = props => {
       console.log(result);
       setIsLoading(false);
       setIsFollowing(true);
+
+      props.getFollowIdsHandler();
     })
     .catch(err => {
       console.log(err);
@@ -106,6 +108,8 @@ const FollowUser = props => {
       console.log(result);
       setIsLoading(false);
       setIsFollowing(false);
+
+      props.getFollowIdsHandler();
     })
     .catch(err => {
       console.log(err);

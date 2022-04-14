@@ -110,7 +110,7 @@ exports.createPostUserReaction = async (req, res, next) => {
       userReaction = new UserReaction({
         userId: userId,
         postId: postId,
-        typeIdNumber: typeIdNumber
+        typeIdNumber: typeIdNumber,
       });
 
       await userReaction.save();
@@ -120,7 +120,7 @@ exports.createPostUserReaction = async (req, res, next) => {
       userReaction = new UserReaction({
         userId: '',
         postId: postId,
-        typeIdNumber: typeIdNumber
+        typeIdNumber: typeIdNumber,
       });
 
       await userReaction.save();
@@ -140,22 +140,22 @@ exports.createPostUserReaction = async (req, res, next) => {
 
 exports.getPostUserReaction = async (req, res, next) => {
   // console.log('req.body', req.body);
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed, entered data incorrect.');
-    error.statusCode = 422;
-    throw error;
-  }
-
-  const type = req.body.type;
-  const userId = req.userId;
-  const postId = req.body.postId;
-
-  // const commentId = req.body.commentId;
-  // const reactionRcvUserId = req.body.reactionRcvUserId;
-  // const groupTalkTextId = req.body.groupTalkTextId;
-
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed, entered data incorrect.');
+      error.statusCode = 422;
+      throw error;
+    }
+  
+    const type = req.body.type;
+    const userId = req.userId;
+    const postId = req.body.postId;
+  
+    // const commentId = req.body.commentId;
+    // const reactionRcvUserId = req.body.reactionRcvUserId;
+    // const groupTalkTextId = req.body.groupTalkTextId;
+
     // const post = Post.findById(postId);
     // if (!post) {
     //   const error = new Error('Post not found.');
@@ -164,6 +164,7 @@ exports.getPostUserReaction = async (req, res, next) => {
     // }
 
     let userReaction = [];
+    let typeIdNumber;
 
     if (type) {
       const userReactionType = await UserReactionType.findOne({ type: type });
@@ -174,7 +175,7 @@ exports.getPostUserReaction = async (req, res, next) => {
         throw error;
       }
   
-      const typeIdNumber = userReactionType.typeIdNumber;
+      typeIdNumber = userReactionType.typeIdNumber;
   
       userReaction = await UserReaction.find({
         // userId: userId,
@@ -191,12 +192,75 @@ exports.getPostUserReaction = async (req, res, next) => {
     }
     // console.log('userReaction', userReaction);
 
+
+    //// exclude comment reactions
     const postReaction = userReaction.filter(reaction => {
       return !reaction.commentId;
     })
-    // console.log('postReaction', postReaction);
+
 
     res.status(200).json({ message: 'User Post Reactions found.', data: postReaction });
+
+
+    //// store reaction count in post data
+    const post = await Post.findById(postId);
+
+    if (post && type) {
+      // console.log('post', post)
+      // console.log('postReaction, type', postReaction, type);
+      const userReactionCounts = post.userReactionCounts;
+      // console.log('userReactionCounts', userReactionCounts);
+      if (!userReactionCounts || userReactionCounts.length === 0) {
+        
+        const updatedCounts = [{
+          type: type,
+          typeIdNumber: typeIdNumber,
+          reactionCount: postReaction.length,
+        }];
+        // console.log('updatedCounts', updatedCounts);
+        post.userReactionCounts = updatedCounts;
+
+        await post.save();
+      }
+
+      const typeReaction = post.userReactionCounts.find(reaction => {
+        return reaction.type === type;
+      });
+
+      // console.log('typeReaction', typeReaction);
+
+      let updatedCounts = [];
+
+      if (!typeReaction) {
+        updatedCounts = post.userReactionCounts.concat({
+          type: type,
+          typeIdNumber: typeIdNumber,
+          reactionCount: postReaction.length,
+        });
+
+        post.userReactionCounts = updatedCounts;
+        await post.save();
+
+      } else {
+        const withoutList = post.userReactionCounts.filter(reaction => {
+          return reaction.type !== type;
+        })
+
+        updatedCounts = withoutList.concat({type: type,
+          typeIdNumber: typeIdNumber,
+          reactionCount: postReaction.length,
+        });
+
+        post.userReactionCounts = updatedCounts;
+        await post.save();
+        // updatedCounts = userReactionCounts
+      
+
+        // console.log('post after store count', post);
+    }
+
+
+  }
 
   } catch (err) {
     if (!err.statusCode) {

@@ -13,6 +13,7 @@ import {
   getFollowingUsers,
   getFollowingUser,
 } from '../../util/user';
+// import { useStore } from '../../hook-store/store';
 import { BASE_URL, GQL_URL } from '../../App';
 import './Follow.css'
 
@@ -21,7 +22,13 @@ import SampleImage from '../Image/person-icon-50.jpg';
 const FollowUsersList = props => {
   console.log('FollowUsersListjs-props', props);
 
+  // const { followingUsers } = props;
+  const lsUserId = localStorage.getItem('userId');
+
   const [t] = useTranslation('translation');
+
+  // const [store, dispatch] = useStore();
+  // console.log('store in FollowUsersList.js', store);
 
   // const [userList, setUserList] = useState([]);
   // const [searchSelectedUser, setSearchSelectedUser] = useState(null);
@@ -36,16 +43,49 @@ const FollowUsersList = props => {
   },[]);
 
   const getFollowUsersHandler = () => {
-    setIsLoading(true);
+    if (lsUserId) {
+      const lsFollowingUsers = localStorage.getItem('followingUsers');
+      
+      if (lsFollowingUsers) {
+        const parsedData = JSON.parse(lsFollowingUsers);
+  
+        if (
+          (parsedData.userId && parsedData.userId !== lsUserId) ||
+          parsedData.getDate < Date.now() - 1000 * 60 * 60
+        ) {
+          retrieveFollowingUsers();
+        } else {
+          setFollowingUsers(parsedData.data);
+        }
+      } else {
+        retrieveFollowingUsers();
+      }
+    } else {
+      localStorage.removeItem('followingUsers');
+    }
+  };
 
+  const retrieveFollowingUsers = () => {
+    setIsLoading(true);
+    
     getFollowingUsers(
-      localStorage.getItem('userId'),
+      lsUserId,
       BASE_URL, 
       localStorage.getItem('token')
     )
     .then(result => {
       console.log(result);
       setFollowingUsers(result.data);
+
+      localStorage.setItem(
+        'followingUsers', 
+        JSON.stringify({
+          userId: lsUserId,
+          getDate: Date.now(),
+          data: result.data
+        })
+      );
+
       setIsLoading(false);
     })
     .catch(err => {
@@ -57,6 +97,7 @@ const FollowUsersList = props => {
 
   const showUsersHandler = () => {
     if(!showUsers) {
+      // props.getFollowIdsHandler();
       getFollowUsersHandler();
     }
     
@@ -153,7 +194,6 @@ const FollowUsersList = props => {
               props.showSmallModalHandler();
             }}>
               {user.name}</div> */}
-  
             <div className="post__AuthorElement">
               <span className="post__AuthorImageContainer">
 

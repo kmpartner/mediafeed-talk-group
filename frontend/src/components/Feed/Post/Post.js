@@ -45,6 +45,16 @@ const Post = props => {
   // const postLinkTarget = window.innerWidth < 768 && '_blank';
   const postLinkTarget = '_blank';
 
+  const reactionCounts = props.postData.userReactionCounts;
+  let likeCount;
+
+  if (reactionCounts && reactionCounts.length > 0) {
+    likeCount = reactionCounts.find(count => {
+      return count.type === 'like';
+    });
+  }
+  // console.log(reactionCounts, likeCounts);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSmallModal, setShowSmallModal] = useState(false);
   const [showDeleteImagesModal, setShowDeleteImagesModal] = useState(false);
@@ -231,7 +241,15 @@ const Post = props => {
         </h3>
 
         {props.postFilter !== 'recent-visit-posts' && (
-          <div>{t('feed.29', 'Visits')}: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
+          <div className="post__metrics">
+            <div className="post__metricsItem">{t('feed.29', 'Visits')}: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
+            {likeCount && likeCount.reactionCount > 0 && (
+              <div className="post__metricsItem">
+                <span className="post__reactionButton">&#128077; </span>
+                {likeCount.reactionCount}
+              </div>
+            )}
+          </div>
         )}
 
         {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>

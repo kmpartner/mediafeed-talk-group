@@ -108,6 +108,20 @@
   margin: 1rem 0;
 }
 
+.post__metrics {
+  display: flex;
+}
+
+.post__metricsItem {
+  margin-right: 0.5rem;
+}
+
+.post__reactionButton {
+  font-size: 0.8rem;
+  color: transparent; 
+  text-shadow: 0 0 0 var(--color);
+}
+
 @media (min-width: 768px) {
   .post {
     padding: 1rem;

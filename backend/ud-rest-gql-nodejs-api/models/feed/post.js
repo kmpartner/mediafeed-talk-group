@@ -77,6 +77,11 @@ const postSchema = Schema({
     //     // required: true
     // },
     totalVisit: { type: Number, default: 0 },
+    userReactionCounts: [{
+        type: { type: String },
+        typeIdNumber: { type: String },
+        reactionCount: { type: Number },
+    }],
     // visit: {
     //     details : [{
     //         userId: { type: String },

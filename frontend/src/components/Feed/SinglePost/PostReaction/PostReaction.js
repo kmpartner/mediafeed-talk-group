@@ -122,7 +122,8 @@ const PostResponse = (props) => {
         <span className="post-reaction__reactionButton"
           onClick={() => { createPostReactionHandler('like') }}
         >
-          {t('feed.text31', 'Likes')} &#128077; {likeReactionNum} {isUserLike && '(already liked)'}
+          {/* {t('feed.text31', 'Likes')}  */}
+          &#128077; {likeReactionNum} {isUserLike && '(already liked)'}
         </span>
 
         {/* {isUserLike ? <div>

@@ -268,7 +268,7 @@ class Feed extends Component {
     if (lsUserId) {
       if (lsUserFavoritePosts 
           && lsUserId === lsUserFavoritePosts.userId 
-          && lsUserFavoritePosts.getDate > Date.now() - 1000 * 60 * 60 * 24 * 7
+          && lsUserFavoritePosts.getDate > Date.now() - 1000 * 60 * 60
           // && lsUserFavoritePosts.getDate > Date.now() - 1000
         ) {
           this.setState({ 

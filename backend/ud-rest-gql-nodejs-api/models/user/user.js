@@ -82,6 +82,10 @@ const userSchema = new Schema({
         timestamp: { type: Number },
     },
     userColor: { type: String },
+    followingUserIds: [{
+        userId: { type: String },
+    }],
+
     talkRequestUserIds: [{
         userId: { type: String },
     }],

@@ -11,8 +11,10 @@ import {
   getUsers, 
   // addFollowingUserId, 
   // deleteFollowingUserId,
-  // getFollowingUserIds
+  getFollowingUsers
 } from '../../util/user';
+// import { useStore } from '../../hook-store/store';
+
 import { BASE_URL } from '../../App';
 import './UserModalContents.css';
 
@@ -24,43 +26,83 @@ const UserModalContents = props => {
 
   const lsUserId = localStorage.getItem('userId');
 
+  // const [store, dispatch] = useStore();
+  // console.log('store in UserModalContents.js', store);
+
   const [userList, setUserList] = useState([]);
   const [searchSelectedUser, setSearchSelectedUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   setIsLoading(true);
 
-  //   getUsers(BASE_URL, localStorage.getItem('token'))
-  //     .then(result => {
-  //       console.log(result);
-  //       setUserList(result.usersData);
-  //       setIsLoading(false);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       setIsLoading(false);
-  //     })
+  // useEffect(() => {
+  //   if (store.usersData.length === 0) {
+
+  //     setIsLoading(true);
+  
+  //     getUsers(BASE_URL, localStorage.getItem('token'))
+  //       .then(result => {
+  //         console.log(result);
+  //         // setUserList(result.usersData);
+  //         dispatch('SET_USERSDATA', result.usersData);
+  
+  //         setIsLoading(false);
+  //       })
+  //       .catch(err => {
+  //         console.log(err);
+  //         setIsLoading(false);
+  //       })
+  //   }
       
   // },[]);
 
-  // const getFollowIdsHandler = () => {
-  //   setIsLoading(true);
+  useEffect(() => {
+    if (lsUserId) {
+      const lsFollowingUsers = localStorage.getItem('followingUsers');
+      
+      if (lsFollowingUsers) {
+        const parsedData = JSON.parse(lsFollowingUsers);
+  
+        if (
+          (parsedData.userId && parsedData.userId !== lsUserId) ||
+          parsedData.getDate < Date.now() - 1000 * 60 * 60
+        ) {
+          getFollowIdsHandler();
+        }
+      } else {
+        getFollowIdsHandler();
+      }
+    } else {
+      localStorage.removeItem('followingUsers');
+    }
+  },[]);
 
-  //   getFollowingUserIds(
-  //     localStorage.getItem('userId'), 
-  //     BASE_URL, 
-  //     localStorage.getItem('token')
-  //   )
-  //   .then(result => {
-  //     console.log(result);
-  //     setIsLoading(false);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     setIsLoading(false);
-  //   });
-  // };
+  const getFollowIdsHandler = () => {
+    setIsLoading(true);
+
+    getFollowingUsers(
+      lsUserId, 
+      BASE_URL, 
+      localStorage.getItem('token')
+    )
+    .then(result => {
+      console.log(result);
+
+      localStorage.setItem(
+        'followingUsers', 
+        JSON.stringify({
+          userId: lsUserId,
+          getDate: Date.now(),
+          data: result.data
+        })
+      );
+
+      setIsLoading(false);
+    })
+    .catch(err => {
+      console.log(err);
+      setIsLoading(false);
+    });
+  };
 
   // const addFollowIdHandler = () => {
   //   setIsLoading(true);
@@ -199,6 +241,7 @@ const UserModalContents = props => {
             <AddFollowUser 
               postCreatorUserId={props.postCreatorUserId}
               author={props.author}
+              getFollowIdsHandler={getFollowIdsHandler}
             />
 
             <FollowUsersList

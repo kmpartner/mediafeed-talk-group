@@ -28,47 +28,24 @@ const s3 = new aws.S3();
 
 
 exports.getFollowingUsers = async (req, res, next) => {
-    console.log('req.query', req.query);
-
-    const userId = req.userId;
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
     try {
-        // const follow = await Follow.findOne({ userId: userId });
+        console.log('req.query', req.query);
 
-        // if (!follow) {
-        //     const error = new Error('follow of userId could not find.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
-
-        // const userInfoList = [];
-        // let userInfo;
-        // for (let i=0; i<follow.followingUsers.length; i++) {
-        //     userInfo = await User.findById(follow.followingUsers[i].userId);
-        //     // console.log(userInfo);
-        //     if (userInfo) {
-        //         userInfoList.push({
-        //             userId: userInfo._id.toString(),
-        //             name: userInfo.name,
-        //             imageUrl: userInfo.imageUrl,
-        //             addAt: follow.followingUsers[i].addAt
-        //         });
-        //     }
-        // }
+        const userId = req.userId;
+    
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
 
 
         //// get from follwer-table
         const followerElements = await FollowerTable.find({
             userId: userId
         });
-        console.log('followerElements', followerElements);
+        // console.log('followerElements', followerElements);
 
         const returnUserList = [];
         if (followerElements.length > 0) {
@@ -84,7 +61,15 @@ exports.getFollowingUsers = async (req, res, next) => {
                         _id: addUser._id.toString(),
                         userId: addUser.userId,
                         name: addUser.name,
-                        imageUrl: addUser.imageUrl,
+                        // imageUrl: addUser.imageUrl,
+                        imageUrl: addUser.imageUrl && addUser.imageUrl !== 'undefined' && addUser.imageUrl !== 'deleted'
+                        ? s3.getSignedUrl('getObject', {
+                            Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                            Key: addUser.imageUrl,
+                            Expires: 60 * 60 * 24 * 365
+                        })
+                        // : 'undefined',
+                        : null,
                         createdAt: addUser.createdAt
                     })
                 }
@@ -95,6 +80,23 @@ exports.getFollowingUsers = async (req, res, next) => {
         // res.status(200).json({ message: 'followingUsers of userId found.', data: userInfoList });
         res.status(200).json({ message: 'followingUsers of userId found.', data: returnUserList });
 
+
+        //// store in followingUserIds in User
+        const user = await User.findOne({ userId: userId });
+        // console.log('user', user);
+        if (user) {
+            const followingIdList = [];
+
+            for (const element of returnUserList) {
+                followingIdList.push({
+                    userId: element.userId
+                });
+            }
+            
+            user.followingUserIds = followingIdList;
+            await user.save();
+        }
+
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
@@ -104,59 +106,25 @@ exports.getFollowingUsers = async (req, res, next) => {
 }
 
 exports.getFollowingUser = async (req, res, next) => {
-    console.log('req.query', req.query);
-
-    const userId = req.userId;
-    const followingUserId = req.query.followingUserId;
-    if (userId === followingUserId) {
-        console.log('cannot get yourself');
-        // const error = new Error('cannot get yourself.');
-        // error.statusCode = 400;
-        // throw error;
-        return res.status(400).json({ message: 'cannot get yourself.' });
-    }
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
     try {
-        // const follow = await Follow.findOne({ userId: userId });
+        console.log('req.query', req.query);
 
-        // if (!follow || follow.followingUsers.length === 0) {
-        //     // return res.status(404).json({ message: 'followingUser of userId could not find.' });
-        //     const error = new Error('followingUser of userId could not find.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
-
-        // const followingUserIndex = follow.followingUsers.findIndex(ele => {
-        //     return ele.userId === followingUserId;
-        // });
-
-        // if (followingUserIndex < 0) {
-        //     const error = new Error('followingUser could not find.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
-
-        // const userInfo = follow.followingUsers[followingUserIndex];
-        // const returnUserAllInfo = await User.findById(userInfo.userId);
-        // if (!allUserInfo) {
-        //     const error = new Error('user could not find.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // } 
-
-        // const returnUInfo = {
-        //     userId: allUserInfo._id.toString(),
-        //     name: allUserInfo.name,
-        //     imageUrl: allUserInfo.imageUrl,
-        //     addAt: userInfo.addAt
-        // };
+        const userId = req.userId;
+        const followingUserId = req.query.followingUserId;
+        if (userId === followingUserId) {
+            console.log('cannot get yourself');
+            // const error = new Error('cannot get yourself.');
+            // error.statusCode = 400;
+            // throw error;
+            return res.status(400).json({ message: 'cannot get yourself.' });
+        }
+    
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
 
 
         ///// get from followerTable
@@ -180,7 +148,15 @@ exports.getFollowingUser = async (req, res, next) => {
             _id: returnUserAllInfo._id.toString(),
             userId: returnUserAllInfo.userId,
             name: returnUserAllInfo.name,
-            imageUrl: returnUserAllInfo.imageUrl,
+            // imageUrl: returnUserAllInfo.imageUrl,
+            imageUrl: returnUserAllInfo.imageUrl && returnUserAllInfo.imageUrl !== 'undefined' && returnUserAllInfo.imageUrl !== 'deleted'
+            ? s3.getSignedUrl('getObject', {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: returnUserAllInfo.imageUrl,
+                Expires: 60 * 60 * 24 * 365
+            })
+            // : 'undefined',
+            : null,
             createdAt: returnUserAllInfo.createdAt
         }
 
@@ -196,75 +172,26 @@ exports.getFollowingUser = async (req, res, next) => {
 }
 
 exports.addFollowingUser = async (req, res, next) => {
-    console.log('req.body', req.body);
-
-    const userId = req.userId;
-    const followingUserId = req.body.followingUserId;
-    if (userId === followingUserId) {
-        console.log('cannot add yourself');
-        const error = new Error('cannot add yourself.');
-        error.statusCode = 400;
-        throw error;
-        // return res.status(400).json({ message: 'cannot add yourself.' });
-    }
-
-    // console.log('req.puery.postId', req.query.postId, 'req.body.content', req.body.content);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
     try {
-        // const follow = await Follow.findOne({ userId: userId });
-        // const followUser = await User.findById(followingUserId);
+        console.log('req.body', req.body);
 
-        // if (!followUser) {
-        //     const error = new Error('following user not found.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
-
-        // const content = {
-        //     userId: followUser._id.toString(),
-        //     addAt: Date.now()
-        //     // xuserId: followUser._id
-        //     // name: followUser.name,
-        //     // imageUrl: followUser.imageUrl ? followUser.imageUrl : null
-        // };
-        
-        // if (!follow) {
-        //     const newFollow = new Follow({
-        //         userId: userId,
-        //         followingUsers: [],
-        //         // followedUserIds: [],
-        //         favoritePostIds: []
-        //     });
-        //     await newFollow.save();
-        //     // newFollow.followingUserIds.push(followingUserId);
-        //     newFollow.followingUsers.push(content);
-        //     await newFollow.save();
-        // }
-        // else {
-        //     const followUserFind = follow.followingUsers.findIndex(user => {
-        //         return user.userId === followingUserId;
-        //     });
-        //     console.log('followUserFind: ', followUserFind);
-
-        //     if (follow && followUserFind < 0) {
-        //         // follow.followingUserIds.push(followingUserId);
-        //         follow.followingUsers.push(content);
-        //         await follow.save();
-        //     }
-
-        //     if (follow && followUserFind >= 0) {
-        //         const error = new Error('followingUser is already exist.');
-        //         error.statusCode = 400;
-        //         throw error;
-        //         // return res.status(400).json({ message: 'followingUserId is already exist.' });
-        //     }
-        // }
+        const userId = req.userId;
+        const followingUserId = req.body.followingUserId;
+        if (userId === followingUserId) {
+            console.log('cannot add yourself');
+            const error = new Error('cannot add yourself.');
+            error.statusCode = 400;
+            throw error;
+            // return res.status(400).json({ message: 'cannot add yourself.' });
+        }
+    
+        // console.log('req.puery.postId', req.query.postId, 'req.body.content', req.body.content);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
 
 
         //// add in followerTable
@@ -686,63 +613,19 @@ exports.deleteFavoritePost = async (req, res, next) => {
 }
 
 exports.getFavoritePostUserList = async (req, res, next) => {
-        // console.log('req.query', req.query);
-
-        const postId = req.query.postId;
-        // const postId = '5f052f8dd778373b73c889fe'
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const error = new Error('Validation failed, entered data incorrect.');
-            error.statusCode = 422;
-            throw error;
-        }
     
         try {
-            // const post = await Post.findById(postId);
-            // if (!post) {
-            //     const error = new Error('post not found.');
-            //     error.statusCode = 404;
-            //     throw error;
-            // }
-            // const follow = await Follow.find();
-            // if (!follow) {
-            //     const error = new Error('follow not found.');
-            //     error.statusCode = 404;
-            //     throw error;
-            // }
-            // console.log('follow', follow);
-    
-            // const favoriteUserList = [];
-    
-            // for (let i=0; i<follow.length; i++) {
-            //     if (follow[i].favoritePosts && follow[i].favoritePosts.length > 0) {
-            //         // console.log('userfollow', follow[i].followingUsers);
+            // console.log('req.query', req.query);
 
-            //         const userInfo = await User.findById(follow[i].userId);
-            //         const userfollow = follow[i].favoritePosts;
-        
-            //         for (let k=0; k<userfollow.length; k++) {
-            //             // console.log('userfollow[k]', userfollow[k].userId);
-            //             if (userfollow[k].postId === postId) {
+            const postId = req.query.postId;
+            // const postId = '5f052f8dd778373b73c889fe'
 
-            //                 favoriteUserList.push({
-            //                     userId: follow[i].userId,
-            //                     name: userInfo.name,
-            //                     imageUrl: userInfo.imageUrl,
-            //                     addAt: userfollow[k].addAt
-            //                 });
-            //             }
-            //         }            
-            //     }        
-            // }
-            // console.log('favoriteUserList', favoriteUserList);
-            // const returnData = {
-            //     postId: postId,
-            //     favoritedByList: favoriteUserList 
-            // };
-
-
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const error = new Error('Validation failed, entered data incorrect.');
+                error.statusCode = 422;
+                throw error;
+            }
 
             //// get from favoritePost
             const favoritePostElements = await FavoritePost.find({ 
@@ -769,7 +652,7 @@ exports.getFavoritePostUserList = async (req, res, next) => {
                         ? s3.getSignedUrl('getObject', {
                             Bucket: process.env.DO_SPACE_BUCKET_NAME,
                             Key: userInfo.imageUrl,
-                            Expires: 60 * 60
+                            Expires: 60 * 60 * 24 * 365
                         })
                         // : 'undefined',
                         : null,
