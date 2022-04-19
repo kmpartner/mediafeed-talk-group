@@ -16,12 +16,12 @@ exports.commentAction = async (req, res, next) => {
 }
 
 exports.getPostComments = async (req, res, next) => {
-    // console.log(req.params.postId, 'req.body.content',req.body.content);
-    // const postId = req.params.postId;
-    const postId = req.query.postId;
-    console.log('postId:', postId);
-
     try {
+        // console.log(req.params.postId, 'req.body.content',req.body.content);
+        // const postId = req.params.postId;
+        const postId = req.query.postId;
+        // console.log('postId:', postId);
+
         // const post = await Post.findById(postId);
         // // const user = await User.findById(req.userId);
         // // console.log('user', user);
@@ -36,7 +36,16 @@ exports.getPostComments = async (req, res, next) => {
         // console.log('comments', comments);
 
         // io.getIO().emit('posts', { action: 'delete', post: postId });
-        res.status(200).json({ message: 'Get comment successfully', comments: comments });
+        res.status(200).json({ message: 'Get comments successfully', comments: comments });
+
+        const post = await Post.findById(postId);
+    
+        if (post) {
+            post.totalComment = comments.length;
+            await post.save();
+        }
+
+
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

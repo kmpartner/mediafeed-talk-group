@@ -68,7 +68,10 @@ const AddFavoritePost = props => {
         setIsFavorite(true);
         setIsLoading(false);
 
+        return props.getFavoriteUsers(props.postId);
         // addLsFavoritePost(props.postData, localStorage.getItem('userId'))
+      })
+      .then(res => {
         return getFavoritePosts(
           localStorage.getItem('userId'),
           BASE_URL,
@@ -96,7 +99,11 @@ const AddFavoritePost = props => {
         setIsFavorite(false);
         setIsLoading(false);
 
-        // deleteLsFavoritePost(props.postId);
+        const deletedFavoriteUsers = props.favoriteUsers.filter(favoriteUser => {
+          return favoriteUser.userId !== localStorage.getItem('userId');
+        });
+        props.setFavoriteUsers(deletedFavoriteUsers);
+
         return getFavoritePosts(
           localStorage.getItem('userId'),
           BASE_URL,

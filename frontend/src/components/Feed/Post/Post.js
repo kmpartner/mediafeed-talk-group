@@ -7,6 +7,7 @@ import Img from "react-cool-img";
 import Button from '../../Button/Button';
 import Loader from '../../Loader/Loader';
 import Modal from '../../Modal/Modal';
+import PostMetrics from './PostMetrics';
 import SmallModal from '../../Modal/SmallModal';
 import TransBackdrop from '../../Backdrop/TransBackdrop';
 import UserModalContents from '../../Modal/UserModalContents';
@@ -45,15 +46,7 @@ const Post = props => {
   // const postLinkTarget = window.innerWidth < 768 && '_blank';
   const postLinkTarget = '_blank';
 
-  const reactionCounts = props.postData.userReactionCounts;
-  let likeCount;
 
-  if (reactionCounts && reactionCounts.length > 0) {
-    likeCount = reactionCounts.find(count => {
-      return count.type === 'like';
-    });
-  }
-  // console.log(reactionCounts, likeCounts);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSmallModal, setShowSmallModal] = useState(false);
@@ -240,7 +233,7 @@ const Post = props => {
 
         </h3>
 
-        {props.postFilter !== 'recent-visit-posts' && (
+        {/* {props.postFilter !== 'recent-visit-posts' && (
           <div className="post__metrics">
             <div className="post__metricsItem">{t('feed.29', 'Visits')}: {props.postData && props.postData.totalVisit ? props.postData.totalVisit : 0}</div>
             {likeCount && likeCount.reactionCount > 0 && (
@@ -250,6 +243,10 @@ const Post = props => {
               </div>
             )}
           </div>
+        )} */}
+
+        {props.postFilter !== 'recent-visit-posts' && (
+          <PostMetrics t={props.t} postData={props.postData} />
         )}
 
         {/* <video src={BASE_URL + '/' + props.image} height="50" ></video>

@@ -28,6 +28,8 @@ import {
 import { isImageFile, isVideoFile } from '../../../util/image';
 import * as favoritePostUtils from '../../../util/feed/favorite-post';
 import { getDate } from '../../../util/timeFormat';
+import { getPostFavoriteUserList } from '../../../util/follow';
+
 import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
 import './SinglePost.css';
@@ -175,6 +177,32 @@ class SinglePost extends Component {
         this.setState({ isLoading: false });
         this.catchError(err);
       });
+  }
+
+  setFavoriteUsers = (favoriteUsers) => {
+    this.setState({ favoriteUsers: favoriteUsers });
+  }
+
+  getFavoriteUsers = (postId) => {
+    return new Promise((resolve, reject) => {
+      this.setState({ isLoading: true });
+  
+      getPostFavoriteUserList(BASE_URL, postId)
+        .then(result => {
+          console.log(result);
+          this.setState({ 
+            favoriteUsers: result.data.favoritedByList,
+            isLoading: false,
+           });
+          
+           resolve('favorite users get success');
+        })
+        .catch(err => {
+          console.log(err);
+          this.setState({ isLoading: false });
+          reject('favorite users get failed');
+        });
+    });
   }
 
   storePostIdHandler = () => {
@@ -404,18 +432,18 @@ class SinglePost extends Component {
       );
     }
 
-    const favoriteUsersBody = this.state.favoriteUsers.map(user => {
-      return (
-        <div key={user.userId}>
-          <span onClick={() => {
-            this.selectUserHandler(user);
-          }}
-          >
-            {user.name}
-          </span>
-        </div>
-      );
-    });
+    // const favoriteUsersBody = this.state.favoriteUsers.map(user => {
+    //   return (
+    //     <div key={user.userId}>
+    //       <span onClick={() => {
+    //         this.selectUserHandler(user);
+    //       }}
+    //       >
+    //         {user.name}
+    //       </span>
+    //     </div>
+    //   );
+    // });
 
     let shareElement;
     if (this.state.isPublic === 'public') {
@@ -610,6 +638,9 @@ class SinglePost extends Component {
                 <AddFavoritePost
                   postId={this.props.match.params.postId}
                   token={this.props.token}
+                  favoriteUsers={this.state.favoriteUsers}
+                  getFavoriteUsers={this.getFavoriteUsers}
+                  setFavoriteUsers={this.setFavoriteUsers}
                 />
               </div>
             
@@ -626,6 +657,9 @@ class SinglePost extends Component {
                 setSelectedCreatorId={this.showSelectedUserPosts}
                 resetPostPage={() => { }}
                 showSmallModalHandler={this.showSmallModalHandler}
+                favoriteUsers={this.state.favoriteUsers}
+                getFavoriteUsers={this.getFavoriteUsers}
+                // setFavoriteUsers={this.setFavoriteUsers}
               />
             </div>
             

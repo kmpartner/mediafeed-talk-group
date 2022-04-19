@@ -82,6 +82,7 @@ const postSchema = Schema({
         typeIdNumber: { type: String },
         reactionCount: { type: Number },
     }],
+    totalComment: { type: Number, default: 0 },
     // visit: {
     //     details : [{
     //         userId: { type: String },

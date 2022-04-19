@@ -2,12 +2,10 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
-import AutoSuggestUser from '../AutoSuggest/AutoSuggestUser';
 import Button from '../Button/Button';
 import ErrorHandler from '../ErrorHandler/ErrorHandler';
 import Loader from '../Loader/Loader';
-import { getPostFavoriteUserList } from '../../util/follow';
-import { BASE_URL, GQL_URL } from '../../App';
+
 import './Follow.css'
 
 import SampleImage from '../Image/person-icon-50.jpg';
@@ -15,45 +13,49 @@ import SampleImage from '../Image/person-icon-50.jpg';
 const PostFavoriteUsersList = props => {
   console.log('FollowUsersListjs-props', props);
 
+  const { favoriteUsers, getFavoriteUsers } = props;
+
   const [t] = useTranslation('translation');
 
-  // const [userList, setUserList] = useState([]);
-  // const [searchSelectedUser, setSearchSelectedUser] = useState(null);
-  const [followingUsers, setFollowingUsers] = useState([]);
-  const [favoriteUsers, setFavoriteUsers] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false);
+  // const [favoriteUsers, setFavoriteUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showUsers, setShowUsers] = useState(false);
 
   useEffect(() => {
-    // getFollowUsersHandler();
-    // console.log(window.location);
-  }, []);
-
-  const getPostFavoriteUserListHandler = () => {
     setIsLoading(true);
 
-    const postId = props.postId;
-    getPostFavoriteUserList(BASE_URL, postId)
-      .then(result => {
-        console.log(result);
-        setFavoriteUsers(result.data.favoritedByList);
+    getFavoriteUsers(props.postId)
+      .then(res => {
+        console.log(res);
         setIsLoading(false);
       })
       .catch(err => {
         console.log(err);
-        // catchError(err);
         setIsLoading(false);
       });
-  }
+  }, []);
+
+  // const getPostFavoriteUserListHandler = () => {
+  //   setIsLoading(true);
+
+  //   const postId = props.postId;
+  //   getPostFavoriteUserList(BASE_URL, postId)
+  //     .then(result => {
+  //       console.log(result);
+  //       setFavoriteUsers(result.data.favoritedByList);
+
+  //       // setIsGetList(true);
+  //       setIsLoading(false);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       // catchError(err);
+  //       setIsLoading(false);
+  //     });
+  // }
 
   const showUsersHandler = () => {
-    if(!showUsers) {
-      // getFollowUsersHandler();
-      getPostFavoriteUserListHandler();
-    }
-    
     setShowUsers(!showUsers);
   };
 
@@ -66,14 +68,8 @@ const PostFavoriteUsersList = props => {
   };
 
   let favoriteUsersList;
-  if (isLoading) {
-    favoriteUsersList = (
-      <div className="follow__loader">
-        <Loader />
-      </div>
-    );
-  } else {
-    if (favoriteUsers.length === 0) {
+
+  if (favoriteUsers.length === 0) {
       favoriteUsersList = (<div>no users</div>);
     } else {
       favoriteUsersList = favoriteUsers.map(user => {
@@ -122,7 +118,15 @@ const PostFavoriteUsersList = props => {
       });
     }
 
-  }
+    if (isLoading) {
+      favoriteUsersList = (
+        <div className="follow__loader">
+          <Loader />
+        </div>
+      );
+    } 
+
+  
 
 
   return (

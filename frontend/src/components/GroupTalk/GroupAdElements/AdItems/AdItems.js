@@ -4,6 +4,8 @@ import { withI18n } from "react-i18next";
 import RightContents from "../GroupRightElements/RightContents";
 import TopBarContents from "../GroupTopElements/TopBarContents";
 
+import GrayImage from '../../../../images/light-gray-square-300.jpg';
+
 import classes from "./AdItems.module.css";
 // import "../FeedEdit.css";
 // import "./ImagePreviewContents.css"
@@ -33,7 +35,8 @@ const AdItems = (props) => {
           <div>
             <img
               className={classes.body300x65Image}
-              src={ad.adImageUrl}
+              //  src={ad.adImageUrl}
+              src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
               alt="300x65 image"
             ></img>
           </div>
@@ -72,7 +75,8 @@ const AdItems = (props) => {
          <div>
            <img
              className={classes.body300x300Image}
-             src={ad.adImageUrl}
+            //  src={ad.adImageUrl}
+             src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
              alt="300x300 image"
            ></img>
          </div>
@@ -113,7 +117,8 @@ const AdItems = (props) => {
           <div className={classes.bodyInPostContents}>
             <img
               className={classes.bodyInPostImageContainer}
-              src={ad.adImageUrl}
+              // src={ad.adImageUrl}
+              src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
               alt="inPosts-image"
             ></img>
             <div className={classes.bodyInPostTextContainer}>
