@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import openSocket from 'socket.io-client';
 import { withI18n } from "react-i18next";
+import axios from 'axios';
 // import Resizer from 'react-image-file-resizer'; 
 
 import AutoSuggestHook from '../../components/AutoSuggest/AutoSuggestHook';
@@ -75,6 +76,7 @@ class Feed extends Component {
     postFilter: '',
 
     windowValues: null,
+    uploadProgress: 0,
   };
 
   componentDidMount() {
@@ -746,24 +748,48 @@ class Feed extends Component {
         method = 'put'
       }
 
-      fetch(url, {
+
+
+
+      axios.request({
         method: method,
+        url: url,
+        data: formData,
         headers: {
           Authorization: 'Bearer ' + this.props.token,
         },
-        body: formData
+        onUploadProgress: (p) => {
+          console.log('onUploadProgress', (p.loaded/p.total*100).toFixed(0), p); 
+          this.setState({
+              uploadProgress: p.loaded / p.total * 100
+          });
+        }
       })
-        .then(res => {
-          console.log(res);
-          if (res.status !== 200 && res.status !== 201) {
-            throw new Error('Creating or editing a post failed!');
-          }
-          return res.json();
-        })
+
+
+      // fetch(url, {
+      //   method: method,
+      //   headers: {
+      //     Authorization: 'Bearer ' + this.props.token,
+      //   },
+      //   body: formData,
+      // })
+        // .then(res => {
+        //   console.log(res);
+        //   if (res.status !== 200 && res.status !== 201) {
+        //     throw new Error('Creating or editing a post failed!');
+        //   }
+        //   return res.json();
+        // })
         .then(resData => {
           console.log(resData);
-  
-          const updatedPostData = resData.post;
+
+          if (resData.status !== 200 && resData.status !== 201) {
+            throw new Error('Creating or editing a post failed!');
+          }
+
+          // const updatedPostData = resData.post;
+          const updatedPostData = resData.data.post;
           // console.log(updatedPostData);
   
           // console.log('this.state.editPost', this.state.editPost);
@@ -786,7 +812,8 @@ class Feed extends Component {
             return {
               isEditing: false,
               editPost: null,
-              editLoading: false
+              editLoading: false,
+              uploadProgress: 0,
             };
           }, () => {
             
@@ -822,7 +849,8 @@ class Feed extends Component {
             isEditing: false,
             editPost: null,
             editLoading: false,
-            error: err
+            error: err,
+            uploadProgress: 0,
           });
 
           //// // delete selectedId, postData edit from single postpage
@@ -1623,7 +1651,7 @@ class Feed extends Component {
         />
         </div> */}
 
-        <FeedSocketAction />
+        <FeedSocketAction uploadProgress={this.state.uploadProgress} />
       </div>
       </Fragment>
     );

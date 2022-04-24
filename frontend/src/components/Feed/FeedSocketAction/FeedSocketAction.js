@@ -6,8 +6,8 @@ import { useStore } from '../../../hook-store/store';
 import { BASE_URL } from '../../../App';
 // import classes from './PostSelect.module.css';
 
-function PostSelect(props) {
-  const {} = props;
+function FeedSocketAction(props) {
+  const { uploadProgress } = props;
 
   const [store, dispatch] = useStore();
 
@@ -22,7 +22,7 @@ function PostSelect(props) {
           dispatch('SHOW_NOTIFICATION', {
             status: 'pending',
             title: '',
-            message: `Image uploaded ${data.imageData.filename}`,
+            message: `Stored ${data.imageData.originalname}`,
           });
 
       }
@@ -46,6 +46,28 @@ function PostSelect(props) {
   },[]);
 
 
+  useEffect(() => {
+    if (uploadProgress > 0) {
+      dispatch('SHOW_NOTIFICATION', {
+        status: 'pending',
+        title: '',
+        message: `uploading... ${uploadProgress.toFixed(0)}%`,
+      });
+      if (uploadProgress >= 100) {
+        dispatch('SHOW_NOTIFICATION', {
+          status: 'pending',
+          title: '',
+          message: `upload finished, storing...`,
+        });
+      }
+    }
+    else {
+      dispatch('CLEAR_NOTIFICATION');
+    }
+
+  },[uploadProgress]);
+
+
 
  
 
@@ -57,4 +79,4 @@ function PostSelect(props) {
   );
 }
 
-export default withI18n()(PostSelect);
+export default withI18n()(FeedSocketAction);

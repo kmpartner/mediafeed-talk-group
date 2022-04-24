@@ -777,7 +777,7 @@ class FeedEdit extends Component {
               // placeholder="Content for post"
               placeholder={t('feed.text16')}
               control="textarea"
-              rows="4"
+              rows="7"
               onChange={this.postInputChangeHandler}
               // onChange={() => {
               //   this.contentInputChangeHandler('', this.state.contentInput);
