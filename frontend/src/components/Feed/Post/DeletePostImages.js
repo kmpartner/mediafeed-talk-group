@@ -12,10 +12,10 @@ import TransBackdrop from "../../Backdrop/TransBackdrop";
 import UserModalContents from "../../Modal/UserModalContents";
 import { getUserLocation } from "../../../util/user";
 import { isImageFile, isVideoFile } from "../../../util/image";
-import "./Post.css";
 
 import { BASE_URL } from "../../../App";
 
+import "./Post.css";
 import classes from './DeletePostImages.module.css';
 
 const DeletePostImages = (props) => {
@@ -29,7 +29,8 @@ const DeletePostImages = (props) => {
     modifiedImagePaths,
     imagePaths,
     thumbnailImagePaths,
-    setShowDeleteImagesModal
+    setShowDeleteImagesModal,
+    updatePostElementHandler,
   } = props;
 
   const [pathUrls, setPathUrls] = useState([]);
@@ -179,8 +180,19 @@ const DeletePostImages = (props) => {
     
     console.log('deletePathUrls', deletePathUrls);
     console.log(formData.get('deleteImageUrls'), formData.get('deleteImageUrls').split(','));
-    // return;
-    fetch(BASE_URL + `/feed-images/delete-post-images/${props.id}?userLocation=${localStorage.getItem('userLocation')}`, {
+ 
+    let url = BASE_URL + `/feed-images/delete-post-images/${props.id}?userLocation=${localStorage.getItem('userLocation')}`;
+
+    if (deletePathUrls && deletePathUrls.length > 0) {
+      const fileType = deletePathUrls[0].imagePath.split('.')[props.modifiedImagePaths[0].split('.').length -1];
+      
+      if (isVideoFile(fileType)) {
+        url = BASE_URL + `/feed-video-upload/delete-post-video/${props.id}?userLocation=${localStorage.getItem('userLocation')}`;
+      }
+    }
+    // console.log('url', url);
+
+    fetch(url, {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -197,13 +209,17 @@ const DeletePostImages = (props) => {
       .then(res => {
         console.log(res);
 
+        updatePostElementHandler(res.post);
+
         setIsDeleting(false);
         setShowDeleteConfirm(false);
-        setDeleteResult('Delete Image Success');
-        setTimeout(() => {
-          setDeleteResult('');
-          // setShowDeleteImagesModal(false);
-        },1000*5);
+        // setDeleteResult('Delete Image Success');
+        setShowDeleteImagesModal(false);
+
+        // setTimeout(() => {
+        //   setDeleteResult('');
+        //   setShowDeleteImagesModal(false);
+        // },1000*3);
 
         // const deletedPathUrls = pathUrls.filter(function(val) {
         //   return deleteImageUrls.crid.indexOf(val.crid) === -1;

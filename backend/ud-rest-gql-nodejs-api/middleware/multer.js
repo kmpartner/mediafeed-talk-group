@@ -33,7 +33,7 @@ const fileFilter = (req, file, cb) => {
 
 const multerLimits = { 
   fileSize: process.env.MULTER_SIZE_LIMIT_MB
-    ? 1024 * 1024 * Number(process.env.MULTER_SIZE_LIMIT_MB) 
+    ? 1000 * 1000 * Number(process.env.MULTER_SIZE_LIMIT_MB) 
     : 1024 * 1024 * 5 
 };
 
@@ -59,9 +59,9 @@ const filesFilter = (req, file, cb) => {
     file.mimetype === 'image/jpg' ||
     file.mimetype === 'image/jpeg' ||
     file.mimetype === 'image/gif' ||
-    file.mimetype === 'image/webp' ||
-    file.mimetype === 'video/mp4' ||
-    file.mimetype === 'video/webm'
+    file.mimetype === 'image/webp'
+    // file.mimetype === 'video/mp4' ||
+    // file.mimetype === 'video/webm'
   ) {
     cb(null, true);
   } 
@@ -76,6 +76,47 @@ exports.imagesUpload = multer({
   limits: multerLimits,
   fileFilter: filesFilter
 }).array('images', 6)
+
+
+
+
+//// videos upload
+
+const multerVideoLimits = { 
+  fileSize: process.env.MULTER_VIDEO_SIZE_LIMIT_MB
+    ? 1000 * 1000 * Number(process.env.MULTER_VIDEO_SIZE_LIMIT_MB) 
+    : 1024 * 1024 * 5
+};
+
+const fileVideoStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images-video');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now().toString() + `-${Math.floor(Math.random() * 10**6).toString()}crid-` + file.originalname);
+  }
+});
+
+const videoFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'video/mp4' ||
+    file.mimetype === 'video/webm'
+  ) {
+    cb(null, true);
+  } 
+   else {
+    cb(null, false);
+  }
+}
+
+exports.videoUpload = multer({
+  storage: fileVideoStorage,
+  limits: multerVideoLimits,
+  fileFilter: videoFilter,
+}).array('images', 1)
+
+
+
 
 
 

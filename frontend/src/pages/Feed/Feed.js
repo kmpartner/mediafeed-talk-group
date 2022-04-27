@@ -742,11 +742,25 @@ class Feed extends Component {
       // formData.append('images', postData.image);
 
       let url = BASE_URL + `/feed-images/post-images?userLocation=${localStorage.getItem('userLocation')}`;
+      
+      //// video post upload url
+      if (postData.image && postData.image[0].type.split('/')[0] === 'video') {
+        url = BASE_URL + `/feed-video-upload?userLocation=${localStorage.getItem('userLocation')}`;
+      }
+
+
       let method = 'POST'
       if (this.state.editPost) {
         url = BASE_URL + '/feed-images/post-images/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
         method = 'put'
+
+        //// video update upload url
+        if (postData.image && postData.image[0].type.split('/')[0] === 'video') {
+          url = BASE_URL + '/feed-video-upload/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
+        }
       }
+
+
 
 
 
@@ -991,11 +1005,17 @@ class Feed extends Component {
   };
 
 
-  deleteMultiImagePostHandler = (postId) => {
+  deleteMultiImagePostHandler = (postId, isVideo) => {
     this.setState({ isPostDeleting: true });
     this.setState({ postDeleteResult: '' });
 
-    fetch(BASE_URL + `/feed-images/post-images/${postId}?userLocation=${localStorage.getItem('userLocation')}`, {
+    let url = BASE_URL + `/feed-images/post-images/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
+    
+    if (isVideo) {
+      url = BASE_URL + `/feed-video-upload/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
+    }
+
+    fetch(url, {
       method: 'DELETE',
       headers: {
         Authorization: 'Bearer ' + this.props.token,
@@ -1053,6 +1073,13 @@ class Feed extends Component {
         },1000*5);
       })
   };
+
+
+  updatePostElementHandler = (updatedPostData) => {
+    this.updatePost(updatedPostData);
+  };
+
+
 
 
 
@@ -1225,7 +1252,9 @@ class Feed extends Component {
               public={post.public}
               onStartEdit={this.startEditPostHandler.bind(this, post._id)}
               onDelete={this.deletePostHandler.bind(this, post._id)}
-              deleteMultiImagePostHandler={this.deleteMultiImagePostHandler.bind(this, post._id)}
+              // deleteMultiImagePostHandler={this.deleteMultiImagePostHandler.bind(this, post._id)}
+              deleteMultiImagePostHandler={this.deleteMultiImagePostHandler}
+              updatePostElementHandler={this.updatePostElementHandler}
               isPostDeleting={this.state.isPostDeleting}
               postDeleteResult={this.state.postDeleteResult}
               setSelectedCreatorId={this.setSelectedCreatorId}
@@ -1296,7 +1325,9 @@ class Feed extends Component {
               public={post.public}
               onStartEdit={this.startEditPostHandler.bind(this, post._id)}
               onDelete={this.deletePostHandler.bind(this, post._id)}
-              deleteMultiImagePostHandler={this.deleteMultiImagePostHandler.bind(this, post._id)}
+              // deleteMultiImagePostHandler={this.deleteMultiImagePostHandler.bind(this, post._id)}
+              deleteMultiImagePostHandler={this.deleteMultiImagePostHandler}
+              updatePostElementHandler={this.updatePostElementHandler}
               isPostDeleting={this.state.isPostDeleting}
               postDeleteResult={this.state.postDeleteResult}
               setSelectedCreatorId={this.setSelectedCreatorId}

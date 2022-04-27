@@ -72,7 +72,24 @@ const Post = props => {
 
   const showSmallModalHandler = () => {
     setShowSmallModal(!showSmallModal);
-  }
+  };
+
+  const deletePostHandler = () => {
+    if (props.modifiedImageUrls && props.modifiedImageUrls.length > 0) {
+      const fileType = props.modifiedImagePaths[0].split('.')[props.modifiedImagePaths[0].split('.').length -1];
+      
+      if (isImageFile(fileType)) {
+        props.deleteMultiImagePostHandler(props.id, false);
+      }
+      if (isVideoFile(fileType)) {
+        props.deleteMultiImagePostHandler(props.id, true);
+      }
+    } else {
+      props.deleteMultiImagePostHandler(props.id, false);
+    }
+
+  };
+
 
   let smallImage;
 
@@ -308,7 +325,7 @@ const Post = props => {
                 </Button>
                 <Button mode="raised" design=""
                   disabled={props.isPostDeleting}
-                  onClick={props.deleteMultiImagePostHandler}
+                  onClick={deletePostHandler}
                 >
                   {/* Delete */}
                   {t('feed.text17')}
@@ -333,6 +350,7 @@ const Post = props => {
               modifiedImagePaths={props.modifiedImagePaths}
               thumbnailImagePaths={props.thumbnailImagePaths}
               setShowDeleteImagesModal={setShowDeleteImagesModal}
+              updatePostElementHandler={props.updatePostElementHandler}
             />
           }
       </article>

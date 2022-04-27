@@ -33,6 +33,7 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
+const videoFilePath = 'images-video';
 
 // exports.feedAction = async (req, res, next) => {
 //     // console.log(req.body);
@@ -42,7 +43,7 @@ const s3 = new aws.S3();
 
 
 
-exports.createMultiImagesPost = async (req, res, next) => {
+exports.createVideoPost = async (req, res, next) => {
     // console.log('post-image req.files: ', req.files);
     console.log('req.body.oldPath', req.body.oldPath);
     console.log('req.body', req.body);
@@ -179,7 +180,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
             const smallImage = await createSmallImage(image.path, modifiedImageUrl);
         }
         if (fileMimetype === 'video') {
-            thumbnailImageUrl = 'images/' + forFileFileName
+            thumbnailImageUrl = videoFilePath + '/' + forFileFileName
             thumbnailImageUrls.push(thumbnailImageUrl);
 
 
@@ -196,19 +197,21 @@ exports.createMultiImagesPost = async (req, res, next) => {
             const videoInfo = await getVideoInfo(image.path);
             // console.log('videoInfo', videoInfo);
             
-            if (videoInfo.width > 600) {
-                await resizeVideo(image.path, modifiedImageUrl, 640);
-                var rsStats = fs.statSync(modifiedImageUrl);
-                var rsfileSizeInBytes = rsStats.size;
-                // Convert the file size to megabytes (optional)
-                // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-                console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+
+            //// resize video 
+            // if (videoInfo.width > 600) {
+            //     await resizeVideo(image.path, modifiedImageUrl, 640);
+            //     var rsStats = fs.statSync(modifiedImageUrl);
+            //     var rsfileSizeInBytes = rsStats.size;
+            //     // Convert the file size to megabytes (optional)
+            //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+            //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
     
-                if (rsfileSizeInBytes < fileSizeInBytes) {
-                    console.log('in copyfile')
-                    await copyFile(modifiedImageUrl, image.path);
-                }
-            }
+            //     if (rsfileSizeInBytes < fileSizeInBytes) {
+            //         console.log('in copyfile')
+            //         await copyFile(modifiedImageUrl, image.path);
+            //     }
+            // }
 
 
 
@@ -297,7 +300,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
 
 
-exports.updateMutiImagesPost = async (req, res, next) => {
+exports.updateVideoPost = async (req, res, next) => {
     // console.log('req.body', req.body, 'req.files', req.files);
 
     const postId = req.params.postId;
@@ -386,7 +389,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                     const smallImage = await createSmallImage(image.path, modifiedImageUrl);
                 }
                 if (fileMimetype === 'video') {
-                    thumbnailImageUrl = 'images/' + forFileFileName
+                    thumbnailImageUrl = videoFilePath + '/' + forFileFileName
                     thumbnailImageUrls.push(thumbnailImageUrl);
 
 
@@ -512,7 +515,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
 
 
 
-exports.deleteMultiImagePost = async (req, res, next) => {
+exports.deleteVideoPost = async (req, res, next) => {
     const postId = req.params.postId;
     console.log('postId in deleteMutiImagePost', postId);
 
@@ -647,7 +650,7 @@ exports.deleteMultiImagePost = async (req, res, next) => {
 
 
 
-exports.deletePostImages = async (req, res, next) => {
+exports.deletePostVideo = async (req, res, next) => {
     const postId = req.params.postId;
     let deleteImageUrls = [];
     let deleteModifiedImageUrls = []; 
@@ -807,7 +810,7 @@ exports.deletePostImages = async (req, res, next) => {
         // await FavoritePost.deleteMany({ postId: postId });
 
         const returnPost = createReturnPost(post);
-        // console.log('returnPost', returnPost);
+        
         io.getIO().emit('posts', { action: 'delete', post: postId });
 
         res.status(200).json({ 
@@ -908,7 +911,7 @@ const createThumbnail = (imageUrl, filename) => {
                 filename: filename,
                 timemarks: ['50%'],
                 size: '?x100'
-            }, './images');
+            }, `./${videoFilePath}`);
     })
 }
 
