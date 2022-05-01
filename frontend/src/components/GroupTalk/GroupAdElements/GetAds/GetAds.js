@@ -7,7 +7,7 @@ import GetAdList from "./GetAdList";
 // import { getNearAdElements } from "../../../../util/ad-visit";
 import { useStore } from "../../../../hook-store/store";
 import * as adVisitUtils from "../../../../util/ad-visit"
-import { ADNETWORK_URL } from "../../../../App";
+import { ADNETWORK_URL, BASE_URL } from "../../../../App";
 
 const GetAd = (props) => {
   // console.log('GetAdList-props', props);
@@ -19,6 +19,16 @@ const GetAd = (props) => {
   const [isTimerStart, setIsTimerStart] = useState(false);
   // const [timerTime, setTimerTime] = useState(0);
 
+  useEffect(() => {
+    const adTestGet = async() => {
+      const result = await fetch(BASE_URL + '/ad/test-get');
+
+      const resData = await result.json();
+      console.log(resData, result);
+    };
+
+    adTestGet();
+  },[]);
   // useEffect(() => {
   //   setTimeout(() => {
   //     if (store.adStore.adList.length === 0) {

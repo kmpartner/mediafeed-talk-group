@@ -48,6 +48,8 @@ const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
 const feedFilterRoute = require('./routes/feed/feed-filter');
 const feedVideoUploadRoute = require('./routes/feed/feed-video-upload');
 
+const adRoute = require('./routes/ad/ad');
+
 const db = require('./db');
 
 const { allowedOriginList } = require('./allowed-origin-list');
@@ -157,6 +159,8 @@ app.use('/group-image', groupImageUpload, groupImageRoute);
 app.use('/feed-images', imagesUpload, feedMultiImageRoute);
 app.use('/feed-filter', feedFilterRoute);
 app.use('/feed-video-upload', videoUpload, feedVideoUploadRoute);
+
+app.use('/ad', adRoute);
 
 app.use(auth);
 app.use('', imageForGqlRoutes);

@@ -788,22 +788,29 @@ class Feed extends Component {
       //   },
       //   body: formData,
       // })
-        // .then(res => {
-        //   console.log(res);
-        //   if (res.status !== 200 && res.status !== 201) {
-        //     throw new Error('Creating or editing a post failed!');
-        //   }
-        //   return res.json();
-        // })
+      //   .then(res => {
+      //     console.log(res);
+      //     if (res.status !== 200 && res.status !== 201) {
+      //       throw new Error('Creating or editing a post failed!');
+      //     }
+      //     return res.json();
+      //   })
+
+
         .then(resData => {
           console.log(resData);
 
+          // for fetch
+          // const updatedPostData = resData.post;
+          
+          // for axios
           if (resData.status !== 200 && resData.status !== 201) {
             throw new Error('Creating or editing a post failed!');
           }
-
-          // const updatedPostData = resData.post;
           const updatedPostData = resData.data.post;
+
+
+
           // console.log(updatedPostData);
   
           // console.log('this.state.editPost', this.state.editPost);
