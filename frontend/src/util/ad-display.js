@@ -5,7 +5,8 @@ export const storeAdDisplay = async (url, token, adElementId, adPlaceId) => {
         ? localStorage.getItem('userSelectLng') 
         : navigator.language;
       
-      const response = await fetch(url + `/ad-display/store-ad-display?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+      // const response = await fetch(url + `/ad-display/store-ad-display?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+      const response = await fetch(url + `/ad/ad-display?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
         method: 'POST',
         headers: {
           Authorization: 'Bearer ' + token,

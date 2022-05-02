@@ -6,6 +6,10 @@ const router = express.Router();
 
 router.get('/test-get', adController.getTest);
 
-router.post('/store-ad-display', adController.storeAdDisplay);
+router.get('/near-adelements', adController.getNearAdElements);
+
+router.post('/ad-display', adController.storeAdDisplay);
+
+router.post('/ad-visit', adController.storeClickVisit);
 
 module.exports = router;

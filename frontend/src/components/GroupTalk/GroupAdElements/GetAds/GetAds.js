@@ -29,6 +29,7 @@ const GetAd = (props) => {
 
     adTestGet();
   },[]);
+
   // useEffect(() => {
   //   setTimeout(() => {
   //     if (store.adStore.adList.length === 0) {

@@ -744,7 +744,7 @@ class Feed extends Component {
       let url = BASE_URL + `/feed-images/post-images?userLocation=${localStorage.getItem('userLocation')}`;
       
       //// video post upload url
-      if (postData.image && postData.image[0].type.split('/')[0] === 'video') {
+      if (postData.image && postData.image !== 'undefined' && postData.image[0].type.split('/')[0] === 'video') {
         url = BASE_URL + `/feed-video-upload?userLocation=${localStorage.getItem('userLocation')}`;
       }
 

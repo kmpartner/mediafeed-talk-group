@@ -3,7 +3,13 @@ import _ from 'lodash';
 export const storeClickData = (url, token, adElementId, adPlaceId, type,) => {
   return new Promise((resolve, reject) => {
 
-    fetch(url + `/ad-visit/store-click-visit`, {
+    const lsUserLocation = localStorage.getItem('userLocation') ? localStorage.getItem('userLocation') : '';
+    const lsUserSelectLng = localStorage.getItem('userSelectLng') 
+      ? localStorage.getItem('userSelectLng') 
+      : navigator.language;
+
+    // fetch(url + `/ad-visit/store-click-visit?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+    fetch(url + `/ad/ad-visit?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -44,7 +50,8 @@ export const getNearAdElements = (url, token) => {
         ? localStorage.getItem('userSelectLng') 
         : navigator.language;
       
-      const response = await fetch(url + `/ad-filter-element/near-ad-elements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+      // const response = await fetch(url + `/ad-filter-element/near-ad-elements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+      const response = await fetch(url + `/ad/near-adelements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + token,
