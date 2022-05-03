@@ -38,7 +38,7 @@ const PostMetrics = props => {
           </div>
         )}
         {commentCount && (
-          <span> Comment {commentCount}</span>
+          <span> {t('comment.text8', 'Comments')} {commentCount}</span>
         )}
       </div>
     </Fragment>

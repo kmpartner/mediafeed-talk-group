@@ -78,8 +78,7 @@ function FeedEditSelectFile(props) {
           <span onClick={showEmbedHandler}>
             {/* {!showEmbed && <span>OR,</span>}  */}
             <br/>
-            {/* {t('feed.text33', 'Embed Media')}  */}
-            Embed Media &#9662;
+            {t('feed.text33', 'Embed Media')} &#9662;
           </span>
         </div>
       }

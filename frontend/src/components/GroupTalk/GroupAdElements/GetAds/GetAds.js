@@ -27,7 +27,7 @@ const GetAd = (props) => {
       console.log(resData, result);
     };
 
-    adTestGet();
+    // adTestGet();
   },[]);
 
   // useEffect(() => {
