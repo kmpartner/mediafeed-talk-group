@@ -93,7 +93,7 @@ exports.createVideoPost = async (req, res, next) => {
         const post = new Post({
             title: title,
             content: content,
-            imageUrl: 'undefined',
+            imageUrl: '',
             imageUrls: imageUrls,
             modifiedImageUrls: modifiedImageUrls,
             thumbnailImageUrls: thumbnailImageUrls,

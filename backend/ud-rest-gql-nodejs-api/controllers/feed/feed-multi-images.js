@@ -80,9 +80,6 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
 
     const savePost = async () => {
-
-
-
         // const user = await User.findById(req.userId);
         const user = await User.findOne({ userId: req.userId });
         
@@ -92,7 +89,8 @@ exports.createMultiImagesPost = async (req, res, next) => {
         const post = new Post({
             title: title,
             content: content,
-            imageUrl: 'undefined',
+            // imageUrl: 'undefined',
+            imageUrl: '',
             imageUrls: imageUrls,
             modifiedImageUrls: modifiedImageUrls,
             thumbnailImageUrls: thumbnailImageUrls,

@@ -8,7 +8,7 @@ const postSchema = Schema({
     },
     imageUrl: {
         type: String,
-        required: true
+        // required: true
     },
     modifiedImageUrl: {
         type: String,
