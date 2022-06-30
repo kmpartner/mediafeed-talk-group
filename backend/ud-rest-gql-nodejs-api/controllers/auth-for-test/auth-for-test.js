@@ -16,7 +16,7 @@ exports.loginTokenForTest = async (req, res, next) => {
   // const firebaseData = req.body.firebaseData;
   // const fbProviderId = firebaseData.additionalUserInfo.providerId;
 
-  const testUserIdList = ['61b41d950c71d544c5c32485', '60dfe34f948acf20fc03acde', '61b41d950c71d544c5c32496'];
+  const testUserIdList = ['61b41d950c71d544c5c32485', '60dfe34f948acf20fc03acde', '61b41d950c71d544c5c32496', '60e110d91892a4426830768c'];
   let loadedUser;
   try {
     const isUserIdInList = testUserIdList.find((id) => {
@@ -32,7 +32,7 @@ exports.loginTokenForTest = async (req, res, next) => {
     const user = await User.findOne({ userId: userId });
     // console.log(user);
     if (!user) {
-      const error = new Error("A user with userId not found.");
+      const error = new Error("user with userId not found.");
       error.statusCode = 401;
       throw error;
     }

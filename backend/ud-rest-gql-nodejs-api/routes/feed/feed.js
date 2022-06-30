@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 
 const feedController = require('../../controllers/feed/feed');
 const feedMultiImagesController = require('../../controllers/feed/feed-multi-images');
+const liveController = require('../../controllers/feed/live');
 
 // const isAuth = require('../middleware/is-auth');
 const isAuth = require('../../middleware/is-auth');
@@ -71,6 +72,10 @@ router.get(
     // isAuth, 
     feedController.getPostForMap
 );
+
+router.get('/live-post', liveController.getLivePost);
+
+router.get('/presenter-posts', liveController.getPresenterPosts);
 
 // router.get('/comment/action', isAuth, feedController.commentAction);
 

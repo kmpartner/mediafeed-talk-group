@@ -83,6 +83,12 @@ const postSchema = Schema({
         reactionCount: { type: Number },
     }],
     totalComment: { type: Number, default: 0 },
+    postType: { type: String }, //// '', 'live' ....
+    liveRoomId: { type: String },
+    liveLocationPass: { type: String },
+    // livePresenterEmail: { type: String },
+    // livePresenterUserId: { type: String },
+
     // visit: {
     //     details : [{
     //         userId: { type: String },

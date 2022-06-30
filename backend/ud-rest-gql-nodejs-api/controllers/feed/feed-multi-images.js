@@ -227,6 +227,8 @@ exports.createMultiImagesPost = async (req, res, next) => {
             Key: `${image.path}`
         };
 
+        // console.log('params', params);
+
         var paramsModify = {
             ACL: 'private',
             Bucket: process.env.DO_SPACE_BUCKET_NAME,
