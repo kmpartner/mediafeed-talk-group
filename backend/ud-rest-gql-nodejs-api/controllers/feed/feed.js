@@ -211,11 +211,16 @@ const getPosts = async (req, res, next) => {
       //     .sort({ createdAt: -1 })
       //     // .skip((currentPage - 1) * perPage)
       //     // .limit(perPage);
-      if (!req.query.userId) {
+
+      const decodedToken = testAuth(req, "", "");
+      // console.log(decodedToken);
+
+      if (!req.query.userId || decodedToken.userId !== req.query.userId) {
         const error = new Error("not authorized!");
         error.statusCode = 403;
         throw error;
       }
+
       let userPosts = await Post.find({ creatorId: req.query.userId })
         // .populate('creator')
         .sort({ createdAt: -1 });

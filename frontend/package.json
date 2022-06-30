@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.26.1",
+    "bowser": "^2.11.0",
     "browserify": "^16.5.1",
     "compressorjs": "^1.1.1",
     "date-and-time": "^2.0.1",
@@ -16,7 +17,7 @@
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "npm": "^8.5.0",
+    "npm": "^8.12.2",
     "qrcode": "^1.4.4",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.2",

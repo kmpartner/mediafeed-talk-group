@@ -101,7 +101,7 @@ const MainNavigation = props => {
     }
     
     <MobileToggle onOpen={props.onOpenMobileNav} />
-    <div className="main-nav__logo">
+    <div id="logoid" className="main-nav__logo">
       {/* <NavLink to="/feed/posts">
         <Logo />
       </NavLink> */}

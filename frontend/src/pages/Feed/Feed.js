@@ -755,7 +755,7 @@ class Feed extends Component {
         method = 'put'
 
         //// video update upload url
-        if (postData.image && postData.image[0].type.split('/')[0] === 'video') {
+        if (postData.image && postData.image !== 'undefined' && postData.image[0].type.split('/')[0] === 'video') {
           url = BASE_URL + '/feed-video-upload/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
         }
       }

@@ -1,6 +1,7 @@
 // import { useContext } from 'react';
 import React from 'react';
 import { Fragment, useEffect } from 'react';
+import Bowser from "bowser";
 
 import { useWindowDimensions } from '../../custom-hooks/useWindowDimensions';
 
@@ -31,6 +32,11 @@ function GetWindowData(props) {
     dispatch('SET_WINDOW_VALUES', values);
     
   },[height, width]);
+
+  useEffect(() => {
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    dispatch('SET_BOWSERDATA', browser.parsedResult);
+  },[]);
 
 
   // const [store, dispatch] = useStore();

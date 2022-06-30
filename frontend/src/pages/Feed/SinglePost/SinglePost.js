@@ -397,6 +397,11 @@ class SinglePost extends Component {
   };
 
   render() {
+
+    if (this.state.postData && this.state.postData.postType === 'live') {
+      return <div>live-post</div>
+    };
+
     const { t } = this.props;
     // console.log(t);
 

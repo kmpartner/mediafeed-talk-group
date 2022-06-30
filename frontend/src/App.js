@@ -8,6 +8,7 @@ import i18n from './i18n';
 
 import Button from './components/Button/Button';
 import Layout from './components/Layout/Layout';
+import LivePost from './pages/Live/LivePost';
 import Loader from './components/Loader/Loader';
 import Backdrop from './components/Backdrop/Backdrop';
 import Toolbar from './components/Toolbar/Toolbar';
@@ -778,11 +779,17 @@ class App extends Component {
               <TermsOfUse {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
             )}
           />
-          <Route
-            path="/privacypolicy"
-            render={props => (
-              <PrivacyPolicy {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
-            )}
+        <Route
+          path="/privacypolicy"
+          render={props => (
+            <PrivacyPolicy {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
+          )}
+        />
+        <Route
+          path="/livepost"
+          render={props => (
+            <LivePost {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
+          )}
         />
         {/* <Route
           path="/"
@@ -865,6 +872,12 @@ class App extends Component {
               <PrivacyPolicy {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
             )}
           />
+        <Route
+          path="/livepost"
+          render={props => (
+            <LivePost {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
+          )}
+        />
           {/* <Route
             path="/"
             exact

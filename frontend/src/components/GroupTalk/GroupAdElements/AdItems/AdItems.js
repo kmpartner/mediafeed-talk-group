@@ -21,20 +21,20 @@ const AdItems = (props) => {
         href={ad.linkUrl}
         target="_blank" rel="noopener noreferrer"
       >
-        <div className={classes.body300x65Container}>
-          <div className={classes.body300x65Text}>
-            <div className={classes.body300x65TextContents}>
-              <div className={classes.body300x65TextTitle}>
+        <div className="body300x65Container">
+          <div className="body300x65Text">
+            <div className="body300x65TextContents">
+              <div className="body300x65TextTitle">
                 {ad.title}
               </div>
-              <div className={classes.body300x65TextDescription}>
+              <div className="body300x65TextDescription">
                 {ad.description}
               </div>
             </div>
           </div>
           <div>
             <img
-              className={classes.body300x65Image}
+              className="body300x65Image"
               //  src={ad.adImageUrl}
               src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
               alt="300x65 image"
@@ -71,20 +71,20 @@ const AdItems = (props) => {
         href={ad.linkUrl}
         target="_blank" rel="noopener noreferrer"
       >
-       <div className={classes.body300x300Container}>
+       <div className="body300x300Container">
          <div>
            <img
-             className={classes.body300x300Image}
+             className="body300x300Image"
             //  src={ad.adImageUrl}
              src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
              alt="300x300 image"
            ></img>
          </div>
-         <div className={classes.body300x300TextContainer}>
-           <span className={classes.body300x300TextTitle}>
+         <div className="body300x300TextContainer">
+           <span className="body300x300TextTitle">
              {ad.title}
            </span>
-           <span className={classes.body300x300TextDescription}>
+           <span className="body300x300TextDescription">
              {ad.description}
            </span>
          </div>
@@ -113,19 +113,19 @@ const AdItems = (props) => {
         href={ad.linkUrl}
         target="_blank" rel="noopener noreferrer"
       >
-        <div className={classes.bodyInPostContainer}>
-          <div className={classes.bodyInPostContents}>
+        <div className="bodyInPostContainer">
+          <div className="bodyInPostContents">
             <img
-              className={classes.bodyInPostImageContainer}
+              className="bodyInPostImageContainer"
               // src={ad.adImageUrl}
               src={ad.adImageUrl ? ad.adImageUrl : GrayImage}
               alt="inPosts-image"
             ></img>
-            <div className={classes.bodyInPostTextContainer}>
-                <div className={classes.bodyInPostTextTitle}>
+            <div className="bodyInPostTextContainer">
+                <div className="bodyInPostTextTitle">
                   {ad.title}
                 </div>
-                <div className={classes.bodyInPostTextDescription}>
+                <div className="bodyInPostTextDescription">
                   {ad.description}
                 </div>
             </div>

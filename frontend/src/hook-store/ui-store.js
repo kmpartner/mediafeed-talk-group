@@ -81,6 +81,12 @@ const configureStore = () => {
         windowValues: payload,
       }
     },
+    SET_BOWSERDATA: (state, payload) => {
+      return {
+        ...state,
+        bowserData: payload,
+      }
+    },
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -100,6 +106,7 @@ const configureStore = () => {
     viewPage: 1,
     gotPosts: [],
     windowValues: null,
+    bowserData: null,
     // lastPage: 0,
     // notification: {
     //   status: null,
