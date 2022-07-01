@@ -12,7 +12,7 @@ import { useStore } from '../../hook-store/store';
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
-import { BASE_URL } from '../../App';
+import { BASE_URL, LIVE_URL } from '../../App';
 // import './NotPageFound.css';
 
 import LiveEmbed from '../../components/LiveEmbed/LiveEmbed';
@@ -25,7 +25,7 @@ const LivePost = props => {
   const roomId = queryParams.get('roomId');
   const locationPass = queryParams.get('locationPass');
 
-  const liveUrl = process.env.REACT_APP_LIVE_URL;
+  // const liveUrl = process.env.REACT_APP_LIVE_URL;
 
   const [t] = useTranslation('translation');
 
@@ -188,7 +188,7 @@ const LivePost = props => {
       )}
       
       <LiveEmbed
-        liveEmbedUrl={`${liveUrl}/${roomId}?locationPass=${locationPass}`}
+        liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
         start={liveInfo && liveInfo.start}
         end={liveInfo && liveInfo.end}
       />

@@ -366,6 +366,10 @@ class Feed extends Component {
       queryEnd = BASE_URL + '/feed-filter/most-reaction-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&type=Like`;
     }
 
+    if (this.state.selectedCreatorId) {
+      queryEnd = BASE_URL + '/feed/user-public-posts?page=' + page + `&userpost=${this.state.userOnly.toString()}&userId=${this.state.selectedCreatorId}`;
+    }
+
 
     fetch(queryEnd, {
       headers: {

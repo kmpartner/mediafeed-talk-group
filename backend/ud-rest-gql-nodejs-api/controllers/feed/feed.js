@@ -1173,6 +1173,50 @@ const getPostForMap = async (req, res, next) => {
   }
 };
 
+
+const getUserPublicPosts = async (req, res, next) => {
+  try {
+    console.log("req.query", req.query);
+    const userId = req.query.userId;
+
+    if (!userId) {
+      const error = new Error("userId is required");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    let userPosts = await Post.find({ 
+      creatorId: userId,
+      public: 'public'
+     })
+    .sort({ createdAt: -1 });
+
+    if (userPosts.length === 0) {
+      const error = new Error("user public posts not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    userPosts = createReturnPosts(userPosts);
+
+    // const userPosts = uPosts.filter(post => post.creatorId.toString() === req.query.userId);
+    totalItems = userPosts.length;
+    // console.log('userPosts: ',userPosts);
+    console.log("userPosts totalItems", totalItems);
+
+    res.status(200).json({
+      message: "Get user public posts Successfully",
+      posts: userPosts,
+    });
+    
+  } catch(err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 // const clearImage = filePath => {
 //     console.log('clearimage', filePath);
 //     filePath = path.join(__dirname, '..', filePath);
@@ -1603,6 +1647,7 @@ module.exports = {
   updatePost: updatePost,
   deletePost: deletePost,
   deletePostImage: deletePostImage,
+  getUserPublicPosts: getUserPublicPosts,
   getPostForMap: getPostForMap,
   createReturnPost: createReturnPost,
   createReturnPosts: createReturnPosts,

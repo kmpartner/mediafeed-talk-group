@@ -73,6 +73,8 @@ router.get(
     feedController.getPostForMap
 );
 
+router.get('/user-public-posts', feedController.getUserPublicPosts);
+
 router.get('/live-post', liveController.getLivePost);
 
 router.get('/presenter-posts', liveController.getPresenterPosts);
