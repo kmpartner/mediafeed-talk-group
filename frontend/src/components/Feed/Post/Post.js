@@ -31,7 +31,12 @@ const Post = props => {
   // const fileType = imagePlace.split('.')[imagePlace.split('.').length - 1].toLowerCase();
   const imagePlace = props.image.split('?')[0];
   const fileType = imagePlace.split('.')[imagePlace.split('.').length - 1].toLowerCase();
-  const linkToPost = `/feed/${props.id}`;
+  
+  let linkToPost = `/feed/${props.id}`;
+
+  if (props.postData.postType === 'live') {
+    linkToPost = `/livepost?roomId=${props.postData.liveRoomId}&locationPass=${props.postData.liveLocationPass}`;
+  }
 
   // console.log('embedUrl', props.embedUrl)
   let youTubeThumbnailUrl;
@@ -314,8 +319,14 @@ const Post = props => {
             <SmallModal style="modal2">
               <div>
                 <div className="userImageUpload__confirmContent">
-                    {t('feed.text7', 'Is is no problem to delete post completely?')}
+                    <div>
+                      {t('feed.text7', 'Is is no problem to delete post completely?')}
+                    </div>
+                    <div>
+                      (Post comments are also deleted.)
+                    </div>
                 </div>
+
                 <Button mode="flat" design=""
                   disabled={props.isPostDeleting}
                   onClick={hideDeleteModalHandler}

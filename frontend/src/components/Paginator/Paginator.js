@@ -37,12 +37,16 @@ const paginator = props => {
       // }
       
       props.onPrevious();
-      window.scrollTo(0, 0);
+      if (!props.noScroll) {
+        window.scrollTo(0, 0);
+      }
   }
 
   const nextHandler = () => {
     props.onNext();
-    window.scrollTo(0, 0);
+    if (!props.noScroll) {
+      window.scrollTo(0, 0);
+    }
   }
  
   return (

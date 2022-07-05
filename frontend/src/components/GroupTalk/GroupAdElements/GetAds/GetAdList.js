@@ -15,13 +15,16 @@ const GetAdList = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
+  // console.log('store GetAdList.js', store);
 
   useEffect(() => {
-    if (store.adStore.adList.length === 0) {
-      getNearAdElementsHandler();
+    if (store.adStore.adList.length === 0 && store.bowserData) {
+      const nearAds = getNearAdElementsHandler();
+      dispatch('SET_ADLIST', nearAds);
     }
-  },[]);
+  },[store.bowserData]);
 
+  
   const getNearAdElementsHandler = async () => {
     try {
       const adsData = await getNearAdElements(ADNETWORK_URL, 'token');
@@ -30,13 +33,32 @@ const GetAdList = (props) => {
 
       let adList = adsData.data.ads;
 
-      //// filter not end ads
+      const deviceType = store.bowserData.platform.type;
+
+      //// filter not end ads and device type
       if (adList.length > 0) {
-        adList = adList.filter(ad => {
-          return ad.end > Date.now();
-          // return ad.start < Date.now() && ad.end > Date.now();
-        });
+        // adList = adList.filter(ad => {
+        //   return ad.end > Date.now();
+        //   // return ad.start < Date.now() && ad.end > Date.now();
+        // });
+
+        if (deviceType === 'mobile' || window.innerWidth <= 480)
+				{
+					adList = adList.filter((ad) =>
+					{
+						return ad.targetDevice !== 'desktop' && ad.end > Date.now();
+					});
+				}
+				if (deviceType === 'desktop' || window.innerWidth > 480)
+				{
+					adList = adList.filter((ad) =>
+					{
+						return ad.targetDevice !== 'mobile' && ad.end > Date.now();
+					});
+				}
       }
+
+      // console.log('adList after filter', adList);
 
       dispatch('SET_ADLIST', adList);
     } catch (err) {

@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next/hooks';
 import Button from '../../components/Button/Button';
 // import Feed from '../Feed/Feed';
 import Loader from '../../components/Loader/Loader';
+import LivePresenterPosts from './LivePresenterPosts';
 import Post from '../../components/Feed/Post/Post';
+import PostComments from '../../components/Feed/SinglePost/PostComment/PostComments';
 
 import { useStore } from '../../hook-store/store';
 
@@ -16,7 +18,7 @@ import { BASE_URL, LIVE_URL } from '../../App';
 // import './NotPageFound.css';
 
 import LiveEmbed from '../../components/LiveEmbed/LiveEmbed';
-
+import classes from './LivePost.module.css';
 
 const LivePost = props => {
   // console.log('need-to-login-props', props);
@@ -24,6 +26,8 @@ const LivePost = props => {
   const queryParams = currentUrl.searchParams;
   const roomId = queryParams.get('roomId');
   const locationPass = queryParams.get('locationPass');
+
+  const { token, isAuth } = props;
 
   // const liveUrl = process.env.REACT_APP_LIVE_URL;
 
@@ -34,6 +38,7 @@ const LivePost = props => {
   const [liveInfo, setLiveInfo] = useState();
   const [livePost, setLivePost] = useState();
   const [presenterPosts, setPresenterPosts] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,6 +57,7 @@ const LivePost = props => {
 
   const getLivePostHandler = async (liveRoomId, liveLocationPass) => {
     try {
+      setError('');
       console.log('in createLivePostHandler');
       const result = await fetch(BASE_URL + `/feed/live-post?liveRoomId=${liveRoomId}&liveLocationPass=${liveLocationPass}&userLocation=${localStorage.getItem('userLocation')}`, {
         method: 'GET',
@@ -61,6 +67,10 @@ const LivePost = props => {
         },
       });
   
+      if (result.status === 400) {
+        setError('Live not found.');
+      }
+
       const resData = await result.json();
 
       console.log(result, resData);
@@ -103,76 +113,9 @@ const LivePost = props => {
 
 
 
-  let presenterPostsBody;
-
-  if (presenterPosts.length > 0) {
-    presenterPostsBody = (
-      <ul>{presenterPosts.map(post => {
-        return (
-          <div key={post._id} className="feed-container">
-            {/* {post.title} */}
-            <Post
-              key={post._id}
-              id={post._id}
-              author={post.creatorName}
-              creatorImageUrl={post.creatorImageUrl}
-              date={new Date(post.createdAt).toLocaleDateString('en-US')}
-              postDate={post.createdAt}
-              title={post.title}
-              image={post.imageUrl}
-              modifiedImageUrl={post.modifiedImageUrl}
-              thumbnailImageUrl={post.thumbnailImageUrl}
-              imageUrls={post.imageUrls}
-              modifiedImageUrls={post.modifiedImageUrls}
-              thumbnailImageUrls={post.thumbnailImageUrls}
-              imagePaths={post.imagePaths}
-              modifiedImagePaths={post.modifiedImagePaths}
-              thumbnailImagePaths={post.thumbnailImagePaths}
-              embedUrl={post.embedUrl}
-              content={post.content}
-              b64Simage={post.b64Simage}
-              postCreatorUserId={post.creatorId}
-              public={post.public}
-              onStartEdit={() => {}}
-              onDelete={() => {}}
-              // deleteMultiImagePostHandler={this.deleteMultiImagePostHandler.bind(this, post._id)}
-              deleteMultiImagePostHandler={() => {}}
-              updatePostElementHandler={() => {}}
-              isPostDeleting={''}
-              postDeleteResult={''}
-              setSelectedCreatorId={''}
-              resetPostPage={''}
-              postData={post}
-              postFilter={''}
-            />
-          </div>
-        );
-      })}</ul>
-    );
-  }
-
-
-
-
-  let body;
-  if (props.isLoading) {
-    body = (<div className="notPageFound__Loader">
-      <Loader />
-      </div>);
-  } 
-  else {
-    body = ( 
-    <div className="notPageFound__container">
-    </div>
-    );
-  }
-
   return (
     <div>
       
-      {/* <GetWindowData 
-        setWindowValues={() => {}}
-      /> */}
 
       {store.windowValues && (store.windowValues.width < 768) && (
         <AdElementDisplay
@@ -186,16 +129,50 @@ const LivePost = props => {
           adPlaceId='toppage-right' 
         />
       )}
-      
-      <LiveEmbed
-        liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
-        start={liveInfo && liveInfo.start}
-        end={liveInfo && liveInfo.end}
-      />
+
+      <div>
+        {/* <strong>{error}</strong> */}
+      </div>
+
+      <section className="feed-container">
+        {livePost && livePost.public === 'public' && (
+          <div>live-title: {livePost.title}</div>
+        )}
+
+        {liveInfo && (
+          <div>
+            start-time: {new Date(liveInfo.start).toLocaleString()}, 
+            end-time: {new Date(liveInfo.end).toLocaleString()}
+          </div>
+        )}
+        <LiveEmbed
+          liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
+        />
+      </section>
+
+
+      <section className="feed-container">
+        {/* <div>live-comment-list</div> */}
+        
+        {livePost && (
+          <div className={classes.livePostComment}
+  >
+            <PostComments
+              token={token}
+              postId={livePost._id}
+              postCreatorId={livePost.creatorId}
+              isAuth={isAuth}
+            />
+          </div>
+        )}
+      </section>
 
       <section>
-        <div>presenter-posts</div>
-        {presenterPostsBody}
+        <LivePresenterPosts 
+          presenterPosts={presenterPosts}
+        />
+        {/* <div>presenter-posts</div> */}
+        {/* {presenterPostsBody} */}
       </section>
 
       {/* <Feed 

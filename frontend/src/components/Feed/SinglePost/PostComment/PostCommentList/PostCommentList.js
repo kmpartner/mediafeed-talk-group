@@ -8,7 +8,7 @@ import InputEmoji from '../../../../Form/Input/InputEmoji';
 import ErrorHandler from '../../../../ErrorHandler/ErrorHandler';
 import Button from '../../../../Button/Button';
 import Loader from '../../../../Loader/Loader';
-import { BASE_URL } from '../../../../../App';
+import { BASE_URL, authPageLink, authSignupPageLink } from '../../../../../App';
 // import './PostComment.css';
 
 import PostCommentListInput from './PostCommentInput/PostCommentListInput';
@@ -337,7 +337,7 @@ const PostCommentList = props => {
       <button onClick={() => {console.log(window, 'yoffset', window.pageYOffset)}}>pos-pos</button>
       <button onClick={() => {setYOffsetValue(230)}}>to-230</button> */}
 
-      <hr />
+      {/* <hr /> */}
 
       <div>
         {/* Comments */}
@@ -349,6 +349,34 @@ const PostCommentList = props => {
       </div>
       <ErrorHandler error={error} onHandle={errorHandler} />
 
+      {!props.isAuth && (
+        <div>
+          <div>Login to write comment</div>
+          <div>
+            <a href={authPageLink} >
+            <Button
+                  mode="raised" type="submit" design="success"
+                  // disabled={!props.replyInput || props.commentLoading}
+            >
+                {/* Login */}
+                {t('general.text11')}
+              </Button>
+            </a>
+          </div>
+          <div>OR</div>
+          <div>
+            <a href={authSignupPageLink} >
+              <Button
+                    mode="raised" type="submit" design="success"
+                    // disabled={!props.replyInput || props.commentLoading}
+              >
+                {/* Signup */}
+                {t('general.text12')}
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
 
       {props.isAuth ?
         <PostCommentListInput

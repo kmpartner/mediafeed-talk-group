@@ -17,7 +17,9 @@
 
 @media (min-width: 768px) {
   .liveContainer {
+    /* margin: 0 auto;
     margin-right: 340px;
+    max-width: 40rem; */
   }
   .someContent {
     /* display: none; */

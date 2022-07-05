@@ -13,7 +13,7 @@ import classes from './LiveEmbed.module.css';
 
 const LiveEmbed = props => {
   // console.log('need-to-login-props', props);
-  const { liveEmbedUrl, start, end, uid } = props;
+  const { liveEmbedUrl } = props;
 
   // const liveEmbedUrl ='http://localhost:4444/embedlive/testroomid/testroomid';
 
@@ -26,8 +26,8 @@ const LiveEmbed = props => {
   
   let iframeStyle = {
     width: '100%',
-    height: `${window.innerWidth*20/16}px`,
-    borderRadius: '2px',
+    height: `${window.innerWidth*17/16}px`,
+    borderRadius: '6px',
     // border: '3px solid red',
   };
 
@@ -93,11 +93,6 @@ const LiveEmbed = props => {
     <Fragment>
 
       <div className={classes.liveContainer}>
-        <div>
-          start-time: {new Date(start).toLocaleString()}, 
-          end-time: {new Date(end).toLocaleString()}
-          {/* uid: {uid} */}
-        </div>
         {/* <iframe src="https://www.youtube.com/embed/cWDJoK8zw58"></iframe> */}
         <iframe style={iframeStyle} id='iframe' src={liveEmbedUrl} onLoad={() => {}}></iframe>
         {/* <div className={classes.someContent}

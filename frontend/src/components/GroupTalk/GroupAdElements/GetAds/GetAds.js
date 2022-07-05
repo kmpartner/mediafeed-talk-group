@@ -39,7 +39,7 @@ const GetAd = (props) => {
   // }, []);
 
   useEffect(() => {
-    if (!isTimerStart) {
+    if (!isTimerStart && store.bowserData) {
       setIsTimerStart(true);
 
       setInterval(() => {
@@ -47,7 +47,7 @@ const GetAd = (props) => {
         getNearAdElementsHandler();
       }, 1000 * 60 * 15);
     }
-  }, []);
+  }, [store.bowserData]);
 
   // useEffect(() => {
   //   console.log('timerTime', timerTime);
@@ -69,19 +69,41 @@ const GetAd = (props) => {
 
       let adList = adsData.data.ads;
 
-      //// filter not end ads
+      const deviceType = store.bowserData.platform.type;
+
+      // console.log('adList before filter', adList);
+
+      //// filter not end ads and device type
       if (adList.length > 0) {
-        adList = adList.filter((ad) => {
-          return ad.end > Date.now();
-          // return ad.start < Date.now() && ad.end > Date.now();
-        });
+        // adList = adList.filter(ad => {
+        //   return ad.end > Date.now();
+        //   // return ad.start < Date.now() && ad.end > Date.now();
+        // });
+
+        if (deviceType === 'mobile' || window.innerWidth <= 480)
+				{
+					adList = adList.filter((ad) =>
+					{
+						return ad.targetDevice !== 'desktop' && ad.end > Date.now();
+					});
+				}
+				if (deviceType === 'desktop' || window.innerWidth > 480)
+				{
+					adList = adList.filter((ad) =>
+					{
+						return ad.targetDevice !== 'mobile' && ad.end > Date.now();
+					});
+				}
       }
+
+      // console.log('adList', adList);
 
       dispatch("SET_ADLIST", adList);
     } catch (err) {
       console.log(err);
     }
   };
+
 
   return (
     <Fragment>
