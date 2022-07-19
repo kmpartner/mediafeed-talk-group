@@ -55,7 +55,8 @@ exports.loginTokenForTest = async (req, res, next) => {
     const token = jwt.sign(
       {
         email: loadedUser.email,
-        userId: loadedUser._id.toString(),
+        // userId: loadedUser._id.toString(),
+        userId: loadedUser.userId,
         name: loadedUser.name,
         firebaseUserData: firebaseData.user ? firebaseData.user : {},
         fierbaseAdditionalUserInfo: firebaseData.additionalUserInfo ? firebaseData.additionalUserInfo : {},

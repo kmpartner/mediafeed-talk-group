@@ -13,7 +13,10 @@
 }
 
 .feed__control {
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .feed__favoriteButton {

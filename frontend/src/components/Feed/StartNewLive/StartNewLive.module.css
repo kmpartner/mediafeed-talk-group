@@ -1,0 +1,41 @@
+.startNewLive {
+  font-size: 1.25rem;
+}
+
+.startNewLiveModal {
+  position: fixed;
+  /* width: 90%; */
+  /* max-width: 70%; */
+  /* height: 50%; */
+  max-height:80%;
+  overflow: auto;
+  left: 5%;
+  right: 5%;
+  top: 2%;
+  background: var(--background-color);
+  border: 0.5px solid rgb(110, 110, 110);
+  border-radius: 5px;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.closeButtonContainer {
+  text-align: right;
+}
+
+.closeButton {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.startNewLiveLink {
+  text-decoration: underline;
+  color: var(--color);
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .startNewLiveModal {
+    max-width: 40rem;
+  }
+}

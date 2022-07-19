@@ -14,6 +14,7 @@ import FeedSocketAction from '../../components/Feed/FeedSocketAction/FeedSocketA
 // import Input from '../../components/Form/Input/Input';
 import Paginator from '../../components/Paginator/Paginator';
 import PostSelect from '../../components/Feed/PostSelect/PostSelect';
+import StartNewLive from '../../components/Feed/StartNewLive/StartNewLive';
 import Loader from '../../components/Loader/Loader';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import { getUserLocation, getFavoritePosts } from '../../util/user';
@@ -77,6 +78,8 @@ class Feed extends Component {
 
     windowValues: null,
     uploadProgress: 0,
+
+    newLiveStart: false,
   };
 
   componentDidMount() {
@@ -1636,6 +1639,14 @@ class Feed extends Component {
                 {/* New Post */}
                 {t('feed.text1')}
               </Button>
+              <Button mode="raised" design="accent" onClick={() => {this.setState({ newLiveStart: !this.state.newLiveStart }); }}>
+                New Live
+              </Button>
+              {this.state.newLiveStart && (
+                <StartNewLive 
+                  onClose={() => { this.setState({ newLiveStart: false }); }}
+                />
+              )}
             </section>
 
             {/* <Button mode="flat" design="" onClick={() => {
