@@ -136,13 +136,17 @@ const LivePost = props => {
 
       <section className="feed-container">
         {livePost && livePost.public === 'public' && (
-          <div>live-title: {livePost.title}</div>
+          <div>{t('feed.text10', 'Title')}: {livePost.title}</div>
         )}
 
         {liveInfo && (
           <div>
-            start-time: {new Date(liveInfo.start).toLocaleString()}, 
-            end-time: {new Date(liveInfo.end).toLocaleString()}
+            <div>
+              {t('general.text22', 'Start')} {new Date(liveInfo.start).toLocaleString()}
+            </div>
+            <div>
+              {t('general.text23', 'End')} {new Date(liveInfo.end).toLocaleString()}
+            </div>
           </div>
         )}
         <LiveEmbed

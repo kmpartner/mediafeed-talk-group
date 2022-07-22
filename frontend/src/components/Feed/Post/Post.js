@@ -266,8 +266,11 @@ const Post = props => {
             )}
           </div>
         )} */}
+        {props.postData.postType === 'live' && (
+          <div>Live</div>
+        )}
 
-        {props.postFilter !== 'recent-visit-posts' && (
+        {!(props.postFilter === 'recent-visit-posts' || props.postData.postType === 'live') && (
           <PostMetrics t={props.t} postData={props.postData} />
         )}
 
@@ -323,7 +326,7 @@ const Post = props => {
                       {t('feed.text7', 'Is is no problem to delete post completely?')}
                     </div>
                     <div>
-                      (Post comments are also deleted.)
+                      ({t('feed.text39', 'Post comments are also deleted.')})
                     </div>
                 </div>
 

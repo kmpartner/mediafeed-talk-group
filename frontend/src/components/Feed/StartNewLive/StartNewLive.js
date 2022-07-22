@@ -10,7 +10,7 @@ import { BOOKLIVE_URL, LIVE_URL } from "../../../App";
 import classes from "./StartNewLive.module.css";
 
 function StartNewLive(props) {
-  const { onClose } = props;
+  const { t, onClose } = props;
 
   return (
     <Fragment>
@@ -26,28 +26,31 @@ function StartNewLive(props) {
           <div></div>
 
           <p>
-            By using video presentation app (
+            {t('live.text01', 'By using video presentation app')}
+            {' '}
+            (<a className={classes.startNewLiveLink} 
+                href={LIVE_URL + '/your-presentation'} target="_blank" rel="noopener noreferrer"
+              >
+                REMEET-WePL
+              </a>
+            ), {t('live.text02', 'you can start live broadcast in feed page.')}
+          </p>
+          <p>
             <a className={classes.startNewLiveLink} 
-              href={LIVE_URL + '/your-new-presentation'} target="_blank" rel="noopener noreferrer"
+              href={LIVE_URL+ '/your-presentation'} target="_blank" rel="noopener noreferrer"
             >
               REMEET-WePL
             </a>
-            ), you can start live broadcasting in feed page.
+            {" "}
+            {t('live.text03', 'is a simple video presentation app with text chat, screen share, file share.')}
           </p>
           <p>
-            <a className={classes.startNewLiveLink} 
-              href={LIVE_URL+ '/your-new-presentation'} target="_blank" rel="noopener noreferrer"
-            >
-              REMEET-WePL
-            </a>{" "}
-            is a simple video presentation app with text chat, screen share, file share.
-          </p>
-          <p>
-            To start live broadcasting, you need to reserve a room at{" "}
+            {t('live.text04', 'To start live broadcast, you need to reserve a room at')}
+            {" "}
             <a className={classes.startNewLiveLink} 
               href={BOOKLIVE_URL} target="_blank" rel="noopener noreferrer"
             >
-              room reservation page
+              {t('live.text05', 'room reservation page')}
             </a>
           </p>
         </div>
