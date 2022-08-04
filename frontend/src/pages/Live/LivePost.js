@@ -13,6 +13,7 @@ import PostComments from '../../components/Feed/SinglePost/PostComment/PostComme
 import { useStore } from '../../hook-store/store';
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+import AdElementTime from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementTime';
 
 import { BASE_URL, LIVE_URL } from '../../App';
 // import './NotPageFound.css';
@@ -118,16 +119,24 @@ const LivePost = props => {
       
 
       {store.windowValues && (store.windowValues.width < 768) && (
-        <AdElementDisplay
-          adType='300x65' 
-          adPlaceId='toppage-top' 
-        />
+        // <AdElementDisplay
+        //   adType='300x65' 
+        //   adPlaceId='toppage-top' 
+        // />
+        <AdElementTime
+        adType='300x65' 
+        adPlaceId='toppage-top' 
+      />
       )}
       {store.windowValues && (store.windowValues.width >= 768) && (
-        <AdElementDisplay 
-          adType='300x300'
-          adPlaceId='toppage-right' 
-        />
+        // <AdElementDisplay 
+        //   adType='300x300'
+        //   adPlaceId='toppage-right' 
+        // />
+        <AdElementTime
+        adType='300x300'
+        adPlaceId='toppage-right' 
+      />
       )}
 
       <div>

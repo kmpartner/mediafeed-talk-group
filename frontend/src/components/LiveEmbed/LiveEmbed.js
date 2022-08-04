@@ -26,7 +26,7 @@ const LiveEmbed = props => {
   
   let iframeStyle = {
     width: '100%',
-    height: `${window.innerWidth*17/16}px`,
+    height: `${window.innerWidth*15/16}px`,
     borderRadius: '6px',
     // border: '3px solid red',
   };

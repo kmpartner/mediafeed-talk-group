@@ -4,6 +4,8 @@ import { withI18n } from "react-i18next";
 import RightContents from "../GroupRightElements/RightContents";
 import TopBarContents from "../GroupTopElements/TopBarContents";
 
+import { ADNETWORKLINK_URL } from "../../../../App";
+
 import GrayImage from '../../../../images/light-gray-square-300.jpg';
 
 import classes from "./AdItems.module.css";
@@ -18,7 +20,8 @@ const AdItems = (props) => {
   if (ad && activeList && activeList.length > 0) {
     body300x65 = (
       <a className={classes.adLink}
-        href={ad.linkUrl}
+        // href={ad.linkUrl}
+        href={`${ADNETWORKLINK_URL}?altk=${ad.token}`}
         target="_blank" rel="noopener noreferrer"
       >
         <div className="body300x65Container">
@@ -68,7 +71,8 @@ const AdItems = (props) => {
   if (ad && activeList && activeList.length > 0) {
     body300x300 = (
       <a className={classes.adLink}
-        href={ad.linkUrl}
+        // href={ad.linkUrl}
+        href={`${ADNETWORKLINK_URL}?altk=${ad.token}`}
         target="_blank" rel="noopener noreferrer"
       >
        <div className="body300x300Container">
@@ -110,7 +114,8 @@ const AdItems = (props) => {
   if (ad && activeList && activeList.length > 0) {
     bodyInPosts = (
       <a className={classes.adLink}
-        href={ad.linkUrl}
+        // href={ad.linkUrl}
+        href={`${ADNETWORKLINK_URL}?altk=${ad.token}`}
         target="_blank" rel="noopener noreferrer"
       >
         <div className="bodyInPostContainer">

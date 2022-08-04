@@ -78,6 +78,7 @@ export const PUSH_URL = process.env.REACT_APP_DEV_PUSH_URL;
 export const authPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 export const authSignupPageLink = process.env.REACT_APP_DEV_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
 export const ADNETWORK_URL = process.env.REACT_APP_DEV_BASE_URL;
+export const ADNETWORKLINK_URL = process.env.REACT_APP_DEV_ADNETWORKLINK_URL;
 export const LIVE_URL = process.env.REACT_APP_DEV_LIVE_URL;
 export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 
@@ -94,7 +95,8 @@ export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 // export const authPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const authSignupPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const ADNETWORK_URL = process.env.REACT_APP_TEST_BASE_URL;
-// export const LIVE_URL = process.env.REACT_APP_LIVE_URL
+// export const ADNETWORKLINK_URL = process.env.REACT_APP_ADNETWORKLINK_URL;
+// export const LIVE_URL = process.env.REACT_APP_TEST_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
 
 
@@ -109,6 +111,7 @@ export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 // export const authPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/login?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const authSignupPageLink = process.env.REACT_APP_AUTHPAGE_URL + `/signup?fromUrl=${encodeURIComponent(window.location.origin)}`;
 // export const ADNETWORK_URL = process.env.REACT_APP_BASE_URL;
+// export const ADNETWORKLINK_URL = process.env.REACT_APP_ADNETWORKLINK_URL;
 // export const LIVE_URL = process.env.REACT_APP_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
 
