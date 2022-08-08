@@ -159,8 +159,11 @@ const Post = props => {
         // console.log(fileType, props.modifiedImagePaths[0]);
       }
 
-      let imageHeight = "100"
+      let imageHeight = "150"
       if (props.modifiedImageUrls.length > 1) {
+        imageHeight = "100"
+      }
+      if (props.modifiedImageUrls.length > 2) {
         imageHeight = "75"
       }
 
@@ -216,9 +219,13 @@ const Post = props => {
             </iframe> */}
             <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
               <span className="post__SmallVideos">
-                <Img src={youTubeThumbnailUrl} alt="post videos" width="160" />
-                <span className="post__SmallVideosYouTubeMark"
-                  // role="img" aria-label="video indicator"
+                {/* <Img src={youTubeThumbnailUrl} alt="post videos" width="160" /> */}
+                <Img src={youTubeThumbnailUrl} alt="post videos" 
+                  // width="200"
+                  height="150" 
+                />
+                  <span className="post__SmallVideosYouTubeMark"
+                    // role="img" aria-label="video indicator"
                 >
                   &#9654;
                 </span>

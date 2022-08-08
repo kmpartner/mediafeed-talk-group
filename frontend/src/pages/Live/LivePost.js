@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
 
@@ -10,6 +10,7 @@ import LivePresenterPosts from './LivePresenterPosts';
 import Post from '../../components/Feed/Post/Post';
 import PostComments from '../../components/Feed/SinglePost/PostComment/PostComments';
 
+// import { useOnScreen } from '../../custom-hooks/useOnScreen';
 import { useStore } from '../../hook-store/store';
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
@@ -34,12 +35,57 @@ const LivePost = props => {
 
   const [t] = useTranslation('translation');
 
+  // const ref = useRef();
+  // const isBottomVisible = useOnScreen(ref);
+
   const [store, dispatch] = useStore();
+  // console.log('store in LivePost.js', store);
 
   const [liveInfo, setLiveInfo] = useState();
   const [livePost, setLivePost] = useState();
   const [presenterPosts, setPresenterPosts] = useState([]);
   const [error, setError] = useState('');
+
+  const [underEmbedBottom, setUnderEmbedBottom] = useState(false);
+  const [targetRect, setTargetRect] = useState();
+
+  // const targetEl = document.getElementById(`live-embed-bottom`);
+  // let targetRect;
+  // if (targetEl) {
+  //   targetRect = targetEl.getBoundingClientRect();
+  // }
+
+  useEffect(() => {
+    const targetEl = document.getElementById(`live-embed-bottom`);
+    const rectInterval = setInterval(() => {
+
+      setTargetRect(targetEl.getBoundingClientRect());
+    
+    }, 1000*3);
+
+    return () => {
+      clearInterval(rectInterval);
+    };
+  },[]);
+
+  useEffect(() => {
+
+    console.log('live-embed-bottom targetRect', targetRect);
+    console.log('windowValues in livePost.js', store.windowValues);
+
+    if (targetRect && targetRect.top < -100) {
+      console.log('embmed bottom is close to screen top')
+      if (!underEmbedBottom) {
+        setUnderEmbedBottom(true);
+      }
+    } else {
+      console.log('not embmed bottom is close to screen top')
+      if (underEmbedBottom) {
+        setUnderEmbedBottom(false);
+      }
+    }
+  },[store.windowValues, targetRect]);
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -160,8 +206,15 @@ const LivePost = props => {
         )}
         <LiveEmbed
           liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
+          underEmbedBottom={underEmbedBottom}
         />
       </section>
+
+      <div id="live-embed-bottom"
+        // ref={ref}
+      >
+        {/* bottom-of-live-embed */}
+      </div>
 
 
       <section className="feed-container">

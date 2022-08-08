@@ -12,8 +12,8 @@ import classes from './LiveEmbed.module.css';
 
 
 const LiveEmbed = props => {
-  // console.log('need-to-login-props', props);
-  const { liveEmbedUrl } = props;
+  console.log('LiveEmbed-props', props);
+  const { liveEmbedUrl, underEmbedBottom } = props;
 
   // const liveEmbedUrl ='http://localhost:4444/embedlive/testroomid/testroomid';
 
@@ -38,7 +38,38 @@ const LiveEmbed = props => {
       height: `${(window.innerWidth-320)*14/16}px`,
       borderRadius: '6px',
       // border: '3px solid red',
+    }
 
+  }
+
+  if (underEmbedBottom) {
+    if (window.innerWidth > 768) { 
+      iframeStyle = {
+        borderRadius: '4px',
+        border: '1px solid gray',
+        position: 'fixed',
+        top: '70px',
+        // bottom: '10px',
+        // right: '5px',
+        left: '5px',
+        width: '200px',
+        height: '200px',
+        zIndex: '100',
+        transitionDuration: '0.75s',
+      }
+    } else {
+      iframeStyle = {
+        borderRadius: '4px',
+        border: '1px solid gray',
+        position: 'fixed',
+        top: '5px',
+        // bottom: '10px',
+        right: '5px',
+        width: '200px',
+        height: '200px',
+        zIndex: '100',
+        transitionDuration: '0.75s',
+      }
     }
   }
 
