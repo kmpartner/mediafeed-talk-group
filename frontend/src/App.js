@@ -166,7 +166,17 @@ class App extends Component {
   };
 
   componentDidMount() {
-    console.log('app.js-props', this.props);
+    // console.log('app.js-props', this.props);
+
+    const currentUrl = new URL(window.location.href);
+    
+    if (currentUrl.pathname === '/feed/posts') {
+      this.mobileNavHandler(true);
+
+      setTimeout(() => {
+        this.mobileNavHandler(false);
+      },1000*3);
+    }
     // this.getAuthInfo();
 
     getAuthInfo()
