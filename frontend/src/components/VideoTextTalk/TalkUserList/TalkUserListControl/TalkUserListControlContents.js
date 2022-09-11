@@ -3,14 +3,14 @@ import { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next/hooks";
 import Img from "react-cool-img";
 
-import Button from "../../Button/Button";
-import Loader from "../../Loader/Loader";
-import SampleImage from "../../Image/person-icon-50.jpg";
+import Button from "../../../Button/Button";
+import Loader from "../../../Loader/Loader";
+import SampleImage from "../../../Image/person-icon-50.jpg";
 
 // import "../../../pages/GroupTalk/GroupTalk.css";
-import classes from "./TalkUserListControllContents.module.css";
+import classes from "./TalkUserListControlContents.module.css";
 
-const TalkUserListControllContents = (props) => {
+const TalkUserListControlContents = (props) => {
   console.log("TalkUserListControllContents.js-props", props);
 
   const {
@@ -192,16 +192,17 @@ const TalkUserListControllContents = (props) => {
     );
   }
 
-  const talkUserListControllContentsBody = (
+  const talkUserListControlContentsBody = (
     <div>
-      <div
-        // onCliclk={showFavoriteListHandler}
-        onClick={() => {
-          setShowFavoriteList(!showFavoriteList);
-        }}
-      >
-        {/* Your Favorite Users &#9662; */}
-        {t('videoTalk.text17', 'Your Favorite Users')} &#9662;
+      <div>
+        <span
+          onClick={() => {
+            setShowFavoriteList(!showFavoriteList);
+          }}
+        >
+          {/* Your Favorite Users &#9662; */}
+          {t('videoTalk.text17', 'Your Favorite Users')} &#9662;
+        </span>
       </div>
       
       {showFavoriteList && favoriteListBody}
@@ -209,7 +210,7 @@ const TalkUserListControllContents = (props) => {
     </div>
   );
 
-  return <Fragment>{talkUserListControllContentsBody}</Fragment>;
+  return <Fragment>{talkUserListControlContentsBody}</Fragment>;
 };
 
-export default TalkUserListControllContents;
+export default TalkUserListControlContents;

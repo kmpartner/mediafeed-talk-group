@@ -13,8 +13,9 @@ import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import TalkDestInfo from '../../components/VideoTextTalk/TalkDestInfo/TalkDestInfo';
 import TalkUserList from '../../components/VideoTextTalk/TalkUserList/TalkUserList';
-import TalkUserListControll from '../../components/VideoTextTalk/TalkUserList/TalkUserListControll';
-import TopBarContents from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopBarContents';
+import TalkUserListControl from '../../components/VideoTextTalk/TalkUserList/TalkUserListControl/TalkUserListControl';
+import TalkUserListNotify from '../../components/VideoTextTalk/TalkUserList/TalkUserListNotify/TalkUserListNotify';
+// import TopBarContents from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopBarContents';
 import VideoTextTalkInput from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkInput';
 import VideoTextTalkTextList from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkTextList';
 
@@ -42,6 +43,9 @@ import "firebase/firestore";
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import TalkRightElements from '../../components/VideoTextTalk/TalkRightElements/TalkRightElements';
 
+
+import TalkPermission from '../../components/VideoTextTalk/TalkPermission/TalkPermission';
+
 let isAlreadyCalling = false;
 let getCalled = false;
 
@@ -60,7 +64,7 @@ const VideoTextTalk = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  // console.log('store in VideoTextTalk', store);
+  console.log('store in VideoTextTalk', store);
 
   const [userSocket, setUserSocket] = useState('');
   const [userSocketId, setUserSocketId] = useState('');
@@ -865,6 +869,14 @@ const VideoTextTalk = (props) => {
 
     });
 
+    socket.on('error-user-accepted', data => {
+      console.log('error-user-accepted data', data);
+      
+      setIsLoading(false);
+      setIsTextPosting(false);
+
+    });
+
 
 
 
@@ -1140,6 +1152,7 @@ const VideoTextTalk = (props) => {
       sendAt: Date.now(),
       language: navigator.languages[0],
       geolocation: JSON.parse(localStorage.getItem('userLocation')),
+      token: localStorage.getItem('token'),
     });
 
     deleteDraftInput('talk', textTalkId);
@@ -1502,6 +1515,8 @@ const VideoTextTalk = (props) => {
 
   return (
     <div className="talk-appContainer">
+      <TalkPermission />
+      
       <div>
 
       {store.windowValues && (store.windowValues.width >= 768) && (
@@ -1863,7 +1878,20 @@ const VideoTextTalk = (props) => {
         <div> 
           {!showNoconnectTextTalk &&
             <div>
-              <TalkUserListControll
+              <TalkUserListControl
+                userId={userId}
+                usersData={usersData}
+                favoriteUsers={favoriteUsers}
+                editFavoriteUsersHandler={editFavoriteUsersHandler}
+                editFavoriteUsersResult={editFavoriteUsersResult}
+                noconnectGetUserDestTalkHandler={noconnectGetUserDestTalkHandler}
+                showNoconnectTextTalk={showNoconnectTextTalk}
+                showNoconnectTextTalkHandler={showNoconnectTextTalkHandler}
+                noconnectDestUserIdHandler={noconnectDestUserIdHandler}
+                isLoading={isLoading}
+              />
+
+              <TalkUserListNotify
                 userId={userId}
                 usersData={usersData}
                 favoriteUsers={favoriteUsers}

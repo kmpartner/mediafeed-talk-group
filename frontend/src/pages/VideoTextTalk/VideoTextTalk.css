@@ -259,7 +259,8 @@
   margin-top: 1rem;
   display: flex;
   justify-content: flex-start;
-  align-items: center
+  align-items: center;
+  flex-wrap: wrap;
   /* cursor: pointer; */
 }
 

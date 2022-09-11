@@ -10,6 +10,7 @@ const Redis = require('ioredis');
 const redis = require('redis');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const fetch = require('node-fetch');
 
 const TextTalk = require('./models/text-talk');
 const GroupTalk = require('./models/group-talk');
@@ -897,6 +898,30 @@ export class Server {
         if (data.fromUserId !== jwtUserId) {
           throw new Error('not authenticated');
         }
+
+
+        const result = await fetch(process.env.UDRESTAPI_URL + 
+          `/talk-permission/check-user-accept?toUserId=${data.toUserId}`, {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + data.token,
+            'Content-Type': 'application/json'
+          },
+        });
+    
+        const resData = await result.json();
+        console.log(resData);
+        
+        if (!resData.data) {
+          // throw new Error('user is not accepted');
+          socket.emit('error-user-accepted', {
+            message: 'user accepted error',
+          });
+          return;
+        }
+
+        console.log('user-accepted');
+        // return;
 
         let socketConnection;
 

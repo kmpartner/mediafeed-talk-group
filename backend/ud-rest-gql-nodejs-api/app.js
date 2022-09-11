@@ -48,6 +48,8 @@ const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
 const feedFilterRoute = require('./routes/feed/feed-filter');
 const feedVideoUploadRoute = require('./routes/feed/feed-video-upload');
 
+const TalkPermissionRoute = require('./routes/user/talk-permission');
+
 const adRoute = require('./routes/ad/ad');
 
 const db = require('./db');
@@ -97,6 +99,14 @@ app.use(morgan('dev', {
 // app.use(morgan('combined',)); // combined common dev short tiny
 
 app.use(bodyParser.json()); //application/json
+
+
+
+app.use('/healthz', (req, res, next) => {
+    // console.log('in /healthz');
+    res.send('<h3> /healthz . </h3>')
+});
+
 
 app.use((req, res, next) => {
 
@@ -160,6 +170,7 @@ app.use('/feed-images', imagesUpload, feedMultiImageRoute);
 app.use('/feed-filter', feedFilterRoute);
 app.use('/feed-video-upload', videoUpload, feedVideoUploadRoute);
 
+app.use('/talk-permission', TalkPermissionRoute);
 app.use('/ad', adRoute);
 
 app.use(auth);
@@ -268,10 +279,7 @@ app.use('/xxx', (req, res, next) => {
     res.send('<h1>Hello from Express r-g/xxx ...</h1>')
 });
   
-app.use('/healthz', (req, res, next) => {
-    // console.log('in /healthz');
-    res.send('<h3> /healthz . </h3>')
-});
+
 
 
 app.use((error, req, res, next) => {

@@ -4,14 +4,16 @@ import { useTranslation } from 'react-i18next/hooks';
 import Img from "react-cool-img";
 
 // import GroupListControllContents from './GroupListControllContents';
-import TalkModal from '../TalkUserList/TalkModal';
-import TalkUserListControllContents from './TalkUserListControllContents';
+import TalkModal from '../TalkModal';
+import TalkUserListControllContents from './TalkUserListControlContents';
+import TalkUserListControlAccept from './TalkUserListControlAccept';
 
-import classes from './TalkUserListControll.module.css'
+import { marks } from '../../../../images/marks';
+import classes from './TalkUserListControl.module.css'
 
 
-const TalkUserListControll = (props) => {
-  console.log('TalkUserListControll-props', props);
+const TalkUserListControl = (props) => {
+  // console.log('TalkUserListControll-props', props);
 
   const { 
     userId,
@@ -30,9 +32,14 @@ const TalkUserListControll = (props) => {
 
   const [showTalkUserListControllModal, setShowTalkUserListControllModal] = useState('');
 
+  const [showTalkNotifyModal, setShowTalkNotifyModal] = useState(false);
 
   const showTalkUserListControllModalHandler = () => {
     setShowTalkUserListControllModal(!showTalkUserListControllModal);
+  }
+
+  const showTalkNotifyModalHandler = () => {
+    setShowTalkNotifyModal(!showTalkNotifyModal);
   }
 
 
@@ -46,6 +53,22 @@ const TalkUserListControll = (props) => {
       editFavoriteUsersResult={editFavoriteUsersResult}
       noconnectGetUserDestTalkHandler={noconnectGetUserDestTalkHandler}
       showNoconnectTextTalk={showNoconnectTextTalk}
+      showNoconnectTextTalkHandler={showNoconnectTextTalkHandler}
+      noconnectDestUserIdHandler={noconnectDestUserIdHandler}
+      isLoading={isLoading}
+    />
+  );
+
+  const talkUserListControllAccept = (
+    // <div>talk-user-list-controll-contents</div>
+    <TalkUserListControlAccept
+      // userId={userId}
+      usersData={usersData}
+      // favoriteUsers={favoriteUsers} 
+      // editFavoriteUsersHandler={editFavoriteUsersHandler}
+      // editFavoriteUsersResult={editFavoriteUsersResult}
+      noconnectGetUserDestTalkHandler={noconnectGetUserDestTalkHandler}
+      // showNoconnectTextTalk={showNoconnectTextTalk}
       showNoconnectTextTalkHandler={showNoconnectTextTalkHandler}
       noconnectDestUserIdHandler={noconnectDestUserIdHandler}
       isLoading={isLoading}
@@ -73,17 +96,43 @@ const TalkUserListControll = (props) => {
           showModalHandler={showTalkUserListControllModalHandler}
         >
           {talkUserListControllContents}
+          {talkUserListControllAccept}
         </TalkModal>
       }
     </div>
   );
 
+  // const notifyButton = (
+  //   <div onClick={showTalkNotifyModalHandler}>
+  //     other-content {marks.bellMrak} {marks.bellRedMrak}
+  //   </div>
+  // );
+
+  // let talkNotifyBody;
+
+  // talkNotifyBody = (
+  //   <div>
+  //     {!isLoading && notifyButton}
+  
+  //     {showTalkNotifyModal && 
+  //       <TalkModal 
+  //         showModalHandler={showTalkNotifyModalHandler}
+  //       >
+  //         <div>notify-modal-content</div>
+  //       </TalkModal>
+  //     }
+  //   </div>
+  // )
+
+
+
 
   return (
     <Fragment>
+      {/* {talkNotifyBody} */}
       {infoButtonBody}
     </Fragment>
   );
 }
 
-export default TalkUserListControll;
+export default TalkUserListControl;

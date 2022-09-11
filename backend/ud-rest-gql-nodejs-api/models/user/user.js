@@ -86,15 +86,15 @@ const userSchema = new Schema({
         userId: { type: String },
     }],
 
-    talkRequestUserIds: [{
-        userId: { type: String },
-    }],
-    talkAcceptUserIds: [{
-        userId: { type: String },
-    }],  
-    talkDenyUserIds: [{
-        userId: { type: String },
-    }],
+    // talkRequestUserIds: [{
+    //     userId: { type: String },
+    // }],
+    // talkAcceptUserIds: [{
+    //     userId: { type: String },
+    // }],  
+    // talkDenyUserIds: [{
+    //     userId: { type: String },
+    // }],
 },
 { timestamps: true }
 )

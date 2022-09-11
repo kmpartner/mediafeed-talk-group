@@ -87,6 +87,12 @@ const configureStore = () => {
         bowserData: payload,
       }
     },
+    SET_TALKPERMISSION: (state, payload) => {
+      return {
+        ...state,
+        talkPermission: payload,
+      }
+    },
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -107,6 +113,8 @@ const configureStore = () => {
     gotPosts: [],
     windowValues: null,
     bowserData: null,
+
+    talkPermission: null,
     // lastPage: 0,
     // notification: {
     //   status: null,

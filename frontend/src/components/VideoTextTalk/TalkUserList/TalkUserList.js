@@ -5,18 +5,22 @@ import Img from "react-cool-img";
 
 import AutoSuggestVideoTextTalk from '../../AutoSuggest/AutoSuggestVideoTextTalk';
 import Button from '../../Button/Button';
+import TalkUserListPermission from './TalkUserListPermission';
 
-import { BASE_URL } from '../../../App';
+import { useStore } from '../../../hook-store/store';
+
+// import { BASE_URL } from '../../../App';
 // import './VideoTextTalk.css'
 
 import SampleImage from '../../Image/person-icon-50.jpg';
 
 
 const TalkUserList = props => {
-  console.log('UserTalkList.js-props', props);
+  // console.log('UserTalkList.js-props', props);
 
   const [t] = useTranslation('translation');
 
+  const [store, dispatch] = useStore();
   // const [suggestInput, setSuggestInput] = useState('');
   const [suggestList, setSuggestList] = useState([]);
 
@@ -37,11 +41,53 @@ const TalkUserList = props => {
     setSuggestList(list);
   }
 
+
   let talkUserList;
   if (props.usersData.length > 0) {
 
     talkUserList = <ul>
       {props.usersData.map((element, index) => {
+
+        let isRequesting = false;
+        let isRequested = false;
+        let isAccepted = false;
+        let isAccept = false;
+
+        if (store.talkPermission) {
+          // console.log(store.talkPermission.talkRequestingUserIds);
+          const isInRequsting = store.talkPermission.talkRequestingUserIds.find(requesting => {
+            return requesting.userId === element.userId;
+          });
+
+          if (isInRequsting) {
+            isRequesting = true;
+          }
+
+          const isInRequested = store.talkPermission.talkRequestedUserIds.find(requested => {
+            return requested.userId === element.userId;
+          })
+
+          if (isInRequested) {
+            isRequested = true;
+          }
+
+          const isInAccepted = store.talkPermission.talkAcceptedUserIds.find(accepted => {
+            return accepted.userId === element.userId;
+          })
+
+          if (isInAccepted) {
+            isAccepted = true;
+          }
+
+          const isInAccept = store.talkPermission.talkAcceptUserIds.find(accept => {
+            return accept.userId === element.userId;
+          })
+
+          if (isInAccept) {
+            isAccept = true;
+          }
+        }
+
         // console.log(element);
 
         // const userInfo = props.usersData.find(user => {
@@ -88,12 +134,26 @@ const TalkUserList = props => {
                     props.showNoconnectTextTalkHandler();
                     props.noconnectDestUserIdHandler(element.userId);
                   }}
+                  disabled={!isAccepted}
                 >
                   {/* write text */}
                   {t('groupTalk.text37', 'write text')}
                 </Button>
               </span>
 
+              <TalkUserListPermission 
+                // userId={props.userId}
+                destUserId={element.userId}
+                isRequesting={isRequesting}
+                isRequested={isRequested}
+                isAccepted={isAccepted}
+                isAccept={isAccept}
+              />
+              {/* {isRequesting ? 'requesting' : 'not-req'}
+              {', '}
+              {isAccepted ? 'accepted' : 'not-accepted'}
+              {', '}
+              {isRequested ? 'requested' : 'not-requested'} */}
             </li>
           </div>
           );

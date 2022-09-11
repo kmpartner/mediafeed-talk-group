@@ -18,7 +18,7 @@ const configureStore = () => {
     // },
     SET_ADLIST: (state, payload) => {
       return {
-        ...state,
+        // ...state,
         adStore: {
           ...state.adStore,
           adList: payload,
@@ -43,7 +43,6 @@ const configureStore = () => {
   };
 
   initStore(actions, {
-    // notification: null,
     adStore: {
       adList: [],
       adListGetDate: null,
