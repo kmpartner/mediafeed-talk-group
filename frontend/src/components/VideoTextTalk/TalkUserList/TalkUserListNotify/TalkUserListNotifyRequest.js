@@ -81,7 +81,7 @@ const TalkUserListNotifyRequest = (props) => {
     }
   };
 
-  let requestedBody = <div>no user</div>;
+  let requestedBody = <div>{t('videoTalk.text25', 'no user')}</div>;
 
   if (talkPermission && talkPermission.talkRequestedUserIds.length > 0) {
     requestedBody = (
@@ -130,7 +130,7 @@ const TalkUserListNotifyRequest = (props) => {
                       );
                     }}
                   >
-                    Accept User
+                    {t('videoTalk.text20', 'Accept User')}
                 </Button>
               </div>
 
@@ -337,8 +337,8 @@ const TalkUserListNotifyRequest = (props) => {
             setShowRequestedList(!showRequestedList);
           }}
         >
-          {/* {t('videoTalk.text17', 'Your Favorite Users')} &#9662; */}
-          Requested List &#9662;
+          {/* Requested List &#9662; */}
+          {t('videoTalk.text22', 'Requested List')} &#9662;
         </span>
       </div>
       

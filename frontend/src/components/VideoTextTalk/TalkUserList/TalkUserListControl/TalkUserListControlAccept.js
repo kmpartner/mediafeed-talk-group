@@ -83,7 +83,7 @@ const TalkUserListControlAccept = (props) => {
     }
   };
 
-  let acceptListBody = <div>no user</div>
+  let acceptListBody = <div>{t('videoTalk.text25', 'no user')}</div>
 
   if (talkPermission && talkPermission.talkAcceptUserIds.length > 0) {
     acceptListBody = (
@@ -143,7 +143,7 @@ const TalkUserListControlAccept = (props) => {
                   <Button design='raised' mode='' size='smaller' 
                     disabled={true}
                   >
-                    not-accepted
+                    {t('videoTalk.text26', 'not accepted')}
                   </Button>
                 )}
  
@@ -156,8 +156,7 @@ const TalkUserListControlAccept = (props) => {
                     disabled={showDeleteConfirm || isLoading || acceptLoading}
                     loading={isLoading}
                   >
-                    Delete from accept list
-                    {/* {t('groupTalk.text31', 'Delete from favorite')} */}
+                    {t('videoTalk.text24', 'Delete from accept list')}
                   </Button>
                 </div>
 
@@ -215,8 +214,8 @@ const TalkUserListControlAccept = (props) => {
             setShowAcceptList(!showAcceptList);
           }}
         >
-          {/* {t('videoTalk.text17', 'Your Favorite Users')} &#9662; */}
-          Accept List &#9662;
+          {/* Your accept user List &#9662; */}
+          {t('videoTalk.text21', 'Your accept user List')} &#9662;
         </span>
       </div>
       

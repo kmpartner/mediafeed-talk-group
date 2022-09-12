@@ -150,7 +150,7 @@ const TalkUserListPermission = props => {
             );
           }}
         >
-          Accept User
+          {t('videoTalk.text20', 'Accept User')}
         </Button>
       );
     }
@@ -168,14 +168,16 @@ const TalkUserListPermission = props => {
           destUserId,
         );
       }}>
-        Send request to write
+        {t('videoTalk.text19', 'Send request to write')}
       </Button>
     )
   }
 
   let talkUserListPermissionBody = (
     <span>
-      {isRequesting ? <strong>Requesting</strong> : ''}
+      {isRequesting ? <strong>
+        {t('videoTalk.text23', 'Requesting')}
+        </strong> : ''}
       {/* {', '}
       {isRequested ? 'requested' : 'not-requested'}
       {', '}
