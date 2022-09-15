@@ -1,14 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { withI18n } from "react-i18next";
-import Img from "react-cool-img";
+// import Img from "react-cool-img";
 
-import Backdrop from "../../Backdrop/Backdrop";
-import Button from "../../Button/Button";
-import Modal from "../../Modal/Modal";
-import Input from "../../Form/Input/Input";
-import InputEmoji from "../../Form/Input/InputEmoji";
-import FilePicker from "../../Form/Input/FilePicker";
-import Loader from "../../Loader/Loader";
 // import Image from '../../Image/Image';
 import { isVideoFile, isImageFile, isAudioFile } from "../../../util/image";
 import { BASE_URL } from '../../../App';
@@ -23,12 +16,19 @@ const ImagePreviews = (props) => {
     modifiedImageUrls, 
     modifiedImagePaths,
     thumbnailImageUrls,
+    state,
   } = props;
 
   const getFileType = (value) => {
     const fileType = value.split('.')[value.split('.').length -1].toLowerCase();
     return fileType;
   };
+
+  let isValidImagePreview = false;
+
+  if (state && state.postForm && state.postForm.image.valid) {
+    isValidImagePreview = true;
+  }
 
   let imagePreviewsBody;
   if (imagePreviews.length > 0) {
@@ -43,10 +43,19 @@ const ImagePreviews = (props) => {
               </span>
             );
           }
+
           if (imagePreview.split("/")[0] === "data:video") {
             imagePreviewBody = (
               <span>
-                <video src={imagePreview} controls height="75"></video>
+                <video src={imagePreview} controls height="100"></video>
+              </span>
+            );
+          }
+
+          if (imagePreview.split("/")[0] === "data:audio") {
+            imagePreviewBody = (
+              <span>
+                <audio src={imagePreview} controls height=""></audio>
               </span>
             );
           }
@@ -62,7 +71,7 @@ const ImagePreviews = (props) => {
     previousImagesBody = (
       <div>
         <div className="feedEdit__previousImagesTitle">
-          Previously Uploaded Images
+          Previously Uploaded file
         </div>
         <ul className="feedEdit__previousImages">
           {modifiedImagePaths.map(imagePath => {
@@ -91,6 +100,14 @@ const ImagePreviews = (props) => {
                 </span>
               );
             }
+            if (fileType === 'gif')
+            {
+              previousPreviewBody = (
+                <strong>
+                  Delete previous gif file bofore uploading new file
+                </strong>
+              );
+            }
             // if (getFileType(imagePath) === "mp4" 
             // || getFileType(imagePath) === "webm"
             // ) 
@@ -98,7 +115,14 @@ const ImagePreviews = (props) => {
             {
               previousPreviewBody = (
                 <span>
-                  <span>Delete previous video bofore uploading new file</span>
+                  {/* <video 
+                    src={imageUrl}
+                    controls
+                    height="100" alt="previously uploaded video"
+                  /> */}
+                  <strong>
+                    Delete previous video bofore uploading new file
+                  </strong>
                   {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
                   {/* <video src={imageUrl} height="50"></video> */}
                 </span>
@@ -108,7 +132,9 @@ const ImagePreviews = (props) => {
             {
               previousPreviewBody = (
                 <span>
-                  <span>Delete previous audio file bofore uploading new file</span>
+                  <strong>
+                    Delete previous audio file bofore uploading new file
+                  </strong>
                   {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
                   {/* <video src={imageUrl} height="50"></video> */}
                 </span>
@@ -123,7 +149,9 @@ const ImagePreviews = (props) => {
   }
 
   return <Fragment>
-    <div>{imagePreviewsBody}</div>
+    {isValidImagePreview && (
+      <div>{imagePreviewsBody}</div>
+    )}
     <div>{previousImagesBody}</div>
     </Fragment>;
 };

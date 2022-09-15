@@ -326,7 +326,9 @@ class FeedEdit extends Component {
           updatedForm.image.valid = false;
         }
 
-        if ((isVideoExist || isGifFileExist) && isPreviousFiles) {
+        if ( (isVideoExist || isGifFileExist || isAudioFileExist) && 
+          isPreviousFiles
+        ) {
           updatedForm.image.valid = false;
         }
 
@@ -756,6 +758,7 @@ class FeedEdit extends Component {
                 imagePreviews={this.state.imagePreviews}
                 modifiedImageUrls={this.props.selectedPost ? this.props.selectedPost.modifiedImageUrls : []}
                 modifiedImagePaths={this.props.selectedPost ? this.props.selectedPost.modifiedImagePaths : []}
+                state={this.state}
               />
             </div>
 
