@@ -15,11 +15,12 @@ import UserModalContents from '../../Modal/UserModalContents';
 import DeletePostImages from './DeletePostImages';
 import AdElementDisplay from '../../GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import { getUserLocation } from '../../../util/user';
-import { isImageFile, isVideoFile } from '../../../util/image';
+import { isImageFile, isVideoFile, isAudioFile } from '../../../util/image';
 import { getDate, getDateTime } from '../../../util/timeFormat';
 import './Post.css';
 
 import { BASE_URL } from '../../../App';
+
 
 
 const Post = props => {
@@ -86,9 +87,15 @@ const Post = props => {
       if (isImageFile(fileType)) {
         props.deleteMultiImagePostHandler(props.id, false);
       }
+
       if (isVideoFile(fileType)) {
         props.deleteMultiImagePostHandler(props.id, true);
       }
+
+      if (isAudioFile(fileType)) {
+        props.deleteMultiImagePostHandler(props.id, false);
+      }
+      
     } else {
       props.deleteMultiImagePostHandler(props.id, false);
     }
@@ -149,7 +156,28 @@ const Post = props => {
     </div>
   );
 
+
+
+
+
   let postImagesBody;
+
+  // //// audio file case
+  // const firstImageUrl = props.imageUrls[0];
+  // // console.log(imageFileName);
+  // if (firstImageUrl) {
+  //   const imageFileType = firstImageUrl.split('.').pop();
+  //   // console.log(imageFileType);
+  //   if (isAudioFile(imageFileType)) {
+  //     postImagesBody = (
+  //       <span className="post__SmallImages">
+  //         {/* <div>audio-file</div> */}
+  //         <audio src={firstImageUrl} controls height={'50'} alt="post images"/>
+  //     </span>
+  //     );
+  //   }
+  // }
+
   if (props.modifiedImageUrls && props.modifiedImageUrls.length > 0) {
     postImagesBody = <ul>{props.modifiedImageUrls.map(url => {
       
@@ -185,6 +213,7 @@ const Post = props => {
           </span>
         );
       } 
+
       if (isImageFile(fileType)) {
         return (
           <span className="post__SmallImages">
@@ -197,9 +226,22 @@ const Post = props => {
           </span>
         );
       }
+
+      if (isAudioFile(fileType)) {
+        return (
+          <span className="post__SmallImages">
+            <span className="post__SmallImages">
+              {/* <div>audio-file</div> */}
+              <audio src={url} controls height={'50'} alt="post images"/>
+            </span>
+          </span>
+        );
+      }
+
     })
     }</ul>
   }
+
 
   return (
     <Fragment>

@@ -21,6 +21,7 @@ import { getUserLocation, getFavoritePosts } from '../../util/user';
 import { postUpdatePushHandler } from '../../util/pushNotification'
 import { createWithAdIndexList } from '../../util/ad-visit';
 import { deleteLsFavoritePost, updateLsFavoritePosts } from '../../util/feed/favorite-post';
+import { isAudioFile } from '../../util/image';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import GetWindowData from '../../components/UI/getWindowData';
@@ -755,8 +756,14 @@ class Feed extends Component {
         url = BASE_URL + `/feed-video-upload?userLocation=${localStorage.getItem('userLocation')}`;
       }
 
+      //// audio post upload url
+      if (postData.image && postData.image !== 'undefined' && postData.image[0].type.split('/')[0] === 'audio') {
+        url = BASE_URL + `/feed-audio-upload?userLocation=${localStorage.getItem('userLocation')}`;
+      }
+
 
       let method = 'POST'
+
       if (this.state.editPost) {
         url = BASE_URL + '/feed-images/post-images/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
         method = 'put'
@@ -765,7 +772,25 @@ class Feed extends Component {
         if (postData.image && postData.image !== 'undefined' && postData.image[0].type.split('/')[0] === 'video') {
           url = BASE_URL + '/feed-video-upload/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
         }
+
+        //// audio update upload url
+        if (postData.image && postData.image !== 'undefined' && postData.image[0].type.split('/')[0] === 'audio') {
+          url = BASE_URL + '/feed-audio-upload/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
+        }
+
+              // console.log(postData.imagePaths);
+        if (!postData.image && postData.imagePaths.length > 0) {
+          const fileName = postData.imagePaths[0];
+          const fileType = fileName.split('.').pop();
+          // console.log('fileName, fileType', fileName, fileType);
+          if (isAudioFile(fileType)) {
+            url = BASE_URL + '/feed-audio-upload/' + this.state.editPost._id + `?userLocation=${localStorage.getItem('userLocation')}`;
+            }
+        }
       }
+
+      // console.log(url, method);
+      // throw new Error('error-error');
 
 
 
@@ -1019,12 +1044,16 @@ class Feed extends Component {
   };
 
 
-  deleteMultiImagePostHandler = (postId, isVideo) => {
+  deleteMultiImagePostHandler = (postId, isVideo, isAudio) => {
     this.setState({ isPostDeleting: true });
     this.setState({ postDeleteResult: '' });
 
     let url = BASE_URL + `/feed-images/post-images/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
     
+    if (isVideo) {
+      url = BASE_URL + `/feed-video-upload/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
+    }
+
     if (isVideo) {
       url = BASE_URL + `/feed-video-upload/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
     }

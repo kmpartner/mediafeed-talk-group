@@ -13,7 +13,7 @@ import SmallModal from '../../../components/Modal/SmallModal';
 // import FilePicker from "../../Form/Input/FilePicker";
 // import Loader from "../../Loader/Loader";
 // import Image from '../../Image/Image';
-import { isVideoFile, isImageFile } from "../../../util/image";
+import { isVideoFile, isImageFile, isAudioFile } from "../../../util/image";
 import { BASE_URL } from '../../../App';
 
 // import "./FeedEdit.css";
@@ -212,7 +212,7 @@ const SinglePostImages = (props) => {
 
   let singlePostImagesBody;
   if (imageUrls && imageUrls.length > 0) {
-    
+
     let fileType
     if (modifiedImagePaths && modifiedImagePaths.length > 0) {
       fileType = modifiedImagePaths[0].split('.')[modifiedImagePaths[0].split('.').length -1];
@@ -280,6 +280,7 @@ const SinglePostImages = (props) => {
                 </span>
               );
             }
+
             if (isImageFile(fileType)) {
               return (
                 <span>
@@ -294,6 +295,14 @@ const SinglePostImages = (props) => {
                     // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
                     height="" alt="pictures of previews" 
                   />
+                </span>
+              );
+            }
+
+            if (isAudioFile(fileType)) {
+              return (
+                <span>
+                  <audio src={imageUrl} controls alt="post images"/>
                 </span>
               );
             }

@@ -11,7 +11,7 @@ import SmallModal from "../../Modal/SmallModal";
 import TransBackdrop from "../../Backdrop/TransBackdrop";
 import UserModalContents from "../../Modal/UserModalContents";
 import { getUserLocation } from "../../../util/user";
-import { isImageFile, isVideoFile } from "../../../util/image";
+import { isImageFile, isVideoFile, isAudioFile } from "../../../util/image";
 
 import { BASE_URL } from "../../../App";
 
@@ -189,6 +189,9 @@ const DeletePostImages = (props) => {
       if (isVideoFile(fileType)) {
         url = BASE_URL + `/feed-video-upload/delete-post-video/${props.id}?userLocation=${localStorage.getItem('userLocation')}`;
       }
+
+      //// audio case use image delete path
+
     }
     // console.log('url', url);
 
@@ -275,6 +278,21 @@ const DeletePostImages = (props) => {
                 </span>
                 {isSelected && <div>selected &#10003;</div>}
               </span>
+            </span>
+          );
+        } 
+
+        if (isAudioFile(fileType)) {
+          return (
+            <span 
+              // className={classes.feedImages__column} 
+              onClick={() => { editDeleteImages(pathUrl.crid); }}
+            >
+              <button className={classes.deletePostImagesAudioSelectButton}>
+                select
+              </button>
+              <audio src={pathUrl.modifiedImageUrl} controls height={'50'} alt="post images"/>
+              {isSelected && <div>selected &#10003;</div>}
             </span>
           );
         } 

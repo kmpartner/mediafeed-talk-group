@@ -2,7 +2,11 @@ import QRCode from 'qrcode';
 // import Resizer from "react-image-file-resizer";
 import Compressor from 'compressorjs';
 
-import { acceptImageType, acceptVideoType } from './validators';
+import { 
+  acceptImageType, 
+  acceptVideoType,
+  acceptAudioType,
+ } from './validators';
 
 export const generateBase64FromImage = imageFile => {
   const reader = new FileReader();
@@ -93,6 +97,25 @@ export const isVideoFile = (fileType) => {
     return false;
   }
 }
+
+export const isAudioFile = (fileType) => {
+  // console.log(fileType)
+  let matchType;
+  if (fileType) {
+    matchType = acceptAudioType.find(type => type === fileType.toLowerCase());
+  }
+  // console.log(matchType);
+
+  if (
+    // fileType === 'mp4' ||
+    // fileType === 'webm'
+    matchType
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 export const makeQrcode = (textData) => {
   return new Promise((resolve, reject) => {
@@ -249,6 +272,41 @@ export const isPreviousGifFileExist = pathList => {
   }
 
   if (gifFiles.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+
+export const isAudioUploaded = fileList => {
+  const videoFiles = [];
+
+  for (const file of fileList) {
+    if (file.type.split('/')[0] === 'audio') {
+      videoFiles.push(file.type);
+    }
+  }
+
+  if (videoFiles.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+
+export const isPreviousAudioFileExist = pathList => {
+  const videoFiles = [];
+
+  for (const path of pathList) {
+    const fileType = path.split('.')[path.split('.').length -1].toLowerCase();
+    if (fileType === 'mp3' || fileType === 'wav' || fileType === 'weba') {
+      videoFiles.push(path);
+    }
+  }
+
+  if (videoFiles.length > 0) {
     return true;
   } else {
     return false;

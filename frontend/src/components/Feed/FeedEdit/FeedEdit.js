@@ -29,6 +29,8 @@ import {
   isPreviousVideoExist,
   isGifFileUploaded,
   isPreviousGifFileExist,
+  isAudioUploaded,
+  isPreviousAudioFileExist,
   generateBase64ImageData,
   createCompressedImage,
 }
@@ -289,28 +291,38 @@ class FeedEdit extends Component {
         //// video file or gif image case, only 1 file accept
         const isVideoExist = isVideoUploaded(files);
         const isGifFileExist = isGifFileUploaded(files);
+        
+        const isAudioFileExist = isAudioUploaded(files);
         // console.log('isGifFileExist', isGifFileExist);
 
         let isPreviousVideo = false;
         let isPreviousGifFile = false;
+
+        let isPreviousAudioFile = false;
 
         let isPreviousFiles = false;
 
         if (updatedForm.imagePaths && updatedForm.imagePaths.value.length > 0) {
           isPreviousVideo = isPreviousVideoExist(updatedForm.imagePaths.value);
           isPreviousGifFile = isPreviousGifFileExist(updatedForm.imagePaths.value);
+          isPreviousAudioFile = isPreviousAudioFileExist(updatedForm.imagePaths.value);
 
           isPreviousFiles = true;
         }
 
         console.log('isPreviousVideo', isPreviousVideo);
         console.log('isPreviousGifFile', isPreviousGifFile);
+        console.log('isPreviousAudioFile', isPreviousAudioFile);
 
         if ((isVideoExist && files.length > 1) || isPreviousVideo) {
           updatedForm.image.valid = false;
         }
 
         if ((isGifFileExist && files.length > 1) || isPreviousGifFile) {
+          updatedForm.image.valid = false;
+        }
+
+        if ((isAudioFileExist && files.length > 1) || isPreviousAudioFile) {
           updatedForm.image.valid = false;
         }
 

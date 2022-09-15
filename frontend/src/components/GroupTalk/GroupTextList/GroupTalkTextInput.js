@@ -26,7 +26,7 @@ const GroupTalkTextInput = props => {
           onChange={props.textInputHandlerEmoji}
           value={props.groupTextInput}
           rows="3"
-          pickerStyle={{ position: 'fixed', top: '0px', bottom:'90px', left: '0px', zIndex: '300', maxHeight:'90vh', maxWidth:'75%', overflow:'auto'}}
+          pickerStyle={{ position: 'fixed', top: '60px', bottom:'90px', left: '0px', zIndex: '300', maxHeight:'90vh', maxWidth:'75%', overflow:'auto'}}
         />
       </div>
       <div className="groupTalk__textInputPostButton">

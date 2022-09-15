@@ -44,6 +44,7 @@ export const acceptableFile = value => {
 
 export const acceptImageType = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
 export const acceptVideoType = ['mp4', 'webm'];
+export const acceptAudioType = ['mp3', 'wav', 'weba'];
 
 export const acceptableFiles = fileList => {
   const passlist = [];
@@ -52,7 +53,7 @@ export const acceptableFiles = fileList => {
     const fileType = file.name.split('.')[file.name.split('.').length -1].toLowerCase();
     console.log(fileType);
 
-    const acceptTypes = acceptImageType.concat(acceptVideoType);
+    const acceptTypes = acceptImageType.concat(acceptVideoType).concat(acceptAudioType);
     
     let matchType;
     if (fileType) {

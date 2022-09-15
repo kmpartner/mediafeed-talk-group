@@ -10,7 +10,7 @@ import InputEmoji from "../../Form/Input/InputEmoji";
 import FilePicker from "../../Form/Input/FilePicker";
 import Loader from "../../Loader/Loader";
 // import Image from '../../Image/Image';
-import { isVideoFile, isImageFile } from "../../../util/image";
+import { isVideoFile, isImageFile, isAudioFile } from "../../../util/image";
 import { BASE_URL } from '../../../App';
 
 import "./FeedEdit.css";
@@ -98,7 +98,17 @@ const ImagePreviews = (props) => {
             {
               previousPreviewBody = (
                 <span>
-                  <span>Delete previous video bofore uploading new video</span>
+                  <span>Delete previous video bofore uploading new file</span>
+                  {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
+                  {/* <video src={imageUrl} height="50"></video> */}
+                </span>
+              );
+            }
+            if (isAudioFile(fileType))
+            {
+              previousPreviewBody = (
+                <span>
+                  <span>Delete previous audio file bofore uploading new file</span>
                   {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
                   {/* <video src={imageUrl} height="50"></video> */}
                 </span>
