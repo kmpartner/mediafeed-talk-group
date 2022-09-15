@@ -26,7 +26,7 @@ const MongoClient = mongodb.MongoClient;
 // var serviceAccount = require("../credentials/credentials.json");
 // const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-t2qe0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
 const dbName = process.env.MONGO_DB_MESSAGES;
-const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-t2qe0.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+const mongoDbUrl = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.9nwqj.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 let _db;
 const initDb = (callback) => {
     if (_db) {

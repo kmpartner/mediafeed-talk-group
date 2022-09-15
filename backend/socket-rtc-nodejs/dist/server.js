@@ -20,6 +20,7 @@ const Redis = require('ioredis');
 const redis = require('redis');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const fetch = require('node-fetch');
 const TextTalk = require('./models/text-talk');
 const GroupTalk = require('./models/group-talk');
 const TalkConnection = require('./models/talk-connection');
@@ -42,11 +43,11 @@ class Server {
         this.httpServer = http_1.createServer(this.app);
         this.io = socketIO(this.httpServer);
         // //// for local dev
-        // const originAllow = 'http://localhost:* http://localhost:8503 http://localhost:8504';
+        const originAllow = 'http://localhost:* http://localhost:8503 http://localhost:8504';
         //// this.io.adapter(socketRedis({ host: '127.0.0.1', port: 6379 }));
         // //// for deploy
-        const originAllow = 'https://ud-gqlapi-front.web.app:* https://ud-restapi-front.web.app:* https://ud-gqlapi-front.firebaseapp.com:* https://ud-restapi-front.firebaseapp.com:* https://watakura.xyz:* https://www.watakura.xyz:*';
-        this.io.adapter(socketRedis({ host: 'redis-sr', port: 6379 }));
+        // const originAllow = 'https://ud-gqlapi-front.web.app:* https://ud-restapi-front.web.app:* https://ud-gqlapi-front.firebaseapp.com:* https://ud-restapi-front.firebaseapp.com:* https://watakura.xyz:* https://www.watakura.xyz:*'
+        // this.io.adapter(socketRedis({ host: 'redis-sr', port: 6379 }));
         this.io.origins(originAllow);
         this.app.use(bodyParser.json()); //application/json
         this.configureApp();
@@ -667,6 +668,25 @@ class Server {
                 if (data.fromUserId !== jwtUserId) {
                     throw new Error('not authenticated');
                 }
+                const result = yield fetch(process.env.UDRESTAPI_URL +
+                    `/talk-permission/check-user-accept?toUserId=${data.toUserId}`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: 'Bearer ' + data.token,
+                        'Content-Type': 'application/json'
+                    },
+                });
+                const resData = yield result.json();
+                console.log(resData);
+                if (!resData.data) {
+                    // throw new Error('user is not accepted');
+                    socket.emit('error-user-accepted', {
+                        message: 'user accepted error',
+                    });
+                    return;
+                }
+                console.log('user-accepted');
+                // return;
                 let socketConnection;
                 socketConnection = yield TextTalk.findOne({
                     userId: data.fromUserId,
