@@ -26,6 +26,7 @@ const {
     groupImageUpload,
     imagesUpload,
     videoUpload,
+    audioUpload,
 } = require('./middleware/multer');
 // const io = require('./socket.js')
 
@@ -47,6 +48,7 @@ const groupImageRoute = require('./routes/group-image/group-image');
 const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
 const feedFilterRoute = require('./routes/feed/feed-filter');
 const feedVideoUploadRoute = require('./routes/feed/feed-video-upload');
+const feedAudioUploadRoute = require('./routes/feed/feed-audio-upload');
 
 const TalkPermissionRoute = require('./routes/user/talk-permission');
 
@@ -152,6 +154,7 @@ app.use((req, res, next) => {
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/images-video', express.static(path.join(__dirname, 'images-video')));
+app.use('/images-audio', express.static(path.join(__dirname, 'images-audio')));
 app.use('/images-user', express.static(path.join(__dirname, 'images-user')));
 
 app.use('/feed', imageUpload, feedRoutes);
@@ -169,6 +172,7 @@ app.use('/group-image', groupImageUpload, groupImageRoute);
 app.use('/feed-images', imagesUpload, feedMultiImageRoute);
 app.use('/feed-filter', feedFilterRoute);
 app.use('/feed-video-upload', videoUpload, feedVideoUploadRoute);
+app.use('/feed-audio-upload', audioUpload, feedAudioUploadRoute);
 
 app.use('/talk-permission', TalkPermissionRoute);
 app.use('/ad', adRoute);

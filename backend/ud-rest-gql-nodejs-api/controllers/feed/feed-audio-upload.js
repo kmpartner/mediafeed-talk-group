@@ -33,6 +33,7 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
+const audioFilePath = 'images-audio';
 
 // exports.feedAction = async (req, res, next) => {
 //     // console.log(req.body);
@@ -42,10 +43,11 @@ const s3 = new aws.S3();
 
 
 
-exports.createMultiImagesPost = async (req, res, next) => {
+exports.createAudioPost = async (req, res, next) => {
     // console.log('post-image req.files: ', req.files);
     console.log('req.body.oldPath', req.body.oldPath);
     console.log('req.body', req.body);
+    console.log('req.files', req.files);
     
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -80,6 +82,9 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
 
     const savePost = async () => {
+
+
+
         // const user = await User.findById(req.userId);
         const user = await User.findOne({ userId: req.userId });
         
@@ -89,14 +94,17 @@ exports.createMultiImagesPost = async (req, res, next) => {
         const post = new Post({
             title: title,
             content: content,
-            // imageUrl: 'undefined',
             imageUrl: '',
             imageUrls: imageUrls,
+            // modifiedImageUrls: modifiedImageUrls,
+            // thumbnailImageUrls: thumbnailImageUrls,
             modifiedImageUrls: modifiedImageUrls,
-            thumbnailImageUrls: thumbnailImageUrls,
+            thumbnailImageUrls: [],
             imagePaths: imageUrls,
+            // modifiedImagePaths: modifiedImageUrls,
+            // thumbnailImagePaths: thumbnailImageUrls,
             modifiedImagePaths: modifiedImageUrls,
-            thumbnailImagePaths: thumbnailImageUrls,
+            thumbnailImagePaths: [],
             embedUrl: embedUrl,
             // creator: req.userId,
             // creatorId: req.userId,
@@ -133,7 +141,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
             const returnPost = createReturnPost(post);
 
             res.status(201).json({
-                message: 'Post multi-images created Successfully',
+                message: 'Post audio created Successfully',
                 // post: post,
                 post: returnPost,
                 // creator: { 
@@ -173,49 +181,13 @@ exports.createMultiImagesPost = async (req, res, next) => {
         // thumbnailImageUrl = 'images/' + forFileFileName;
 
         const fileMimetype = image.mimetype.split('/')[0];
-        if (fileMimetype === 'image') {
-            const smallImage = await createSmallImage(image.path, modifiedImageUrl);
-        }
-        if (fileMimetype === 'video') {
-            thumbnailImageUrl = 'images/' + forFileFileName
-            thumbnailImageUrls.push(thumbnailImageUrl);
 
 
-
-
-
-            //// resize video when more than 600 width
-            var stats = fs.statSync(image.path);
-            var fileSizeInBytes = stats.size;
-            // Convert the file size to megabytes (optional)
-            // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
-            console.log('fileSizeInbytes',fileSizeInBytes);
-
-            const videoInfo = await getVideoInfo(image.path);
-            // console.log('videoInfo', videoInfo);
-            
-            if (videoInfo.width > 600) {
-                await resizeVideo(image.path, modifiedImageUrl, 640);
-                var rsStats = fs.statSync(modifiedImageUrl);
-                var rsfileSizeInBytes = rsStats.size;
-                // Convert the file size to megabytes (optional)
-                // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-                console.log('rsfileSizeInbytes',rsfileSizeInBytes);
-    
-                if (rsfileSizeInBytes < fileSizeInBytes) {
-                    console.log('in copyfile')
-                    await copyFile(modifiedImageUrl, image.path);
-                }
-            }
-
-
-
-
-
-            const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
-            const thumbnail = await createThumbnail(image.path, forFileFileName);
+        if (fileMimetype === 'audio') {
+            const trimedAudio = await trimAudio(image.path, modifiedImageUrl);
         }
 
+ 
 
         var params = {
             ACL: 'private',
@@ -227,8 +199,6 @@ exports.createMultiImagesPost = async (req, res, next) => {
             Key: `${image.path}`
         };
 
-        // console.log('params', params);
-
         var paramsModify = {
             ACL: 'private',
             Bucket: process.env.DO_SPACE_BUCKET_NAME,
@@ -237,37 +207,49 @@ exports.createMultiImagesPost = async (req, res, next) => {
             Key: `${modifiedImageUrl}`
         };
 
-        if (thumbnailImageUrl) {
-            var paramsThumb = {
-                ACL: 'private',
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Body: fs.createReadStream(thumbnailImageUrl),
-                //   ContentType: 'image/jpeg',
-                Key: `${thumbnailImageUrl}`
-            };
-        }
+        // if (thumbnailImageUrl) {
+        //     var paramsThumb = {
+        //         ACL: 'private',
+        //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+        //         Body: fs.createReadStream(thumbnailImageUrl),
+        //         //   ContentType: 'image/jpeg',
+        //         Key: `${thumbnailImageUrl}`
+        //     };
+        // }
 
-        if (fileMimetype === 'image') {
-            if (!process.env.S3NOTUSE) {
-                await s3Upload(params);
-                await s3Upload(paramsModify);
-                clearImage(image.path);
-                clearImage(modifiedImageUrl);
-                // savePost();
-            }
+        // if (fileMimetype === 'image') {
+        //     if (!process.env.S3NOTUSE) {
+        //         await s3Upload(params);
+        //         await s3Upload(paramsModify);
+        //         clearImage(image.path);
+        //         clearImage(modifiedImageUrl);
+        //         // savePost();
+        //     }
 
-        }
-        if (fileMimetype === 'video') {
-            if (!process.env.S3NOTUSE) {
-                await s3Upload(params);
-                await s3Upload(paramsModify);
-                await s3Upload(paramsThumb);
-                clearImage(image.path);
-                clearImage(modifiedImageUrl);
-                clearImage(thumbnailImageUrl);
-                // savePost();
-            }
-        }
+        // }
+
+        if (fileMimetype === 'audio') {
+          if (!process.env.S3NOTUSE) {
+              await s3Upload(params);
+              await s3Upload(paramsModify);
+              clearImage(image.path);
+              clearImage(modifiedImageUrl);
+              // savePost();
+          }
+
+      }
+
+        // if (fileMimetype === 'video') {
+        //     if (!process.env.S3NOTUSE) {
+        //         await s3Upload(params);
+        //         await s3Upload(paramsModify);
+        //         await s3Upload(paramsThumb);
+        //         clearImage(image.path);
+        //         clearImage(modifiedImageUrl);
+        //         clearImage(thumbnailImageUrl);
+        //         // savePost();
+        //     }
+        // }
 
         //// send update data
         io.getIO().emit('posts', { 
@@ -297,7 +279,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
 
 
-exports.updateMutiImagesPost = async (req, res, next) => {
+exports.updateAudioPost = async (req, res, next) => {
     // console.log('req.body', req.body, 'req.files', req.files);
 
     const postId = req.params.postId;
@@ -333,6 +315,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
     const embedUrl = req.body.embedUrl;
     // const imagePaths = req.body.imagePaths || [];
 
+    // let imageUrls = post.imageUrls || [];
     let imageUrls = post.imageUrls || [];
     let modifiedImageUrls = post.modifiedImageUrls || [];
     let thumbnailImageUrls = post.thumbnailImageUrls || [];
@@ -353,6 +336,8 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         }
 
         if (req.files && req.files.length > 0) {
+            // imageUrls = [];
+
             const imageLimitNum = 6;
 
             if (req.body.totalFileNumber && parseInt(req.body.totalFileNumber) > imageLimitNum) {
@@ -382,16 +367,20 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                 // thumbnailImageUrl = 'images/' + forFileFileName;
         
                 const fileMimetype = image.mimetype.split('/')[0];
-                if (fileMimetype === 'image') {
-                    const smallImage = await createSmallImage(image.path, modifiedImageUrl);
-                }
-                if (fileMimetype === 'video') {
-                    thumbnailImageUrl = 'images/' + forFileFileName
-                    thumbnailImageUrls.push(thumbnailImageUrl);
+                // if (fileMimetype === 'image') {
+                //     const smallImage = await createSmallImage(image.path, modifiedImageUrl);
+                // }
+                // if (fileMimetype === 'video') {
+                //     thumbnailImageUrl = audioFilePath + '/' + forFileFileName
+                //     thumbnailImageUrls.push(thumbnailImageUrl);
 
 
-                    const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
-                    const thumbnail = await createThumbnail(image.path, forFileFileName);
+                //     const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
+                //     const thumbnail = await createThumbnail(image.path, forFileFileName);
+                // }
+
+                if (fileMimetype === 'audio') {
+                    const trimedAudio = await trimAudio(image.path, modifiedImageUrl);
                 }
         
         
@@ -413,36 +402,47 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                     Key: `${modifiedImageUrl}`
                 };
         
-                if (thumbnailImageUrl) {
-                    var paramsThumb = {
-                        ACL: 'private',
-                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                        Body: fs.createReadStream(thumbnailImageUrl),
-                        //   ContentType: 'image/jpeg',
-                        Key: `${thumbnailImageUrl}`
-                    };
-                }
+                // if (thumbnailImageUrl) {
+                //     var paramsThumb = {
+                //         ACL: 'private',
+                //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                //         Body: fs.createReadStream(thumbnailImageUrl),
+                //         //   ContentType: 'image/jpeg',
+                //         Key: `${thumbnailImageUrl}`
+                //     };
+                // }
 
-                if (fileMimetype === 'image') {
-                    //// upload images to cloud storage if s3 use
-                    if (!process.env.S3NOTUSE) {
-                        await s3Upload(params);
-                        await s3Upload(paramsModify);
-                        clearImage(image.path);
-                        clearImage(modifiedImageUrl);
-                    }
-                }
-                if (fileMimetype === 'video') {
-                    //// upload video to cloud storage if s3 use
-                    if (!process.env.S3NOTUSE) {
-                        await s3Upload(params);
-                        await s3Upload(paramsModify);
-                        await s3Upload(paramsThumb);
+                // if (fileMimetype === 'image') {
+                //     //// upload images to cloud storage if s3 use
+                //     if (!process.env.S3NOTUSE) {
+                //         await s3Upload(params);
+                //         await s3Upload(paramsModify);
+                //         clearImage(image.path);
+                //         clearImage(modifiedImageUrl);
+                //     }
+                // }
+                // if (fileMimetype === 'video') {
+                //     //// upload video to cloud storage if s3 use
+                //     if (!process.env.S3NOTUSE) {
+                //         await s3Upload(params);
+                //         await s3Upload(paramsModify);
+                //         await s3Upload(paramsThumb);
         
-                        clearImage(image.path);
-                        clearImage(modifiedImageUrl);
-                        clearImage(thumbnailImageUrl);
-                    }
+                //         clearImage(image.path);
+                //         clearImage(modifiedImageUrl);
+                //         clearImage(thumbnailImageUrl);
+                //     }
+                // }
+                
+                if (fileMimetype === 'audio') {
+                  //// upload video to cloud storage if s3 use
+                  if (!process.env.S3NOTUSE) {
+                      await s3Upload(params);
+                      await s3Upload(paramsModify);
+                      clearImage(image.path);
+                      clearImage(modifiedImageUrl);
+                  }
+
                 }    
                 
                 
@@ -452,6 +452,38 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                     imageData: image,
                 });
             }
+
+
+
+            // //// delete old file
+            // for (const imageUrl of post.imageUrls) {
+                
+            //     const imageObjects = [];
+            //     // const imageUrlArray = post.imageUrl.split('.');
+            //     // const fileType = imageUrlArray.pop().toLowerCase();
+
+            //     imageObjects.push({
+            //         Key: imageUrl,
+            //     });
+        
+            //     const params = {
+            //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            //         Delete: {
+            //             Objects: imageObjects,
+            //             // Quiet: false
+            //         }
+            //     };
+              
+            //     if (!process.env.S3NOTUSE) {
+            //         await s3DeleteMany(params);
+            //     }
+
+            //     if (process.env.S3NOTUSE) {
+            //         clearImage(imageUrl);
+            //     }
+                
+            // }
+
 
             io.getIO().emit('posts', { 
                 action: 'upload-finish',
@@ -480,9 +512,10 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         post.headers = headers;
         post.modifiedImageUrls = modifiedImageUrls;
         post.modifiedImagePaths = modifiedImageUrls;
-        post.thumbnailImageUrls = thumbnailImageUrls;
-        post.thumbnailImagePaths = thumbnailImageUrls;
-        post.embedUrl = embedUrl;
+        post.thumbnailImageUrls = [];
+        post.thumbnailImagePaths = [];
+
+        // post.embedUrl = embedUrl;
         // const updateTime = Date.now();
         // post.lastUpdateTime = updateTime;
         // if (!post.updateTimes) {
@@ -491,7 +524,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         // post.updateTimes.push(updateTime);
 
         const result = await post.save();
-
+        // console.log('post', post);
         io.getIO().emit('posts', { action: 'update', post: result });
         
         const returnPost = createReturnPost(post);
@@ -512,142 +545,142 @@ exports.updateMutiImagesPost = async (req, res, next) => {
 
 
 
-exports.deleteMultiImagePost = async (req, res, next) => {
-    const postId = req.params.postId;
-    console.log('postId in deleteMutiImagePost', postId);
+// exports.deleteAudioPost = async (req, res, next) => {
+//     const postId = req.params.postId;
+//     // console.log('postId in deleteMutiImagePost', postId);
 
-    // try {
-    const post = await Post.findById(postId)
+//     // try {
+//     const post = await Post.findById(postId)
 
-    // check login user
-    if (!post) {
-        const error = new Error('Could not find post.');
-        error.statusCode = 404;
-        throw error;
-    }
-    if (post.creatorId.toString() !== req.userId) {
-        const error = new Error('not authorized!');
-        error.statusCode = 403;
-        throw error;
-    }
-
-
-    if (post.imageUrls.length > 0) {
-
-        const imageObjects = [];
-        const modifiedImageObjects = [];
-        const thumbnailImageObjects = [];
-
-        for (const imageUrl of post.imageUrls) { 
-            const imageUrlArray = post.imageUrl.split('.');
-            const fileType = imageUrlArray.pop().toLowerCase();
-
-            imageObjects.push({
-                Key: imageUrl,
-            });
-        }
-
-        for (const imageUrl of post.modifiedImageUrls) { 
-            const imageUrlArray = post.imageUrl.split('.');
-            const fileType = imageUrlArray.pop().toLowerCase();
-
-            modifiedImageObjects.push({
-                Key: imageUrl,
-            });
-        }
-
-        
-
-        const params = {
-            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-            Delete: {
-                Objects: imageObjects,
-                // Quiet: false
-            }
-        };
-
-        const modifiedParams = {
-            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-            Delete: {
-                Objects: modifiedImageObjects,
-                // Quiet: false
-            }
-        };
+//     // check login user
+//     if (!post) {
+//         const error = new Error('Could not find post.');
+//         error.statusCode = 404;
+//         throw error;
+//     }
+//     if (post.creatorId.toString() !== req.userId) {
+//         const error = new Error('not authorized!');
+//         error.statusCode = 403;
+//         throw error;
+//     }
 
 
-        //// delete images depend on store places
-        if (!process.env.S3NOTUSE) {
-            await s3DeleteMany(params);
-            await s3DeleteMany(modifiedParams);
-        }
-        if (process.env.S3NOTUSE) {
-            for (const imageUrl of post.imageUrls) {
-                clearImage(imageUrl);
-            }
+//     if (post.imageUrls.length > 0) {
 
-            for (const modifiedImageUrl of post.modifiedImageUrls) {
-                clearImage(modifiedImageUrl);
-            }
-        }
+//         const imageObjects = [];
+//         const modifiedImageObjects = [];
+//         const thumbnailImageObjects = [];
 
-        if (post.thumbnailImageUrls.length > 0) {
-            for (const imageUrl of post.thumbnailImageUrls) {
-                thumbnailImageObjects.push({
-                    Key: imageUrl,
-                });
-            }
+//         for (const imageUrl of post.imageUrls) { 
+//             const imageUrlArray = post.imageUrl.split('.');
+//             const fileType = imageUrlArray.pop().toLowerCase();
 
-            const thumbParam = {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Delete: {
-                    Objects: thumbnailImageObjects,
-                    // Quiet: false
-                }
-            };
+//             imageObjects.push({
+//                 Key: imageUrl,
+//             });
+//         }
 
+//         // for (const imageUrl of post.modifiedImageUrls) { 
+//         //     const imageUrlArray = post.imageUrl.split('.');
+//         //     const fileType = imageUrlArray.pop().toLowerCase();
 
-            //// delete video images depend on store places
-            if (!process.env.S3NOTUSE) {
-                await s3DeleteMany(thumbParam);
-            }
-            if (process.env.S3NOTUSE) {
-                for (const imageUrl of post.thumbnailImageUrls) {
-                    clearImage(imageUrl);
-                }
-            }
-
-        }
+//         //     modifiedImageObjects.push({
+//         //         Key: imageUrl,
+//         //     });
+//         // }
 
         
 
+//         const params = {
+//             Bucket: process.env.DO_SPACE_BUCKET_NAME,
+//             Delete: {
+//                 Objects: imageObjects,
+//                 // Quiet: false
+//             }
+//         };
 
-    }
-
-    try {
-        await Post.findByIdAndRemove(postId);
-
-        await Comment.deleteMany({ postId: postId });
-        await PostVisit.deleteOne({ postId: postId });
-
-        ////delete favorite post
-        await FavoritePost.deleteMany({ postId: postId });
-
-        io.getIO().emit('posts', { action: 'delete', post: postId });
-
-        res.status(200).json({ message: 'Deleted post.' });
-
-    } catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
-    }
-
-};
+//         // const modifiedParams = {
+//         //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
+//         //     Delete: {
+//         //         Objects: modifiedImageObjects,
+//         //         // Quiet: false
+//         //     }
+//         // };
 
 
+//         //// delete images depend on store places
+//         if (!process.env.S3NOTUSE) {
+//             await s3DeleteMany(params);
+//             // await s3DeleteMany(modifiedParams);
+//         }
+//         if (process.env.S3NOTUSE) {
+//             for (const imageUrl of post.imageUrls) {
+//                 clearImage(imageUrl);
+//             }
 
-exports.deletePostImages = async (req, res, next) => {
+//             // for (const modifiedImageUrl of post.modifiedImageUrls) {
+//             //     clearImage(modifiedImageUrl);
+//             // }
+//         }
+
+//         if (post.thumbnailImageUrls.length > 0) {
+//             for (const imageUrl of post.thumbnailImageUrls) {
+//                 thumbnailImageObjects.push({
+//                     Key: imageUrl,
+//                 });
+//             }
+
+//             const thumbParam = {
+//                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
+//                 Delete: {
+//                     Objects: thumbnailImageObjects,
+//                     // Quiet: false
+//                 }
+//             };
+
+
+//             //// delete video images depend on store places
+//             if (!process.env.S3NOTUSE) {
+//                 await s3DeleteMany(thumbParam);
+//             }
+//             if (process.env.S3NOTUSE) {
+//                 for (const imageUrl of post.thumbnailImageUrls) {
+//                     clearImage(imageUrl);
+//                 }
+//             }
+
+//         }
+
+        
+
+
+//     }
+
+//     try {
+//         await Post.findByIdAndRemove(postId);
+
+//         await Comment.deleteMany({ postId: postId });
+//         await PostVisit.deleteOne({ postId: postId });
+
+//         ////delete favorite post
+//         await FavoritePost.deleteMany({ postId: postId });
+
+//         io.getIO().emit('posts', { action: 'delete', post: postId });
+
+//         res.status(200).json({ message: 'Deleted post.' });
+
+//     } catch (err) {
+//         if (!err.statusCode) {
+//             err.statusCode = 500;
+//         }
+//         next(err);
+//     }
+
+// };
+
+
+
+exports.deletePostVideo = async (req, res, next) => {
     const postId = req.params.postId;
     let deleteImageUrls = [];
     let deleteModifiedImageUrls = []; 
@@ -807,7 +840,7 @@ exports.deletePostImages = async (req, res, next) => {
         // await FavoritePost.deleteMany({ postId: postId });
 
         const returnPost = createReturnPost(post);
-        // console.log('returnPost', returnPost);
+        
         io.getIO().emit('posts', { action: 'delete', post: postId });
 
         res.status(200).json({ 
@@ -829,41 +862,13 @@ exports.deletePostImages = async (req, res, next) => {
 
 
 
-
-const createSmallImage = (imageUrl, modifiedImageUrl) => {
-    return new Promise((resolve, reject) => {
-        gm(imageUrl)
-            // .resize(100, 100)
-            // .resize(null, 100)
-            .resize(null, 100)
-            // .noProfile()
-            .write(modifiedImageUrl, function (err) {
-                if (err) {
-                    console.log('error occured ', err);
-                    reject({ message: "error occured " + err });
-                }
-                if (!err) {
-                    console.log('done making small image')
-                    resolve({ message: "done making small image" })
-                    // console.log('done');
-                    // gm(modifiedImageUrl)
-                    //     .identify(function (err, data) {
-                    //         if (err) console.log(err);
-                    //         // if (!err) console.log('DATA:',data);
-
-                    //     });
-                }
-            });
-    })
-}
-
-const trimVideo = (imageUrl, modifiedImageUrl) => {
+const trimAudio = (imageUrl, modifiedImageUrl) => {
     return new Promise((resolve, reject) => {
         ffmpeg(imageUrl)
             .setFfmpegPath(ffmpeg_static)
-            .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
-            .setDuration(3)
-            .size("50x?").autopad()
+            .setStartTime('00:00:00') //Can be in "HH:MM:SS" format also
+            .setDuration(20)
+            // .size("50x?").autopad()
             .on("start", function (commandLine) {
                 console.log("Spawned FFmpeg with command: " + commandLine);
             })
@@ -878,160 +883,11 @@ const trimVideo = (imageUrl, modifiedImageUrl) => {
             })
             .on("end", function (err) {
                 if (!err) {
-                    console.log("video trim conversion Done");
-                    resolve({ message: 'video trim conversion Done' })
+                    console.log("audio trim conversion Done");
+                    resolve({ message: 'audio trim conversion Done' })
                 }
             })
             .saveToFile(modifiedImageUrl);
 
     })
 }
-
-const createThumbnail = (imageUrl, filename) => {
-    return new Promise((resolve, reject) => {
-        ffmpeg(imageUrl)
-            // setup event handlers
-            // .on('filenames', function(filename) {
-            //     console.log('screenshots are ' + filenames.join(', '));
-            // })
-            .on('end', function () {
-                console.log('screenshots were saved');
-                resolve({ message: 'screenshots were saved' })
-            })
-            .on('error', function (err) {
-                console.log('an error happened: ' + err.message);
-                reject({ message: "error occured " + err });
-            })
-            // take 2 screenshots at predefined timemarks and size
-            .takeScreenshots({
-                count: 1,
-                filename: filename,
-                timemarks: ['50%'],
-                size: '?x100'
-            }, './images');
-    })
-}
-
-
-const getVideoInfo = (imageUrl) => {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(imageUrl, (error, videoInfo) => {
-            if (error) {
-                console.log(error)
-              return reject(error);
-            }
-            // console.log('videoInfo', videoInfo.streams[0]);
-            resolve(videoInfo.streams[0]);
-        })
-    })
-};
-
-const copyFile = (path, distPath) => {
-    return new Promise((resolve, reject) => {
-        // File destination.txt will be created or overwritten by default.
-        fs.copyFile(path, distPath, (err) => {
-            if (err) {
-                reject(err);
-                // throw err;
-            }
-            console.log(`file was copied to ${distPath}`);
-            resolve(`file was copied to ${distPath}`);
-        });
-    })
-};
-
-
-const resizeVideo = (imageUrl, modifiedImageUrl, width) => {
-    return new Promise((resolve, reject) => {
-        ffmpeg(imageUrl)
-        .setFfmpegPath(ffmpeg_static)
-        // .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
-        // .setDuration(3)
-        .size(`${width}x?`).autopad()
-        .on("start", function (commandLine) {
-            console.log("Spawned FFmpeg with command: " + commandLine);
-        })
-        .on('codecData', function (data) {
-            console.log('Input is ' + data.audio_details + ' AUDIO ' +
-                'WITH ' + data.video_details + ' VIDEO');
-        })
-        .on('progress', function(progress) {
-            console.log('Processing: ' + progress.percent + '% done');
-        })
-        .on("error", function (err) {
-            console.log("error: ", err);
-            reject({ message: "error occured " + err });
-        })
-        .on("end", function (err) {
-            if (!err) {
-                console.log("video resize conversion Done");
-                resolve({ message: 'video resize conversion Done' })
-            }
-        })
-        .saveToFile(modifiedImageUrl);
-        // .saveToFile('images/resize.mp4');
-    });
-
-};
-
-    // var CreateSmallImage = gm(imageUrl)
-    //     .resize(50, 50)
-    //     // .noProfile()
-    //     .write(modifiedImageUrl, function (err) {
-    //         if (err) {console.log(err);}
-    //         if (!err) {
-    //             // console.log('done');
-    //             // gm(modifiedImageUrl)
-    //             //     .identify(function (err, data) {
-    //                 //         if (err) console.log(err);
-    //                 //         // if (!err) console.log('DATA:',data);
-
-    //                 //     });
-    //             }
-    //     });
-
-    // var trimVideo = ffmpeg(imageUrl)
-    //     .setFfmpegPath(ffmpeg_static)
-    //     .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
-    //     .setDuration(3) 
-    //     .size("50x?").autopad()
-    //     .on("start", function(commandLine) {
-    //         console.log("Spawned FFmpeg with command: " + commandLine);
-    //     })
-    //     .on('codecData', function(data) {
-    //         console.log('Input is ' + data.audio_details + ' AUDIO ' +
-    //         'WITH ' + data.video_details + ' VIDEO');
-    //     })
-    //     .on("error", function(err) {
-    //         console.log("error: ", err);
-    //     })
-    //     .on("end", function(err) {
-    //         if (!err) {
-    //             console.log("conversion Done");
-    //         }
-    //     })
-    //     .saveToFile(modifiedImageUrl);
-
-        // gm(imageUrl)
-        //     .size(function (err, size) {
-        //         if (err) {
-        //             console.log(err);
-        //         }
-        //         if (!err) {
-        //             console.log('size', size);
-        //         console.log(size.width > size.height ? 'wider' : 'taller than you');
-        //     }
-        // });
-
-        // im.identify(imageUrl, function(err, features){
-    //     if (err) throw err;
-    //     console.log('features', features);
-    //   })
-
-    // const imageUrlArray = imageUrl.split('.');
-    // const fileType = imageUrlArray.pop();
-    // const withoutFileType = imageUrlArray.join('');
-    // const modifiedImageUrl = withoutFileType + '-modify.' + fileType 
-    // console.log('imageUrl ft', fileType);
-    // console.log('img',withoutFileType);
-    // console.log('mod', modifiedImageUrl);

@@ -117,6 +117,43 @@ exports.videoUpload = multer({
 
 
 
+//// audio upload
+
+const multerAudioLimits = { 
+  fileSize: process.env.MULTER_AUDIO_SIZE_LIMIT_MB
+    ? 1000 * 1000 * Number(process.env.MULTER_AUDIO_SIZE_LIMIT_MB) 
+    : 1024 * 1024 * 5
+};
+
+const fileAudioStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images-audio');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now().toString() + `-${Math.floor(Math.random() * 10**6).toString()}crid-` + file.originalname);
+  }
+});
+
+const audioFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'audio/mpeg' ||
+    file.mimetype === 'audio/wav' ||
+    file.mimetype === 'audio/webm'
+  ) {
+    cb(null, true);
+  } 
+   else {
+    cb(null, false);
+  }
+}
+
+exports.audioUpload = multer({
+  storage: fileAudioStorage,
+  limits: multerAudioLimits,
+  fileFilter: audioFilter,
+}).array('images', 1)
+
+
 
 
 
