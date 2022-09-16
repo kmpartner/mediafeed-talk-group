@@ -70,14 +70,36 @@ exports.createMultiImagesPost = async (req, res, next) => {
     }
 
     if (req.files.length > 0 && embedUrl) {
+
+        for (const file of req.files) {
+            clearImage(file.path);
+        }
+
         const error = new Error('embedUrl is not accepted when files exist');
         error.statusCode = 400;
         throw error;
     }
 
+
+    if (req.files.length >= 2) {
+        const gifExist = req.files.find(file => {
+            return file.mimetype === 'image/gif';
+        })
+
+        if (gifExist) {
+
+            for (const file of req.files) {
+                clearImage(file.path);
+            }
+
+            const error = new Error('accept one gif file error');
+            error.statusCode = 400;
+            throw error;
+        }
+    }
+
     // console.log('req.body, req.files', req.body, req.files);
-
-
+    
 
     const savePost = async () => {
         // const user = await User.findById(req.userId);
@@ -160,10 +182,21 @@ exports.createMultiImagesPost = async (req, res, next) => {
     for (const image of req.files) {
         imageUrls.push(image.path);
 
+        let isGifImage = false;
+
+        if (image.mimetype === 'image/gif') {
+            isGifImage = true;
+        }
+
         let thumbnailImageUrl;
 
         const modifiedImageUrl = imageModify.makeModifiedUrl(image.path);
-        modifiedImageUrls.push(modifiedImageUrl);
+
+        if (!isGifImage) {
+            modifiedImageUrls.push(modifiedImageUrl);
+        } else {
+            modifiedImageUrls.push(image.path);
+        }
         
         const ForFile = image.path.split('/')[1];
         const ForFileArray = ForFile.split('.');
@@ -174,47 +207,11 @@ exports.createMultiImagesPost = async (req, res, next) => {
 
         const fileMimetype = image.mimetype.split('/')[0];
         if (fileMimetype === 'image') {
-            const smallImage = await createSmallImage(image.path, modifiedImageUrl);
-        }
-        if (fileMimetype === 'video') {
-            thumbnailImageUrl = 'images/' + forFileFileName
-            thumbnailImageUrls.push(thumbnailImageUrl);
-
-
-
-
-
-            //// resize video when more than 600 width
-            var stats = fs.statSync(image.path);
-            var fileSizeInBytes = stats.size;
-            // Convert the file size to megabytes (optional)
-            // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
-            console.log('fileSizeInbytes',fileSizeInBytes);
-
-            const videoInfo = await getVideoInfo(image.path);
-            // console.log('videoInfo', videoInfo);
-            
-            if (videoInfo.width > 600) {
-                await resizeVideo(image.path, modifiedImageUrl, 640);
-                var rsStats = fs.statSync(modifiedImageUrl);
-                var rsfileSizeInBytes = rsStats.size;
-                // Convert the file size to megabytes (optional)
-                // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-                console.log('rsfileSizeInbytes',rsfileSizeInBytes);
-    
-                if (rsfileSizeInBytes < fileSizeInBytes) {
-                    console.log('in copyfile')
-                    await copyFile(modifiedImageUrl, image.path);
-                }
+            if (!isGifImage) {
+                const smallImage = await createSmallImage(image.path, modifiedImageUrl);
             }
-
-
-
-
-
-            const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
-            const thumbnail = await createThumbnail(image.path, forFileFileName);
         }
+        if (fileMimetype === 'video') {}
 
 
         var params = {
@@ -227,15 +224,18 @@ exports.createMultiImagesPost = async (req, res, next) => {
             Key: `${image.path}`
         };
 
-        // console.log('params', params);
 
-        var paramsModify = {
-            ACL: 'private',
-            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-            Body: fs.createReadStream(modifiedImageUrl),
-            //   ContentType: 'image/jpeg',
-            Key: `${modifiedImageUrl}`
-        };
+        let paramsModify;
+
+        if (!isGifImage) {
+            paramsModify = {
+                ACL: 'private',
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Body: fs.createReadStream(modifiedImageUrl),
+                //   ContentType: 'image/jpeg',
+                Key: `${modifiedImageUrl}`
+            };
+        }
 
         if (thumbnailImageUrl) {
             var paramsThumb = {
@@ -247,27 +247,24 @@ exports.createMultiImagesPost = async (req, res, next) => {
             };
         }
 
+
         if (fileMimetype === 'image') {
             if (!process.env.S3NOTUSE) {
-                await s3Upload(params);
-                await s3Upload(paramsModify);
-                clearImage(image.path);
-                clearImage(modifiedImageUrl);
-                // savePost();
+                if (!isGifImage) {
+                    await s3Upload(params);
+                    await s3Upload(paramsModify);
+                    clearImage(image.path);
+                    clearImage(modifiedImageUrl);
+                }
+                else {
+                    await s3Upload(params);
+                    clearImage(image.path);
+                }
+
             }
 
         }
-        if (fileMimetype === 'video') {
-            if (!process.env.S3NOTUSE) {
-                await s3Upload(params);
-                await s3Upload(paramsModify);
-                await s3Upload(paramsThumb);
-                clearImage(image.path);
-                clearImage(modifiedImageUrl);
-                clearImage(thumbnailImageUrl);
-                // savePost();
-            }
-        }
+
 
         //// send update data
         io.getIO().emit('posts', { 
@@ -347,9 +344,33 @@ exports.updateMutiImagesPost = async (req, res, next) => {
             && parseInt(req.body.totalFileNumber) > 0
             && embedUrl
         ) {
+
+            if (req.files.length > 0) {
+                for (const file of req.files) {
+                    clearImage(file.path);
+                }
+            }
+
             const error = new Error('embedUrl is not accepted when image exist');
             error.statusCode = 400;
             throw error;
+        }
+
+        if (req.files.length >= 2) {
+            const gifExist = req.files.find(file => {
+                return file.mimetype === 'image/gif';
+            })
+    
+            if (gifExist) {
+
+                for (const file of req.files) {
+                    clearImage(file.path);
+                }
+
+                const error = new Error('accept one gif file error');
+                error.statusCode = 400;
+                throw error;
+            }
         }
 
         if (req.files && req.files.length > 0) {
@@ -369,10 +390,22 @@ exports.updateMutiImagesPost = async (req, res, next) => {
             for (const image of req.files) {
                 imageUrls.push(image.path);
 
+                let isGifImage = false;
+
+                if (image.mimetype === 'image/gif') {
+                    isGifImage = true;
+                }
+
                 let thumbnailImageUrl;
         
                 const modifiedImageUrl = imageModify.makeModifiedUrl(image.path);
-                modifiedImageUrls.push(modifiedImageUrl);
+                // modifiedImageUrls.push(modifiedImageUrl);
+
+                if (!isGifImage) {
+                    modifiedImageUrls.push(modifiedImageUrl);
+                } else {
+                    modifiedImageUrls.push(image.path);
+                }
                 
                 const ForFile = image.path.split('/')[1];
                 const ForFileArray = ForFile.split('.');
@@ -383,18 +416,11 @@ exports.updateMutiImagesPost = async (req, res, next) => {
         
                 const fileMimetype = image.mimetype.split('/')[0];
                 if (fileMimetype === 'image') {
-                    const smallImage = await createSmallImage(image.path, modifiedImageUrl);
+                    if (!isGifImage) {
+                        const smallImage = await createSmallImage(image.path, modifiedImageUrl);
+                    }
                 }
-                if (fileMimetype === 'video') {
-                    thumbnailImageUrl = 'images/' + forFileFileName
-                    thumbnailImageUrls.push(thumbnailImageUrl);
 
-
-                    const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
-                    const thumbnail = await createThumbnail(image.path, forFileFileName);
-                }
-        
-        
                 var params = {
                     ACL: 'private',
                     // ACL: 'public-read',
@@ -405,13 +431,17 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                     Key: `${image.path}`
                 };
         
-                var paramsModify = {
-                    ACL: 'private',
-                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                    Body: fs.createReadStream(modifiedImageUrl),
-                    //   ContentType: 'image/jpeg',
-                    Key: `${modifiedImageUrl}`
-                };
+                let paramsModify;
+
+                if (!isGifImage) {
+                    paramsModify = {
+                        ACL: 'private',
+                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                        Body: fs.createReadStream(modifiedImageUrl),
+                        //   ContentType: 'image/jpeg',
+                        Key: `${modifiedImageUrl}`
+                    };
+                }
         
                 if (thumbnailImageUrl) {
                     var paramsThumb = {
@@ -426,24 +456,30 @@ exports.updateMutiImagesPost = async (req, res, next) => {
                 if (fileMimetype === 'image') {
                     //// upload images to cloud storage if s3 use
                     if (!process.env.S3NOTUSE) {
-                        await s3Upload(params);
-                        await s3Upload(paramsModify);
-                        clearImage(image.path);
-                        clearImage(modifiedImageUrl);
+                        if (!isGifImage) {
+                            await s3Upload(params);
+                            await s3Upload(paramsModify);
+                            clearImage(image.path);
+                            clearImage(modifiedImageUrl);
+                        }
+                        else {
+                            await s3Upload(params);
+                            clearImage(image.path);
+                        }
                     }
                 }
-                if (fileMimetype === 'video') {
-                    //// upload video to cloud storage if s3 use
-                    if (!process.env.S3NOTUSE) {
-                        await s3Upload(params);
-                        await s3Upload(paramsModify);
-                        await s3Upload(paramsThumb);
+                // if (fileMimetype === 'video') {
+                //     //// upload video to cloud storage if s3 use
+                //     if (!process.env.S3NOTUSE) {
+                //         await s3Upload(params);
+                //         await s3Upload(paramsModify);
+                //         await s3Upload(paramsThumb);
         
-                        clearImage(image.path);
-                        clearImage(modifiedImageUrl);
-                        clearImage(thumbnailImageUrl);
-                    }
-                }    
+                //         clearImage(image.path);
+                //         clearImage(modifiedImageUrl);
+                //         clearImage(thumbnailImageUrl);
+                //     }
+                // }    
                 
                 
                 io.getIO().emit('posts', { 
