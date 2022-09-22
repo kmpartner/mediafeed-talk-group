@@ -1141,7 +1141,7 @@ const VideoTextTalk = (props) => {
     setIsLoading(true);
   };
 
-  const noconnectTextPostHandler = (text, toUserId) => {
+  const noconnectTextPostHandler = (text, toUserId, filePaths) => {
     socketState.emit('text-send', {
       from: userSocketId,
       fromUserId: userId,
@@ -1153,6 +1153,8 @@ const VideoTextTalk = (props) => {
       language: navigator.languages[0],
       geolocation: JSON.parse(localStorage.getItem('userLocation')),
       token: localStorage.getItem('token'),
+      fileUrls: filePaths ? filePaths : [],
+      filePaths: filePaths ? filePaths : [],
     });
 
     deleteDraftInput('talk', textTalkId);

@@ -26,6 +26,8 @@ const GroupTalk = require('./models/group-talk');
 const TalkConnection = require('./models/talk-connection');
 // const TestRoutes = require('./routes/test');
 const TextTalkRoutes = require('./routes/text-talk');
+const fileUploadRoutes = require('./routes/file-upload');
+const { fileUpload } = require('./middleware/multer');
 const { handlePushNotification } = require('./handle-push');
 require('dotenv').config();
 class Server {
@@ -90,6 +92,7 @@ class Server {
         });
         // this.app.use('/test', TestRoutes);
         this.app.use('/text-talk', TextTalkRoutes);
+        this.app.use('/file-upload', fileUpload, fileUploadRoutes);
         // this.app.get("/", (req, res) => {
         //   res.sendFile("index.html");
         // });

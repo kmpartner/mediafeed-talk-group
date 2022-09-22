@@ -38,6 +38,12 @@ const textSchema = {
     geolocation: {
         type: Object
     },
+    fileUrls: [{
+            typ: String,
+        }],
+    filePaths: [{
+            typ: String,
+        }],
 };
 const textTalkSchema = Schema({
     userId: {

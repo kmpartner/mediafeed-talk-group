@@ -42,6 +42,19 @@ const textSchema = {
   geolocation: {
     type: Object
   },
+  
+  fileUrls: [{
+    type: String,
+  }],
+  filePaths: [{
+    type: String,
+  }],
+  // miniFileUrls: [{
+  //   typ: String,
+  // }],
+  // miniFilePaths: [{
+  //   typ: String,
+  // }],
 }
 
 

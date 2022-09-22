@@ -1,14 +1,24 @@
 import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
 import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
+import SmallModal from '../../Modal/SmallModal';
+import VideoTextTalkUpload from './VideoTextTalkUpload';
 
+import classes from './VideoTextTalkInput.module.css';
 
 const VideoTextTalkInput = props => {
-  console.log('VideoTextTalkInput.js-props', props);
+  // console.log('VideoTextTalkInput.js-props', props);
 
   const [t] = useTranslation('translation');
+
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const showUploadModalHandler = (value) => {
+    setShowUploadModal(value);
+  };
 
   return (
     <div className="groupTalk__textInputElements">
@@ -42,6 +52,24 @@ const VideoTextTalkInput = props => {
         >
           Post
         </Button>
+        <span 
+        onClick={() => { showUploadModalHandler(true); }}
+        >
+          upload-file
+        </span>
+        {showUploadModal && (
+          <SmallModal style={classes.uploadModal}>
+            <VideoTextTalkUpload
+              showUploadModalHandler={showUploadModalHandler}
+              // textInput={props.textInput}
+              noconnectDestUserId={props.noconnectDestUserId}
+              noconnectTextPostHandler={props.noconnectTextPostHandler}
+            />
+          </SmallModal>
+        )}
+        {/* {!showUploadModal && (
+          <SmallModal>small-modal-content</SmallModal>
+        )} */}
       </div>
     </div>
   );

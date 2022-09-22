@@ -18,7 +18,9 @@ const TalkConnection = require('./models/talk-connection');
 
 // const TestRoutes = require('./routes/test');
 const TextTalkRoutes = require('./routes/text-talk');
+const fileUploadRoutes = require('./routes/file-upload');
 
+const { fileUpload } = require('./middleware/multer');
 const { handlePushNotification } = require('./handle-push');
 
 require('dotenv').config();
@@ -92,9 +94,17 @@ export class Server {
       ];
       var origin = req.headers.origin;
       console.log(origin);
+
+      
+      //// for deploy
       if (allowedOrigins.indexOf(origin) > -1) {
         res.setHeader('Access-Control-Allow-Origin', origin);
       }
+
+      //// for dev
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       if (req.method === 'OPTIONS') {
@@ -118,6 +128,7 @@ export class Server {
 
     // this.app.use('/test', TestRoutes);
     this.app.use('/text-talk', TextTalkRoutes);
+    this.app.use('/file-upload', fileUploadRoutes);
 
     // this.app.get("/", (req, res) => {
     //   res.sendFile("index.html");
