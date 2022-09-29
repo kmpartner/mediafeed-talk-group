@@ -1,8 +1,11 @@
+
 export {}
 const fs = require('fs');
 const path = require('path');
 
 const aws = require('aws-sdk');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpeg_static = require('ffmpeg-static');
 const gm = require('gm');
 require('dotenv').config();
 
@@ -114,6 +117,61 @@ const createSmallImage = (imageUrl: string, modifiedImageUrl: string) => {
   })
 };
 
+
+const resizeVideo = (imageUrl: string, modifiedImageUrl: string, duration: number, width: number) => {
+  return new Promise((resolve, reject) => {
+      ffmpeg(imageUrl)
+          .setFfmpegPath(ffmpeg_static)
+          // .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
+          .setDuration(duration)
+          // .size("50x?").autopad()
+          .size(`${width}x?`).autopad()
+          .on("start", function (commandLine: any) {
+              console.log("Spawned FFmpeg with command: " + commandLine);
+          })
+          .on('codecData', function (data: any) {
+              console.log('Input is ' + data.audio_details + ' AUDIO ' +
+                  'WITH ' + data.video_details + ' VIDEO');
+          })
+          .on('progress', function(progress: any) {
+            if (progress.percent > 25 && progress.percent < 29) {
+              console.log('Processing: ' + progress.percent + '% done');
+            }
+            if (progress.percent > 50 && progress.percent < 54) {
+              console.log('Processing: ' + progress.percent + '% done');
+            }
+            if (progress.percent > 75 && progress.percent < 79) {
+              console.log('Processing: ' + progress.percent + '% done');
+            }
+          })
+          .on("error", function (err: any) {
+              console.log("error: ", err);
+              reject({ message: "error occured " + err });
+          })
+          .on("end", function (err: any) {
+              if (!err) {
+                  console.log("video trim conversion Done");
+                  resolve({ message: 'video trim conversion Done' })
+              }
+          })
+          .saveToFile(modifiedImageUrl);
+
+  })
+};
+
+const getVideoInfo = (imageUrl: string) => {
+  return new Promise((resolve, reject) => {
+      ffmpeg.ffprobe(imageUrl, (error: any, videoInfo: any) => {
+          if (error) {
+              console.log(error)
+            return reject(error);
+          }
+          // console.log('videoInfo', videoInfo.streams[0]);
+          resolve(videoInfo.streams[0]);
+      })
+  })
+};
+
 const makeModifiedPath = (dataUrl: string, addText: string) => {
   const imageUrlArray = dataUrl.split('.');
   const fileType = imageUrlArray.pop();
@@ -127,11 +185,46 @@ const makeModifiedPath = (dataUrl: string, addText: string) => {
   return modifiedPath;
 };
 
+const createReturnPost = (post: any) => {
+
+  const port = process.env.PORT || 4001;
+
+      const fileUrls = [];
+      if (post.fileUrls && post.fileUrls.length > 0) {
+        if (!process.env.S3NOTUSE) {
+          for (const fileUrl of post.fileUrls) {
+            fileUrls.push(
+              s3.getSignedUrl("getObject", {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: fileUrl,
+                Expires: 60 * 60 * 24 * 365,
+              })
+            );
+          }
+        }
+
+        if (process.env.S3NOTUSE) {
+          for (const fileUrl of post.fileUrls) {
+            // fileUrls.push(`http://localhost:${port}/${fileUrl}`);
+            fileUrls.push(fileUrl);
+          }
+        }
+      }
+
+      return {
+        ...post._doc,
+        fileUrls: fileUrls,
+      }
+};
+
 module.exports = {
   s3Upload,
   s3DeleteMany,
   clearImage,
   isAudioFile,
   createSmallImage,
+  resizeVideo,
+  getVideoInfo,
   makeModifiedPath,
+  createReturnPost,
 }

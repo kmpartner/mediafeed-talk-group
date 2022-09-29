@@ -22,6 +22,7 @@ const fileUploadRoutes = require('./routes/file-upload');
 
 const { fileUpload } = require('./middleware/multer');
 const { handlePushNotification } = require('./handle-push');
+const { createReturnPost } = require('./util/file-upload-utils');
 
 require('dotenv').config();
 
@@ -79,6 +80,11 @@ export class Server {
 
   private configureRoutes(): void {
 
+    this.app.get("/healthz", (req, res) => {
+      // res.sendFile("index.html");
+      res.send("hello world express socket.io healthz");
+    });
+
     this.app.use((req: any, res: any, next: any) => {
 
       //// for push
@@ -126,6 +132,10 @@ export class Server {
 
     })
 
+    console.log('talk-files path', path.join('', 'talk-files'))
+    // this.app.use('/talk-files', express.static(path.join(__dirname, 'talk-files')));
+    this.app.use('/talk-files', express.static(path.join('', 'talk-files')));
+
     // this.app.use('/test', TestRoutes);
     this.app.use('/text-talk', TextTalkRoutes);
     this.app.use('/file-upload', fileUploadRoutes);
@@ -142,12 +152,6 @@ export class Server {
       // res.sendFile("index.html");
       res.send("hello world express socket.io");
     });
-
-    this.app.get("/healthz", (req, res) => {
-      // res.sendFile("index.html");
-      res.send("hello world express socket.io healthz");
-    });
-
 
 
     this.app.use((error: any, req: any, res: any, next: any) => {
@@ -1033,12 +1037,21 @@ export class Server {
           });
         }
 
+
+        
         //// no connect case
         else {
 
+          const urlUserDestTalk = userDestTalk.text.map((text: any) => {
+            return createReturnPost(text);
+          });
+
+          // console.log(urlTextList);
+
           //// update textdata of fromUser
           socket.emit('update-text-list', {
-            textList: userDestTalk.text,
+            // textList: userDestTalk.text,
+            textList: urlUserDestTalk,
           });
 
 
@@ -1055,14 +1068,15 @@ export class Server {
               .to(room1)
               .to(room2)
               .emit('update-text-list', {
-                textList: userDestTalk.text,
+                // textList: userDestTalk.text,
+                textList: urlUserDestTalk,
               });
 
 
             //// send textdata info to toUser
             this.io.to(destUser.socketId).emit('text-from-noconnect-user', {
-              text: userDestTalk.text[userDestTalk.text.length -1],
-              // textList: userDestTalk.text
+              // text: userDestTalk.text[userDestTalk.text.length -1],
+              text: urlUserDestTalk[urlUserDestTalk.length -1],
             });
 
 
@@ -1072,7 +1086,8 @@ export class Server {
                 // console.log('destUser.socketRooms && !destUser.socketRooms[room1] || !destUser.socketRooms[room2]');
 
                 socket.emit('send-text-forPush', {
-                  text: userDestTalk.text[userDestTalk.text.length -1]
+                  // text: userDestTalk.text[userDestTalk.text.length -1]
+                  text: urlUserDestTalk[urlUserDestTalk.length -1],
                 });
               }
             }
@@ -1080,7 +1095,8 @@ export class Server {
             //// toUser online but not in rooms, start push notify textdata
             if (!destUser.socketRooms) {
               socket.emit('send-text-forPush', {
-                text: userDestTalk.text[userDestTalk.text.length -1]
+                // text: userDestTalk.text[userDestTalk.text.length -1]
+                text: urlUserDestTalk[urlUserDestTalk.length -1],
               });
             }
 
@@ -1088,7 +1104,8 @@ export class Server {
           } else {
 
             socket.emit('send-text-forPush', {
-              text: userDestTalk.text[userDestTalk.text.length -1]
+              // text: userDestTalk.text[userDestTalk.text.length -1]
+              text: urlUserDestTalk[urlUserDestTalk.length -1],
             });
           }
         }
@@ -1205,9 +1222,14 @@ export class Server {
         //// no connect case
         else {
 
+          const urlUserDestTalk = userDestTalk.text.map((text: any) => {
+            return createReturnPost(text);
+          });
+
           //// update textdata of fromUser
           socket.emit('update-text-list', {
-            textList: userDestTalk.text,
+            // textList: userDestTalk.text,
+            textList: urlUserDestTalk,
           });
 
 
@@ -1227,7 +1249,8 @@ export class Server {
               .to(room1)
               .to(room2)
               .emit('update-text-list', {
-                textList: userDestTalk.text,
+                // textList: userDestTalk.text,
+                textList: urlUserDestTalk,
               });
 
 
@@ -1401,9 +1424,16 @@ export class Server {
 
         });
 
+
+
+        const urlUserDestTalk = userDestTalk.text.map((text: any) => {
+          return createReturnPost(text);
+        });
+
         socket.emit('update-text-list', {
           // textList: textTalkOne.talk[0].text,
-          textList: userDestTalk.text,
+          // textList: userDestTalk.text,
+          textList: urlUserDestTalk,
         });
 
 

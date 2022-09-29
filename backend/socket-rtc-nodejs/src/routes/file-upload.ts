@@ -7,12 +7,15 @@ const fileUploadController = require('../controllers/file-upload');
 
 const { fileUpload, filesUpload } = require('../middleware/multer');
 
-router.post('/', 
-// fileUpload, 
-filesUpload, 
-fileUploadController.fileUpload);
+const isAuth = require('../middleware/is-auth');
 
-router.post('/delete-files', fileUploadController.deleteFiles);
-// router.get('/', fileUploadController.fileUpload);
+router.post('/', 
+  isAuth,
+  // fileUpload, 
+  filesUpload, 
+  fileUploadController.fileUpload
+);
+
+router.post('/delete-files',isAuth, fileUploadController.deleteFiles);
 
 module.exports = router;

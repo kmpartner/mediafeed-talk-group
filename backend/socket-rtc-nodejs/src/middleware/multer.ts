@@ -25,7 +25,8 @@ const fileFilter = (req: any, file: any, cb: any) => {
     file.mimetype === 'video/webm' ||
     file.mimetype === 'audio/mpeg' ||
     file.mimetype === 'audio/wav' ||
-    file.mimetype === 'audio/webm'
+    file.mimetype === 'audio/webm' ||
+    file.mimetype === 'application/pdf'
     ////....
   ) {
     cb(null, true);
@@ -44,7 +45,7 @@ const multerLimits = {
 
 exports.filesUpload = multer({
   storage: fileStorage,
-  limits: multerLimits,
+  // limits: multerLimits,
   fileFilter: fileFilter
 }).array('files', 1)
 
