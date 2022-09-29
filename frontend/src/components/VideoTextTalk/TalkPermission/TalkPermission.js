@@ -2,7 +2,7 @@ import React from 'react';
 import { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
-import { getUserAccessPermission } from '../../../util/talk-permission';
+import { getUserAccessPermission } from '../../../util/talk/talk-permission';
 import { useStore } from '../../../hook-store/store';
 import { BASE_URL } from '../../../App';
 // import './VideoTextTalk.css'

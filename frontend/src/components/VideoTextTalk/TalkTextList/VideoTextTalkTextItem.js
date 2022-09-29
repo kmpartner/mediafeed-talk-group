@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import Linkify from 'react-linkify';
 
 import VideoTextTalkModal from './VideoTextTalkModal';
+import VideoTextTalkTextFile from './VideoTextTalkTextFile';
 
 import classes from './VideoTextTalkTextItem.module.css';
 // import './VideoTextTalk.css'
@@ -122,6 +123,11 @@ const VideoTextTalkTextItem = (props) => {
   const talkElement = (
     // <li className={elementStyle}>
     <div className={elementStyle} style={colorStyle}>
+      
+      <VideoTextTalkTextFile 
+        inputData={inputData}
+      />
+
       <div className="textTalk-listElement-text">
         <Linkify componentDecorator={componentDecorator}>
           {inputData.text}

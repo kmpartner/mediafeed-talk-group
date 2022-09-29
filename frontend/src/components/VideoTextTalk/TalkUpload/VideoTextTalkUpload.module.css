@@ -1,0 +1,34 @@
+.talkUploadClose {
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.talkUploadCloseButton {
+  cursor: pointer;
+}
+
+.talkUploadSelectButtons {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  /* max-width: 10rem; */
+}
+
+.talkUploadPreview {
+  height: 100px;
+}
+
+.talkUploadSelectClose {
+  padding: 1rem 0;
+}
+
+.talkUploadTextInput {
+  padding: 1rem 0;
+}
+
+@media (min-width: 768px) {
+  .talkUploadSelectButtons {
+    flex-direction: row;
+  }
+}

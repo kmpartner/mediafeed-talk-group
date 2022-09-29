@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
 import SmallModal from '../../Modal/SmallModal';
-import VideoTextTalkUpload from './VideoTextTalkUpload';
+import VideoTextTalkUpload from '../TalkUpload/VideoTextTalkUpload';
 
 import classes from './VideoTextTalkInput.module.css';
 
@@ -64,6 +64,7 @@ const VideoTextTalkInput = props => {
               // textInput={props.textInput}
               noconnectDestUserId={props.noconnectDestUserId}
               noconnectTextPostHandler={props.noconnectTextPostHandler}
+              isTextPosting={props.isTextPosting}
             />
           </SmallModal>
         )}

@@ -50,3 +50,34 @@ export const talkFileUpload = async (url, token, files) => {
     throw err;
   }
 };
+
+
+export const deleteFiles = async (url, token, text, deleteFilePaths) => {
+  try {
+    const result = await fetch(url + '/file-upload/delete-files', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: text,
+        deleteFilePaths: deleteFilePaths,
+      }),
+    })
+
+    const resData = await result.json();
+
+    console.log(result, resData);
+
+    if (!result.ok) {
+      throw new Error('error occured');
+    }
+
+    return resData;
+    
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+}

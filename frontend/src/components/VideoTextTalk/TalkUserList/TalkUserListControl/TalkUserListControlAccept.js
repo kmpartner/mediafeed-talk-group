@@ -9,7 +9,7 @@ import SampleImage from "../../../Image/person-icon-50.jpg";
 
 import { 
   deleteAcceptUserId,
-} from '../../../../util/talk-permission';
+} from '../../../../util/talk/talk-permission';
 
 import { useStore } from "../../../../hook-store/store";
 

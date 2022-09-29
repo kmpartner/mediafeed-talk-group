@@ -11,7 +11,7 @@ import {
   deleteAcceptUserId,
   addRequestingUserId,
   addAcceptUserId,
-} from '../../../../util/talk-permission';
+} from '../../../../util/talk/talk-permission';
 
 import { useStore } from "../../../../hook-store/store";
 
