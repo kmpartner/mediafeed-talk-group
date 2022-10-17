@@ -1,3 +1,4 @@
+import image from "../../components/Image/Image";
 import { 
   createCompressedImage,
   generateBase64FromImage, 
@@ -8,7 +9,7 @@ export const createImagePreviews = async (files) => {
 
     const imageFiles = [];
     const b64Images = [];
-  
+    
     for (const file of files) {
       let image = file;
   
@@ -61,7 +62,11 @@ export const createImagePreviews = async (files) => {
       //   });
     }
   
-    return b64Images;
+    // return b64Images;
+    return { 
+      b64Images: b64Images, 
+      imageFiles: imageFiles,
+    };
   } catch(err) {
     console.log(err);
     throw err;

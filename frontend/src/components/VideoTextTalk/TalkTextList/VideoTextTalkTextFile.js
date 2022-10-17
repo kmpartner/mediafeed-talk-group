@@ -73,7 +73,8 @@ const VideoTextTalkTextFile = (props) => {
               setShowSepImageHandler(true);
             }}
           >
-            <Img style={{ maxWidth: "200px"}} 
+            <Img className={classes.textTalkFileImage}
+            // style={{ maxWidth: "200px"}} 
             // src={inputData.fileUrls[0]} 
             src={fileImageUrl}
             alt="image in text" 
@@ -125,7 +126,8 @@ const VideoTextTalkTextFile = (props) => {
     if (isVideoFile(fileExt)) {
       fileImageBody = (
         <div>
-          <video style={{ maxWidth : "200px" }}
+          <video className={classes.textTalkFileVideo}
+            // style={{ maxWidth : "200px" }}
             // id="video"
             id={fileImageUrl}
             controls
@@ -214,7 +216,8 @@ const VideoTextTalkTextFile = (props) => {
 
     if (isAudioFile(fileExt)) {
       fileImageBody = (
-        <audio style={{height: ""}} 
+        <audio className={classes.textTalkFile}
+        // style={{maxWidth:"100%"}}
         // src={inputData.fileUrls[0]}
         controls
         src={fileImageUrl}
@@ -227,9 +230,29 @@ const VideoTextTalkTextFile = (props) => {
         !isVideoFile(fileExt) && 
         !isAudioFile(fileExt)
     ) {
-      fileImageBody = (
-        <div>{fileImageUrl}</div>
-      )
+      if (fileImageUrl) {
+        const fileUrl = new URL(fileImageUrl);
+        const fileName = fileUrl.pathname.split('/').pop();
+        // console.log('fileName', fileName);
+        const cridIndex = fileName.indexOf('crid');
+        // console.log('cridIndex', cridIndex); 
+        const originalName = fileName.slice(cridIndex + 5);
+        
+        fileImageBody = (
+          <div className={classes.textTalkFile}>
+            <div>
+              {originalName}
+            </div>
+            <div>
+              <a style={{color: 'gray', textDecoration: "none" }}
+                href={fileImageUrl} target="_blank" rel="noopener noreferrer">
+                downlad-file
+              </a>
+            </div>
+          </div>
+        );
+      }
+      
     }
 
   }

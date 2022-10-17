@@ -46,7 +46,7 @@ const multerLimits = {
 exports.filesUpload = multer({
   storage: fileStorage,
   // limits: multerLimits,
-  fileFilter: fileFilter
+  // fileFilter: fileFilter
 }).array('files', 1)
 
 exports.fileUpload = multer({

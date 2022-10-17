@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
 import Loader from '../../Loader/Loader';
@@ -18,15 +18,29 @@ const VideoTextTalkTextList = (props) => {
     noconnectDestUserId,
     usersData,
     noconnectTextDeleteHandler,
+    getMoreNum,
+    setGetMoreNum,
+    noconnectGetMoreHandler,
+    isMoreText,
     isLoading,
   } = props;
   
 
   const [t] = useTranslation('translation');
 
+  const ref = useRef(null);
+
+
   const destUser = usersData.find(user => {
     return user.userId === noconnectDestUserId;
   });
+
+  const scrollToRef = () => {
+    ref.current.scrollIntoView({
+      // behavior: 'smooth',
+      // block: 'center',
+    });
+  };
 
   let textListBody;
 
@@ -34,17 +48,31 @@ const VideoTextTalkTextList = (props) => {
     textListBody = (
       <ul className="textTalk-list">{textInputList.map((inputData, index) => {
         // console.log(inputData);
-        return (
-          <div key={inputData._id}>
-            <VideoTextTalkTextItem 
-              inputData={inputData}
-              userId={userId}
-              destUser={destUser}
-              noconnectTextDeleteHandler={noconnectTextDeleteHandler}
-              isLoading={isLoading}
-            />
-          </div>
-        );
+        if (index === 0) {
+          return (
+            <div ref={ref} key={inputData._id}>
+              <VideoTextTalkTextItem 
+                inputData={inputData}
+                userId={userId}
+                destUser={destUser}
+                noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                isLoading={isLoading}
+              />
+            </div>
+          );
+        } else {
+          return (
+            <div key={inputData._id}>
+              <VideoTextTalkTextItem 
+                inputData={inputData}
+                userId={userId}
+                destUser={destUser}
+                noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                isLoading={isLoading}
+              />
+            </div>
+          );
+        }
       })}
       </ul>
     );
@@ -59,7 +87,22 @@ const VideoTextTalkTextList = (props) => {
           <Loader />
         </div>
       }
+      {textInputList.length > 0 && isMoreText && (
+        <span>
+          <button
+            onClick={() => { 
+              noconnectGetMoreHandler(noconnectDestUserId, getMoreNum + 1);
+              setGetMoreNum(getMoreNum + 1); 
+              scrollToRef();
+            }}
+          >
+            show-more-num-button
+          </button> {getMoreNum}
+        </span>
+      )}
       {textListBody}
+
+      {/* <button onClick={handleClick}>Scroll to element</button> */}
     </Fragment>
   );
 };

@@ -15,6 +15,19 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
+.textTalkFile {
+  max-width: 100%;
+}
+
+.textTalkFileImage {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.textTalkFileVideo {
+  width: 200px;
+  max-width: 100%;
+}
 /* @media (min-width: 768px) {
   .sepImageModal {
     width: 28rem;

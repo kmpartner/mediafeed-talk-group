@@ -71,25 +71,33 @@
 .groupTalk__textInputContainer {
   position: fixed;
   bottom: 0px;
-  height: 90px;
+  /* height: 90px; */
+  height: 130px;
   width: 100%;
 }
 
 .groupTalk__textInputElements {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  flex-direction: column;
 }
 
 .groupTalk__textInputTextarea {
-  width: 75%;
+  /* width: 75%; */
+  width: 90%;
 }
 
 .groupTalk__textInputPostButton {
   margin-top: 15px;
-  width: 22.5%; 
+  margin-top: 0;
+  /* width: 22.5%; */
+  width: 75%; 
   font-size: 0.75rem;
   font-weight: bolder;
+
+  display: flex;
+  gap: 10px;
 }
 
 .groupTalk__createResult {
@@ -138,7 +146,8 @@
 
 .groupTalkTextList-container {
   position: fixed;
-  bottom: 90px;
+  /* bottom: 90px; */
+  bottom: 130px;
   top: 145px;
   left: 0px;
   right: 0px;

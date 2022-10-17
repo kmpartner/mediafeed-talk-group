@@ -198,6 +198,7 @@
 .textTalk-container {
   position: fixed;
   bottom: 100px;
+  bottom: 130px;
   top: 110px;
   left: 0px;
   right: 0px;
@@ -205,6 +206,7 @@
   flex-direction: column;
   justify-content: space-between; */
   overflow-y: auto;
+  /* overflow-x: hidden; */
   /* height: 60vh; */
   /* width:100%; */
   /* margin-left:5%; */

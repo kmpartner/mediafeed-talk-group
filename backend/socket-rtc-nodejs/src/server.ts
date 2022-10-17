@@ -164,6 +164,10 @@ export class Server {
   }
 
   private handleSocketConnection(): void {
+    
+    const initialLoadNum = 25;
+    // const initialLoadNum = 6;
+
     //// initially check auth 
 
     let jwtUserId: string;
@@ -1046,12 +1050,16 @@ export class Server {
             return createReturnPost(text);
           });
 
+          const getMoreNum = data.getMoreNum || 1;
+
           // console.log(urlTextList);
 
           //// update textdata of fromUser
           socket.emit('update-text-list', {
             // textList: userDestTalk.text,
-            textList: urlUserDestTalk,
+            textList: urlUserDestTalk.slice( -1 * (getMoreNum*initialLoadNum + 1) ),
+            isMoreText: urlUserDestTalk.length > (getMoreNum*initialLoadNum + 1),
+            socketOnName: 'text-send',
           });
 
 
@@ -1069,7 +1077,10 @@ export class Server {
               .to(room2)
               .emit('update-text-list', {
                 // textList: userDestTalk.text,
-                textList: urlUserDestTalk,
+                // textList: urlUserDestTalk,
+                textList: urlUserDestTalk.slice( -1 * (getMoreNum*initialLoadNum + 1) ),
+                isMoreText: urlUserDestTalk.length > (getMoreNum*initialLoadNum + 1),
+                socketOnName: 'text-send',
               });
 
 
@@ -1226,10 +1237,15 @@ export class Server {
             return createReturnPost(text);
           });
 
+          const getMoreNum = data.getMoreNum || 1;
+
           //// update textdata of fromUser
           socket.emit('update-text-list', {
             // textList: userDestTalk.text,
-            textList: urlUserDestTalk,
+            // textList: urlUserDestTalk,
+            textList: urlUserDestTalk.slice( -1 * (getMoreNum*initialLoadNum - 1) ),
+            isMoreText: urlUserDestTalk.length > (getMoreNum*initialLoadNum - 1),
+            socketOnName: 'text-delete',
           });
 
 
@@ -1250,7 +1266,10 @@ export class Server {
               .to(room2)
               .emit('update-text-list', {
                 // textList: userDestTalk.text,
-                textList: urlUserDestTalk,
+                // textList: urlUserDestTalk,
+                textList: urlUserDestTalk.slice( -1 * (getMoreNum*initialLoadNum - 1) ),
+                isMoreText: urlUserDestTalk.length > (getMoreNum*initialLoadNum - 1),
+                socketOnName: 'text-delete',
               });
 
 
@@ -1430,16 +1449,61 @@ export class Server {
           return createReturnPost(text);
         });
 
+        const getMoreNum = data.getMoreNum || 1;
+
         socket.emit('update-text-list', {
           // textList: textTalkOne.talk[0].text,
           // textList: userDestTalk.text,
-          textList: urlUserDestTalk,
+          // textList: urlUserDestTalk,
+          textList: urlUserDestTalk.slice(-1*getMoreNum*initialLoadNum),
+          isMoreText: urlUserDestTalk.length > getMoreNum*initialLoadNum,
         });
 
 
       });
 
 
+      socket.on('noconnect-get-more', async (data) => {
+        console.log('noconnect-get-more data', data);
+        const user = data.user;
+
+        if (jwtUserId !== user.userId) {
+          throw new Error('not authenticated');
+        }
+
+        const talkWithDest = await TextTalk.findOne({
+          userId: user.userId,
+          'talk.pairId': `${user.userId}-${data.destUser.userId}`
+        });
+
+
+        if (talkWithDest) {
+          const userDestTalk = talkWithDest.talk.find((talk: any) => {
+            return talk.pairId === `${user.userId}-${data.destUser.userId}`
+          });
+
+          if (userDestTalk) {
+            const urlUserDestTalk = userDestTalk.text.map((text: any) => {
+              return createReturnPost(text);
+            });
+    
+            const getMoreNum = data.getMoreNum || 1;
+    
+            socket.emit('update-text-list', {
+              // textList: textTalkOne.talk[0].text,
+              // textList: userDestTalk.text,
+              // textList: urlUserDestTalk,
+              textList: urlUserDestTalk.slice(-1*getMoreNum*initialLoadNum),
+              isMoreText: urlUserDestTalk.length > getMoreNum*initialLoadNum,
+              socketOnName: 'noconnect-get-more',
+            });
+          }
+        }
+  
+      });
+
+
+      
       //// handle push notification for text send
       handlePushNotification(socket);
 

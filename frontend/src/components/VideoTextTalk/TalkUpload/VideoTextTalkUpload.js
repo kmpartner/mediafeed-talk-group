@@ -44,11 +44,20 @@ const VideoTextTalkUpload = props => {
   const [textInput, setTextInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [imagesData, setImagesData] = useState();
+
   useEffect(() => {
     if (selectedFiles.length > 0) {
       createImagePreviewsHandler(selectedFiles);
     }
   },[selectedFiles]);
+
+  useEffect(() => {
+    if (imagesData) {
+      console.log('iamgesData', imagesData);
+      // createImagePreviewsHandler(selectedFiles);
+    }
+  },[imagesData]);
 
 
   const fileSelectHandler = (event) => {
@@ -141,7 +150,9 @@ const VideoTextTalkUpload = props => {
 
       const previews = await createImagePreviews(files);
       console.log(previews);
-      setFilePreviews(previews);
+      // setFilePreviews(previews);
+      setFilePreviews(previews.b64Images);
+      setImagesData(previews);
 
       setIsLoading(false);
     } catch(err) {
@@ -183,36 +194,39 @@ const VideoTextTalkUpload = props => {
 
       {!selectedType && (
         <div>
-          <div>select-file-type</div>
+          <div className={classes.talkUploadTitle}>
+            select-file-type
+          </div>
           <div className={classes.talkUploadSelectButtons}>
-
-            <button 
+            <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('image') }}
             >
               image-file
-            </button>
-            <button
+            </Button>
+            <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('video') }}
             >
               video-file
-            </button>
-            <button
+            </Button>
+            <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('audio') }}
             >
               audio-file
-            </button>
-            <button
+            </Button>
+            <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('other') }}
             >
               other-file
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {selectedType === 'image' && (
         <div>
-          <div>select-image</div>
+          <div className={classes.talkUploadSelectFileTitle}>
+            select-image
+          </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
@@ -222,7 +236,9 @@ const VideoTextTalkUpload = props => {
       )}
       {selectedType === 'video' && (
         <div>
-          <div>select-video</div>
+          <div className={classes.talkUploadSelectFileTitle}>
+            select-video
+          </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
@@ -232,7 +248,9 @@ const VideoTextTalkUpload = props => {
       )}
       {selectedType === 'audio' && (
         <div>
-          <div>select-audio</div>
+          <div className={classes.talkUploadSelectFileTitle}>
+            select-audio
+          </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
@@ -242,11 +260,13 @@ const VideoTextTalkUpload = props => {
       )}
       {selectedType === 'other' && (
         <div>
-          <div>select-other</div>
+          <div className={classes.talkUploadSelectFileTitle}>
+            select-other
+          </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
-            accept=".pdf" 
+            // accept=".pdf" 
           />
         </div>
       )}
@@ -260,45 +280,42 @@ const VideoTextTalkUpload = props => {
       )}
 
       {selectedType && (
-        <div className={classes.talkUploadSelectClose}>
-          <button
+        <div className={classes.talkUploadGoback}>
+          <Button mode="" type=""
             onClick={() => { resetSelectedFiles(); }}
           >
             go-back
-          </button>
+          </Button>
         </div>
       )}
 
-      <div className={classes.talkUploadTextInput}>
-        {/* <input 
-          type="text" 
-          placeholder='text-here'
-          onChange={textInputChangeHandler}
-        /> */}
-        <InputEmoji
-          type="text"
-          label=""
-          // placeholder="text input...."
-          placeholder={t('videoTalk.text10')}
-          control="textarea"
-          getInput={getInputHandler}
-          onChange={textInputHandlerEmoji}
-          value={textInput}
-          rows="3"
-          pickerStyle={{ position: 'fixed', top: '60px', bottom:'90px', left: '0px', zIndex: '300', maxHeight:'90vh', maxWidth:'75%', overflow:'auto'}}
-        />
-      </div>
+      {selectedFiles.length > 0 && (
+        <div className={classes.talkUploadTextInput}>
+          <InputEmoji
+            type="text"
+            label=""
+            // placeholder="text input...."
+            placeholder={t('videoTalk.text10')}
+            control="textarea"
+            getInput={getInputHandler}
+            onChange={textInputHandlerEmoji}
+            value={textInput}
+            rows="3"
+            pickerStyle={{ position: 'fixed', top: '60px', bottom:'90px', left: '0px', zIndex: '300', maxHeight:'90vh', maxWidth:'75%', overflow:'auto'}}
+          />
+        </div>
+      )}
 
-
-      <div>
-        <button
+    {selectedFiles.length > 0 && (
+      <div className={classes.talkUploadActionButtons}>
+        <Button mode="flat" type="submit"
           disabled={isTextPosting || isLoading}
           loading={isTextPosting || isLoading}
           onClick={() => {showUploadModalHandler(false); }}
         >
           cancel-close
-        </button>
-        <button
+        </Button>
+        <Button mode="raised" type="submit"
           disabled={isTextPosting || isLoading}
           loading={isTextPosting || isLoading}
           onClick={() => {
@@ -306,13 +323,14 @@ const VideoTextTalkUpload = props => {
                 // BASE_URL,
                 SOCKET_URL,
                 localStorage.getItem('token'),
-                selectedFiles,
+                imagesData.imageFiles, //selectedFiles,
               );
           }}
         >
-          upload-and-post-button
-        </button>
+          upload-and-post
+        </Button>
       </div>
+    )}
 
       {(isTextPosting || isLoading) && (
         <div>

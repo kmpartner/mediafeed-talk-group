@@ -81,7 +81,7 @@ const VideoTextTalkUploadPreview = props => {
     if (selectedType === 'audio') {
       previewBody = (
         <div>
-          <audio 
+          <audio className={classes.talkUploadPreview}
             // className={classes.talkUploadPreview}
             src={filePreviews[0]} controls height=""
             alt="selected file preview" 
@@ -102,7 +102,9 @@ const VideoTextTalkUploadPreview = props => {
 
   return (
     <Fragment>
-      <div>{previewBody}</div>
+      <div className={classes.talkUploadPreviewContainer}>
+        {previewBody}
+      </div>
       {/* <div>
         {JSON.stringify(videoDimenstions)}
       </div> */}

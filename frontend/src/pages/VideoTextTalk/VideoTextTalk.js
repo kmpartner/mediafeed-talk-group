@@ -104,6 +104,9 @@ const VideoTextTalk = (props) => {
 
   const [favoriteUsers, setFavoriteUsers] = useState([]);
   const [editFavoriteUsersResult, setEditFavoriteUsersResult] = useState('');
+  
+  const [getMoreNum, setGetMoreNum] = useState(1);
+  const [isMoreText, setIsMoreText] = useState(false);
   // const [emitUserInfo, setEmitUserInfo] = useState({});
   // let socket;
 
@@ -298,8 +301,15 @@ const VideoTextTalk = (props) => {
   useEffect(() => {
     // var div = document.getElementById('text-talk');
     // console.log('div', div);
-    scrollToBottom('text-talk');
-  }, [showTextTalk, textInputList.length]);
+    const initialLoadNum = 25;
+    
+    if (textInputList.length <= initialLoadNum) {
+      scrollToBottom('text-talk');
+    }
+  }, 
+  // [showTextTalk]
+  [showTextTalk, textInputList.length]
+  );
 
 
   useEffect(() => {
@@ -382,6 +392,8 @@ const VideoTextTalk = (props) => {
     }
 
   }, [userListObj]);
+
+
 
   async function callUser(socketId) {
     const offer = await peerConnection.createOffer();
@@ -746,8 +758,8 @@ const VideoTextTalk = (props) => {
     socket.on("update-text-list", data => {
       console.log('update-text-list data', data);
 
-      setIsLoading(false);
-      setIsTextPosting(false);
+      // setIsLoading(false);
+      // setIsTextPosting(false);
 
       if (data.textList.length > 0 && data.textList.length !== textInputList.length && 
         data.textList[data.textList.length -1].fromUserId === userId
@@ -763,7 +775,16 @@ const VideoTextTalk = (props) => {
 
       }
 
-      // setTextInputList(data.textList);
+      setIsMoreText(data.isMoreText);
+
+      if (data.socketOnName === 'text-send') {
+        scrollToBottom('text-talk');
+      }
+
+      
+      setIsLoading(false);
+      setIsTextPosting(false);
+
     });
 
     socket.on('new-text-send', data => {
@@ -932,6 +953,9 @@ const VideoTextTalk = (props) => {
 
     setFavoriteUsers([]);
     setEditFavoriteUsersResult('');
+
+    setGetMoreNum(1);
+    setIsMoreText(false);
   }
 
 
@@ -1155,6 +1179,8 @@ const VideoTextTalk = (props) => {
       token: localStorage.getItem('token'),
       fileUrls: filePaths ? filePaths : [],
       filePaths: filePaths ? filePaths : [],
+
+      getMoreNum: getMoreNum,
     });
 
     deleteDraftInput('talk', textTalkId);
@@ -1166,6 +1192,8 @@ const VideoTextTalk = (props) => {
     socketState.emit('text-delete', {
       userId: userId,
       text: text,
+
+      getMoreNum: getMoreNum,
     });
 
     setIsLoading(true);
@@ -1198,6 +1226,23 @@ const VideoTextTalk = (props) => {
         });
       }
     }
+  };
+
+  const noconnectGetMoreHandler = (destUserId, getMoreNum) => {
+    socketState.emit('noconnect-get-more', {
+      user: {
+        userId: userId,
+        userName: userName,
+        socketId: userSocketId,
+      },
+      destUser: {
+        socketId: '',
+        userId: destUserId,
+      },
+      getMoreNum: getMoreNum,
+    });
+
+    setIsLoading(true);
   };
 
 
@@ -1281,6 +1326,7 @@ const VideoTextTalk = (props) => {
   const showTextInputElementHandler = () => {
     setShowTextInputElement(!showTextInputElement);
   };
+
 
 
 
@@ -1690,7 +1736,7 @@ const VideoTextTalk = (props) => {
                   /> */}
 
                   <div id="text-talk" className="textTalk-container"
-                    style={!showTextInputElement ? {bottom: "5px"} : {}}
+                    style={!showTextInputElement ? {bottom: "15px"} : {}}
                   >
                     {/* {textList} */}
                     <VideoTextTalkTextList 
@@ -1700,6 +1746,10 @@ const VideoTextTalk = (props) => {
                       favoriteUsers={favoriteUsers}
                       editFavoriteUsersHandler={editFavoriteUsersHandler}
                       editFavoriteUsersResult={editFavoriteUsersResult}
+                      getMoreNum={getMoreNum}
+                      setGetMoreNum={setGetMoreNum}
+                      noconnectGetMoreHandler={noconnectGetMoreHandler}
+                      isMoreText={isMoreText}
                       isLoading={isLoading}
                     />
                   </div>
@@ -1781,7 +1831,7 @@ const VideoTextTalk = (props) => {
                   />
 
                   <div id="text-talk" className="textTalk-container"
-                    style={!showTextInputElement ? {bottom: "5px"} : {}}
+                    style={!showTextInputElement ? {bottom: "15px"} : {}}
                   >
                     <VideoTextTalkTextList 
                       textInputList={textInputList}
@@ -1793,6 +1843,10 @@ const VideoTextTalk = (props) => {
                       editFavoriteUsersHandler={editFavoriteUsersHandler}
                       editFavoriteUsersResult={editFavoriteUsersResult}
                       noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                      getMoreNum={getMoreNum}
+                      setGetMoreNum={setGetMoreNum}
+                      noconnectGetMoreHandler={noconnectGetMoreHandler}
+                      isMoreText={isMoreText}
                       isLoading={isLoading}
                     />
                   </div>

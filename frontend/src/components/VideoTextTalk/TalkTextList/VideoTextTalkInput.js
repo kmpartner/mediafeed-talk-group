@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
+import Backdrop from '../../Backdrop/Backdrop';
 import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
 import SmallModal from '../../Modal/SmallModal';
@@ -52,21 +53,24 @@ const VideoTextTalkInput = props => {
         >
           Post
         </Button>
-        <span 
+        <Button mode="" type=""
         onClick={() => { showUploadModalHandler(true); }}
         >
           upload-file
-        </span>
+        </Button>
         {showUploadModal && (
-          <SmallModal style={classes.uploadModal}>
-            <VideoTextTalkUpload
-              showUploadModalHandler={showUploadModalHandler}
-              // textInput={props.textInput}
-              noconnectDestUserId={props.noconnectDestUserId}
-              noconnectTextPostHandler={props.noconnectTextPostHandler}
-              isTextPosting={props.isTextPosting}
-            />
-          </SmallModal>
+          <div>
+            <Backdrop onClick={() => { showUploadModalHandler(false); }}/>
+            <SmallModal style={classes.uploadModal}>
+              <VideoTextTalkUpload
+                showUploadModalHandler={showUploadModalHandler}
+                // textInput={props.textInput}
+                noconnectDestUserId={props.noconnectDestUserId}
+                noconnectTextPostHandler={props.noconnectTextPostHandler}
+                isTextPosting={props.isTextPosting}
+              />
+            </SmallModal>
+          </div>
         )}
         {/* {!showUploadModal && (
           <SmallModal>small-modal-content</SmallModal>
