@@ -111,6 +111,8 @@ const VideoTextTalk = (props) => {
   
   const [listScrollTop, setListScrollTop] = useState(0);
 
+  const [initialLoad, setInitialLoad] = useState(true);
+
   // const [emitUserInfo, setEmitUserInfo] = useState({});
   // let socket;
 
@@ -302,18 +304,27 @@ const VideoTextTalk = (props) => {
     console.log(textInputList);
   }, [textInputList.length])
 
-  useEffect(() => {
-    // // match both front and backend
-    const initialLoadNum = 25;
-    // const initialLoadNum = 6;
+  // useEffect(() => {
+  //   // // match both front and backend
+  //   const initialLoadNum = 25;
+  //   // const initialLoadNum = 6;
     
-    if (textInputList.length <= initialLoadNum) {
+  //   if (textInputList.length <= initialLoadNum) {
+  //     scrollToBottom('text-talk');
+  //   }
+  // }, 
+  // // [showTextTalk]
+  // [showTextTalk, textInputList.length]
+  // );
+
+  useEffect(() => {
+    const textTalkEl = document.getElementById('text-talk');
+
+    if (textTalkEl && textInputList.length > 0 && initialLoad) {
       scrollToBottom('text-talk');
+      setInitialLoad(false);
     }
-  }, 
-  // [showTextTalk]
-  [showTextTalk, textInputList.length]
-  );
+  },[showTextTalk, textInputList]);
 
 
   useEffect(() => {
@@ -978,6 +989,8 @@ const VideoTextTalk = (props) => {
     setIsMoreText(false);
 
     setListScrollTop(0);
+
+    setInitialLoad(true);
   }
 
 
