@@ -27,11 +27,11 @@ const InputEmoji = props => {
   const [diffIndex, setDiffIndex] = useState('');
   const [inputPosition, setInputPosition] = useState(0);
 
-  useEffect(() => {
-    if (props.previousContentInput) {
-      setInputEmoji(props.previousContentInput);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (props.previousContentInput) {
+  //     setInputEmoji(props.previousContentInput);
+  //   }
+  // }, []);
 
   useEffect(() => {
     props.getInput(inputEmoji);

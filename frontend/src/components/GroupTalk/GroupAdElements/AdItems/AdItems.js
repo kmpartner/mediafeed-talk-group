@@ -13,7 +13,7 @@ import classes from "./AdItems.module.css";
 // import "./ImagePreviewContents.css"
 
 const AdItems = (props) => {
-  // console.log("AdItems.js-props", props);
+  console.log("AdItems.js-props", props);
   const { ad, adType, activeList } = props;
 
   let body300x65;

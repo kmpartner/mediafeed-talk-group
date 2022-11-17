@@ -23,10 +23,12 @@ const getTest = async (req, res, next) => {
 
 const getNearAdElements = async (req, res, next) => {
   try {
+    console.log('req.query', req.query);
     const location = req.query.userLocation ? req.query.userLocation : '';
     const language = req.query.selectLanguage || req.headers["accept-language"].split(",")[0];
+    const adType = req.query.adType;
 
-    const result = await fetch(adNetworkDataUrl + `/ad-filter-element/near-ad-elements?userLocation=${location}&selectLanguage=${language}`, {
+    const result = await fetch(adNetworkDataUrl + `/ad-filter-element/near-ad-elements?userLocation=${location}&selectLanguage=${language}&adType=${adType}`, {
       headers: req.headers,
     });
 

@@ -26,6 +26,16 @@ const configureStore = () => {
         }
       };
     },
+    SET_VIDEOADLIST: (state, payload) => {
+      return {
+        // ...state,
+        adStore: {
+          ...state.adStore,
+          videoAdList: payload,
+          adListGetDate: Date.now(),
+        }
+      };
+    },
     // SET_FEEDLIST_DISPLAYED_ADLIST: (state, payload) => {
     //   let addedList = state.adStore.feedListDisplayedAdList.concat(payload);
     //   addedList = _.uniqBy(addedList, function(element) {
@@ -46,6 +56,7 @@ const configureStore = () => {
     adStore: {
       adList: [],
       adListGetDate: null,
+      videoAdList: [],
       // feedListDisplayedAdList: [],
     }
   });

@@ -39,10 +39,10 @@ const textSchema = {
         type: Object
     },
     fileUrls: [{
-            typ: String,
+            type: String,
         }],
     filePaths: [{
-            typ: String,
+            type: String,
         }],
 };
 const textTalkSchema = Schema({

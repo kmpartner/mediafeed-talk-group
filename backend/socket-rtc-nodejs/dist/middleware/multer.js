@@ -7,7 +7,7 @@ const fileStorage = multer.diskStorage({
         cb(null, 'talk-files');
     },
     filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + '-' + file.originalname);
+        cb(null, new Date().toISOString() + `-${Math.floor(Math.random() * Math.pow(10, 6)).toString()}crid-` + file.originalname);
     }
 });
 const fileFilter = (req, file, cb) => {
@@ -17,7 +17,13 @@ const fileFilter = (req, file, cb) => {
         file.mimetype === 'image/gif' ||
         file.mimetype === 'image/webp' ||
         file.mimetype === 'video/mp4' ||
-        file.mimetype === 'video/webm') {
+        file.mimetype === 'video/webm' ||
+        file.mimetype === 'audio/mpeg' ||
+        file.mimetype === 'audio/wav' ||
+        file.mimetype === 'audio/webm' ||
+        file.mimetype === 'application/pdf'
+    ////....
+    ) {
         cb(null, true);
     }
     else {
@@ -26,16 +32,29 @@ const fileFilter = (req, file, cb) => {
 };
 const multerLimits = {
     fileSize: process.env.MULTER_SIZE_LIMIT_MB
-        ? 1000 * 1000 * Number(process.env.MULTER_SIZE_LIMIT_MB)
+        ? Math.pow(10, 6) * Number(process.env.MULTER_SIZE_LIMIT_MB)
         : 1024 * 1024 * 5
 };
-// exports.imageUpload = multer({
-//   storage: fileStorage,
-//   limits: multerLimits,
-//   fileFilter: fileFilter
-// }).single('image')
+exports.filesUpload = multer({
+    storage: fileStorage,
+}).array('files', 1);
 exports.fileUpload = multer({
     storage: fileStorage,
     limits: multerLimits,
     fileFilter: fileFilter
-}).single('files');
+}).single('file');
+const getFileType = (mimetype) => {
+    console.log(mimetype);
+    if (mimetype.split('/')[0] === 'image') {
+        return 'image';
+    }
+    if (mimetype.split('/')[0] === 'video') {
+        return 'video';
+    }
+    if (mimetype.split('/')[0] === 'audio') {
+        return 'audio';
+    }
+    else {
+        return mimetype;
+    }
+};

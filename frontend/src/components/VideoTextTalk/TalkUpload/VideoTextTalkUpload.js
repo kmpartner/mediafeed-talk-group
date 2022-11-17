@@ -45,10 +45,19 @@ const VideoTextTalkUpload = props => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [imagesData, setImagesData] = useState();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [sizeError, setSizeError] = useState('');
 
   useEffect(() => {
     if (selectedFiles.length > 0) {
+      console.log('selectedFiles', selectedFiles);
       createImagePreviewsHandler(selectedFiles);
+      setErrorMessage('');
+      setSizeError('');
+
+      if (selectedFiles[0].size > 100*10**6) {
+        setSizeError('file size should be less than 100MB');
+      }
     }
   },[selectedFiles]);
 
@@ -86,6 +95,7 @@ const VideoTextTalkUpload = props => {
   const talkFileUploadHandler = async (url, token, files) => {
     try {
       setIsLoading(true);
+      setErrorMessage('');
       // const fileList = [];
       
       // for (const file of files) {
@@ -103,6 +113,8 @@ const VideoTextTalkUpload = props => {
       if (userData) {
         formData.append('userId', userData.userId);
       }
+
+      formData.append('toUserId', noconnectDestUserId);
 
       // formData.append('file', files[0]);
   
@@ -139,7 +151,7 @@ const VideoTextTalkUpload = props => {
     } catch(err) {
       console.log(err);
       setIsLoading(false);
-
+      setErrorMessage('File Upload Failed');
       throw err;
     }
   };
@@ -180,8 +192,7 @@ const VideoTextTalkUpload = props => {
   // }
 
   let uploadBody;
-
-
+  
   uploadBody = (
     <div>
       <div className={classes.talkUploadClose}>
@@ -271,6 +282,16 @@ const VideoTextTalkUpload = props => {
         </div>
       )}
 
+      {selectedType && (
+        <div>
+          <div>File size shoud be less than 100MB, File with more than 90 second length will be trimed.</div>
+          <div>(accept file type, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
+          {sizeError && (
+            <div><strong>{sizeError}</strong></div>
+          )}
+        </div>
+      )}
+
       {selectedFiles && (
         <VideoTextTalkUpladPreview 
           filePreviews={filePreviews}
@@ -306,37 +327,46 @@ const VideoTextTalkUpload = props => {
         </div>
       )}
 
-    {selectedFiles.length > 0 && (
-      <div className={classes.talkUploadActionButtons}>
-        <Button mode="flat" type="submit"
-          disabled={isTextPosting || isLoading}
-          loading={isTextPosting || isLoading}
-          onClick={() => {showUploadModalHandler(false); }}
-        >
-          cancel-close
-        </Button>
-        <Button mode="raised" type="submit"
-          disabled={isTextPosting || isLoading}
-          loading={isTextPosting || isLoading}
-          onClick={() => {
-              talkFileUploadHandler(
-                // BASE_URL,
-                SOCKET_URL,
-                localStorage.getItem('token'),
-                imagesData.imageFiles, //selectedFiles,
-              );
-          }}
-        >
-          upload-and-post
-        </Button>
-      </div>
-    )}
 
       {(isTextPosting || isLoading) && (
         <div>
           <Loader />
         </div>
       )}
+
+
+      {selectedFiles.length > 0 && (
+        <div className={classes.talkUploadActionButtons}>
+          <Button mode="flat" type="submit"
+            disabled={isTextPosting || isLoading}
+            loading={isTextPosting || isLoading}
+            onClick={() => {showUploadModalHandler(false); }}
+          >
+            cancel-close
+          </Button>
+          <Button mode="raised" type="submit"
+            disabled={isTextPosting || isLoading || sizeError}
+            loading={isTextPosting || isLoading}
+            onClick={() => {
+                talkFileUploadHandler(
+                  // BASE_URL,
+                  SOCKET_URL,
+                  localStorage.getItem('token'),
+                  imagesData.imageFiles, //selectedFiles,
+                );
+            }}
+          >
+            upload-and-post
+          </Button>
+        </div>
+      )}
+
+      {selectedFiles.length > 0 && errorMessage && (
+        <strong className={classes.talkUploadError}>
+          {errorMessage}
+        </strong>
+      )}
+
     </div>
   );
 

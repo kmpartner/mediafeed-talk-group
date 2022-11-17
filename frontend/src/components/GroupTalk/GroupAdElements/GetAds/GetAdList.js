@@ -2,7 +2,9 @@ import React from 'react';
 import { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
-import { getNearAdElements } from '../../../../util/ad-visit';
+import { 
+  getNearAdElements,
+ } from '../../../../util/ad-visit';
 import { useStore } from '../../../../hook-store/store';
 
 import { ADNETWORK_URL } from '../../../../App';
@@ -15,19 +17,22 @@ const GetAdList = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  // console.log('store GetAdList.js', store);
+  console.log('store GetAdList.js', store);
 
   useEffect(() => {
     if (store.adStore.adList.length === 0 && store.bowserData) {
       const nearAds = getNearAdElementsHandler();
       dispatch('SET_ADLIST', nearAds);
+
+      getNearAdElementsHandler('video');
     }
   },[store.bowserData]);
 
   
-  const getNearAdElementsHandler = async () => {
+  const getNearAdElementsHandler = async (adType) => {
     try {
-      const adsData = await getNearAdElements(ADNETWORK_URL, 'token');
+      // const adsData = await getNearAdElements(ADNETWORK_URL, 'token');
+      const adsData = await getNearAdElements(ADNETWORK_URL, 'token', adType);
       console.log(adsData);
       // setAdList(adsData.data.ads);
 
@@ -58,9 +63,12 @@ const GetAdList = (props) => {
 				}
       }
 
-      // console.log('adList after filter', adList);
-
-      dispatch('SET_ADLIST', adList);
+      console.log('adList after filter', adList);
+      if (adType === 'video') {
+        dispatch('SET_VIDEOADLIST', adList);
+      } else {
+        dispatch('SET_ADLIST', adList);
+      }
     } catch (err) {
       console.log(err);
     }

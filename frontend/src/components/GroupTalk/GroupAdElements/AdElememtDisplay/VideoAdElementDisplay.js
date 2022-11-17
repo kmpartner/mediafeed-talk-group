@@ -8,6 +8,7 @@ import Loader from '../../../Loader/Loader';
 // import RightContents from '../GroupRightElements/RightContents';
 
 import AdItems from '../AdItems/AdItems';
+import VideoAdItems from '../AdItems/VideoAdItems';
 // import GetAdList from '../GetAds/GetAdList';
 
 import { storeClickData, getNearAdElements, createDisplayAd } from '../../../../util/ad-visit';
@@ -20,10 +21,10 @@ import { ADNETWORK_URL } from '../../../../App';
 
 // import classes from './GroupTopElements.module.css';
 
-const AdElementDisplay = (props) => {
+const VideoAdElementDisplay = (props) => {
   // console.log('AdElementDisplay-props', props);
 
-  const { adType, adPlaceId } = props;
+  const { adType, adPlaceId, setPlayState } = props;
 
   const currentUrl = new URL(window.location.href);
   const queryParams = currentUrl.searchParams;
@@ -160,31 +161,45 @@ const AdElementDisplay = (props) => {
   };
 
 
-  let adElementDisplayBody;
-
-  adElementDisplayBody = (
-    <AdItems 
+  const adElementDisplayBody = (
+    <VideoAdItems
       // ad={adList[0]} 
-      ad={displayAd}
+      ad={displayVideoAd}
       // adType={adType ? adType : '300x65'} 
       adType={adType} 
       // roomIdParam={roomIdParam}
-      activeList={activeList}
+      activeList={activeVideoList}
+      isVisible={isVisible}
+      setPlayState={setPlayState}
     />
   );
+  
+  // adElementDisplayBody = (
+  //   <AdItems 
+  //     // ad={adList[0]} 
+  //     ad={displayAd}
+  //     // adType={adType ? adType : '300x65'} 
+  //     adType={adType} 
+  //     // roomIdParam={roomIdParam}
+  //     activeList={activeList}
+  //   />
+  // );
 
-  if (adType === 'video') {
-    adElementDisplayBody = (
-      <AdItems 
-        // ad={adList[0]} 
-        ad={displayVideoAd}
-        // adType={adType ? adType : '300x65'} 
-        adType={adType} 
-        // roomIdParam={roomIdParam}
-        activeList={activeVideoList}
-      />
-    );
-  }
+  // // if (adType === 'video') {
+  // if (adType.startsWith('video')) {
+  //   adElementDisplayBody = (
+  //     <VideoAdItems
+  //       // ad={adList[0]} 
+  //       ad={displayVideoAd}
+  //       // adType={adType ? adType : '300x65'} 
+  //       adType={adType} 
+  //       // roomIdParam={roomIdParam}
+  //       activeList={activeVideoList}
+  //       isVisible={isVisible}
+  //       setPlayState={setPlayState}
+  //     />
+  //   );
+  // }
 
   // if (isLoading) {
   //   adElementDisplayBody = <div>...loading...</div>;
@@ -250,4 +265,4 @@ const AdElementDisplay = (props) => {
   );
 }
 
-export default AdElementDisplay;
+export default VideoAdElementDisplay;

@@ -465,30 +465,30 @@ const GroupTalk = (props) => {
 
 
   //// store draft text in localstorage
-  useEffect(() => {
-    if (groupTalkId) {
+  // useEffect(() => {
+  //   if (groupTalkId) {
 
-      //// check draft text in localstorage and set draft in input
-      if (!groupTextInput) {
-        const lsDraft = getDraftInput('group', groupTalkId);
+  //     //// check draft text in localstorage and set draft in input
+  //     if (!groupTextInput) {
+  //       const lsDraft = getDraftInput('group', groupTalkId);
 
-        if (lsDraft) {
-          setGroupTextInput(lsDraft);
-        }
-      }
+  //       if (lsDraft) {
+  //         setGroupTextInput(lsDraft);
+  //       }
+  //     }
 
-      //// text input length is longer than x store draft in localstorage
-      if (groupTextInput && groupTextInput.length >= 10) {
-        storeDraftInput('group', groupTalkId, groupTextInput);
-      }
+  //     //// text input length is longer than x store draft in localstorage
+  //     if (groupTextInput && groupTextInput.length >= 10) {
+  //       storeDraftInput('group', groupTalkId, groupTextInput);
+  //     }
 
-      //// text input length is less than x delete draft from localstorage
-      if (groupTextInput && groupTextInput.length < 10) {
-        deleteDraftInput('group', groupTalkId);
-      }
+  //     //// text input length is less than x delete draft from localstorage
+  //     if (groupTextInput && groupTextInput.length < 10) {
+  //       deleteDraftInput('group', groupTalkId);
+  //     }
 
-    }
-  },[groupTalkId, groupTextInput]);
+  //   }
+  // },[groupTalkId, groupTextInput]);
   
   // useEffect(() => {
   //   if (!userSocketId && userId && userName && usersData) {

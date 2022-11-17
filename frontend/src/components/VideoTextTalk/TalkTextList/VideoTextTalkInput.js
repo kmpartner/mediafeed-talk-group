@@ -53,11 +53,11 @@ const VideoTextTalkInput = props => {
         >
           Post
         </Button>
-        <Button mode="" type=""
+        {/* <Button mode="" type=""
         onClick={() => { showUploadModalHandler(true); }}
         >
           upload-file
-        </Button>
+        </Button> */}
         {showUploadModal && (
           <div>
             <Backdrop onClick={() => { showUploadModalHandler(false); }}/>

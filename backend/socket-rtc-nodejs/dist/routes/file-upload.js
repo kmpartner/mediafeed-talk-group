@@ -4,6 +4,10 @@ const express = require('express');
 const router = express.Router();
 // const textTalkController = require('../controllers/text-talk');
 const fileUploadController = require('../controllers/file-upload');
-router.post('/', fileUploadController.fileUpload);
-// router.get('/', fileUploadController.fileUpload);
+const { fileUpload, filesUpload } = require('../middleware/multer');
+const isAuth = require('../middleware/is-auth');
+router.post('/', isAuth, 
+// fileUpload, 
+filesUpload, fileUploadController.fileUpload);
+router.post('/delete-files', isAuth, fileUploadController.deleteFiles);
 module.exports = router;

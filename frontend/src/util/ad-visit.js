@@ -42,16 +42,17 @@ export const storeClickData = (url, token, adElementId, adPlaceId, type,) => {
   });
 };
 
-export const getNearAdElements = (url, token) => {
+export const getNearAdElements = (url, token, adType) => {
   return new Promise(async (resolve, reject) => {
     try {
       const lsUserLocation = localStorage.getItem('userLocation') ? localStorage.getItem('userLocation') : '';
       const lsUserSelectLng = localStorage.getItem('userSelectLng') 
         ? localStorage.getItem('userSelectLng') 
         : navigator.language;
-      
+      const qAdType = adType || '';
+
       // const response = await fetch(url + `/ad-filter-element/near-ad-elements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
-      const response = await fetch(url + `/ad/near-adelements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}`, {
+      const response = await fetch(url + `/ad/near-adelements?userLocation=${lsUserLocation}&selectLanguage=${lsUserSelectLng}&adType=${qAdType}`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + token,

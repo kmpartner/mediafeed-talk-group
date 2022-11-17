@@ -10,7 +10,8 @@ import { getUserDataForStore } from '../../util/user';
 
 import GetWindowData from '../../components/UI/getWindowData';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
-
+import VideoAdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/VideoAdElementDisplay';
+import VideoAdElementTime from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/VideoAdElementTime';
 import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
 import './NotPageFound.css';
 
@@ -281,8 +282,17 @@ const NotPageFound = props => {
         />
       )}
       {store.windowValues && (store.windowValues.width >= 768) && (
-        <AdElementDisplay 
-          adType='300x300'
+        // <AdElementDisplay 
+        //   adType='300x300'
+        //   adPlaceId='toppage-right' 
+        // />
+        // <VideoAdElementDisplay 
+        //   adType='video'
+        //   adPlaceId='toppage-right' 
+        // />
+        <VideoAdElementTime 
+          // adType='video'
+          adType='video300'
           adPlaceId='toppage-right' 
         />
       )}

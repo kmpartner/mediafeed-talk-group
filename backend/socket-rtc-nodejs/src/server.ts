@@ -165,9 +165,11 @@ export class Server {
 
   private handleSocketConnection(): void {
     
+    // // match both front and backend
     const initialLoadNum = 25;
     // const initialLoadNum = 6;
 
+    
     //// initially check auth 
 
     let jwtUserId: string;

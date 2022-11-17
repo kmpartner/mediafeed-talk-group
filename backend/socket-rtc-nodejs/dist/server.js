@@ -29,6 +29,7 @@ const TextTalkRoutes = require('./routes/text-talk');
 const fileUploadRoutes = require('./routes/file-upload');
 const { fileUpload } = require('./middleware/multer');
 const { handlePushNotification } = require('./handle-push');
+const { createReturnPost } = require('./util/file-upload-utils');
 require('dotenv').config();
 class Server {
     constructor() {
@@ -60,6 +61,10 @@ class Server {
         // this.app.use(express.static(path.join(__dirname, "../public")));
     }
     configureRoutes() {
+        this.app.get("/healthz", (req, res) => {
+            // res.sendFile("index.html");
+            res.send("hello world express socket.io healthz");
+        });
         this.app.use((req, res, next) => {
             //// for push
             var allowedOrigins = [
@@ -72,9 +77,12 @@ class Server {
             ];
             var origin = req.headers.origin;
             console.log(origin);
+            //// for deploy
             if (allowedOrigins.indexOf(origin) > -1) {
                 res.setHeader('Access-Control-Allow-Origin', origin);
             }
+            //// for dev
+            res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
             if (req.method === 'OPTIONS') {
@@ -90,9 +98,12 @@ class Server {
             // }
             // next();
         });
+        console.log('talk-files path', path.join('', 'talk-files'));
+        // this.app.use('/talk-files', express.static(path.join(__dirname, 'talk-files')));
+        this.app.use('/talk-files', express.static(path.join('', 'talk-files')));
         // this.app.use('/test', TestRoutes);
         this.app.use('/text-talk', TextTalkRoutes);
-        this.app.use('/file-upload', fileUpload, fileUploadRoutes);
+        this.app.use('/file-upload', fileUploadRoutes);
         // this.app.get("/", (req, res) => {
         //   res.sendFile("index.html");
         // });
@@ -103,10 +114,6 @@ class Server {
             // res.sendFile("index.html");
             res.send("hello world express socket.io");
         });
-        this.app.get("/healthz", (req, res) => {
-            // res.sendFile("index.html");
-            res.send("hello world express socket.io healthz");
-        });
         this.app.use((error, req, res, next) => {
             console.log(error);
             const status = error.statusCode || 500;
@@ -116,6 +123,8 @@ class Server {
         });
     }
     handleSocketConnection() {
+        const initialLoadNum = 25;
+        // const initialLoadNum = 6;
         //// initially check auth 
         let jwtUserId;
         this.io.use(function (socket, next) {
@@ -767,9 +776,17 @@ class Server {
                 }
                 //// no connect case
                 else {
+                    const urlUserDestTalk = userDestTalk.text.map((text) => {
+                        return createReturnPost(text);
+                    });
+                    const getMoreNum = data.getMoreNum || 1;
+                    // console.log(urlTextList);
                     //// update textdata of fromUser
                     socket.emit('update-text-list', {
-                        textList: userDestTalk.text,
+                        // textList: userDestTalk.text,
+                        textList: urlUserDestTalk.slice(-1 * (getMoreNum * initialLoadNum + 1)),
+                        isMoreText: urlUserDestTalk.length > (getMoreNum * initialLoadNum + 1),
+                        socketOnName: 'text-send',
                     });
                     //// send textdata to toUser if toUser is online but not connect
                     //// if toUser is not online start to send push notification
@@ -783,31 +800,39 @@ class Server {
                             .to(room1)
                             .to(room2)
                             .emit('update-text-list', {
-                            textList: userDestTalk.text,
+                            // textList: userDestTalk.text,
+                            // textList: urlUserDestTalk,
+                            textList: urlUserDestTalk.slice(-1 * (getMoreNum * initialLoadNum + 1)),
+                            isMoreText: urlUserDestTalk.length > (getMoreNum * initialLoadNum + 1),
+                            socketOnName: 'text-send',
                         });
                         //// send textdata info to toUser
                         this.io.to(destUser.socketId).emit('text-from-noconnect-user', {
-                            text: userDestTalk.text[userDestTalk.text.length - 1],
+                            // text: userDestTalk.text[userDestTalk.text.length -1],
+                            text: urlUserDestTalk[urlUserDestTalk.length - 1],
                         });
                         //// toUser in noconnect-talk and not noconnect-talk with user, start push notify user textdata
                         if (destUser.socketRooms) {
                             if (!destUser.socketRooms[room1] || !destUser.socketRooms[room2]) {
                                 // console.log('destUser.socketRooms && !destUser.socketRooms[room1] || !destUser.socketRooms[room2]');
                                 socket.emit('send-text-forPush', {
-                                    text: userDestTalk.text[userDestTalk.text.length - 1]
+                                    // text: userDestTalk.text[userDestTalk.text.length -1]
+                                    text: urlUserDestTalk[urlUserDestTalk.length - 1],
                                 });
                             }
                         }
                         //// toUser online but not in rooms, start push notify textdata
                         if (!destUser.socketRooms) {
                             socket.emit('send-text-forPush', {
-                                text: userDestTalk.text[userDestTalk.text.length - 1]
+                                // text: userDestTalk.text[userDestTalk.text.length -1]
+                                text: urlUserDestTalk[urlUserDestTalk.length - 1],
                             });
                         }
                     }
                     else {
                         socket.emit('send-text-forPush', {
-                            text: userDestTalk.text[userDestTalk.text.length - 1]
+                            // text: userDestTalk.text[userDestTalk.text.length -1]
+                            text: urlUserDestTalk[urlUserDestTalk.length - 1],
                         });
                     }
                 }
@@ -889,9 +914,17 @@ class Server {
                 }
                 //// no connect case
                 else {
+                    const urlUserDestTalk = userDestTalk.text.map((text) => {
+                        return createReturnPost(text);
+                    });
+                    const getMoreNum = data.getMoreNum || 1;
                     //// update textdata of fromUser
                     socket.emit('update-text-list', {
-                        textList: userDestTalk.text,
+                        // textList: userDestTalk.text,
+                        // textList: urlUserDestTalk,
+                        textList: urlUserDestTalk.slice(-1 * (getMoreNum * initialLoadNum - 1)),
+                        isMoreText: urlUserDestTalk.length > (getMoreNum * initialLoadNum - 1),
+                        socketOnName: 'text-delete',
                     });
                     //// send textdata to toUser if toUser is online but not connect
                     //// if toUser is not online start to send push notification
@@ -905,7 +938,11 @@ class Server {
                             .to(room1)
                             .to(room2)
                             .emit('update-text-list', {
-                            textList: userDestTalk.text,
+                            // textList: userDestTalk.text,
+                            // textList: urlUserDestTalk,
+                            textList: urlUserDestTalk.slice(-1 * (getMoreNum * initialLoadNum - 1)),
+                            isMoreText: urlUserDestTalk.length > (getMoreNum * initialLoadNum - 1),
+                            socketOnName: 'text-delete',
                         });
                     }
                     else {
@@ -1030,10 +1067,47 @@ class Server {
                     this.activeSocketsObj = listWithoutUser.concat(userWithRooms);
                     // console.log('this.activeSocketsObj after room', this.activeSocketsObj)
                 });
+                const urlUserDestTalk = userDestTalk.text.map((text) => {
+                    return createReturnPost(text);
+                });
+                const getMoreNum = data.getMoreNum || 1;
                 socket.emit('update-text-list', {
                     // textList: textTalkOne.talk[0].text,
-                    textList: userDestTalk.text,
+                    // textList: userDestTalk.text,
+                    // textList: urlUserDestTalk,
+                    textList: urlUserDestTalk.slice(-1 * getMoreNum * initialLoadNum),
+                    isMoreText: urlUserDestTalk.length > getMoreNum * initialLoadNum,
                 });
+            }));
+            socket.on('noconnect-get-more', (data) => __awaiter(this, void 0, void 0, function* () {
+                console.log('noconnect-get-more data', data);
+                const user = data.user;
+                if (jwtUserId !== user.userId) {
+                    throw new Error('not authenticated');
+                }
+                const talkWithDest = yield TextTalk.findOne({
+                    userId: user.userId,
+                    'talk.pairId': `${user.userId}-${data.destUser.userId}`
+                });
+                if (talkWithDest) {
+                    const userDestTalk = talkWithDest.talk.find((talk) => {
+                        return talk.pairId === `${user.userId}-${data.destUser.userId}`;
+                    });
+                    if (userDestTalk) {
+                        const urlUserDestTalk = userDestTalk.text.map((text) => {
+                            return createReturnPost(text);
+                        });
+                        const getMoreNum = data.getMoreNum || 1;
+                        socket.emit('update-text-list', {
+                            // textList: textTalkOne.talk[0].text,
+                            // textList: userDestTalk.text,
+                            // textList: urlUserDestTalk,
+                            textList: urlUserDestTalk.slice(-1 * getMoreNum * initialLoadNum),
+                            isMoreText: urlUserDestTalk.length > getMoreNum * initialLoadNum,
+                            socketOnName: 'noconnect-get-more',
+                        });
+                    }
+                }
             }));
             //// handle push notification for text send
             handlePushNotification(socket);

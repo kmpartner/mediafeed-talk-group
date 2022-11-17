@@ -2,6 +2,8 @@ export {}
 const fs = require('fs');
 // const path = require('path');
 
+const fetch = require('node-fetch');
+
 require('dotenv').config();
 
 const { 
@@ -26,6 +28,39 @@ const fileUpload = async (req: any, res: any, next: any) => {
     if (req.body.userId !== req.userId) {
       throw new Error('userId error');
     }
+
+    const toUserId = req.body.toUserId;
+    const authHeader = req.get('Authorization');
+
+    if (!authHeader) {
+        const error = new Error('Not authenticated.');
+        // error.statusCode = 401;
+        throw error;
+    }
+
+    const result = await fetch(process.env.UDRESTAPI_URL + 
+      `/talk-permission/check-user-accept?toUserId=${toUserId}`, {
+      method: 'GET',
+      headers: {
+        // Authorization: 'Bearer ' + data.token,
+        Authorization: authHeader,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const resData = await result.json();
+    console.log(resData);
+    
+    if (!resData.data) {
+      const error = new Error('not authorized!');
+      // error.statusCode = 403;
+      throw error;
+      // return;
+    }
+
+    console.log('user-accepted');
+    // throw new Error('error-error');
+
 
     const files = req.files;
     // const files = [req.file];
@@ -318,16 +353,19 @@ const videoUpload = async (file: any) => {
   // console.log('files', file, resizedVideo);
 
   // throw new Error('error-error');
+  var params;
 
-  var params = {
-    ACL: 'private',
-    // ACL: 'public-read',
-    Bucket: process.env.DO_SPACE_BUCKET_NAME,
-    Body: fs.createReadStream(file.path),
-    //   ContentType: 'image/jpeg',
-    // Key: `images/${req.file.originalname}`
-    Key: `${file.path}`
-  };
+  if (!resizedVideo) {
+    params = {
+      ACL: 'private',
+      // ACL: 'public-read',
+      Bucket: process.env.DO_SPACE_BUCKET_NAME,
+      Body: fs.createReadStream(file.path),
+      //   ContentType: 'image/jpeg',
+      // Key: `images/${req.file.originalname}`
+      Key: `${file.path}`
+    };
+  }
 
   if (resizedVideo) {
     params = {

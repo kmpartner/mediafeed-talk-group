@@ -22,6 +22,7 @@ const VideoTextTalkTextList = (props) => {
     setGetMoreNum,
     noconnectGetMoreHandler,
     isMoreText,
+    listScrollTop,
     isLoading,
   } = props;
   
@@ -29,6 +30,16 @@ const VideoTextTalkTextList = (props) => {
   const [t] = useTranslation('translation');
 
   const ref = useRef(null);
+
+  // // get older text when scrolled to top
+  useEffect(() => {
+    // console.log('refl listScrollTop', listScrollTop);
+    if (listScrollTop === 0 && isMoreText) {
+      noconnectGetMoreHandler(noconnectDestUserId, getMoreNum + 1);
+      setGetMoreNum(getMoreNum + 1); 
+      scrollToRef();
+    }
+  },[listScrollTop]);
 
 
   const destUser = usersData.find(user => {
@@ -42,11 +53,15 @@ const VideoTextTalkTextList = (props) => {
     });
   };
 
+
+
+
   let textListBody;
 
   if (textInputList.length > 0) {
     textListBody = (
-      <ul className="textTalk-list">{textInputList.map((inputData, index) => {
+      <ul className="textTalk-list">
+        {textInputList.map((inputData, index) => {
         // console.log(inputData);
         if (index === 0) {
           return (
@@ -87,7 +102,8 @@ const VideoTextTalkTextList = (props) => {
           <Loader />
         </div>
       }
-      {textInputList.length > 0 && isMoreText && (
+
+      {/* {textInputList.length > 0 && isMoreText && (
         <span>
           <button
             onClick={() => { 
@@ -99,9 +115,9 @@ const VideoTextTalkTextList = (props) => {
             show-more-num-button
           </button> {getMoreNum}
         </span>
-      )}
-      {textListBody}
+      )} */}
 
+      {textListBody}
       {/* <button onClick={handleClick}>Scroll to element</button> */}
     </Fragment>
   );

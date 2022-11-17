@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Prompt } from 'react-router'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
@@ -63,8 +63,9 @@ const VideoTextTalk = (props) => {
 
   const [t] = useTranslation('translation');
 
+
   const [store, dispatch] = useStore();
-  console.log('store in VideoTextTalk', store);
+  // console.log('store in VideoTextTalk', store);
 
   const [userSocket, setUserSocket] = useState('');
   const [userSocketId, setUserSocketId] = useState('');
@@ -107,6 +108,9 @@ const VideoTextTalk = (props) => {
   
   const [getMoreNum, setGetMoreNum] = useState(1);
   const [isMoreText, setIsMoreText] = useState(false);
+  
+  const [listScrollTop, setListScrollTop] = useState(0);
+
   // const [emitUserInfo, setEmitUserInfo] = useState({});
   // let socket;
 
@@ -114,31 +118,31 @@ const VideoTextTalk = (props) => {
     document.title = 'Talk page'
   },[]);
   
-  useEffect(() => {
-    console.log(textTalkId, textInput);
-    if (textTalkId) {
+  // useEffect(() => {
+  //   // console.log(textTalkId, textInput);
+  //   if (textTalkId) {
 
-      //// check draft text in localstorage and set draft in input
-      if (!textInput) {
-        const lsDraft = getDraftInput('talk', textTalkId);
+  //     //// check draft text in localstorage and set draft in input
+  //     if (!textInput) {
+  //       const lsDraft = getDraftInput('talk', textTalkId);
 
-        if (lsDraft) {
-          setTextInput(lsDraft);
-        }
-      }
+  //       if (lsDraft) {
+  //         setTextInput(lsDraft);
+  //       }
+  //     }
 
-      //// text input length is longer than x store draft in localstorage
-      if (textInput && textInput.length >= 2) {
-        storeDraftInput('talk', textTalkId, textInput);
-      }
+  //     //// text input length is longer than x store draft in localstorage
+  //     if (textInput && textInput.length >= 2) {
+  //       storeDraftInput('talk', textTalkId, textInput);
+  //     }
 
-      //// text input length is less than x delete draft from localstorage
-      if (textInput && textInput.length < 2) {
-        deleteDraftInput('talk', textTalkId);
-      }
+  //     //// text input length is less than x delete draft from localstorage
+  //     if (textInput && textInput.length < 2) {
+  //       deleteDraftInput('talk', textTalkId);
+  //     }
 
-    }
-  },[textTalkId, textInput]);
+  //   }
+  // },[textTalkId, textInput]);
 
   useEffect(() => {
     // socketConnectHandler();
@@ -299,9 +303,9 @@ const VideoTextTalk = (props) => {
   }, [textInputList.length])
 
   useEffect(() => {
-    // var div = document.getElementById('text-talk');
-    // console.log('div', div);
+    // // match both front and backend
     const initialLoadNum = 25;
+    // const initialLoadNum = 6;
     
     if (textInputList.length <= initialLoadNum) {
       scrollToBottom('text-talk');
@@ -392,6 +396,22 @@ const VideoTextTalk = (props) => {
     }
 
   }, [userListObj]);
+
+
+
+  useEffect(() => {
+    const textTalkEl = document.getElementById('text-talk');
+    // console.log('refl testTalkEl', textTalkEl)
+    
+    if (textTalkEl) {
+      // console.log('refl ', textTalkEl.target)
+      textTalkEl.addEventListener('scroll', (event) => {
+        // console.log('refl', textTalkEl.scrollTop);
+        setListScrollTop(textTalkEl.scrollTop);
+
+      })
+    }
+  },[showNoconnectTextTalk]);
 
 
 
@@ -956,6 +976,8 @@ const VideoTextTalk = (props) => {
 
     setGetMoreNum(1);
     setIsMoreText(false);
+
+    setListScrollTop(0);
   }
 
 
@@ -998,8 +1020,13 @@ const VideoTextTalk = (props) => {
     // console.log(commentInput);
   }
   const getInputHandler = (input) => {
+    console.log('input', input);
     setTextInput(input);
   }
+
+  useEffect(() => {
+    console.log('input', textInput);
+  },[textInput]);
 
   const textPostHandler = (text) => {
 
@@ -1326,7 +1353,6 @@ const VideoTextTalk = (props) => {
   const showTextInputElementHandler = () => {
     setShowTextInputElement(!showTextInputElement);
   };
-
 
 
 
@@ -1750,6 +1776,7 @@ const VideoTextTalk = (props) => {
                       setGetMoreNum={setGetMoreNum}
                       noconnectGetMoreHandler={noconnectGetMoreHandler}
                       isMoreText={isMoreText}
+                      listScrollTop={listScrollTop}
                       isLoading={isLoading}
                     />
                   </div>
@@ -1847,6 +1874,7 @@ const VideoTextTalk = (props) => {
                       setGetMoreNum={setGetMoreNum}
                       noconnectGetMoreHandler={noconnectGetMoreHandler}
                       isMoreText={isMoreText}
+                      listScrollTop={listScrollTop}
                       isLoading={isLoading}
                     />
                   </div>

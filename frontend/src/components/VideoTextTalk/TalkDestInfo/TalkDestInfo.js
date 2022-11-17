@@ -9,7 +9,7 @@ import TalkModal from "../TalkUserList/TalkModal";
 import classes from "./TalkDestInfo.module.css";
 
 const TalkDestInfo = (props) => {
-  console.log("TalkDestInfo.js props", props);
+  // console.log("TalkDestInfo.js props", props);
   const {
     userId,
     noconnectDestUserId,
