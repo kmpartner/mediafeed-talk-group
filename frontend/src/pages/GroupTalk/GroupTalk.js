@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Prompt } from 'react-router'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
@@ -31,6 +31,7 @@ import GroupTalkTextList from '../../components/GroupTalk/GroupTextList/GroupTal
 import GroupTalkAuthModal from './GroupTalkAuthModal';
 import GroupTopElements from '../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
 import GroupRightElements from '../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
+import GroupTalkSocket from './GroupTalkSocket';
 import Loader from '../../components/Loader/Loader';
 import { getUserData, getUserDataForStore, getUsers, getUsersRest, getUsersForGroup, getUserLocation, updateUserColor } from '../../util/user';
 import { getLocalTimeElements } from '../../util/timeFormat';
@@ -60,13 +61,13 @@ import {
 import '../VideoTextTalk/VideoTextTalk.css'
 import './GroupTalk.css';
 
-import SampleImage from '../../components/Image/person-icon-50.jpg';
+// import SampleImage from '../../components/Image/person-icon-50.jpg';
 
-import * as firebase from "firebase/app";
-// Add the Firebase services that you want to use
-import "firebase/auth";
-import "firebase/firestore";
-import { isNull, join } from 'lodash';
+// import * as firebase from "firebase/app";
+// // Add the Firebase services that you want to use
+// import "firebase/auth";
+// import "firebase/firestore";
+// import { isNull, join } from 'lodash';
 
 
 let isAlreadyCalling = false;
@@ -88,7 +89,6 @@ const GroupTalk = (props) => {
   // console.log('query grouproomid', roomIdParam);
 
 
-  let socket
 
   const lsToken = localStorage.getItem('token');
 
@@ -282,145 +282,6 @@ const GroupTalk = (props) => {
   }, [userId]);
 
 
-  useEffect(() => {
-    setIsLoading(true);
-
-    if (userId && usersData.length > 0 && userName) {
-      setIsLoading(false);
-    }
-
-    if (!userSocketId && userId && userName && usersData.length > 0) {
-      console.log(userId, userName);
-      socketConnectHandler();
-    }
-  }, [userId, usersData, userSocketId, userName]);
-
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-
-  //   if (userId && usersData.length > 0) {
-  //     setIsLoading(false);
-  //   }
-
-  // }, [userId, usersData]);
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     getUserTextTalksHandler(userId, SOCKET_URL, localStorage.getItem('token'));
-  //   }
-  // }, [userId]);
-
-
-
-
-
-
-
-  // useEffect(() => {
-  //   if (callGet) {
-  //     setShowNoconnectTextTalk(false);
-  //     setShowNoconnectTextTalk(false);
-  //     setNoconnectDestUserId('');
-  //   }
-  // }, [callGet]);
-
-  // useEffect(() => {
-  //   console.log(textInputList);
-  // }, [textInputList.length])
-
-  // // useEffect(() => {
-  // //   // var div = document.getElementById('text-talk');
-  // //   // console.log('div', div);
-  // //   scrollToBottom('text-talk');
-  // // }, [groupTalkInputList.length]);
-
-  // useEffect(() => {
-
-  //   const userObj = userListObj.find(user => {
-  //     return user.userId === userId;
-  //   });
-
-  //   if (userObj && userObj.calling) {
-  //     const destUserObj = userListObj.find(user => {
-  //       return user.userId === userObj.destUser.userId;
-  //     });
-  //     // console.log('user', userObj, 'destUser', destUserObj);
-
-  //     if (destUserObj && destUserObj.calling &&
-  //       destUserObj.destUser.userId === userId
-  //     ) {
-  //       setCallingTo(destUserObj);
-  //     }
-  //   }
-
-  //   //// disconnect and reload when callingTo user disconnect
-  //   const callingToUser = userListObj.find(user => {
-  //     return user.userId === callingTo.userId && user.socketId === callingTo.socketId;
-  //   });
-
-  //   if (callingTo && !callingToUser) {
-  //     // setCallingTo('');
-  //     alert('Calling user disconnected');
-
-  //     socketState.disconnect();
-  //     resetSocket();
-  //     window.location.reload();
-  //     // socketCloseHandler2();
-  //   }
-
-  //   //// disconnect and reload when useObj's socketId is 
-  //   //// different from cilent's socketId
-  //   if (userObj && userObj.socketId !== userSocketId) {
-  //     socketState.disconnect();
-  //     resetSocket()
-  //     window.location.reload();
-  //   }
-
-
-  //   //// find connecton-made user and if destuser is userId, connect
-  //   if (userObj && !userObj.calling) {
-  //     const connectionMadeUser = userListObj.find(user => {
-  //       if (user.destUser && user.destUser.userId === userId) {
-  //         return user;
-  //       }
-  //     });
-
-  //     if (connectionMadeUser && !callReject) {
-  //       callUser(connectionMadeUser.socketId);
-  //     }
-  //   }
-
-  //   //// find trying to call user, not yet start talking, set tryingToCallUser for display
-  //   if (userObj && userObj.calling) {
-  //     const destinationUser = userListObj.find(user => {
-  //       return user.userId === userObj.destUser.userId;
-  //     });
-
-  //     if (destinationUser && !destinationUser.destUser || destinationUser.destUser.userId !== userObj.userId) {
-  //       setTryingToCallUser(userObj.destUser);
-  //     }
-
-  //     if (destinationUser && destinationUser.destUser && destinationUser.destUser.userId === userObj.userId) {
-  //       setTryingToCallUser('');
-
-  //       if (destinationUser.talkStartAt) {
-  //         setTalkStartAt(destinationUser.talkStartAt);
-  //       }
-  //       if (userObj.talkStartAt) {
-  //         setTalkStartAt(userObj.talkStartAt);
-  //       }
-  //     }
-
-  //   }
-
-  // }, [userListObj]);
-
-
-
-
-
-
 
 
   //// get group list after socketId obtained
@@ -435,21 +296,6 @@ const GroupTalk = (props) => {
     if (userId && userSocketId && store.groupListData.length > 0) {
       setGroupList(store.groupListData);
 
-      // for (const ele of store.groupListData) {
-      //   if (ele.members.length > 0) {
-
-      //     const isUser = ele.members.find(mem => {
-      //       return mem.userId === userId
-      //     });
-      //     if (isUser) {
-      //       // isUserInList = true;
-      //       // isUserGroup = ele;
-      //       setJoinGroupId(ele.groupRoomId);
-      //       setJoinGroupName(ele.groupName);
-      //       setJoinGroupOnlineMember(ele.members);
-      //     }
-      //   }
-      // }
 
     }
 
@@ -462,751 +308,6 @@ const GroupTalk = (props) => {
       joinGroupHandler(groupTalkId);
     }
   }, [isMember]);
-
-
-  //// store draft text in localstorage
-  // useEffect(() => {
-  //   if (groupTalkId) {
-
-  //     //// check draft text in localstorage and set draft in input
-  //     if (!groupTextInput) {
-  //       const lsDraft = getDraftInput('group', groupTalkId);
-
-  //       if (lsDraft) {
-  //         setGroupTextInput(lsDraft);
-  //       }
-  //     }
-
-  //     //// text input length is longer than x store draft in localstorage
-  //     if (groupTextInput && groupTextInput.length >= 10) {
-  //       storeDraftInput('group', groupTalkId, groupTextInput);
-  //     }
-
-  //     //// text input length is less than x delete draft from localstorage
-  //     if (groupTextInput && groupTextInput.length < 10) {
-  //       deleteDraftInput('group', groupTalkId);
-  //     }
-
-  //   }
-  // },[groupTalkId, groupTextInput]);
-  
-  // useEffect(() => {
-  //   if (!userSocketId && userId && userName && usersData) {
-  //     socketConnectHandler()
-  //   }
-  // }, [userSocketId, userId, userName, usersData]);
-
-
-  // async function callUser(socketId) {
-  //   const offer = await peerConnection.createOffer();
-  //   await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
-
-  //   socketState.emit("call-user", {
-  //     offer,
-  //     to: socketId,
-  //     user: {
-  //       userId: userId,
-  //       userName: userName,
-  //       socketId: userSocketId,
-  //     }
-  //   });
-  // }
-
-
-  // const callRejectHandler = () => {
-  //   socketState.emit("reject-call", {
-  //     from: userSocketId
-  //   });
-  // }
-
-  const socketConnectHandler = () => {
-    // socket = openSocket.connect("localhost:4001");
-
-    // let socket
-
-    // if (!socketState) {
-    //   socket = openSocket.connect("localhost:4001");
-    //   console.log('socket', socket, 'socket.id', socket.id);
-    //   console.log(socket.id);
-    //   setSocketState(socket);
-
-    // } else {
-    //   socket = socketState;
-    //   console.log('userId, userName', userId, userName);
-
-    //   socket.emit('user-info', {
-    //     socketId: userSocketId,
-    //     userId: userId,
-    //     userName: userName,
-    //     connectAt: Date.now()
-    //   });
-    // }
-
-    // socket = openSocket.connect("localhost:4001");
-    // socket = openSocket.connect(SOCKET_SURL);
-    // socket = openSocket.connect(SOCKET_SURL, {
-
-    setIsLoading(true);
-
-    socket = openSocket.connect(SOCKET_GROUP_SURL, {
-      reconnection: true,
-      reconnectionDelay: 500,
-      transports: ['websocket']
-    });
-    console.log('socket', socket);
-    setSocketState(socket);
-
-
-    socket.on('user-socket', (data) => {
-      console.log('user-socket :', data);
-      const userSocketId = data.userSocketId;
-      setUserSocketId(data.userSocketId);
-
-      // console.log('userId, userName', userId, userName);
-      // setUserSocket(data.socket);
-      // updateUser(data.userSocketId);
-      const sendData = {
-        socketId: userSocketId,
-        userId: userId,
-        userName: userName,
-        userImageUrl: userImageUrl,
-        connectAt: Date.now(),
-        token: lsToken,
-      };
-      // setEmitUserInfo(sendData);
-      socket.emit('user-info', sendData);
-
-
-      // // send request to get group user info
-      socket.emit('get-group-user', {
-        userId: userId,
-        token: lsToken,
-      });
-
-
-    });
-
-    socket.on('new-connection', (data) => {
-      console.log('new-connection data', data);
-    })
-
-    // // console.log('userObj', userObj);
-
-    socket.on("update-user-list", ({ users }) => {
-      console.log("update-user-list", users);
-      // setUserList(users);
-
-      const userObj = userListObj.find(element => {
-        return element.userId === userId;
-      });
-
-      socket.emit('update-user-list-recieved', {
-        users: users,
-        // user: {
-        //   userId: userId,
-        //   socketId: userSocketId,
-        //   userName: userName
-        // }
-        user: userObj
-      });
-
-      // if (users.indexOf(callingTo) < 0) {
-      //   setCallingTo('');
-      // }
-
-      // updateUserList(users);
-
-      // socket.emit('hey', {
-      //   to: users
-      // });
-    });
-
-    socket.on("remove-user", ({ socketId, activeSockets }) => {
-      console.log('remove-user socketId', socketId);
-      console.log('remove-user activeSockets', activeSockets);
-
-      // socket.emit("user-removed", {
-      //   activeSockts: activeSockets
-      // });
-
-
-      // const elToRemove = document.getElementById(socketId);
-      // console.log('elToRemove', elToRemove);
-      // if (elToRemove) {
-      //   elToRemove.remove();
-      // }
-    });
-
-
-
-    // socket.on("call-made", async data => {
-    //   console.log('call-made data', data);
-    //   // setCallFrom(data.socket);
-
-    //   setCallReject(false);
-
-    //   const confirmed = window.confirm(
-    //     // `User name: ${data.user.userName} wants to call you. Do you accept this call?`
-    //     `${data.user.userName} ${t('videoTalk.text13')}`
-    //   );
-    //   console.log('confirmed', confirmed);
-
-    //   if (!confirmed) {
-
-    //     setCallReject(true);
-
-    //     socket.emit("reject-call", {
-    //       from: data.socket,
-    //       user: {
-    //         userId: userId,
-    //         userName: userName,
-    //         socketId: userSocketId
-    //       }
-    //     });
-
-    //     return;
-    //   }
-
-    //   if (getCalled) {
-    //     // const confirmed = window.confirm(
-    //     //   `User "Socket: ${data.socket}" wants to call you. Do accept this call?`
-    //     // );
-
-
-    //     if (!confirmed) {
-
-    //       setCallReject(true);
-
-    //       socket.emit("reject-call", {
-    //         from: data.socket,
-    //         user: {
-    //           userId: userId,
-    //           userName: userName,
-    //           socketId: userSocketId
-    //         }
-    //       });
-
-    //       return;
-    //     }
-    //   }
-
-    //   await peerConnection.setRemoteDescription(
-    //     new RTCSessionDescription(data.offer)
-    //   );
-
-    //   const answer = await peerConnection.createAnswer();
-    //   await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-
-    //   // console.log('before make-anser peerConnection', peerConnection);
-
-    //   socket.emit("make-answer", {
-    //     answer,
-    //     to: data.socket,
-    //     // user: {
-    //     //   userId: userId,
-    //     //   userName: userName,
-    //     //   socketId: userSocketId
-    //     // }
-    //   });
-    //   getCalled = true;
-
-    //   setCallGet(true);
-
-    // });
-
-    // socket.on("answer-made", async data => {
-    //   console.log("answer-made data", data);
-    //   await peerConnection.setRemoteDescription(
-    //     new RTCSessionDescription(data.answer)
-    //   );
-
-    //   console.log('anser-made peerConnection', peerConnection);
-
-    //   // setCallingTo(data.socket);
-    //   console.log('data.destUser', data.destUser);
-    //   // setCallingTo(data.destUser);
-
-
-    //   if (!isAlreadyCalling) {
-    //     // callUser(data.socket);
-    //     isAlreadyCalling = true;
-    //     setIsCalling(true);
-    //   }
-
-    //   // const user = userListObj.find(element => {
-    //   //   return element.socketId === userSocketId;
-    //   // });
-    //   // console.log('user', user);
-
-    //   socket.emit('connection-made', {
-    //     destUser: data.destUser
-    //   });
-
-    // });
-
-    // socket.on("call-rejected", data => {
-    //   console.log('call-rejected data', data);
-    //   alert(
-    //     // `${data.user.userName} reject your call.`
-    //     `${data.user.userName} ${t('videoTalk.text14')}.`
-    //   );
-    //   window.location.reload();
-    //   // unselectUsersFromList();
-    // });
-
-
-    // // peerConnection.ontrack = function ({ streams: [stream] }) {
-    // //   console.log('stream peeronnection.ontrack', [stream]);
-    // //   const remoteVideo = document.getElementById("remote-video");
-    // //   console.log('remoteVideo', remoteVideo);
-    // //   if (remoteVideo) {
-    // //     remoteVideo.srcObject = stream;
-    // //   }
-    // // };
-
-    // // const localVideo = document.getElementById("local-video");
-    // // console.log('localVideo.srcObject o', localVideo, localVideo.srcObject);
-    // // console.log('peerConnection', peerConnection);
-
-    // // navigator.getUserMedia(
-    // //   { video: true, audio: true },
-    // //   stream => {
-    // //     const localVideo = document.getElementById("local-video");
-    // //     if (localVideo) {
-    // //       // localVideo.srcObject = stream;
-    // //       // console.log('localVideo.srcObject', localVideo, localVideo.srcObject);
-    // //     }
-
-    // //     // videoRef.current = stream
-
-    // //     // console.log('videoRef', videoRef);
-    // //     // console.log('stream', stream);
-    // //     // console.log(videoRef);
-    // //     // videoRef.current = stream;
-    // //     // console.log('videoref current', videoRef.current)
-
-
-
-    // //     stream.getTracks().forEach(track => {
-    // //       // console.log('track, stream', track, stream);
-    // //       // return peerConnection.addTrack(track, stream)
-    // //     });
-    // //   },
-    // //   error => {
-    // //     console.warn(error.message);
-    // //   }
-    // // );
-
-
-
-
-    socket.on('update-usersObj-list', data => {
-      console.log('update-usersObj-list data', data);
-
-      setUserListObj(data.usersObj);
-
-      // const userObj = data.usersObj.find(element => {
-      //   return element.userId === userId;
-      // });
-
-      socket.emit('update-usersObj-list-recieved', {
-        usersObj: data.usersObj,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        },
-        // user: userObj
-      });
-      // const callingToUser = data.usersObj.find(user => {
-      //   return user.userId === callingTo.userId;
-      // });
-      // console.log('callingToUser', callingToUser, 'callingTo', callingTo);
-      // if (callingTo && !callingToUser) {
-      //   setCallingTo('');
-      // }
-
-      // if (data.usersObj.indexOf(callingTo) < 0) {
-      //   setCallingTo('');
-      // }
-
-    });
-
-
-    socket.on('new-user-info', data => {
-      console.log('new-user-info data', data);
-
-      // console.log('emitUserInfo', emitUserInfo)
-
-      socket.emit('new-user-info-recieved', {
-        newUser: data.newUser,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        },
-        usersObj: data.usersObj
-        // recievedUser: emitUserInfo
-      });
-    });
-
-    socket.on('ask-usersObj', data => {
-      console.log('ask-usersObj data', data);
-
-      socket.emit('ask-usersObj-recieved', {
-        askUser: data,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        }
-      });
-    });
-
-
-
-
-
-
-
-    // socket.on("update-text-list", data => {
-    //   console.log('update-text-list data', data);
-
-    //   if (data.textList.length > 0 && data.textList.length !== textInputList.length &&
-    //     data.textList[data.textList.length - 1].fromUserId === userId
-    //   ) {
-    //     setTextInput('');
-    //   }
-
-    //   const lastListElement = data.textList[data.textList.length - 1];
-
-    //   if (lastListElement && lastListElement.fromUserId && lastListElement.toUserId) {
-    //     if (lastListElement.fromUserId === userId || lastListElement.toUserId === userId) {
-    //       setTextInputList(data.textList);
-
-    //     }
-    //   }
-
-    //   // setTextInputList(data.textList);
-    // });
-
-    // socket.on('new-text-send', data => {
-    //   console.log('new-text-send, data', data);
-    //   // console.log(userId, callingTo);
-
-    //   console.log(textInputList);
-    //   // const beforeList = textInputList.map(element => {
-    //   //   return element;
-    //   // });
-    //   // console.log('beforeList', beforeList);
-    //   // const addList = beforeList.push(data.textData);
-    //   // console.log('addList');
-
-    //   // setTextInputList(addList);
-
-    //   // getTextListHandler(userId, callingTo.userId, localStorage.getItem('token'), SOCKET_URL);
-    // })
-
-    // socket.on('textTalks-data', data => {
-    //   console.log('textTalks-data data', data);
-    //   setUserTextTalkList(data.talkList);
-    // });
-
-    // socket.on('send-text-forPush', data => {
-    //   console.log('send-text-forPush', data);
-
-    //   sendTextPushHandler(
-    //     PUSH_URL,
-    //     // BASE_URL, 
-    //     localStorage.getItem('token'),
-    //     data.text.fromUserId,
-    //     data.text
-    //   )
-    //     .then(res => {
-    //       console.log(res);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     })
-
-    // });
-
-
-
-
-
-
-
-    socket.on('text-from-noconnect-user', data => {
-      console.log('text-from-noconnect-user data', data);
-
-      //// implement to display message notify 
-      setNoconnectMessageNotify(<div>
-        new message from user
-          <br />
-        {data.text.fromName}
-      </div>
-      );
-
-      setTimeout(() => {
-        setNoconnectMessageNotify('');
-      }, 1000 * 5);
-
-    });
-
-
-
-
-
-
-
-    socket.on('create-group-result', data => {
-      console.log('create-group-result data', data);
-
-      setCreateGroupReslut(data.message);
-      setIsLoading(false);
-
-    });
-
-    socket.on('upgrade-group-result', data => {
-      console.log('upgrade-group-result data', data);
-
-      setCreateGroupReslut(data.message);
-      setIsLoading(false);
-    });
-
-    socket.on('update-group-list', data => {
-      console.log('update-group-list data', data);
-
-      setIsLoading(false);
-      setGroupList(data.groups);
-
-
-      dispatch('SET_GROUP_LISTDATA', data.groups);
-
-
-      for (const ele of data.groups) {
-        if (ele.members.length > 0) {
-
-          const isUser = ele.members.find(mem => {
-            return mem.userId === userId
-          });
-          if (isUser) {
-            // isUserInList = true;
-            // isUserGroup = ele;
-            setJoinGroupId(ele.groupRoomId);
-            setJoinGroupName(ele.groupName);
-            setJoinGroupOnlineMember(ele.members);
-          }
-
-        }
-      }
-
-    });
-
-    socket.on('update-group', data => {
-      console.log('update-group data', data);
-
-      const talks = data.group.talks;
-
-      // ////check user wrote last text of talks
-      // if (talks.length > 0 &&
-      //   talks.length !== groupTalkInputList.length &&
-      //   talks[talks.length - 1].fromUserId === userId
-      // ) {
-
-      //   setGroupTextInput('');
-      // }
-
-      setGroupTalkInputList(talks);
-
-      if (!groupInfo || !groupTalkId || !groupAllMemberList.length === 0) {
-        setGroupInfo(data.group);
-        setGroupTalkId(data.group.groupRoomId);
-
-
-        //// get group text reactions
-        socket.emit('get-group-text-reactions', {
-          userId: userId,
-          groupRoomId: data.group.groupRoomId,
-        });
-        
-
-        if (groupAllMemberList.length === 0) {
-  
-          const allMemberList = [];
-  
-          for (const user of data.group.allMemberUserIds) {
-            const userInUsersData = usersData.find(element => {
-              return element.userId === user.userId;
-            });
-    
-            if (userInUsersData) {
-              allMemberList.push(userInUsersData);
-            }
-          }
-    
-          setGroupAllMemberList(allMemberList);
-        }
-      }
-  
-      setIsLoading(false);
-      
-      
-
-
-      // const isUserInGroup = data.group.members.find(member => {
-      //   return member.userId === userId;
-      // });
-
-      // if (isUserInGroup) {
-      //   setJoinGroupId(data.group.groupRoomId);
-      //   setJoinGroupName(data.group.groupName);
-      // }
-    });
-
-
-    socket.on('join-group-result', data => {
-      console.log('join-group-result', data);
-
-      setIsLoading(false);
-
-      // setTimeout(() => {
-      //   setDeleteMemberResult('');
-      //   if (!data.error) {
-      //     window.location.reload();
-      //   }
-      // }, 3000);
-    });
-
-    socket.on('delete-group-result', data => {
-      console.log('delete-group-result', data);
- 
-      setDeleteGroupResult(data.message);     
-      setIsLoading(false);
-
-      setTimeout(() => {
-        setDeleteMemberResult('');
-        if (!data.error) {
-          window.location.reload();
-        }
-      }, 3000);
-
-    });
-
-
-    socket.on('delete-group-member-result', data => {
-      console.log('delete-group-member-result', data);
-
-      setDeleteMemberResult(data.message);
-      setIsLoading(false);
-
-      setTimeout(() => {
-        setDeleteMemberResult('');
-        if (!data.error) {
-          window.location.reload();
-        }
-      }, 3000);
-    });
-
-
-    socket.on('group-text-send-result', data => {
-      console.log('group-text-send-result', data);
-
-      setIsTextPosting(false);
-
-      if (data.textData) {
-        setGroupTextInput('');
-
-        socket.emit('group-text-send-result-recieved', data);
-
-        // sendGroupTextPushHandler(
-        //   PUSH_URL,  // BASE_URL, 
-        //   // SOCKET_GROUP_URL,
-        //   localStorage.getItem('token'),
-        //   userId,
-        //   data.idsForPush,
-        //   data.textData,
-        // )
-        //   .then(res => {
-        //     console.log(res);
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   });
-
-      }
-
-    });
-
-    socket.on('group-text-delete-result', data => {
-      console.log('group-text-delete-result', data);
-
-      setIsLoading(false);
-    });
-
-    socket.on('group-push-result', data => {
-      console.log('group-push-result data', data);
-
-    });
-
-
-
-    socket.on('get-group-user-result', data => {
-      console.log('get-group-user-result data', data);
-
-      if (data.groupUserInfo) {
-        // console.log('data.groupUser', data);
-        setGroupUserInfo(data.groupUserInfo);
-      }
-      setIsLoading(false);
-    });
-
-    socket.on('edit-favorite-groups-result', data => {
-      console.log('edit-favorite-groups-result data', data);
-      
-      setEditFavoriteGroupsResult(data.message);
-
-      setTimeout(() => {
-        setEditFavoriteGroupsResult('');
-
-        if (data.groupUserInfo) {
-          setGroupUserInfo(data.groupUserInfo);
-        }
-      }, 1000*5);
-
-      setIsLoading(false);
-
-    });
-
-
-
-    socket.on('get-group-text-reactions-result', data => {
-      console.log('get-group-text-reactions-result data', data);
-
-      setGroupTextReactions(data.groupRoomReactions);
-      setIsLoading(false);
-    });
-
-    socket.on('create-group-text-reaction-result', data => {
-      console.log('create-group-text-reaction-result data', data);
-
-      setIsLoading(false);
-
-      if (!data.error) {
-
-        setIsLoading(true);
-
-        socket.emit('get-group-text-reactions', {
-          userId: userId,
-          groupRoomId: data.reactionData.groupRoomId,
-        });
-      }
-    });
-
-
-
-  }
 
 
 
@@ -1290,49 +391,6 @@ const GroupTalk = (props) => {
   };
 
 
-
-
-
-  // const socketCloseHandler = () => {
-  //   // console.log('in socketCloseHandler');
-  //   if (socketState) {
-  //     console.log('socketState', socketState);
-
-  //     if (callingTo) {
-  //       const confirmed = window.confirm(
-  //         // `You are still talking. Do you want to stop talking?`
-  //         `${t('videoTalk.text11')}`
-  //       );
-
-  //       if (confirmed) {
-  //         socketState.disconnect();
-  //         resetSocket()
-  //         window.location.reload();
-  //       }
-
-  //     } else {
-  //       socketState.disconnect();
-  //       resetSocket()
-  //       window.location.reload();
-  //     }
-
-
-  //   }
-  // }
-
-  // const resetSocket = () => {
-  //   setSocketState('');
-  //   setUserSocketId('');
-  //   setUserList([]);
-  //   setCallingTo('');
-  //   setIsCalling(false);
-  // }
-
-
-  // const showTextTalkHandler = () => {
-  //   setShowTextTalk(!showTextTalk);
-  //   window.scrollTo(0, 0);
-  // }
 
 
   const textInputHandlerEmoji = (input, value) => {
@@ -1453,31 +511,6 @@ const GroupTalk = (props) => {
 
   };
 
-  // const leaveGroupHandler = (groupRoomId) => {
-  //   const userObj = userListObj.find(user => {
-  //     return user.userId === userId;
-  //   });
-
-  //   // if (userObj) {
-
-  //   // if (userSocketId && userId) {
-  //   //   socketState.emit('leave-group', {
-  //   //     groupRoomId: groupRoomId,
-  //   //     user: {
-  //   //       socketId: userSocketId,
-  //   //       userId: userId,
-  //   //       userName: userName
-  //   //     },
-  //   //   });
-
-  //   //   // setJoinGroupId('');
-  //   //   // setJoinGroupName('');
-  //   //   // setJoinGroupOnlineMember([]);
-
-  //   // }
-
-  //   window.location.reload();
-  // };
 
   const getGroupListHandler = () => {
     if (userSocketId && userId) {
@@ -1670,23 +703,6 @@ const GroupTalk = (props) => {
       });
     }  
 
-    // if (props.isAuth) {
-    //   if (userSocketId && userId) {
-    //     setIsLoading(true);
-    //     setEditFavoriteGroupsResult('');
-  
-    //     socketState.emit('edit-favorite-groups', {
-    //       userId: userId,
-    //       favoriteGroups: favoriteGroups,
-    //       // user: {
-    //       //   socketId: userSocketId,
-    //       //   userId: userId,
-    //       //   userName: userName
-    //       // },
-    //       token: lsToken,
-    //     });
-    //   }
-    // }
   };
 
 
@@ -2036,35 +1052,12 @@ const GroupTalk = (props) => {
 
   let connectButton;
   if (!userSocketId && userId && userName && usersData.length > 0) {
-    // connectButton = (<Button mode="raised" type="submit" onClick={socketConnectHandler}>
-    //   {/* Start Connect */}
-    //   {t('videoTalk.text1')}
-    // </Button>);
+ 
   }
   if (userSocketId && userId && userName && usersData.length > 0) {
-  // if (userSocketId && usersData) {
-    // connectButton = (
-    //   <Button mode="raised" design="danger" type="submit" 
-    //     // onClick={socketCloseHandler}
-    //     onClick={socketDisconnectHandler}
-    //   >
-    //     {/* Stop Connect */}
-    //     {t('videoTalk.text2')}
-    //   </Button>
-    // );
+
   }
   if (!props.isAuth) {
-    // connectButton = (<div>
-    //   <Link to="/" className="notPageFound__linkButton">
-    //     <Button
-    //       mode="raised" type="submit" design="success"
-    //     // disabled={!props.replyInput || props.commentLoading}
-    //     >
-    //       {/* Go to Homepage to Login */}
-    //       {t('groupTalk.text16')}
-    //     </Button>
-    //   </Link>
-    // </div>);
 
   }
 
@@ -2074,60 +1067,88 @@ const GroupTalk = (props) => {
 
   
   return (
-    <div className="groupTalk__appContainer">
-      <div>
+    <Fragment>
+      <div className="groupTalk__appContainer">
+        <div>
 
-      {!roomIdParam && store.windowValues && (store.windowValues.width < 768) && (
-        <AdElementDisplay
-          adType='300x65' 
-          adPlaceId='grouppage-top' 
-        />
-      )}
-      {store.windowValues && (store.windowValues.width >= 768) && (
-      <AdElementDisplay 
-          adType='300x300'
-          adPlaceId='grouppage-right' 
-        />
-      )}
+        {!showGroupTalkText && !roomIdParam && store.windowValues && (store.windowValues.width < 768) && (
+          <AdElementDisplay
+            adType='300x65' 
+            adPlaceId='grouppage-top' 
+          />
+        )}
+        {store.windowValues && (store.windowValues.width >= 768) && (
+        <AdElementDisplay 
+            adType='300x300'
+            adPlaceId='grouppage-right' 
+          />
+        )}
 
+      
 
-
-      {/* <div style={{textAlign:"center"}}>
-      <button onClick={() => {
-          socketDisconnectHandler();
-          }}>disconnect-test</button>
-      </div> */}
-
-      {/* <button onClick={() => {setShowAuthModal(!showAuthModal)}}>auth-modal-test</button> */}
-      {showAuthModal && 
-        <GroupTalkAuthModal 
-          setShowAuthModal={setShowAuthModal}
-        />
-      }
-
-        {isLoading &&
-          <div className="groupTalk__loader">
-            <Loader />
-          </div>
+        {showAuthModal && 
+          <GroupTalkAuthModal 
+            setShowAuthModal={setShowAuthModal}
+          />
         }
 
-        <div>
-          <div className="textTalk_NoconnectMessage">
-            {noconnectMessageNotify}
+          {isLoading &&
+            <div className="groupTalk__loader">
+              <Loader />
+            </div>
+          }
+
+          <div>
+            <div className="textTalk_NoconnectMessage">
+              {noconnectMessageNotify}
+            </div>
+
+            <div className="groupTalk__ConnectButton">
+              {noUserMessage}
+              {connectButton}
+            </div>
+
+            {groupControlBody}
+
+            {groupTextBody}
           </div>
 
-          <div className="groupTalk__ConnectButton">
-            {noUserMessage}
-            {connectButton}
-          </div>
-
-          {groupControlBody}
-
-          {groupTextBody}
         </div>
-
       </div>
-    </div>
+
+      <GroupTalkSocket 
+        setIsLoading={setIsLoading}
+        setSocketState={setSocketState}
+        setUserSocketId={setUserSocketId}
+        userId={userId}
+        userName={userName}
+        userImageUrl={userImageUrl}
+        userListObj={userListObj}
+        setUserListObj={setUserListObj}
+        userSocketId={userSocketId}
+        setNoconnectMessageNotify={setNoconnectMessageNotify}
+        setCreateGroupReslut={setCreateGroupReslut}
+        setGroupList={setGroupList}
+        setJoinGroupId={setJoinGroupId}
+        setJoinGroupName={setJoinGroupName}
+        setJoinGroupOnlineMember={setJoinGroupOnlineMember}
+        setGroupTalkInputList={setGroupTalkInputList}
+        groupInfo={groupInfo}
+        groupTalkId={groupTalkId}
+        groupAllMemberList={groupAllMemberList}
+        setGroupInfo={setGroupInfo}
+        setGroupTalkId={setGroupTalkId}
+        usersData={usersData}
+        setGroupAllMemberList={setGroupAllMemberList}
+        setDeleteGroupResult={setDeleteGroupResult}
+        setDeleteMemberResult={setDeleteMemberResult}
+        setIsTextPosting={setIsTextPosting}
+        setGroupTextInput={setGroupTextInput}
+        setGroupUserInfo={setGroupUserInfo}
+        setEditFavoriteGroupsResult={setEditFavoriteGroupsResult}
+        setGroupTextReactions={setGroupTextReactions}
+      />
+    </Fragment>
   );
 };
 

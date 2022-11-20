@@ -17,7 +17,7 @@ const GetAdList = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  console.log('store GetAdList.js', store);
+  // console.log('store GetAdList.js', store);
 
   useEffect(() => {
     if (store.adStore.adList.length === 0 && store.bowserData) {

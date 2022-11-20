@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import { Fragment, useState, useEffect, } from 'react';
 import { Prompt } from 'react-router'
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
@@ -15,9 +15,11 @@ import TalkDestInfo from '../../components/VideoTextTalk/TalkDestInfo/TalkDestIn
 import TalkUserList from '../../components/VideoTextTalk/TalkUserList/TalkUserList';
 import TalkUserListControl from '../../components/VideoTextTalk/TalkUserList/TalkUserListControl/TalkUserListControl';
 import TalkUserListNotify from '../../components/VideoTextTalk/TalkUserList/TalkUserListNotify/TalkUserListNotify';
+import TalkPermission from '../../components/VideoTextTalk/TalkPermission/TalkPermission';
 // import TopBarContents from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopBarContents';
 import VideoTextTalkInput from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkInput';
 import VideoTextTalkTextList from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkTextList';
+import VideoTextTalkSocket from './VideoTextTalkSocket';
 
 import { getUserData, getUserDataForStore, getUsers, getUserLocation, updateUserColor } from '../../util/user';
 import { getLocalTimeElements } from '../../util/timeFormat';
@@ -35,16 +37,15 @@ import './VideoTextTalk.css'
 
 import SampleImage from '../../components/Image/person-icon-50.jpg';
 
-import * as firebase from "firebase/app";
-// Add the Firebase services that you want to use
-import "firebase/auth";
-import "firebase/firestore";
+// import * as firebase from "firebase/app";
+// // Add the Firebase services that you want to use
+// import "firebase/auth";
+// import "firebase/firestore";
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
-import TalkRightElements from '../../components/VideoTextTalk/TalkRightElements/TalkRightElements';
+// import TalkRightElements from '../../components/VideoTextTalk/TalkRightElements/TalkRightElements';
 
 
-import TalkPermission from '../../components/VideoTextTalk/TalkPermission/TalkPermission';
 
 let isAlreadyCalling = false;
 let getCalled = false;
@@ -59,7 +60,7 @@ const peerConnection = new RTCPeerConnection();
 const VideoTextTalk = (props) => {
 
   // const videoRef = React.createRef();
-  let socket
+  // let socket
 
   const [t] = useTranslation('translation');
 
@@ -113,6 +114,7 @@ const VideoTextTalk = (props) => {
 
   const [initialLoad, setInitialLoad] = useState(true);
 
+  const [connectClick, setConnectClick] = useState(false);
   // const [emitUserInfo, setEmitUserInfo] = useState({});
   // let socket;
 
@@ -120,31 +122,6 @@ const VideoTextTalk = (props) => {
     document.title = 'Talk page'
   },[]);
   
-  // useEffect(() => {
-  //   // console.log(textTalkId, textInput);
-  //   if (textTalkId) {
-
-  //     //// check draft text in localstorage and set draft in input
-  //     if (!textInput) {
-  //       const lsDraft = getDraftInput('talk', textTalkId);
-
-  //       if (lsDraft) {
-  //         setTextInput(lsDraft);
-  //       }
-  //     }
-
-  //     //// text input length is longer than x store draft in localstorage
-  //     if (textInput && textInput.length >= 2) {
-  //       storeDraftInput('talk', textTalkId, textInput);
-  //     }
-
-  //     //// text input length is less than x delete draft from localstorage
-  //     if (textInput && textInput.length < 2) {
-  //       deleteDraftInput('talk', textTalkId);
-  //     }
-
-  //   }
-  // },[textTalkId, textInput]);
 
   useEffect(() => {
     // socketConnectHandler();
@@ -276,19 +253,7 @@ const VideoTextTalk = (props) => {
 
   }, [userId, usersData, userSocketId, userName, props.isAuth]);
 
-  // useEffect(() => {
-  //   // setIsLoading(true);
-
-  //   if (userId && usersData.length > 0) {
-  //     setIsLoading(false);
-  //   }
-  // }, [userId, usersData]);
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     getUserTextTalksHandler(userId, SOCKET_URL, localStorage.getItem('token'));
-  //   }
-  // }, [userId]);
+ 
 
   useEffect(() => {
     if (callGet) {
@@ -442,501 +407,6 @@ const VideoTextTalk = (props) => {
   }
 
 
-  // const callRejectHandler = () => {
-  //   socketState.emit("reject-call", {
-  //     from: userSocketId
-  //   });
-  // }
-
-  const socketConnectHandler = () => {
-    // socket = openSocket.connect("localhost:4001");
-
-    // let socket
-
-    // if (!socketState) {
-    //   socket = openSocket.connect("localhost:4001");
-    //   console.log('socket', socket, 'socket.id', socket.id);
-    //   console.log(socket.id);
-    //   setSocketState(socket);
-
-    // } else {
-    //   socket = socketState;
-    //   console.log('userId, userName', userId, userName);
-
-    //   socket.emit('user-info', {
-    //     socketId: userSocketId,
-    //     userId: userId,
-    //     userName: userName,
-    //     connectAt: Date.now()
-    //   });
-    // }
-
-    const lsToken = localStorage.getItem('token');
-
-    // socket = openSocket.connect("localhost:4001");
-    // socket = openSocket.connect(SOCKET_SURL);
-    // socket = openSocket('/your-namespace');
-
-    setIsLoading(true);
-
-    socket = openSocket.connect(SOCKET_SURL, {
-      reconnection: true,
-      reconnectionDelay: 500,
-      transports: ['websocket'],
-      query: { token: lsToken },
-    });
-    console.log('socket', socket);
-    setSocketState(socket);
-
-
-    socket.on('user-socket', (data) => {
-      console.log('user-socket :', data);
-      const userSocketId = data.userSocketId;
-      setUserSocketId(data.userSocketId);
-
-      // console.log('userId, userName', userId, userName);
-      // setUserSocket(data.socket);
-      // updateUser(data.userSocketId);
-      const sendData = {
-        socketId: userSocketId,
-        userId: userId,
-        userName: userName,
-        userImageUrl: userImageUrl,
-        connectAt: Date.now(),
-      };
-      // setEmitUserInfo(sendData);
-      socket.emit('user-info', sendData);
-
-
-      //// request user's favorite users
-      socket.emit('get-favorite-users', {
-        userId: userId
-      });
-
-    });
-
-    socket.on('new-connection', (data) => {
-      console.log('new-connection data', data);
-    })
-
-    // // console.log('userObj', userObj);
-
-    socket.on("update-user-list", ({ users }) => {
-      console.log("update-user-list", users);
-      // setUserList(users);
-
-
-      const userObj = userListObj.find(element => {
-        return element.userId === userId;
-      });
-
-      socket.emit('update-user-list-recieved', {
-        users: users,
-        user: userObj
-      });
-
-      //// for loader of initial socket connection
-      setIsLoading(false);
-
-      // if (users.indexOf(callingTo) < 0) {
-      //   setCallingTo('');
-      // }
-
-      // updateUserList(users);
-
-      // socket.emit('hey', {
-      //   to: users
-      // });
-    });
-
-    socket.on("remove-user", ({ socketId, activeSockets }) => {
-      console.log('remove-user socketId', socketId);
-      console.log('remove-user activeSockets', activeSockets);
-
-      // socket.emit("user-removed", {
-      //   activeSockts: activeSockets
-      // });
-
-
-      // const elToRemove = document.getElementById(socketId);
-      // console.log('elToRemove', elToRemove);
-      // if (elToRemove) {
-      //   elToRemove.remove();
-      // }
-    });
-
-    socket.on("call-made", async data => {
-      console.log('call-made data', data);
-      // setCallFrom(data.socket);
-
-      setCallReject(false);
-
-      const confirmed = window.confirm(
-        // `user is calling you. Do you accept this call?  ${t('videoTalk.text13')}`
-        `${data.user.userName} ${t('videoTalk.text13')}`
-      );
-      console.log('confirmed', confirmed);
-
-      if (!confirmed) {
-
-        setCallReject(true);
-
-        socket.emit("reject-call", {
-          from: data.socket,
-          user: {
-            userId: userId,
-            userName: userName,
-            socketId: userSocketId
-          }
-        });
-
-        return;
-      }
-
-      if (getCalled) {
-        // const confirmed = window.confirm(
-        //   `User "Socket: ${data.socket}" wants to call you. Do accept this call?`
-        // );
-
-
-        if (!confirmed) {
-
-          setCallReject(true);
-
-          socket.emit("reject-call", {
-            from: data.socket,
-            user: {
-              userId: userId,
-              userName: userName,
-              socketId: userSocketId
-            }
-          });
-
-          return;
-        }
-      }
-
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(data.offer)
-      );
-
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-
-      socket.emit("make-answer", {
-        answer,
-        to: data.socket,
-        // user: {
-        //   userId: userId,
-        //   userName: userName,
-        //   socketId: userSocketId
-        // }
-      });
-      getCalled = true;
-
-      setCallGet(true);
-
-    });
-
-    socket.on("answer-made", async data => {
-      console.log("answer-made data", data);
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(data.answer)
-      );
-
-      console.log('anser-made peerConnection', peerConnection);
-
-      // setCallingTo(data.socket);
-      console.log('data.destUser', data.destUser);
-      // setCallingTo(data.destUser);
-
-
-      if (!isAlreadyCalling) {
-        // callUser(data.socket);
-        isAlreadyCalling = true;
-        setIsCalling(true);
-      }
-
-      // const user = userListObj.find(element => {
-      //   return element.socketId === userSocketId;
-      // });
-      // console.log('user', user);
-
-      socket.emit('connection-made', {
-        destUser: data.destUser
-      });
-
-    });
-
-    socket.on("call-rejected", data => {
-      console.log('call-rejected data', data);
-      alert(
-        // `User ${data.user.userName} reject your call.`
-        `${data.user.userName} ${t('videoTalk.text14')}.`
-      );
-      // socketState.disconnect();
-      // resetSocket();
-      window.location.reload();
-      // unselectUsersFromList();
-    });
-
-
-    peerConnection.ontrack = function ({ streams: [stream] }) {
-      console.log('stream peeronnection.ontrack', [stream]);
-      const remoteVideo = document.getElementById("remote-video");
-      console.log('remoteVideo', remoteVideo);
-      if (remoteVideo) {
-        remoteVideo.srcObject = stream;
-      }
-    };
-
-    const localVideo = document.getElementById("local-video");
-    console.log('localVideo.srcObject o', localVideo, localVideo.srcObject);
-    console.log('peerConnection', peerConnection);
-
-    // navigator.getUserMedia(
-    //   { video: true, audio: true },
-    //   stream => {
-    //     const localVideo = document.getElementById("local-video");
-    //     if (localVideo) {
-    //       // localVideo.srcObject = stream;
-    //       // console.log('localVideo.srcObject', localVideo, localVideo.srcObject);
-    //     }
-
-    //     // videoRef.current = stream
-
-    //     // console.log('videoRef', videoRef);
-    //     // console.log('stream', stream);
-    //     // console.log(videoRef);
-    //     // videoRef.current = stream;
-    //     // console.log('videoref current', videoRef.current)
-
-
-
-    //     stream.getTracks().forEach(track => {
-    //       // console.log('track, stream', track, stream);
-    //       // return peerConnection.addTrack(track, stream)
-    //     });
-    //   },
-    //   error => {
-    //     console.warn(error.message);
-    //   }
-    // );
-
-    socket.on('update-usersObj-list', data => {
-      console.log('update-usersObj-list data', data);
-
-      setUserListObj(data.usersObj);
-
-      // const userObj = data.usersObj.find(element => {
-      //   return element.userId === userId;
-      // });
-
-      socket.emit('update-usersObj-list-recieved', {
-        usersObj: data.usersObj,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        },
-        // user: userObj
-      });
-
-      // const callingToUser = data.usersObj.find(user => {
-      //   return user.userId === callingTo.userId;
-      // });
-      // console.log('callingToUser', callingToUser, 'callingTo', callingTo);
-      // if (callingTo && !callingToUser) {
-      //   setCallingTo('');
-      // }
-
-      // if (data.usersObj.indexOf(callingTo) < 0) {
-      //   setCallingTo('');
-      // }
-
-    });
-
-    socket.on('new-user-info', data => {
-      console.log('new-user-info data', data);
-
-      // console.log('emitUserInfo', emitUserInfo)
-
-      socket.emit('new-user-info-recieved', {
-        newUser: data.newUser,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        },
-        usersObj: data.usersObj
-        // recievedUser: emitUserInfo
-      });
-    });
-
-    socket.on('ask-usersObj', data => {
-      console.log('ask-usersObj data', data);
-
-      socket.emit('ask-usersObj-recieved', {
-        askUser: data,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        }
-      });
-    });
-
-    socket.on("update-text-list", data => {
-      console.log('update-text-list data', data);
-
-      // setIsLoading(false);
-      // setIsTextPosting(false);
-
-      if (data.textList.length > 0 && data.textList.length !== textInputList.length && 
-        data.textList[data.textList.length -1].fromUserId === userId
-      ) {
-        setTextInput('');
-      }
-
-      const lastListElement = data.textList[data.textList.length -1];
-      if (lastListElement && lastListElement.fromUserId && lastListElement.toUserId) {
-        if (lastListElement.fromUserId === userId || lastListElement.toUserId === userId) {
-          setTextInputList(data.textList);
-        }
-
-      }
-
-      setIsMoreText(data.isMoreText);
-
-      if (data.socketOnName === 'text-send') {
-        scrollToBottom('text-talk');
-      }
-
-      
-      setIsLoading(false);
-      setIsTextPosting(false);
-
-    });
-
-    socket.on('new-text-send', data => {
-      console.log('new-text-send, data', data);
-      // console.log(userId, callingTo);
-
-      console.log(textInputList);
-      // const beforeList = textInputList.map(element => {
-      //   return element;
-      // });
-      // console.log('beforeList', beforeList);
-      // const addList = beforeList.push(data.textData);
-      // console.log('addList');
-
-      // setTextInputList(addList);
-
-      // getTextListHandler(userId, callingTo.userId, localStorage.getItem('token'), SOCKET_URL);
-    })
-
-    socket.on('textTalks-data', data => {
-      console.log('textTalks-data data', data);
-    });
-
-    socket.on('send-text-forPush', data => {
-      console.log('send-text-forPush data', data);
-
-      socket.emit('send-text-forPush-recieved', {
-        textData: data.text,
-        user: {
-          userId: userId,
-          socketId: userSocketId,
-          userName: userName
-        }
-      });
-
-        // sendTextPushHandler(
-        //   PUSH_URL,
-        //   // BASE_URL, 
-        //   localStorage.getItem('token'),
-        //   data.text.fromUserId,
-        //   data.text
-        // )
-        // .then(res => {
-        //   console.log(res);
-        // })
-        // .catch(err => {
-        //   console.log(err);
-        // })
-      
-    });
-
-    socket.on('text-push-result', data => {
-      console.log('text-push-result', data);
-    });
-
-
-
-    socket.on('text-from-noconnect-user', data => {
-      console.log('text-from-noconnect-user data', data);
-    
-      //// implement to display message notify 
-      setNoconnectMessageNotify(<div>
-          new message from user
-          <br/>
-          {data.text.fromName}
-        </div>
-      );
-
-      setTimeout(() => {
-        setNoconnectMessageNotify('');
-      },1000*10);  
-         
-    });
-
-
-
-    socket.on('get-favorite-users-result', data => {
-      console.log('get-favorite-users-result data', data);
-      
-      setFavoriteUsers(data.favoriteTalkUsers);
-
-      setIsLoading(false);
-
-    });
-
-    socket.on('edit-favorite-users-result', data => {
-      console.log('edit-favorite-users-result data', data);
-      
-      setEditFavoriteUsersResult(data.message);
-
-      setTimeout(() => {
-        setEditFavoriteUsersResult('');
-
-        if (data.favoriteTalkUsers) {
-          //// request user's favorite users
-          socket.emit('get-favorite-users', {
-            userId: userId
-          });
-        }
-      }, 1000*5);
-
-      setIsLoading(false);
-
-    });
-
-    socket.on('error-user-accepted', data => {
-      console.log('error-user-accepted data', data);
-      
-      setIsLoading(false);
-      setIsTextPosting(false);
-
-    });
-
-
-
-
-
-  }
-
-
-
   const socketDisconnectHandler = () => {
     if (socketState) {
       socketState.disconnect();
@@ -991,24 +461,12 @@ const VideoTextTalk = (props) => {
     setListScrollTop(0);
 
     setInitialLoad(true);
+
+    setConnectClick(false);
   }
 
 
 
-
-
-  const showUserListObj = () => {
-    console.log('userListObj', userListObj);
-  }
-
-  // const getCallingInfoHandler = (socketId) => {
-
-  //   const callingInfo = userListObj.find(element => {
-  //     return socketId === element.socketId;
-  //   })
-  //   console.log(socketId, callingInfo);
-  //   setCallingToInfo(callingInfo);
-  // }
 
   const scrollToBottom = (id) => {
     var div = document.getElementById(id);
@@ -1037,9 +495,6 @@ const VideoTextTalk = (props) => {
     setTextInput(input);
   }
 
-  useEffect(() => {
-    console.log('input', textInput);
-  },[textInput]);
 
   const textPostHandler = (text) => {
 
@@ -1060,115 +515,9 @@ const VideoTextTalk = (props) => {
     deleteDraftInput('talk', textTalkId);
     setIsTextPosting(true);
 
-    // else {
-    //   const textData = {
-    //     from: '',
-    //     fromUserId: userId,
-    //     to: '',
-    //     toUserId: 'no socket toUserId',
-    //     text: text,
-    //     fromName: userName,
-    //     sendAt: Date.now()
-    //   };
-
-    //   fetch(url + `/text-talk`, {
-    //     method: 'POST',
-    //     headers: {
-    //       Authorization: 'Bearer ' + token
-    //     },
-    //     // body: JSON.stringify(textData)
-    //     body: JSON.stringify(textData)
-    //   })
-    //     .then(res => {
-    //       if (res.status !== 200 && res.status !== 201) {
-    //         throw new Error('Posting data failed!');
-    //       }
-    //       return res.json();
-    //     })
-    //     .then(resData => {
-    //       console.log(resData);
-
-    //       socketState.emit('text-send', {
-    //         textData: textData
-    //       });
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     })
-    // }
-
-
-    // console.log('textData', textData);
-    // console.log('json stringify', JSON.stringify({
-    //       from: userSocketId,
-    //       fromUserId: userId,
-    //       to: callingTo.socketId,
-    //       toUserId: callingTo.userId,
-    //       text: text,
-    //       fromName: userName,
-    //       sendAt: Date.now()
-    //   })
-    //   );
-
-    // fetch(url + `/text-talk`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Authorization: 'Bearer ' + token
-    //   },
-    //   // body: JSON.stringify(textData)
-    //   body: JSON.stringify({
-    //     from: userSocketId,
-    //     fromUserId: userId,
-    //     to: callingTo.socketId,
-    //     toUserId: callingTo.userId,
-    //     text: text,
-    //     fromName: userName,
-    //     sendAt: Date.now()
-    //   })
-    // })
-    //   .then(res => {
-    //     if (res.status !== 200 && res.status !== 201) {
-    //       throw new Error('Posting data failed!');
-    //     }
-    //     return res.json();
-    //   })
-    //   .then(resData => {
-    //     console.log(resData);
-
-    //     socketState.emit('text-send', {
-    //       textData: textData
-    //     });
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   })
-
   }
 
-  const textDeleteHandler = (textId, fromUSerId, toUserId, token, url) => {
-    fetch(url + `/text-talk?textId=${textId}&toUserId=${toUserId}&fromUserId=${fromUSerId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: 'Bearer ' + token
-      },
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Posting data failed!');
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
-
-        //   socketState.emit('text-send', {
-        //     textData: textData
-        //   });
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
+ 
 
   const getUserTextTalkListHandler = () => {
     // console.log('in get usertexttalkshandler');
@@ -1242,18 +591,6 @@ const VideoTextTalk = (props) => {
 
 
 
-  const getFavoriteUsersHandler = (userId) => {
-    if (props.isAuth) {
-      if (userSocketId && userId) {
-        setIsLoading(true);
-
-        socketState.emit('edit-favorite-users', {
-          userId: userId,
-        });
-      }
-    }
-  };
-
   const editFavoriteUsersHandler = (userId, favoriteTalkUsers) => {
     if (props.isAuth) {
       if (userSocketId && userId) {
@@ -1308,56 +645,6 @@ const VideoTextTalk = (props) => {
     setNoconnectDestUserId(id);
   }
 
-  const getTextListHandler = (fromUserId, toUserId, token, url) => {
-    console.log('in get TextListhandler');
-    // socketState.emit("get-textList", {
-    //   fromUserId: fromUserId,
-    //   toUserId: toUserId
-    // });
-
-    fetch(url + `/text-talk?fromUserId=${fromUserId}&toUserId=${toUserId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Getting data failed!');
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
-        setTextInputList(resData.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
-
-
-  const getUserTextTalksHandler = (userId, url, token) => {
-    fetch(url + `/text-talk/usertalks?userId=${userId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Getting data failed!');
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
-        setUserTextTalkList(resData.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  };
 
   const getSuggestList = (list) => {
     setSuggestList(list);
@@ -1513,7 +800,10 @@ const VideoTextTalk = (props) => {
   if (!userSocketId && userId && userName && usersData.length > 0) {
     connectButton = (
       <div>
-        <Button mode="raised" type="submit" onClick={socketConnectHandler}>
+        <Button mode="raised" type="submit" 
+          // onClick={socketConnectHandler}
+          onClick={() => { setConnectClick(true); }}
+        >
           {/* Start Connect */}
           {t('videoTalk.text1')}
         </Button>
@@ -1532,30 +822,9 @@ const VideoTextTalk = (props) => {
     );
   }
   if (userSocketId && userId && userName && usersData.length > 0) {
-    // connectButton = (
-    //   <Button mode="raised" design="danger" type="submit" 
-    //     // onClick={socketCloseHandler}
-    //     onClick={socketDisconnectHandler}
-    //   >
-    //     {/* Stop Connect */}
-    //     {t('videoTalk.text2')}
-    //   </Button>
-    // );
+
   }
-  // if (
-  //       userSocketId && userId && userName 
-  //       && usersData.length > 0 && textInputList.length > 0
-  //   ) {
-  //       connectButton = (
-  //         <Button mode="raised" design="" type="submit" 
-  //           // onClick={socketCloseHandler}
-  //           onClick={socketDisconnectHandler}
-  //         >
-  //           {/* Back to List */}
-  //           {t('groupTalk.text11')}
-  //         </Button>
-  //       );
-  // }
+
 
   if (
       userSocketId && userId && userName 
@@ -1600,380 +869,312 @@ const VideoTextTalk = (props) => {
   }
 
 
+
+
+
+
+
+
+
+
   return (
-    <div className="talk-appContainer">
-      <TalkPermission />
-      
-      <div>
-
-      {store.windowValues && (store.windowValues.width >= 768) && (
-        <AdElementDisplay 
-          adType='300x300'
-          adPlaceId='talkpage-right' 
-        />
-      )}
-        {/* <TalkRightElements
-          userSocketId={userSocketId}
-          showNoconnectTextTalk={showNoconnectTextTalk}
-        /> */}
-
-
-        {/* <TalkUserListControll 
-          isLoading={isLoading}
-        /> */}
+    <Fragment>
+      <div className="talk-appContainer">
+        <TalkPermission />
         
-        {/* <div style={{textAlign:"right"}}>
-            <button onClick={() => {
-                socketDisconnectHandler();
-                }}>disconnect-test</button>
-        </div> */}
-
-        {isLoading ?
-          <div className="textTalk__loader">
-            <Loader />
-          </div>
-          : null 
-        }
-
-        {callingTo ?
-          <Prompt 
-          // message="You are still talking. Do you want to stop talking?" 
-            message={t('videoTalk.text11')}
-          />
-        : null
-        }
-
-        <div className="textTalk_NoconnectMessage">
-          {noconnectMessageNotify}
-        </div>
-
-        <div className="textTalk__ConnectButton">
-          {noUserMessage}
-          {connectButton}
-        </div>
-
-        {userSocketId && !showUserTextTalkList  && !callGet ?
-          <div className={!isCalling && !tryingToCallUser ? "textTalk-OnlineUser-Container" : ""}>
-            {!isCalling && !tryingToCallUser ? (<div>
-
-
-              {listForSuggest.length > 0 ? 
-                <div className={suggestList.length > 0 ? "textTalk__UserTalkListSuggest" : "textTalk__UserTalkListNoSuggest"} >
-                  <AutoSuggestVideoTextTalk
-                    userList={listForSuggest}
-                    listType="listForSuggest"
-                    callUser={callUser}
-                    startTalkButton={startTalkButton}
-                    getSuggestList={getSuggestList}
-                  />
-                </div>
-              : null}
-
-
-              {/* Online Users */}
-              {/* {t('videoTalk.text3')} */}
-              </div>)
-            : null}
-
-            {/* <div>
-              <div className={suggestList.length > 0 ? "textTalk__UserTalkListSuggest" : "textTalk__UserTalkListNoSuggest"} >
-                <AutoSuggestVideoTextTalk
-                  userList={listForSuggest}
-                  listType="listForSuggest"
-                  callUser={callUser}
-                  startTalkButton={startTalkButton}
-                  getSuggestList={getSuggestList}
-                />
-              </div>
-            </div> */}
-
-            {userListElement2}
-          </div>
-
-          : null
-        }
         <div>
 
-          {/* {callingTo ?
-            <div>
-              <div>calling-to: {callingTo.userName}</div>
-              <div className="remote-videoContainer" onClick={showTextTalkHandler}>
-                <WebStream
-                  id='remote-video'
-                  videoType={showTextTalk ? "remote-video-small" : "remote-video"}
-                  peerConnection={peerConnection}
-                />
-              </div>
-            </div>
-            : null
-          } */}
+          {store.windowValues && (store.windowValues.width >= 768) && (
+            <AdElementDisplay 
+              adType='300x300'
+              adPlaceId='talkpage-right' 
+            />
+          )}
 
-            <div className="textTalk__ConnectUserInfo">
+          {isLoading &&
+            <div className="textTalk__loader">
+              <Loader />
+            </div>
+          }
+
+          {callingTo &&
+            <Prompt 
+            // message="You are still talking. Do you want to stop talking?" 
+              message={t('videoTalk.text11')}
+            />
+          }
+
+          <div className="textTalk_NoconnectMessage">
+            {noconnectMessageNotify}
+          </div>
+
+          <div className="textTalk__ConnectButton">
+            {noUserMessage}
+            {connectButton}
+          </div>
+
+          {userSocketId && !showUserTextTalkList  && !callGet && (
+            <div className={!isCalling && !tryingToCallUser ? "textTalk-OnlineUser-Container" : ""}>
+              {!isCalling && !tryingToCallUser && (
               <div>
-                {tryingToCallUser ? 
-                  <div>
-                    {/* Your are trying to talk: {tryingToCallUser.userName} */}
-                    {t('videoTalk.text5')}: {tryingToCallUser.userName}
-                  </div> 
-                : null
-                }
-                {callingTo && !showTextTalk ? 
-                  <div>
-                    {/* You are talking to: {callingTo.userName} */}
-                    {t('videoTalk.text7')}: {callingTo.userName}
+                {listForSuggest.length > 0 && 
+                  <div className={suggestList.length > 0 ? "textTalk__UserTalkListSuggest" : "textTalk__UserTalkListNoSuggest"} >
+                    <AutoSuggestVideoTextTalk
+                      userList={listForSuggest}
+                      listType="listForSuggest"
+                      callUser={callUser}
+                      startTalkButton={startTalkButton}
+                      getSuggestList={getSuggestList}
+                    />
                   </div>
-                : null
                 }
-                {talkStartAt && !showTextTalk ? 
-                  <div>
-                    {/* You started to talk: {getLocalTimeElements(talkStartAt).hour}:{getLocalTimeElements(talkStartAt).minute} {getLocalTimeElements(talkStartAt).xm} */}
-                    {t('videoTalk.text8')}: {getLocalTimeElements(talkStartAt).hour}:{getLocalTimeElements(talkStartAt).minute} {getLocalTimeElements(talkStartAt).xm}
-                  </div>
-                : null
-                }
-              </div>
+                </div>
+                )
+              }
 
-              <div style={remoteVideoStyle} className="remote-videoContainer" onClick={showTextTalkHandler}>
-                
-                {showTextTalkButton}
-                
-                <WebStream
-                  id='remote-video'
-                  videoType={showTextTalk ? "remote-video-small" : "remote-video"}
-                  // videoType={remoteVideoType}
-                  peerConnection={peerConnection}
-                  callingTo={callingTo}
-                />
-
-              </div>
-
-
+              {userListElement2}
             </div>
+          )}
 
-          {/* <div className="remote-videoContainer" onClick={showTextTalkHandler}>
-        <WebStream
-          id='remote-video'
-          videoType={showTextTalk ? "remote-video-small" : "remote-video"}
-          peerConnection={peerConnection}
-        />
-      </div> */}
 
 
           <div>
-            {/* <div>
-              {showTextTalkButton}
-            </div> */}
+              <div className="textTalk__ConnectUserInfo">
+                <div>
+                  {tryingToCallUser &&
+                    <div>
+                      {/* Your are trying to talk: {tryingToCallUser.userName} */}
+                      {t('videoTalk.text5')}: {tryingToCallUser.userName}
+                    </div> 
+                  }
+
+                  {callingTo && !showTextTalk && 
+                    <div>
+                      {/* You are talking to: {callingTo.userName} */}
+                      {t('videoTalk.text7')}: {callingTo.userName}
+                    </div>
+                  }
+
+                  {talkStartAt && !showTextTalk &&
+                    <div>
+                      {/* You started to talk: {getLocalTimeElements(talkStartAt).hour}:{getLocalTimeElements(talkStartAt).minute} {getLocalTimeElements(talkStartAt).xm} */}
+                      {t('videoTalk.text8')}: {getLocalTimeElements(talkStartAt).hour}:{getLocalTimeElements(talkStartAt).minute} {getLocalTimeElements(talkStartAt).xm}
+                    </div>
+                  }
+                </div>
+
+                <div style={remoteVideoStyle} className="remote-videoContainer" onClick={showTextTalkHandler}>
+                  
+                  {showTextTalkButton}
+                  
+                  <WebStream
+                    id='remote-video'
+                    videoType={showTextTalk ? "remote-video-small" : "remote-video"}
+                    // videoType={remoteVideoType}
+                    peerConnection={peerConnection}
+                    callingTo={callingTo}
+                  />
+
+                </div>
+              </div>
 
             <div>
-            {callingTo && showTextTalk ?
-                <div>
+      
+              {callingTo && showTextTalk && (
+                  <div>
+                    <div id="text-talk" className="textTalk-container"
+                      style={!showTextInputElement ? {bottom: "15px"} : {}}
+                    >
+                      <VideoTextTalkTextList 
+                        textInputList={textInputList}
+                        userName={userName}
+                        userId={userId}
+                        favoriteUsers={favoriteUsers}
+                        editFavoriteUsersHandler={editFavoriteUsersHandler}
+                        editFavoriteUsersResult={editFavoriteUsersResult}
+                        getMoreNum={getMoreNum}
+                        setGetMoreNum={setGetMoreNum}
+                        noconnectGetMoreHandler={noconnectGetMoreHandler}
+                        isMoreText={isMoreText}
+                        listScrollTop={listScrollTop}
+                        isLoading={isLoading}
+                      />
+                    </div>
 
-                  {/* <TalkDestInfo 
-                    // usersData={usersData}
-                    // noconnectDestUserId={noconnectDestUserId}
-                    // isLoading={isLoading}
-                  /> */}
-
-                  <div id="text-talk" className="textTalk-container"
-                    style={!showTextInputElement ? {bottom: "15px"} : {}}
-                  >
-                    {/* {textList} */}
-                    <VideoTextTalkTextList 
-                      textInputList={textInputList}
-                      userName={userName}
-                      userId={userId}
-                      favoriteUsers={favoriteUsers}
-                      editFavoriteUsersHandler={editFavoriteUsersHandler}
-                      editFavoriteUsersResult={editFavoriteUsersResult}
-                      getMoreNum={getMoreNum}
-                      setGetMoreNum={setGetMoreNum}
-                      noconnectGetMoreHandler={noconnectGetMoreHandler}
-                      isMoreText={isMoreText}
-                      listScrollTop={listScrollTop}
-                      isLoading={isLoading}
-                    />
-                  </div>
-
-                  <div className="">
-
-                    {showTextInputElement ?
-                      <div>
-                        <div className="groupTalk__textInputContainer">
-                          <VideoTextTalkInput
-                            getInputHandler={getInputHandler}
-                            textInputHandlerEmoji={textInputHandlerEmoji}
-                            textInput={textInput}
-                            noconnectDestUserId={noconnectDestUserId}
-                            textPostHandler={textPostHandler}
-                            noconnectTextPostHandler=""
-                            isTextPosting={isTextPosting}
-                          />
-                        </div>
-                        <div
-                          className="groupTalk__showInputButton"
-                          // style={{position: "fixed", bottom:"75px", right:"1px"}}
-                          onClick={() => {
-                            showTextInputElementHandler();
-                            // textPostHandler(textInput);
-                          }}
-                        >
-                          <Button
-                            mode="raised" type="submit"
-                            disabled={textInput}
+                    <div className="">
+                      
+                      {showTextInputElement &&
+                        <div>
+                          <div className="groupTalk__textInputContainer">
+                            <VideoTextTalkInput
+                              getInputHandler={getInputHandler}
+                              textInputHandlerEmoji={textInputHandlerEmoji}
+                              textInput={textInput}
+                              noconnectDestUserId={noconnectDestUserId}
+                              textPostHandler={textPostHandler}
+                              noconnectTextPostHandler=""
+                              isTextPosting={isTextPosting}
+                            />
+                          </div>
+                          <div
+                            className="groupTalk__showInputButton"
+                            // style={{position: "fixed", bottom:"75px", right:"1px"}}
                             onClick={() => {
                               showTextInputElementHandler();
                               // textPostHandler(textInput);
                             }}
                           >
-                            {/* hide */}
-                            {t('groupTalk.text36', 'hide')}
-                      </Button>
+                            <Button
+                              mode="raised" type="submit"
+                              disabled={textInput}
+                              onClick={() => {
+                                showTextInputElementHandler();
+                                // textPostHandler(textInput);
+                              }}
+                            >
+                              {/* hide */}
+                              {t('groupTalk.text36', 'hide')}
+                        </Button>
+                          </div>
                         </div>
-                      </div>
-                      :
-                      <div className="groupTalk__showInputButton"
-                      // style={{fontSize:"0.75rem", width:"40%", bottom:"1px"}}
-                      >
-                        <Button
-                          mode="raised" type="submit"
-                          // disabled={!groupTextInput}
-                          onClick={() => {
-                            showTextInputElementHandler();
-                            // textPostHandler(textInput);
-                          }}
+                      }
+
+                      {!showTextInputElement && (
+                        <div className="groupTalk__showInputButton"
+                        // style={{fontSize:"0.75rem", width:"40%", bottom:"1px"}}
                         >
-                          {/* write text */}
-                          {t('groupTalk.text37', 'write text')}
-                      </Button>
-                      </div>
-                    }
-
-                    {/* <button onClick={() => {scrollToBottom('text-talk')}}>bottom-to</button> */}
+                          <Button
+                            mode="raised" type="submit"
+                            // disabled={!groupTextInput}
+                            onClick={() => {
+                              showTextInputElementHandler();
+                              // textPostHandler(textInput);
+                            }}
+                          >
+                            {/* write text */}
+                            {t('groupTalk.text37', 'write text')}
+                        </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                : null
-              }
-            </div>
+                  
+              )}
+    
 
 
-            <div>
-            {showNoconnectTextTalk ?
-                <div>
-
-                  <TalkDestInfo
-                    userId={userId}
-                    usersData={usersData}
-                    favoriteUsers={favoriteUsers}
-                    editFavoriteUsersHandler={editFavoriteUsersHandler}
-                    editFavoriteUsersResult={editFavoriteUsersResult}
-                    noconnectDestUserId={noconnectDestUserId}
-                    isLoading={isLoading}
-                  />
-
-                  <div id="text-talk" className="textTalk-container"
-                    style={!showTextInputElement ? {bottom: "15px"} : {}}
-                  >
-                    <VideoTextTalkTextList 
-                      textInputList={textInputList}
-                      userName={userName}
+              
+              {showNoconnectTextTalk &&
+                  <div>
+                    <TalkDestInfo
                       userId={userId}
-                      noconnectDestUserId={noconnectDestUserId}
                       usersData={usersData}
                       favoriteUsers={favoriteUsers}
                       editFavoriteUsersHandler={editFavoriteUsersHandler}
                       editFavoriteUsersResult={editFavoriteUsersResult}
-                      noconnectTextDeleteHandler={noconnectTextDeleteHandler}
-                      getMoreNum={getMoreNum}
-                      setGetMoreNum={setGetMoreNum}
-                      noconnectGetMoreHandler={noconnectGetMoreHandler}
-                      isMoreText={isMoreText}
-                      listScrollTop={listScrollTop}
+                      noconnectDestUserId={noconnectDestUserId}
                       isLoading={isLoading}
                     />
-                  </div>
 
-                  <div className="">
+                    <div id="text-talk" className="textTalk-container"
+                      style={!showTextInputElement ? {bottom: "15px"} : {}}
+                    >
+                      <VideoTextTalkTextList 
+                        textInputList={textInputList}
+                        userName={userName}
+                        userId={userId}
+                        noconnectDestUserId={noconnectDestUserId}
+                        usersData={usersData}
+                        favoriteUsers={favoriteUsers}
+                        editFavoriteUsersHandler={editFavoriteUsersHandler}
+                        editFavoriteUsersResult={editFavoriteUsersResult}
+                        noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                        getMoreNum={getMoreNum}
+                        setGetMoreNum={setGetMoreNum}
+                        noconnectGetMoreHandler={noconnectGetMoreHandler}
+                        isMoreText={isMoreText}
+                        listScrollTop={listScrollTop}
+                        isLoading={isLoading}
+                      />
+                    </div>
 
-                    {showTextInputElement ?
-                      <div>
-                        <div className="groupTalk__textInputContainer">
-                          <VideoTextTalkInput
-                            getInputHandler={getInputHandler}
-                            textInputHandlerEmoji={textInputHandlerEmoji}
-                            textInput={textInput}
-                            noconnectDestUserId={noconnectDestUserId}
-                            textPostHandler=""
-                            noconnectTextPostHandler={noconnectTextPostHandler}
-                            isTextPosting={isTextPosting}
-                          />
-                        </div>
-                        <div
-                          className="groupTalk__showInputButton"
-                          // style={{position: "fixed", bottom:"75px", right:"1px"}}
-                          onClick={() => {
-                            showTextInputElementHandler();
-                            // textPostHandler(textInput);
-                          }}
-                        >
-                          <Button
-                            mode="raised" type="submit"
-                            disabled={textInput}
+                      {showTextInputElement && (
+                        <div>
+                          <div className="groupTalk__textInputContainer">
+                            <VideoTextTalkInput
+                              getInputHandler={getInputHandler}
+                              textInputHandlerEmoji={textInputHandlerEmoji}
+                              textInput={textInput}
+                              noconnectDestUserId={noconnectDestUserId}
+                              textPostHandler=""
+                              noconnectTextPostHandler={noconnectTextPostHandler}
+                              isTextPosting={isTextPosting}
+                            />
+                          </div>
+                          <div
+                            className="groupTalk__showInputButton"
+                            // style={{position: "fixed", bottom:"75px", right:"1px"}}
                             onClick={() => {
                               showTextInputElementHandler();
                               // textPostHandler(textInput);
                             }}
                           >
-                            {/* hide */}
-                            {t('groupTalk.text36', 'hide')}
-                      </Button>
+                            <Button
+                              mode="raised" type="submit"
+                              disabled={textInput}
+                              onClick={() => {
+                                showTextInputElementHandler();
+                                // textPostHandler(textInput);
+                              }}
+                            >
+                              {/* hide */}
+                              {t('groupTalk.text36', 'hide')}
+                        </Button>
+                          </div>
                         </div>
-                      </div>
-                      :
-                      <div className="groupTalk__showInputButton"
-                      // style={{fontSize:"0.75rem", width:"40%", bottom:"1px"}}
-                      >
-                        <Button
-                          mode="raised" type="submit"
-                          // disabled={!groupTextInput}
-                          onClick={() => {
-                            showTextInputElementHandler();
-                            // textPostHandler(textInput);
-                          }}
+                      )}
+                      {!showTextInputElement && (
+                        <div className="groupTalk__showInputButton"
+                        // style={{fontSize:"0.75rem", width:"40%", bottom:"1px"}}
                         >
-                          {/* write text */}
-                          {t('groupTalk.text37', 'write text')}
-                      </Button>
-                      </div>
-                    }
-
-                    {/* <button onClick={() => {scrollToBottom('text-talk')}}>bottom-to</button> */}
+                          <Button
+                            mode="raised" type="submit"
+                            // disabled={!groupTextInput}
+                            onClick={() => {
+                              showTextInputElementHandler();
+                              // textPostHandler(textInput);
+                            }}
+                          >
+                            {/* write text */}
+                            {t('groupTalk.text37', 'write text')}
+                        </Button>
+                        </div>
+                      )}
                   </div>
-                </div>
-                : null
               }
+
+
             </div>
 
+
           </div>
-
-
         </div>
-      </div>
 
 
-      <div style={showTextTalk || showUserTextTalkList ? {display: "none"}: null}>
-        <WebStream
-          id='local-video'
-          videoType="local-video"
-          peerConnection={peerConnection}
-        />
-      </div>
+        <div style={showTextTalk || showUserTextTalkList ? {display: "none"}: null}>
+          <WebStream
+            id='local-video'
+            videoType="local-video"
+            peerConnection={peerConnection}
+          />
+        </div>
 
 
 
 
-      {userSocketId && !isCalling && !tryingToCallUser && !callGet ?   
-        <div> 
-          {!showNoconnectTextTalk &&
+        {userSocketId && !isCalling && !tryingToCallUser && !callGet && 
+          !showNoconnectTextTalk && (
+          <div> 
             <div>
               <TalkUserListControl
                 userId={userId}
@@ -2017,13 +1218,36 @@ const VideoTextTalk = (props) => {
                 // isLoading={isLoading}
               />
             </div>
-          }
+          </div>
+        )}
+
+
+          <VideoTextTalkSocket 
+            setIsLoading={setIsLoading}
+            setSocketState={setSocketState}
+            setUserSocketId={setUserSocketId}
+            userId={userId}
+            userName={userName}
+            userImageUrl={userImageUrl}
+            userListObj={userListObj}
+            setCallReject={setCallReject}
+            userSocketId={userSocketId}
+            setCallGet={setCallGet}
+            setIsCalling={setIsCalling}
+            setUserListObj={setUserListObj}
+            textInputList={textInputList}
+            setTextInputList={setTextInputList}
+            setTextInput={setTextInput}
+            setIsMoreText={setIsMoreText}
+            setIsTextPosting={setIsTextPosting}
+            setNoconnectMessageNotify={setNoconnectMessageNotify}
+            setFavoriteUsers={setFavoriteUsers}
+            setEditFavoriteUsersResult={setEditFavoriteUsersResult}
+            connectClick={connectClick}
+            scrollToBottom={scrollToBottom}
+          />
         </div>
-      : null}
-
-
-
-    </div>
+    </Fragment>
   );
 };
 

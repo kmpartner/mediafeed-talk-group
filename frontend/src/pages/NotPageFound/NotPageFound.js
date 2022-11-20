@@ -10,7 +10,6 @@ import { getUserDataForStore } from '../../util/user';
 
 import GetWindowData from '../../components/UI/getWindowData';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
-import VideoAdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/VideoAdElementDisplay';
 import VideoAdElementTime from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/VideoAdElementTime';
 import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
 import './NotPageFound.css';

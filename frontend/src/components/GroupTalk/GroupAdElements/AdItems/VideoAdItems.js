@@ -7,6 +7,7 @@ import TopBarContents from "../GroupTopElements/TopBarContents";
 import { ADNETWORKLINK_URL } from "../../../../App";
 
 import GrayImage from '../../../../images/light-gray-square-300.jpg';
+import RemeetAdVideo from '../../../../images/remeet-test2-2-darkintro.mp4';
 
 import classes from "./AdItems.module.css";
 // import "../FeedEdit.css";
@@ -71,7 +72,6 @@ const VideoAdItems = (props) => {
   },[ad, adType, activeList, listenStart]);
 
 
-
   let bodyVideo300;
 
   if (ad && activeList && activeList.length > 0) {
@@ -102,6 +102,37 @@ const VideoAdItems = (props) => {
       </a>
     )
   }
+  else {
+    // // some fallback
+    bodyVideo300 = (
+      <a className={classes.adLink}
+        // href={ad.linkUrl}
+        href={`https://remeet.watakura.xyz/your-room-from-above-link`}
+        target="_blank" rel="noopener noreferrer"
+      >
+        <video 
+          // className="body300x300Image"
+          className="body300Video"
+          id='adVideo'
+          src={RemeetAdVideo}
+          // controls
+          autoPlay
+          loop
+          muted
+          alt="ad video"
+        />
+          <div className="body300x300TextContainer">
+           <span className="body300x300TextTitle">
+             Video Talk & Meeting
+           </span>
+           <span className="body300x300TextDescription">
+             REMEET: Web meetings & talks with text chat, file & screen sharing
+           </span>
+         </div>
+      </a>
+    )
+  }
+
 
 
   let adItemsBody;
