@@ -14,7 +14,7 @@ import classes from "./AdItems.module.css";
 // import "./ImagePreviewContents.css"
 
 const VideoAdItems = (props) => {
-  console.log("VideoAdItems.js-props", props);
+  // console.log("VideoAdItems.js-props", props);
   const { 
     ad, 
     adType, 
@@ -24,6 +24,7 @@ const VideoAdItems = (props) => {
   } = props;
 
   const [listenStart, setListenStart] = useState(false);
+  const [fallbackDesc, setFallbackDesc] = useState(null);
 
   useEffect(() => {
     const videoEl = document.getElementById('adVideo');
@@ -70,6 +71,27 @@ const VideoAdItems = (props) => {
     }
 
   },[ad, adType, activeList, listenStart]);
+
+
+  // // display fallback desc when adlist not exist 
+  useEffect(() => {
+    if (!ad && activeList.length === 0 && adType === 'video300') {
+      setTimeout(() => {
+        setFallbackDesc(
+          <div className="body300x300TextContainer">
+            <span className="body300x300TextTitle">
+              Video Talk & Meeting
+            </span>
+            <span className="body300x300TextDescription">
+              REMEET: Web meetings & talks with text chat, file & screen sharing
+            </span>
+          </div>
+        );
+      },1000*10);
+    }
+
+  },[ad, adType, activeList]);
+
 
 
   let bodyVideo300;
@@ -121,14 +143,15 @@ const VideoAdItems = (props) => {
           muted
           alt="ad video"
         />
-          <div className="body300x300TextContainer">
+          {/* <div className="body300x300TextContainer">
            <span className="body300x300TextTitle">
              Video Talk & Meeting
            </span>
            <span className="body300x300TextDescription">
              REMEET: Web meetings & talks with text chat, file & screen sharing
            </span>
-         </div>
+         </div> */}
+         {fallbackDesc}
       </a>
     )
   }

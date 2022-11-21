@@ -310,7 +310,12 @@ const GroupTalk = (props) => {
   }, [isMember]);
 
 
-
+  useEffect(() => {
+    if (!roomIdParam) {
+      setShowGroupTalkText(false);
+      socketDisconnectHandler();
+    }
+  },[roomIdParam]);
 
 
   const socketDisconnectHandler = () => {
