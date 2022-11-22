@@ -179,7 +179,8 @@ const Post = props => {
   // }
 
   if (props.modifiedImageUrls && props.modifiedImageUrls.length > 0) {
-    postImagesBody = <ul>{props.modifiedImageUrls.map(url => {
+    // postImagesBody = <ul>{props.modifiedImageUrls.map(url => {
+      postImagesBody = <ul>{props.imageUrls.map((url, index) => {
       
       let fileType;
       if (props.modifiedImagePaths && props.modifiedImagePaths.length > 0) {
@@ -187,18 +188,54 @@ const Post = props => {
         // console.log(fileType, props.modifiedImagePaths[0]);
       }
 
-      let imageHeight = "150"
+      let imageStyle = {
+        width: '100%',
+        maxWidth: '350px',
+        maxHeight: '350px',
+        objectFit: 'cover',
+        borderRadius: '4px'
+      };
+
+      // if (props.modifiedImageUrls.length === 1 && window.innerWidth > 768) {
+      //   imageStyle = {
+      //     width: '100%',
+      //     maxWidth: '300px',
+      //     // maxHeight: '400px',
+      //     // objectFit: 'cover',
+      //     // borderRadius: '4px'
+      //   };
+      // }
+
       if (props.modifiedImageUrls.length > 1) {
-        imageHeight = "100"
+
+        // imageStyle = {height: '175px', maxHeight: '175px'};
+        imageStyle = {
+          height: '175px', 
+          width: '175px',
+          objectFit: 'cover',
+          borderRadius: '4px'
+        };
       }
+
       if (props.modifiedImageUrls.length > 2) {
-        imageHeight = "75"
+
+        // imageStyle = {height: '100px', maxHeight: '100px'};
+        imageStyle = {
+          height: '50px', 
+          width: '50px',
+          objectFit: 'cover',
+          borderRadius: '4px'
+        };
       }
 
       if (isVideoFile(fileType)) {
         return (
           <span className="post__SmallVideos">
-            <Img src={props.thumbnailImageUrls[0]} alt="post videos"/>
+            {/* <Img src={props.thumbnailImageUrls[0]} alt="post videos"/> */}
+            <video 
+              style={{ width: '100%', maxWidth: '400px'}}
+              src={props.imageUrls[0]} 
+              />
             {/* <video src={url} autoPlay height={imageHeight} alt="post videos"/> */}
 
             {/* {url.startsWith('https://')
@@ -217,7 +254,19 @@ const Post = props => {
       if (isImageFile(fileType)) {
         return (
           <span className="post__SmallImages">
-            <Img src={url} height={imageHeight} alt="post images"/>
+            {/* <Img 
+              // style={{width: "100%", maxWidth:"350px"}}
+              // style={{imageStyle}}
+              // style={{width: '50%', maxWidth:"75px"}}
+              style={imageStyle}
+              src={url} 
+              alt="post images"
+            /> */}
+            <img 
+              style={imageStyle}
+              src={props.modifiedImageUrls.length > 2 ? props.modifiedImageUrls[index] :url} 
+              alt="post images"
+            />
 
             {/* {url.startsWith('https://')
               ? <Img src={url} height={imageHeight} alt="post images"/>
@@ -262,9 +311,11 @@ const Post = props => {
             <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
               <span className="post__SmallVideos">
                 {/* <Img src={youTubeThumbnailUrl} alt="post videos" width="160" /> */}
-                <Img src={youTubeThumbnailUrl} alt="post videos" 
+                <Img 
+                  style={{ width: '100%', maxWidth: '400px'}}
+                  src={youTubeThumbnailUrl} alt="post videos" 
                   // width="200"
-                  height="150" 
+                  // height="150" 
                 />
                   <span className="post__SmallVideosYouTubeMark"
                     // role="img" aria-label="video indicator"
