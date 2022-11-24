@@ -85,7 +85,7 @@ exports.imagesUpload = multer({
 const multerVideoLimits = { 
   fileSize: process.env.MULTER_VIDEO_SIZE_LIMIT_MB
     ? 1000 * 1000 * Number(process.env.MULTER_VIDEO_SIZE_LIMIT_MB) 
-    : 1024 * 1024 * 5
+    : 1024 * 1024 * 500
 };
 
 const fileVideoStorage = multer.diskStorage({

@@ -195,23 +195,33 @@ exports.createVideoPost = async (req, res, next) => {
             console.log('fileSizeInbytes',fileSizeInBytes);
 
             const videoInfo = await getVideoInfo(image.path);
-            // console.log('videoInfo', videoInfo);
+            console.log('videoInfo', videoInfo);
+            // console.log('image', image);
             
 
-            //// resize video 
-            // if (videoInfo.width > 600) {
-            //     await resizeVideo(image.path, modifiedImageUrl, 640);
-            //     var rsStats = fs.statSync(modifiedImageUrl);
-            //     var rsfileSizeInBytes = rsStats.size;
-            //     // Convert the file size to megabytes (optional)
-            //     // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
-            //     console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+            // resize video 
+            if (!videoInfo.width || !videoInfo.height || 
+                    videoInfo.width > 480 || videoInfo.height > 480
+                ) {
+                // await resizeVideo(image.path, modifiedImageUrl, 640);
+                
+                if (videoInfo.width > videoInfo.height) {
+                    await resizeVideo(image.path, modifiedImageUrl, 480);
+                } else {
+                    await resizeVideo(image.path, modifiedImageUrl, 240);
+                }
+
+                var rsStats = fs.statSync(modifiedImageUrl);
+                var rsfileSizeInBytes = rsStats.size;
+                // Convert the file size to megabytes (optional)
+                // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+                console.log('rsfileSizeInbytes',rsfileSizeInBytes);
     
-            //     if (rsfileSizeInBytes < fileSizeInBytes) {
-            //         console.log('in copyfile')
-            //         await copyFile(modifiedImageUrl, image.path);
-            //     }
-            // }
+                if (rsfileSizeInBytes < fileSizeInBytes) {
+                    console.log('in copyfile')
+                    await copyFile(modifiedImageUrl, image.path);
+                }
+            }
 
 
 
@@ -391,6 +401,45 @@ exports.updateVideoPost = async (req, res, next) => {
                 if (fileMimetype === 'video') {
                     thumbnailImageUrl = videoFilePath + '/' + forFileFileName
                     thumbnailImageUrls.push(thumbnailImageUrl);
+
+
+
+                    //// resize video when more than 600 width
+                    var stats = fs.statSync(image.path);
+                    var fileSizeInBytes = stats.size;
+                    // Convert the file size to megabytes (optional)
+                    // var fileSizeInMegabytes = fileSizeInBytes / (10**6);
+                    console.log('fileSizeInbytes',fileSizeInBytes);
+
+                    const videoInfo = await getVideoInfo(image.path);
+                    // console.log('videoInfo', videoInfo);
+                    
+
+                    // resize video 
+                    // if (videoInfo.width > 480) {
+                    if (!videoInfo.width || !videoInfo.height || 
+                        videoInfo.width > 480 || videoInfo.height > 480
+                    ) {
+                        // await resizeVideo(image.path, modifiedImageUrl, 640);
+                    
+                        if (videoInfo.width > videoInfo.height) {
+                            await resizeVideo(image.path, modifiedImageUrl, 480);
+                        } else {
+                            await resizeVideo(image.path, modifiedImageUrl, 240);
+                        }
+
+                        var rsStats = fs.statSync(modifiedImageUrl);
+                        var rsfileSizeInBytes = rsStats.size;
+                        // Convert the file size to megabytes (optional)
+                        // var rfileSizeInMegabytes = rfileSizeInBytes / (10**6);
+                        console.log('rsfileSizeInbytes',rsfileSizeInBytes);
+            
+                        if (rsfileSizeInBytes < fileSizeInBytes) {
+                            console.log('in copyfile')
+                            await copyFile(modifiedImageUrl, image.path);
+                        }
+                    }
+
 
 
                     const trimedVideo = await trimVideo(image.path, modifiedImageUrl);
@@ -864,9 +913,9 @@ const trimVideo = (imageUrl, modifiedImageUrl) => {
     return new Promise((resolve, reject) => {
         ffmpeg(imageUrl)
             .setFfmpegPath(ffmpeg_static)
-            .setStartTime('00:00:01') //Can be in "HH:MM:SS" format also
-            .setDuration(3)
-            .size("50x?").autopad()
+            .setStartTime('00:00:03') //Can be in "HH:MM:SS" format also
+            .setDuration(4)
+            .size("240x?").autopad()
             .on("start", function (commandLine) {
                 console.log("Spawned FFmpeg with command: " + commandLine);
             })
