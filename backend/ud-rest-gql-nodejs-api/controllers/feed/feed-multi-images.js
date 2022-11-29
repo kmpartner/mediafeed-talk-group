@@ -551,7 +551,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
 exports.deleteMultiImagePost = async (req, res, next) => {
     const postId = req.params.postId;
     console.log('postId in deleteMutiImagePost', postId);
-
+    
     // try {
     const post = await Post.findById(postId)
 
@@ -660,6 +660,9 @@ exports.deleteMultiImagePost = async (req, res, next) => {
     }
 
     try {
+
+        // throw new Error('error-error');
+
         await Post.findByIdAndRemove(postId);
 
         await Comment.deleteMany({ postId: postId });

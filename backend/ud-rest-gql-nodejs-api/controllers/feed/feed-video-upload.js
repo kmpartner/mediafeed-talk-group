@@ -915,7 +915,7 @@ const trimVideo = (imageUrl, modifiedImageUrl) => {
             .setFfmpegPath(ffmpeg_static)
             .setStartTime('00:00:03') //Can be in "HH:MM:SS" format also
             .setDuration(4)
-            .size("240x?").autopad()
+            .size("400x?").autopad()
             .on("start", function (commandLine) {
                 console.log("Spawned FFmpeg with command: " + commandLine);
             })
