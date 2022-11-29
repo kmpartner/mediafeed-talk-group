@@ -107,7 +107,7 @@ class FeedEdit extends Component {
   componentDidUpdate(prevProps, prevState) {
     console.log('FeedEdit-props', this.props)
     // console.log(prevProps, prevState);
-    // console.log(this.state.postForm);
+    console.log('this.state.postForm didupdate', this.state.postForm);
     if (
       this.props.editing &&
       prevProps.editing !== this.props.editing &&
@@ -150,7 +150,7 @@ class FeedEdit extends Component {
           valid: true,
         },
       };
-      // console.log(postForm);
+      console.log('postForm', postForm);
       this.setState({ 
         postForm: postForm, 
         formIsValid: true,
@@ -627,7 +627,7 @@ class FeedEdit extends Component {
     //     })}
     //   </ul>)
     // }
-    console.log(this.state.postForm);
+    console.log('this.state.postForm', this.state.postForm);
     let imageDeleteElement;
     if (
       this.state.postForm.image.value &&

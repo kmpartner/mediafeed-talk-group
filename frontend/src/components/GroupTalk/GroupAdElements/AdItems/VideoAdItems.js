@@ -26,6 +26,8 @@ const VideoAdItems = (props) => {
   const [listenStart, setListenStart] = useState(false);
   const [fallbackDesc, setFallbackDesc] = useState(null);
 
+
+  // // play and pause controll on visible state
   useEffect(() => {
     const videoEl = document.getElementById('adVideo');
     
@@ -45,6 +47,7 @@ const VideoAdItems = (props) => {
 
   },[ad, adType, activeList, isVisible]);
 
+  // // listen video playing state
   useEffect(() => {
     const videoEl = document.getElementById('adVideo');
 
@@ -58,6 +61,14 @@ const VideoAdItems = (props) => {
       videoEl.addEventListener('playing', (e) => {
         console.log('playing...');
         setPlayState('playing');
+
+        // // // 10 second pause and rerender in VideoAdElementTime.js
+        // setTimeout(() => {
+        //   console.log('playing... 10-sec');
+        //   videoEl.pause();
+        //   setPlayState('10-sec');
+        // },1000*10);
+
         // videoEl.play();
       });
 

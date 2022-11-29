@@ -49,12 +49,18 @@ const VideoAdElementTime = (props) =>
 	// }, []);
 
   useEffect(() => {
-    // console.log('playState', playState);
+    console.log('playState', playState);
 
     if (playState === 'ended') {
       setTimeout(() => {
         setAdEl(null);
       }, nextPlayDelay);
+    }
+
+		if (playState === '10-sec') {
+      setTimeout(() => {
+        setAdEl(null);
+      }, 1000*5);
     }
 
   },[playState]);

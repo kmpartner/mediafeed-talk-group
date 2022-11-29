@@ -73,6 +73,7 @@ const LivePresenterPosts = props => {
               resetPostPage={''}
               postData={post}
               postFilter={''}
+              hideActionButtons={true}
             />
           </div>
         );

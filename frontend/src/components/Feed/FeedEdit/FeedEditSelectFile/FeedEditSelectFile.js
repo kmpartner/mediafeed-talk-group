@@ -4,6 +4,8 @@ import { withI18n } from "react-i18next";
 import FilePicker from '../../../Form/Input/FilePicker';
 import EmbedMedia from './EmbedMedia';
 
+import { isVideoFile } from '../../../../util/image';
+
 import classes from './FeedEditSelectFile.module.css';
 
 function FeedEditSelectFile(props) {
@@ -32,6 +34,7 @@ function FeedEditSelectFile(props) {
   }
   // const embedUrl = state.postForm['embedUrl'].value;
   let imageExist = false;
+  let isVideo = false;
 
   if (state.postForm) {
     if (state.postForm.image.value || 
@@ -46,6 +49,17 @@ function FeedEditSelectFile(props) {
     }
   }
 
+  console.log('state.postForm', state.postForm, state.postForm.image.value);
+  if (state.postForm.image.value && 
+    state.postForm.image.value.length > 0 && 
+    state.postForm.image.value[0].name
+  ) {
+    const fileType = state.postForm.image.value[0].name
+      .split('.')[state.postForm.image.value[0].name.split('.').length -1].toLowerCase();
+    
+    isVideo = isVideoFile(fileType);
+    console.log('state.postForm', state.postForm, state.postForm.image.value[0].name, isVideo);
+  }
   return (
     <Fragment>
       {!state.postForm.embedUrl.value &&
@@ -61,15 +75,33 @@ function FeedEditSelectFile(props) {
           touched={state.postForm['image'].touched}
         />
 
-        <span className="feedEdit__aboutMediaFile">
-          {/* think about later about size video and web thing */}
-          {/* (Media File should be jpg, jpeg, png, mp4 file, and less than 3MB) */}
-          {/* (Media File should be jpg, jpeg, png, mp4 file) */}
-          {/* (Media File should be jpg, jpeg, png file, less than 1MB, up to 6 files) */}
-          {/* (Image files should be jpg, jpeg, png file, up to 6 files (Image will be resized when file size exceed 1MB)) */}
-          {/* (Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files (Images with more than 1400px of width or height will be resized)) */}
-          {t('feed.text34', 'Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files')} ({t('feed.text35', 'Images with more than 1400px of width or height will be resized')})
-        </span>
+        <div className="feedEdit__aboutMediaFile">
+          <div>Accept Image or Video (mp4, webm) file</div>
+          <div>
+            {!isVideo && (
+              <div>
+                {/* {t('feed.text34', 'Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files')} 
+                {' '}
+                ({t('feed.text35', 'Images with more than 1400px of width or height will be resized')})
+                {' '} */}
+                Image files should be jpg, jpeg, png, gif file.
+                {' '} 
+                One file size should be less than 5MB. (Large file will be resized)
+                {' '}
+                <br/>
+                Accept up to 6 files. In the case of gif file, accept one file.
+              </div>
+            )}
+
+            {isVideo && (
+              <div>
+                Accept one video file. File size should be less than 250MB 
+                {' '}
+                (file will be resized to smaller size)
+              </div>
+            )}
+          </div>
+        </div>
       </div>
       }
 

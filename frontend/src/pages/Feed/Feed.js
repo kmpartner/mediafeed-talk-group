@@ -21,7 +21,7 @@ import { getUserLocation, getFavoritePosts } from '../../util/user';
 import { postUpdatePushHandler } from '../../util/pushNotification'
 import { createWithAdIndexList } from '../../util/ad-visit';
 import { deleteLsFavoritePost, updateLsFavoritePosts } from '../../util/feed/favorite-post';
-import { isAudioFile } from '../../util/image';
+import { isAudioFile, isVideoFile } from '../../util/image';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import GetWindowData from '../../components/UI/getWindowData';
@@ -123,6 +123,23 @@ class Feed extends Component {
        //// other actions in FeedSocketAction.js
        
     })
+
+    if (localStorage.getItem('deletePostId') && localStorage.getItem('deletePostData') ) {
+      console.log('deletePostData', JSON.parse(localStorage.getItem('deletePostData')));
+      
+      const filePath = JSON.parse(localStorage.getItem('deletePostData')).imagePaths[0];
+      if (filePath) {
+        const fileType = filePath.split('.').pop();
+        const isVideo = isVideoFile(fileType);
+
+        console.log('deletepostData', filePath, fileType, isVideo);
+
+        this.deleteMultiImagePostHandler(localStorage.getItem('deletePostId'), isVideo);
+      } 
+      else {
+        this.deleteMultiImagePostHandler(localStorage.getItem('deletePostId'), false);
+      }
+    }
 
   }
 
@@ -653,7 +670,7 @@ class Feed extends Component {
   startEditPostHandler = postId => {
     this.setState(prevState => {
       const loadedPost = { ...prevState.posts.find(p => p._id === postId) };
-      // console.log(loadedPost);
+      console.log('loadedPost', loadedPost);
 
       getUserLocation()
         .then(result => {
@@ -897,12 +914,17 @@ class Feed extends Component {
         })
         .catch(err => {
           console.log(err);
-          this.catchError(err);   
+          // this.catchError(err);  
+
+          const errmessage = { message: 'Creating or editing a post failed!'}
+          this.catchError(errmessage);
+
           this.setState({
             isEditing: false,
             editPost: null,
             editLoading: false,
-            error: err,
+            // error: err,
+            error: errmessage,
             uploadProgress: 0,
           });
 
@@ -1048,6 +1070,11 @@ class Feed extends Component {
     this.setState({ isPostDeleting: true });
     this.setState({ postDeleteResult: '' });
 
+    const lsDeletePostId = localStorage.getItem('deletePostId');
+
+    localStorage.removeItem('deletePostId');
+    localStorage.removeItem('deletePostData');
+
     let url = BASE_URL + `/feed-images/post-images/${postId}?userLocation=${localStorage.getItem('userLocation')}`;
     
     if (isVideo) {
@@ -1102,6 +1129,19 @@ class Feed extends Component {
         //     Authorization: 'Bearer ' + this.props.token,
         //   },
         // })
+
+        if (lsDeletePostId) {
+          this.setState({
+            error: { message: 'Deleted' },
+          });
+  
+          setTimeout(() => {
+            this.setState({
+              error: null,
+            });
+          },3000);
+        }
+        
       })
       // .then(res => {
       //   console.log(res);
@@ -1114,6 +1154,20 @@ class Feed extends Component {
         setTimeout(() => {
           this.setState({ postDeleteResult: '' });
         },1000*5);
+
+        if (lsDeletePostId) {
+          const errmessage = { message: 'Deletion failed!'}
+          this.catchError(errmessage);
+  
+          this.setState({
+            error: errmessage,
+          });
+  
+          setTimeout(() => {
+            this.props.history.push(`/feed/${postId}`);
+          }, 3000);
+        }
+
       })
   };
 

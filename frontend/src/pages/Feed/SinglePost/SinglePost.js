@@ -17,6 +17,7 @@ import SmallModal from '../../../components/Modal/SmallModal';
 import UserModalContents from '../../../components/Modal/UserModalContents';
 import TransBackdrop from '../../../components/Backdrop/TransBackdrop';
 import SinglePostImages from './SinglePostImages';
+import SinglePostControl from './SinglePostControl';
 import {
   getUserLocation,
   addFavoritePost,
@@ -212,6 +213,16 @@ class SinglePost extends Component {
     this.props.history.push('/feed/posts');
   }
 
+  storeDeletePostIdHandler = () => {
+    localStorage.setItem('deletePostId', this.props.match.params.postId);
+    localStorage.setItem('deletePostData', JSON.stringify(this.state.postData));
+
+    // localStorage.setItem('selectedPostData', JSON.stringify(this.state.postData));
+    // this.props.history.replace('/');
+    this.props.history.push('/feed/posts');
+  }
+
+  
   // getFavoritePostHandler = () => {
   //   this.setState({ isLoading: true });
 
@@ -617,17 +628,15 @@ class SinglePost extends Component {
 
 
             <section className="single-post-notcenter">
-            {this.props.isAuth && localStorage.getItem('userId') === this.state.authorId ?
-              <div className="single-post__editButton">
-                <Button
-                  mode="raised" design="" type="submit"
-                  onClick={this.storePostIdHandler}
-                >
-                  {t('general.text5', 'Edit')}
-                  </Button>
-              </div>
-              : null
-            }
+
+            {this.props.isAuth && localStorage.getItem('userId') === this.state.authorId && (
+              <SinglePostControl 
+                t={t}
+                storePostIdHandler={this.storePostIdHandler}
+                storeDeletePostIdHandler={this.storeDeletePostIdHandler}
+                postData={this.state.postData}
+              />
+            )}
 
             <PostReaction
               userId={localStorage.getItem('userId')}

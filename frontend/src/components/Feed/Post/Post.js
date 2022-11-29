@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useRef } from 'react';
 import { withI18n } from "react-i18next";
 import { Link } from 'react-router-dom';
 import Img from "react-cool-img";
@@ -17,6 +17,8 @@ import AdElementDisplay from '../../GroupTalk/GroupAdElements/AdElememtDisplay/A
 import { getUserLocation } from '../../../util/user';
 import { isImageFile, isVideoFile, isAudioFile } from '../../../util/image';
 import { getDate, getDateTime } from '../../../util/timeFormat';
+import { useOnScreen } from '../../../custom-hooks/useOnScreen';
+
 import './Post.css';
 
 import { BASE_URL } from '../../../App';
@@ -33,6 +35,9 @@ const Post = props => {
   const imagePlace = props.image.split('?')[0];
   const fileType = imagePlace.split('.')[imagePlace.split('.').length - 1].toLowerCase();
   
+  const ref = useRef();
+  const isVisible = useOnScreen(ref);
+
   let linkToPost = `/feed/${props.id}`;
 
   if (props.postData.postType === 'live') {
@@ -230,24 +235,26 @@ const Post = props => {
 
       if (isVideoFile(fileType)) {
         return (
-          <span className="post__SmallVideos">
+          <div className="post__SmallVideos">
             {/* <Img src={props.thumbnailImageUrls[0]} alt="post videos"/> */}
-            <video 
-              style={{ width: '100%', maxWidth: '400px'}}
-              src={props.imageUrls[0]} 
+            <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
+              <video 
+                style={{ maxWidth: '100%', maxHeight: '350px'}}
+                // src={props.imageUrls[0]} 
+                src={props.modifiedImageUrls[0]} 
+                muted 
+                autoPlay={isVideoFile ? true : false}
+                loop={isVideoFile ? true : false}
+                // autoPlay 
+                // loop
               />
-            {/* <video src={url} autoPlay height={imageHeight} alt="post videos"/> */}
-
-            {/* {url.startsWith('https://')
-              ? <Img src={props.thumbnailImageUrls[0]} alt="post videos"/>
-              : <Img src={BASE_URL + '/' + props.thumbnailImageUrls[0]} alt="post videos"/>
-            } */}
-            <span className="post__SmallVideosVideoMark"
-              // role="img" aria-label="video indicator"
-            >
-              &#9654;
-            </span>
-          </span>
+              <div className="post__SmallVideosVideoMark"
+                // role="img" aria-label="video indicator"
+              >
+                &#9654;
+              </div>
+            </Link>
+          </div>
         );
       } 
 
@@ -262,11 +269,13 @@ const Post = props => {
               src={url} 
               alt="post images"
             /> */}
-            <img 
-              style={imageStyle}
-              src={props.modifiedImageUrls.length > 2 ? props.modifiedImageUrls[index] :url} 
-              alt="post images"
-            />
+            <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
+              <img 
+                style={imageStyle}
+                src={props.modifiedImageUrls.length > 2 ? props.modifiedImageUrls[index] :url} 
+                alt="post images"
+              />
+            </Link>
 
             {/* {url.startsWith('https://')
               ? <Img src={url} height={imageHeight} alt="post images"/>
@@ -295,34 +304,29 @@ const Post = props => {
   return (
     <Fragment>
 
-      <article className="post">
+      <article ref={ref} className="post">
         {/* <Link to={linkToPost} target="_blank" rel="noopener noreferrer"> */}
-        <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
-          {postImagesBody}
-        </Link>
+        
+        {postImagesBody}
+        
 
         {props.embedUrl &&
           <div>
-            {/* <iframe width="160" height="90" 
-              src={props.embedUrl}
-              title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
-            >
-            </iframe> */}
             <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
-              <span className="post__SmallVideos">
+              <div className="post__SmallVideos">
                 {/* <Img src={youTubeThumbnailUrl} alt="post videos" width="160" /> */}
                 <Img 
-                  style={{ width: '100%', maxWidth: '400px'}}
+                  style={{ maxWidth: '100%', maxHeight: '350px'}}
                   src={youTubeThumbnailUrl} alt="post videos" 
                   // width="200"
                   // height="150" 
                 />
-                  <span className="post__SmallVideosYouTubeMark"
+                <div className="post__SmallVideosYouTubeMark"
                     // role="img" aria-label="video indicator"
                 >
                   &#9654;
-                </span>
-              </span>
+                </div>
+              </div>
             </Link>
           </div>
         }
@@ -381,44 +385,27 @@ const Post = props => {
             View 
             {t('feed.text4')}
           </Button> */}
-          {props.postCreatorUserId === localStorage.getItem('userId') ?
-            <span>
-              <Button mode="flat" onClick={props.onStartEdit}>
-                {/* Edit */}
-                {t('feed.text5')}
-              </Button>
-              <Button mode="flat" design="danger" onClick={showDeleteModalHandler}>
-                {/* Delete */}
-                {t('feed.text6')}
-              </Button>
-
-              {props.modifiedImageUrls && props.modifiedImageUrls.length > 0
-                &&
-                <Button mode="flat" design="danger" onClick={() => {setShowDeleteImagesModal(!showDeleteImagesModal)}}>
-                  Delete Images
+          {props.postCreatorUserId === localStorage.getItem('userId') &&
+            !props.hideActionButtons && (
+              <span>
+                {/* <Button mode="flat" onClick={props.onStartEdit}>
+                  {t('feed.text5', 'Edit')}
                 </Button>
-              }
-              
-            </span>
-            : null
-          }
+                <Button mode="flat" design="danger" onClick={showDeleteModalHandler}>
+                  {t('feed.text6', 'Delete')}
+                </Button>
+
+                {props.modifiedImageUrls && props.modifiedImageUrls.length > 0
+                  &&
+                  <Button mode="flat" design="danger" onClick={() => {setShowDeleteImagesModal(!showDeleteImagesModal)}}>
+                    Delete Images
+                  </Button>
+                } */}
+              </span>
+          )}
         </div>
-        {showDeleteModal ?
+        {showDeleteModal &&
           <div>
-            {/* <Modal
-              acceptEnabled={true}
-              onCancelModal={hideDeleteModalHandler}
-              // onAcceptModal={!props.imageUrls || props.imageUrls.length === 0 ? props.onDelete : props.deleteMultiImagePostHandler}
-              onAcceptModal={props.deleteMultiImagePostHandler}
-              // isLoading={this.props.postsLoading}
-              title="Delete Post"
-            // style="confirmModal"
-            >
-              <div className="userImageUpload__confirmContent">
-                Is is no problem to delete post completely?
-                {t('feed.text7')}
-              </div>
-            </Modal> */}
             <SmallModal style="modal2">
               <div>
                 <div className="userImageUpload__confirmContent">
@@ -450,7 +437,7 @@ const Post = props => {
               </div>
             </SmallModal>
           </div>
-          : null}
+         }
 
           {showSmallModal ? authorModalBody : null}
           

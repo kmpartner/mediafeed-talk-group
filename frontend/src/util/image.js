@@ -195,10 +195,19 @@ export const checkFileNumberLimit = (totalFileNumber) => {
 export const checkFileSizesLimit = (fileList) => {
   const resultList = [];
 
+  console.log('fileList', fileList);
   for (const file of fileList) {
-    if (file.size < 1024 * 1024 * 5) {
-    // if (file.size < 1024 * 1024 * 1) {
-      resultList.push(file.size);
+    if (file.type.split('/')[0] === 'image') {
+      if (file.size < 1024 * 1024 * 5) {
+      // if (file.size < 1024 * 1024 * 1) {
+        resultList.push(file.size);
+      }
+    }
+
+    if (file.type.split('/')[0] === 'video') {
+      if (file.size < 10**6 * 500) {
+        resultList.push(file.size);
+      }
     }
   }
 

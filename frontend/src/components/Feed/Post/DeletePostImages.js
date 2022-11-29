@@ -13,13 +13,15 @@ import UserModalContents from "../../Modal/UserModalContents";
 import { getUserLocation } from "../../../util/user";
 import { isImageFile, isVideoFile, isAudioFile } from "../../../util/image";
 
+import { useStore } from "../../../hook-store/store";
+
 import { BASE_URL } from "../../../App";
 
 import "./Post.css";
 import classes from './DeletePostImages.module.css';
 
 const DeletePostImages = (props) => {
-  console.log("deleteImages-prop.js", props);
+  // console.log("deleteImages-prop.js", props);
 
   const {
     t,
@@ -32,6 +34,9 @@ const DeletePostImages = (props) => {
     setShowDeleteImagesModal,
     updatePostElementHandler,
   } = props;
+
+  const [store, dispatch] = useStore();
+
 
   const [pathUrls, setPathUrls] = useState([]);
   const [selectedPathUrls, setSelectedPathUrls] = useState([]);
@@ -211,6 +216,16 @@ const DeletePostImages = (props) => {
       })
       .then(res => {
         console.log(res);
+
+        dispatch('SHOW_NOTIFICATION', {
+          status: 'pending',
+          title: 'Deleted',
+          message: '',
+        });
+
+        setTimeout(() => {
+          dispatch('CLEAR_NOTIFICATION')
+        },1000*5);
 
         updatePostElementHandler(res.post);
 

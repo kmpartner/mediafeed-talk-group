@@ -47,7 +47,10 @@ const ImagePreviews = (props) => {
           if (imagePreview.split("/")[0] === "data:video") {
             imagePreviewBody = (
               <span>
-                <video src={imagePreview} controls height="100"></video>
+                <video style={{maxWidth:"70%", maxHeight: "140px", marginLeft:"3rem"}}
+                  src={imagePreview} controls 
+                  // height="100" 
+                />
               </span>
             );
           }
@@ -150,7 +153,9 @@ const ImagePreviews = (props) => {
 
   return <Fragment>
     {isValidImagePreview && (
-      <div>{imagePreviewsBody}</div>
+      <div>
+        {imagePreviewsBody}
+      </div>
     )}
     <div>{previousImagesBody}</div>
     </Fragment>;

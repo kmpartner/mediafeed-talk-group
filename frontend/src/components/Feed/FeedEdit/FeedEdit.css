@@ -15,6 +15,7 @@
 .feedEdit__imagePreviews {
   display: flex;
   margin-top: 5px;
+  min-height: 150px;
 }
 
 .feedEdit__imagePreviews span {

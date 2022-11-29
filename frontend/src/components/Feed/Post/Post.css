@@ -84,6 +84,7 @@
 .post__SmallVideos {
   /* margin-right: 2.5px; */
   position: relative;
+  text-align: center;
 }
 
 .post__SmallVideosVideoMark {
@@ -91,8 +92,11 @@
   color: lightgray;
   position: absolute;
   /* top: 0; */
-  right: 5px;
-  font-size: 1.5rem;
+  /* right: 5px; */
+  top: 40%;
+  right: 45%;
+  font-size: 2.5rem;
+  cursor: pointer;
 }
 
 .post__SmallVideosYouTubeMark {
@@ -100,8 +104,10 @@
   color: red;
   position: absolute;
   /* top: 0; */
-  right: 5px;
-  font-size: 1.5rem;
+  /* right: 5px; */
+  top: 40%;
+  right:45%;
+  font-size: 2.5rem;
 }
 
 .post__adContainer {
