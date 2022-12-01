@@ -29,7 +29,7 @@ const s3 = new aws.S3();
 
 exports.getFollowingUsers = async (req, res, next) => {
     try {
-        console.log('req.query', req.query);
+        // console.log('req.query', req.query);
 
         const userId = req.userId;
     
@@ -57,19 +57,42 @@ exports.getFollowingUsers = async (req, res, next) => {
                 });
 
                 if (addUser) {
+                    let doUrl;
+
+                    if (addUser.imageUrl) {
+                        doUrl = s3.getSignedUrl('getObject',
+                            {
+                                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                                Key: `${addUser.imageUrl}`,
+                                Expires: 60 * 60 * 24 * 30
+                            }
+                        );
+                    }
+            
+                    const port = process.env.PORT || 8083;
+            
+                    let returnImageUrl = null;
+            
+                    if (process.env.S3NOTUSE && addUser.imageUrl) {
+                        returnImageUrl = `http://localhost:${port}/${addUser.imageUrl}`;
+                    }
+                    if (!process.env.S3NOTUSE && addUser.imageUrl) {
+                        returnImageUrl = doUrl;
+                    }
+
                     returnUserList.push({
                         _id: addUser._id.toString(),
                         userId: addUser.userId,
                         name: addUser.name,
-                        // imageUrl: addUser.imageUrl,
-                        imageUrl: addUser.imageUrl && addUser.imageUrl !== 'undefined' && addUser.imageUrl !== 'deleted'
-                        ? s3.getSignedUrl('getObject', {
-                            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                            Key: addUser.imageUrl,
-                            Expires: 60 * 60 * 24 * 365
-                        })
-                        // : 'undefined',
-                        : null,
+                        imageUrl: returnImageUrl,
+                        // imageUrl: addUser.imageUrl && addUser.imageUrl !== 'undefined' && addUser.imageUrl !== 'deleted'
+                        //     ? s3.getSignedUrl('getObject', {
+                        //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                        //         Key: addUser.imageUrl,
+                        //         Expires: 60 * 60 * 24 * 365
+                        //     })
+                        //     // : 'undefined',
+                        //     : null,
                         createdAt: addUser.createdAt
                     })
                 }

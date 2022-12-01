@@ -91,6 +91,8 @@ router.get('/getusers-for-group', authController.getUsersForGroup);
 
 router.get('/user-imageurl', authController.getUserImageUrl);
 
+router.post('/user-imageurl', authController.postGetUserImageUrl);
+
 router.post('/reset', authController.postReset);
 
 router.get('/passwordreset', authController.getResetPasswordTokenUser);

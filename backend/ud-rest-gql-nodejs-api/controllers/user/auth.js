@@ -770,6 +770,57 @@ exports.getUserImageUrl = async (req, res, next) => {
 };
 
 
+exports.postGetUserImageUrl = async (req, res, next) => {
+    const userId = req.body.userId;
+
+    try {
+        const user = await User.findOne({ userId: userId });
+
+        if (!user) {
+            const error = new Error('user not found.');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        let doUrl;
+
+        if (user.imageUrl) {
+            doUrl = s3.getSignedUrl('getObject',
+                {
+                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    Key: `${user.imageUrl}`,
+                    Expires: 60 * 60 * 24 * 30
+                }
+            );
+        }
+
+        const port = process.env.PORT || 8083;
+
+        let returnImageUrl = null;
+
+        if (process.env.S3NOTUSE && user.imageUrl) {
+            returnImageUrl = `http://localhost:${port}/${user.imageUrl}`;
+        }
+        if (!process.env.S3NOTUSE && user.imageUrl) {
+            returnImageUrl = doUrl;
+        }
+
+        // const returnData = {
+        //     userId: user.userId,
+        //     imageUrl: user.imageUrl && returnImageUrl,
+        // }
+
+        res.status(200).json({ message: 'get user image url data successfully.', data: returnImageUrl });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+
 
 
 exports.postReset = async (req, res, next) => {
