@@ -4,12 +4,18 @@ import { useTranslation } from 'react-i18next/hooks';
 import Linkify from 'react-linkify';
 
 import Button from '../../../../../Button/Button';
+
+import { BASE_URL } from '../../../../../../App';
+
+import SampleImage from '../../../../../Image/person-icon-50.jpg';
+
 // import './PostComment.css';
+import classes from './PostCommentListItem.module.css'
 
 
 
 const PostCommentListReplyItem = props => {
-  // console.log('postCommentListReplyItem-props', props);
+  console.log('postCommentListReplyItem-props', props);
 
   const [t] = useTranslation('translation');
 
@@ -42,7 +48,18 @@ const PostCommentListReplyItem = props => {
     </a>
   );
 
+  
+  let commentCreatorImageUrl = '';
 
+  if (props.commentUserImageUrlList && props.comment) {
+    const isInImageUrlList = props.commentUserImageUrlList.find(obj => {
+      return obj.userId === props.comment.creatorId;
+    });
+  
+    if (isInImageUrlList) {
+      commentCreatorImageUrl = isInImageUrlList.imageUrl;
+    }
+  }
 
 
   let replyElement;
@@ -71,7 +88,17 @@ const PostCommentListReplyItem = props => {
           </Linkify>
           </span>
         {/* <br /> */}
-        {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleString()})
+
+        <span className={classes.postCommentListItemUser}>
+          <img
+            className={classes.postCommentListItemImage}
+            src={commentCreatorImageUrl ? commentCreatorImageUrl : SampleImage} 
+            alt="" 
+          />
+          <span title={new Date(props.comment.createdAt).toLocaleString()}>
+            {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleDateString()})
+          </span>
+        </span>
         <div className="comment__actions">
           {canDelete(props.comment.creatorId) && !props.showDeleteModal ?
             <Button
@@ -116,8 +143,17 @@ const PostCommentListReplyItem = props => {
 
           </Linkify>
         </span>
-        {/* <br /> */}
-        {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleString()})
+        
+        <span className={classes.postCommentListItemUser}>
+          <img
+            className={classes.postCommentListItemImage}
+            src={commentCreatorImageUrl ? commentCreatorImageUrl : SampleImage} 
+            alt="" 
+          />
+          <span title={new Date(props.comment.createdAt).toLocaleString()}>
+            {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleDateString()})
+          </span>
+        </span>
       </div>
     );
   }

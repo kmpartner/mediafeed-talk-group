@@ -47,6 +47,14 @@
   border-radius: 0.1rem;
 }
 
+.mobile-nav__userImage {
+  margin-left: 1rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
 .mobile-nav__footer {
   /* position: absolute;
   top: 90% */

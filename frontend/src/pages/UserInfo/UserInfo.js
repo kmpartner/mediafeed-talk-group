@@ -427,10 +427,11 @@ const UserInfo = props => {
           <span>
             {userImageUrl
               ? (
-                  <Img className="userInfo__userImage" 
+                  <Img className="userInfo__userImageFile" 
                     src={userImageUrl}
                     // src={userImageUrl && userImageUrl.startsWith('https://') ? userImageUrl : BASE_URL + '/' + userImageUrl}
-                    alt="" height="25" 
+                    alt="" 
+                    // height="25" 
                   />
                 )
               : (

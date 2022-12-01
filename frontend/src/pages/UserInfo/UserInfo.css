@@ -8,6 +8,14 @@
   margin-left: 1rem;
 }
 
+.userInfo__userImageFile {
+  margin-left: 1rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
 .userInfo__userDescription {
   margin-left: 1rem;
   cursor: pointer;

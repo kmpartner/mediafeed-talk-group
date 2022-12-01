@@ -1,0 +1,12 @@
+.postCommentListItemImage {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.postCommentListItemUser {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

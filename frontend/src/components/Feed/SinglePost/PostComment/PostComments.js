@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import openSocket from 'socket.io-client';
+import _ from 'lodash';
 
 // import Input from '../../../components/Form/Input/Input';
 import ErrorHandler from '../../../ErrorHandler/ErrorHandler';
@@ -11,6 +12,7 @@ import {
   getPostCommentUserReactions, 
   createPostCommentUserReaction
 } from '../../../../util/userReaction';
+import { postGetUserImageUrl } from '../../../../util/user';
 
 import { BASE_URL, GQL_URL, PUSH_URL } from '../../../../App';
 import './PostComment.css';
@@ -27,6 +29,10 @@ const PostComments = props => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [allCommentReactions, setAllCommentReactions] = useState([]);
+  
+  // const [commentUserIdList, setCommentUserIdList] = useState([]);
+  const [commentUserImageUrlList, setCommentUserImageUrlList] = useState([]);
+
   // const [selectedCommentId, setSelectedCommentId] = useState(null);
   // const [yOffsetValue, setYOffsetValue] = useState(null);
 
@@ -55,6 +61,30 @@ const PostComments = props => {
       }
     })
   }, []);
+
+
+  useEffect(() => {
+  
+    const comUserIdList = [];
+
+    if (postCommentList.length > 0) {
+      for (const comment of postCommentList) {
+        comUserIdList.push(comment.creatorId);
+      }
+    }
+
+    const uniqIdList = _.uniq(comUserIdList);
+
+    if (uniqIdList.length > 0) {
+      postGetUserImageUrlListHandler(
+        BASE_URL,
+        'token',
+        uniqIdList,
+      );
+    }
+
+  }, [postCommentList]);
+
 
   // useEffect(() => {
   //   window.scrollTo(window.pageXOffset, yOffsetValue);
@@ -428,6 +458,27 @@ const PostComments = props => {
 };
 
 
+const postGetUserImageUrlListHandler = async (url, token, userIdList) => {
+  const commentUserImageUrls = [];
+
+  for (const userId of userIdList) {
+    const resData = await postGetUserImageUrl(
+      url,
+      token,
+      userId
+    );
+
+    commentUserImageUrls.push({
+      userId: userId,
+      imageUrl: resData ? resData.data : '',
+    });
+  }
+  
+  // console.log('commentUserImageUrls', commentUserImageUrls);
+  setCommentUserImageUrlList(commentUserImageUrls);
+}
+
+
   return (
     <div>
       <ErrorHandler error={error} onHandle={errorHandler} />
@@ -451,6 +502,7 @@ const PostComments = props => {
         postCreatorId={props.postCreatorId}
         createPostCommentUserReactionHandler={createPostCommentUserReactionHandler}
         allCommentReactions={allCommentReactions}
+        commentUserImageUrlList={commentUserImageUrlList}
       />
 
     </div>

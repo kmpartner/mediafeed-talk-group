@@ -20,6 +20,14 @@
   display: none
 }
 
+.main-nav__userImage {
+  margin-left: 1rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
 .name {
   color: white;
   margin-left: 1rem;

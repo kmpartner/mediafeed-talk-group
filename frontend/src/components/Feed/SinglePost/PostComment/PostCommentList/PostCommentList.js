@@ -291,6 +291,7 @@ const PostCommentList = props => {
                 createPostCommentUserReactionHandler={props.createPostCommentUserReactionHandler}
                 allCommentReactions={props.allCommentReactions}
                 isAuth={props.isAuth}
+                commentUserImageUrlList={props.commentUserImageUrlList}
               />
 
 
@@ -317,6 +318,7 @@ const PostCommentList = props => {
                 setShowReplyIndex={setShowReplyIndex}
                 setSelectedCommentId={setSelectedCommentId}
                 allCommentReactions={props.allCommentReactions}
+                commentUserImageUrlList={props.commentUserImageUrlList}
               />
             </div>
           );

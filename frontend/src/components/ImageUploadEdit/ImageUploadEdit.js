@@ -159,7 +159,12 @@ class ImageUploadEdit extends Component {
       if (this.state.imagePreview.split('/')[0] === 'data:image') {
         imagePreviewBody = (
           <div>
-            <img src={this.state.imagePreview} height="50" alt=""></img>
+            <img 
+              style={{width: "3rem", height: "3rem", objectFit:"cover", borderRadius:"2px" }}
+              src={this.state.imagePreview} 
+              height="50" 
+              alt="" 
+            />
           </div>);
       }
       // if (this.state.imagePreview.split('/')[0] !== 'data:image') {
@@ -177,7 +182,11 @@ class ImageUploadEdit extends Component {
         if (isImageFile(selectedImageType)) {
           imagePreviewBody = (
             <div>
-                <img src={BASE_URL + '/' + this.props.selectedPost.imageUrl} height="100" alt=""></img>
+                <img 
+                  src={BASE_URL + '/' + this.props.selectedPost.imageUrl} 
+                  height="" 
+                  alt="" 
+                />
             </div>
           );
         }

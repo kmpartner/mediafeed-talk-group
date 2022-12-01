@@ -60,7 +60,7 @@ const MobileNavigation = props => {
             {userData.imageUrl ?
               // <img className="userImage" src={BASE_URL + '/' + userData.imageUrl} alt="" height="25" />
               <span className="mobile-nav__userImageContainer">
-                <img className="userImage" src={userData.imageUrl} alt="" height="25" />
+                <img className="mobile-nav__userImage" src={userData.imageUrl} alt="" height="25" />
                 <span className="mobile-nav__name">{userData.name}</span>
               </span>
               : <span className="mobile-nav__name">{userData.name}</span>

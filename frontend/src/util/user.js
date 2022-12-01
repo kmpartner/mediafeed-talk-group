@@ -374,7 +374,7 @@ export const getUserImageUrl = (url, token, userId) => {
 export const getFollowingUsers = (userId, url, token) => {
   return new Promise((resolve, reject) => {
     
-    fetch(url + `/follow/followusers?userId=${userId}`, {
+    fetch(url + `/follow/followusers`, {
       method: 'GET',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -869,6 +869,38 @@ export const updateUserColor = (url, token, userId, userColor) => {
       .catch(err => {
         console.log(err);
         reject({ message: 'Update user color failed', error: err });
+      });
+
+  })
+};
+
+export const postGetUserImageUrl = (url, token, userId) => {
+  // console.log('in resetpasswordhandler');
+  return new Promise((resolve, reject) => {
+
+    fetch(url + `/auth/user-imageurl`, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: userId,
+        })
+      })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Getting user imageUrl failed!");
+        }
+        return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        resolve({ message: 'Get user imageUrl result', data: resData.data });
+      })
+      .catch(err => {
+        console.log(err);
+        // reject({ message: 'Get user imageUrl color failed', error: err });
       });
 
   })

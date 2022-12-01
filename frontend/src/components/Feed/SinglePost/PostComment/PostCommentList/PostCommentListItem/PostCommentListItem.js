@@ -9,6 +9,8 @@ import PostCommentReaction from '../../PostCommentReaction/PostCommentReaction';
 
 import { BASE_URL } from '../../../../../../App';
 
+import SampleImage from '../../../../../Image/person-icon-50.jpg';
+
 // import './PostComment.css';
 import classes from './PostCommentListItem.module.css'
 
@@ -19,7 +21,7 @@ const PostCommentListItem = props => {
 
   const [showReplyIndex, setShowReplyIndex] = useState(null);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
-
+  
   // console.log(commentLikeNum);
 
 
@@ -41,12 +43,23 @@ const PostCommentListItem = props => {
   );
 
 
+  let commentCreatorImageUrl = '';
+
+  if (props.commentUserImageUrlList && props.comment) {
+    const isInImageUrlList = props.commentUserImageUrlList.find(obj => {
+      return obj.userId === props.comment.creatorId;
+    });
+  
+    if (isInImageUrlList) {
+      commentCreatorImageUrl = isInImageUrlList.imageUrl;
+    }
+  }
+
 
   const parentElement = (
     <div>
       <div className="comment__parentContent">
         {/* {console.log('IMAGEURL', comment)} */}
-        <img src={BASE_URL + '/' + props.comment.creatorImageUrl} alt=""></img>
         <span className="comment__contentText">
           <Linkify componentDecorator={componentDecorator}>
             {/* {comment.content} */}
@@ -67,9 +80,18 @@ const PostCommentListItem = props => {
             </div>
 
           </Linkify>
+        </span>
+        
+        <span className={classes.postCommentListItemUser}>
+          <img
+            className={classes.postCommentListItemImage}
+            src={commentCreatorImageUrl ? commentCreatorImageUrl : SampleImage}
+            alt="" 
+          />
+          <span title={new Date(props.comment.createdAt).toLocaleString()}>
+            {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleDateString()})
           </span>
-        {/* <br /> */}
-        {props.comment.creatorName} ({new Date(props.comment.createdAt).toLocaleString()})
+        </span>
       </div>
       
 
@@ -85,7 +107,7 @@ const PostCommentListItem = props => {
       <div className="comment__actionButtons">
         {props.replyShowControlElement}
 
-        {canDelete(props.comment.creatorId) && !props.showDeleteModal ?
+        {canDelete(props.comment.creatorId) && !props.showDeleteModal &&
           <Button
             mode="flat" design="danger" type="submit"
             disabled={!canDelete(props.comment.creatorId)}
@@ -99,16 +121,14 @@ const PostCommentListItem = props => {
             {/* Delete */}
             {t('comment.text2')}
           </Button>
-          : null
         }
 
 
       </div>
 
       <div>
-        {canDelete(props.comment.creatorId) && !showReplyIndex ?
+        {canDelete(props.comment.creatorId) && !showReplyIndex &&
           props.deleteConfirmButtons
-          : null
         }
       </div>
 
@@ -117,11 +137,10 @@ const PostCommentListItem = props => {
 
       </div>
 
-      {props.commentLoading && selectedCommentId === props.comment._id ?
+      {props.commentLoading && selectedCommentId === props.comment._id &&
         <div className="comment__loader">
           <Loader />
         </div>
-        : null
       }
 
     </div>

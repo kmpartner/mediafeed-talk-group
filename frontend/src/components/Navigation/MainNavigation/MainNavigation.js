@@ -117,7 +117,7 @@ const MainNavigation = props => {
         // <img className="userImage" src={userData.imageUrl} alt="" height="25"
         // onClick={props.onOpenMobileNav}
         // /> 
-        <Img className="userInfo__userImage" 
+        <Img className="main-nav__userImage" 
           src={userData.imageUrl}
           // src={userData.imageUrl && userData.imageUrl.startsWith('https://') ? userData.imageUrl : BASE_URL + '/' + userData.imageUrl}
           alt="" height="25" 
