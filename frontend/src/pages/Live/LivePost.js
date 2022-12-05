@@ -1,13 +1,13 @@
 import React from 'react';
-import { useEffect, useState, useRef } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Fragment, useEffect, useState } from 'react';
+// import { Link, Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
 
-import Button from '../../components/Button/Button';
+// import Button from '../../components/Button/Button';
 // import Feed from '../Feed/Feed';
 import Loader from '../../components/Loader/Loader';
 import LivePresenterPosts from './LivePresenterPosts';
-import Post from '../../components/Feed/Post/Post';
+// import Post from '../../components/Feed/Post/Post';
 import PostComments from '../../components/Feed/SinglePost/PostComment/PostComments';
 
 // import { useOnScreen } from '../../custom-hooks/useOnScreen';
@@ -15,11 +15,10 @@ import { useStore } from '../../hook-store/store';
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import AdElementTime from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementTime';
+import LiveEmbed from '../../components/LiveEmbed/LiveEmbed';
 
 import { BASE_URL, LIVE_URL } from '../../App';
-// import './NotPageFound.css';
 
-import LiveEmbed from '../../components/LiveEmbed/LiveEmbed';
 import classes from './LivePost.module.css';
 
 const LivePost = props => {
@@ -49,6 +48,8 @@ const LivePost = props => {
   const [underEmbedBottom, setUnderEmbedBottom] = useState(false);
   const [targetRect, setTargetRect] = useState();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // const targetEl = document.getElementById(`live-embed-bottom`);
   // let targetRect;
   // if (targetEl) {
@@ -70,8 +71,8 @@ const LivePost = props => {
 
   useEffect(() => {
 
-    console.log('live-embed-bottom targetRect', targetRect);
-    console.log('windowValues in livePost.js', store.windowValues);
+    // console.log('live-embed-bottom targetRect', targetRect);
+    // console.log('windowValues in livePost.js', store.windowValues);
 
     if (targetRect && targetRect.top < -100) {
       console.log('embmed bottom is close to screen top')
@@ -104,8 +105,10 @@ const LivePost = props => {
 
   const getLivePostHandler = async (liveRoomId, liveLocationPass) => {
     try {
+      setIsLoading(true);
       setError('');
-      console.log('in createLivePostHandler');
+
+      // console.log('in createLivePostHandler');
       const result = await fetch(BASE_URL + `/feed/live-post?liveRoomId=${liveRoomId}&liveLocationPass=${liveLocationPass}&userLocation=${localStorage.getItem('userLocation')}`, {
         method: 'GET',
         headers: {
@@ -129,8 +132,11 @@ const LivePost = props => {
         setLivePost(resData.livePost);
       }
 
+      setIsLoading(false);
+
     } catch(err) {
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -159,30 +165,78 @@ const LivePost = props => {
   }
 
 
+  let nearStart = false;
+  let afterStart = false;
+
+  let liveEmbedBody;
+
+  if (!isLoading) {
+    liveEmbedBody = (
+      <div>
+        Live broadcast not found, or Live broadcast already finished.
+      </div>
+    );
+  }
+
+  if (liveInfo && liveInfo.start < Date.now() + 1000*60*10) {
+    nearStart = true;
+  }
+
+  if (liveInfo && liveInfo.start < Date.now()) {
+    afterStart = true;
+  }
+
+
+  if (liveInfo && nearStart) {
+    liveEmbedBody = (
+      <div>
+        {/* <div>
+          live-info-found {JSON.stringify(liveInfo)}
+        </div> */}
+        <LiveEmbed
+          liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
+          underEmbedBottom={underEmbedBottom}
+        />
+      </div>
+    );
+  }
+
+  if (liveInfo && !nearStart) {
+    liveEmbedBody = (
+      <div>
+        Live broadcast not started.
+        {/* , start-time: {new Date(liveInfo.start).toLocaleString()} */}
+      </div>
+    );
+  }
+
 
   return (
-    <div>
-      
+    <Fragment>
 
-      {store.windowValues && (store.windowValues.width < 768) && (
+      {isLoading && (
+        <div><Loader /></div>
+      )}
+
+      {liveInfo && store.windowValues && (store.windowValues.width < 768) && (
         // <AdElementDisplay
         //   adType='300x65' 
         //   adPlaceId='toppage-top' 
         // />
-        <AdElementTime
-        adType='300x65' 
-        adPlaceId='toppage-top' 
-      />
+          <AdElementTime
+          adType='300x65' 
+          adPlaceId='livepage-top' 
+        />
       )}
-      {store.windowValues && (store.windowValues.width >= 768) && (
+      {liveInfo && store.windowValues && (store.windowValues.width >= 768) && (
         // <AdElementDisplay 
         //   adType='300x300'
         //   adPlaceId='toppage-right' 
         // />
-        <AdElementTime
-        adType='300x300'
-        adPlaceId='toppage-right' 
-      />
+          <AdElementTime
+          adType='300x300'
+          adPlaceId='livepage-right' 
+        />
       )}
 
       <div>
@@ -190,9 +244,9 @@ const LivePost = props => {
       </div>
 
       <section className="feed-container">
-        {livePost && livePost.public === 'public' && (
+        {/* {livePost && livePost.public === 'public' && (
           <div>{t('feed.text10', 'Title')}: {livePost.title}</div>
-        )}
+        )} */}
 
         {liveInfo && (
           <div>
@@ -204,10 +258,11 @@ const LivePost = props => {
             </div>
           </div>
         )}
-        <LiveEmbed
+        {liveEmbedBody}
+        {/* <LiveEmbed
           liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
           underEmbedBottom={underEmbedBottom}
-        />
+        /> */}
       </section>
 
       <div id="live-embed-bottom"
@@ -220,7 +275,7 @@ const LivePost = props => {
       <section className="feed-container">
         {/* <div>live-comment-list</div> */}
         
-        {livePost && (
+        {livePost && afterStart && (
           <div className={classes.livePostComment}
   >
             <PostComments
@@ -248,7 +303,7 @@ const LivePost = props => {
         isAuth={props.isAuth} 
         darkMode={props.darkMode}
       /> */}
-    </div>
+    </Fragment>
   );
 }
 

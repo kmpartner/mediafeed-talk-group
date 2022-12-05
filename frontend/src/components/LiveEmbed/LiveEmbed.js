@@ -12,7 +12,7 @@ import classes from './LiveEmbed.module.css';
 
 
 const LiveEmbed = props => {
-  console.log('LiveEmbed-props', props);
+  // console.log('LiveEmbed-props', props);
   const { liveEmbedUrl, underEmbedBottom } = props;
 
   // const liveEmbedUrl ='http://localhost:4444/embedlive/testroomid/testroomid';
