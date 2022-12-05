@@ -70,6 +70,7 @@ const getLivePost = async (req, res, next) => {
       body: JSON.stringify({
         roomId: liveRoomId,
         password: liveLocationPass,
+        useLive: 'useLive',
       }),
     });
 
