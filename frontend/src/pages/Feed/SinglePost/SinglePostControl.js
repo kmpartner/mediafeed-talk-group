@@ -43,16 +43,14 @@ const SinglePostControl = (props) => {
         mode="raised" design="" type="submit"
         onClick={() => { setShowDeleteModal(true); }}
       >
-        {/* {t('general.text5', 'Edit')} */}
-        delete
+        {t('general.text3', 'Delete')}
       </Button>
       {postData && postData.imageUrls.length > 0 && (
         <Button
           mode="raised" design="" type="submit"
           onClick={() => { setShowDeleteImagesModal(true); }}
         >
-          {/* {t('general.text5', 'Edit')} */}
-          delete Image
+          {t('feed.text55', 'Delete file')}
         </Button>
       )}
 
@@ -73,15 +71,13 @@ const SinglePostControl = (props) => {
                   disabled={props.isPostDeleting}
                   onClick={() => { setShowDeleteModal(false); }}
                 >
-                  {/* Cancel */}
-                  {t('general.text1')}
+                  {t('general.text1', 'Cancel')}
                 </Button>
                 <Button mode="raised" design=""
                   disabled={props.isPostDeleting}
                   onClick={storeDeletePostIdHandler}
                 >
-                  {/* Delete */}
-                  {t('feed.text17')}
+                  {t('feed.text17', 'Delete')}
                 </Button>
 
                 {/* <div>{props.isPostDeleting && <Loader />}</div>

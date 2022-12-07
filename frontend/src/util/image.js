@@ -205,7 +205,8 @@ export const checkFileSizesLimit = (fileList) => {
     }
 
     if (file.type.split('/')[0] === 'video') {
-      if (file.size < 10**6 * 500) {
+      // if (file.size < 10**6 * 500) {
+      if (file.size < 10**6 * 250) {
         resultList.push(file.size);
       }
     }

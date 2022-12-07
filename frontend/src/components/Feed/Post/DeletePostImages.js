@@ -324,7 +324,11 @@ const DeletePostImages = (props) => {
                   // src={pathUrl.modifiedImageUrl.startsWith('https://') ? pathUrl.modifiedImageUrl : BASE_URL + '/' + pathUrl.modifiedImageUrl}
                   alt="small post image"
                 />
-                {isSelected && <div>selected &#10003;</div>}
+                {isSelected && (
+                  <div>
+                    {t('feed.text41', 'Selected')} &#10003;
+                  </div>
+                  )}
               </span>
             </span>
           );
@@ -342,7 +346,9 @@ const DeletePostImages = (props) => {
       />
       <SmallModal style="deleteImageModal">
         <div className={classes.deletePostImagesContainer}>
-          <div>Select Images for deletion</div>
+          <div>
+            {t('feed.text40', 'Select files for deletion')}
+          </div>
           <div>
             {deletePostImagesBody}
           </div>
@@ -365,7 +371,9 @@ const DeletePostImages = (props) => {
           </div>
             {showDeleteConfirm && 
               <div className={classes.deletePostImagesConfirmContainer}>
-                <strong>Delete Selected Images?</strong>
+                <strong>
+                {t('feed.text42', 'Is it no problem to delete Selected files ?')}
+                </strong>
                 <div className={classes.deletePostImagesConfirmButtons}>
                   <Button mode="flat" design=""
                     disabled={isDeleting}

@@ -98,6 +98,9 @@ class SinglePost extends Component {
     localStorage.removeItem('selectedPostId');
     localStorage.removeItem('selectedPostData');
 
+    localStorage.removeItem('deletePostId');
+    localStorage.removeItem('deletePostData');
+
   }
 
   getPost = () => {

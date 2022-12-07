@@ -730,7 +730,7 @@ class FeedEdit extends Component {
               label={t('feed.text10')}
               control="input"
               // placeholder="Title for post"
-              placeholder={t('feed.text15')}
+              // placeholder={t('feed.text15')}
               onChange={this.postInputChangeHandler}
               onBlur={this.inputBlurHandler.bind(this, 'title')}
               valid={this.state.postForm['title'].valid}
@@ -790,7 +790,7 @@ class FeedEdit extends Component {
               // label="Content"
               label={t('feed.text12')}
               // placeholder="Content for post"
-              placeholder={t('feed.text16')}
+              // placeholder={t('feed.text16')}
               control="textarea"
               rows="7"
               onChange={this.postInputChangeHandler}

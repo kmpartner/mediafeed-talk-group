@@ -173,7 +173,7 @@ const LivePost = props => {
   if (!isLoading) {
     liveEmbedBody = (
       <div>
-        Live broadcast not found, or Live broadcast already finished.
+        {t('live.text06', 'Live broadcast not found, or Live broadcast already finished.')}
       </div>
     );
   }
@@ -190,9 +190,6 @@ const LivePost = props => {
   if (liveInfo && nearStart) {
     liveEmbedBody = (
       <div>
-        {/* <div>
-          live-info-found {JSON.stringify(liveInfo)}
-        </div> */}
         <LiveEmbed
           liveEmbedUrl={`${LIVE_URL}/${roomId}?locationPass=${locationPass}`}
           underEmbedBottom={underEmbedBottom}
@@ -204,8 +201,7 @@ const LivePost = props => {
   if (liveInfo && !nearStart) {
     liveEmbedBody = (
       <div>
-        Live broadcast not started.
-        {/* , start-time: {new Date(liveInfo.start).toLocaleString()} */}
+        {t('live.text07', 'Live broadcast not started.')}
       </div>
     );
   }

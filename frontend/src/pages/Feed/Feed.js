@@ -1719,11 +1719,11 @@ class Feed extends Component {
 
             <section className="feed__control">
               <Button mode="raised" design="accent" onClick={this.newPostHandler}>
-                {/* New Post */}
-                {t('feed.text1')}
+ 
+                {t('feed.text1', 'New Post')}
               </Button>
               <Button mode="raised" design="accent" onClick={() => {this.setState({ newLiveStart: !this.state.newLiveStart }); }}>
-                New Live
+                {t('feed.text43', 'New Live broadcast')}
               </Button>
               {this.state.newLiveStart && (
                 <StartNewLive 

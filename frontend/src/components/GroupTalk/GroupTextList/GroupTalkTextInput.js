@@ -43,8 +43,8 @@ const GroupTalkTextInput = props => {
             // textPostHandler(textInput);
           }}
         >
-          Post
-          </Button>
+          {t('general.text26', 'Send')}
+        </Button>
       </div>
 
       {/* {props.showGroupTextInputElement ?

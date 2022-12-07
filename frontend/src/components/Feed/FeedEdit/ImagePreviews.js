@@ -12,6 +12,7 @@ const ImagePreviews = (props) => {
   console.log('ImagePreviews.js-props', props);
 
   const { 
+    t,
     imagePreviews, 
     modifiedImageUrls, 
     modifiedImagePaths,
@@ -74,14 +75,16 @@ const ImagePreviews = (props) => {
     previousImagesBody = (
       <div>
         <div className="feedEdit__previousImagesTitle">
-          Previously Uploaded file
+          {t('feed.text51', 'Previously Uploaded file')}
         </div>
         <ul className="feedEdit__previousImages">
-          {modifiedImagePaths.map(imagePath => {
+          {modifiedImagePaths.map((imagePath, index) => {
 
-            const imageUrl = modifiedImageUrls.find(url => {
-              return url.includes(imagePath.split('/')[1]);
-            });
+            // const imageUrl = modifiedImageUrls.find(url => {
+            //   return url.includes(imagePath.split('/')[1]);
+            // });
+
+            const imageUrl = modifiedImageUrls[index];
 
             const fileType = getFileType(imagePath);
 
@@ -96,9 +99,10 @@ const ImagePreviews = (props) => {
               previousPreviewBody = (
                 <span>
                   <img 
-                  src={imageUrl}
-                  // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
-                  height="" alt="previously uploaded picthres" 
+                    style={{height: "50px", width:"50px", objectFit:"cover"}}
+                    src={imageUrl}
+                    // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    alt="previously uploaded picthres" 
                   />
                 </span>
               );
@@ -106,9 +110,19 @@ const ImagePreviews = (props) => {
             if (fileType === 'gif')
             {
               previousPreviewBody = (
-                <strong>
-                  Delete previous gif file bofore uploading new file
-                </strong>
+                <span>
+                  <img 
+                    style={{height: "50px", width:"50px", objectFit:"cover"}}
+                    src={imageUrl}
+                    // src={imageUrl.startsWith('https://') ? imageUrl : BASE_URL + '/' + imageUrl}
+                    alt="previously uploaded picthres" 
+                  />
+                  <div>
+                    <strong>
+                      {t('feed.text52', 'Delete previous gif file bofore uploading new file')}
+                    </strong>
+                  </div>
+                </span>
               );
             }
             // if (getFileType(imagePath) === "mp4" 
@@ -118,16 +132,17 @@ const ImagePreviews = (props) => {
             {
               previousPreviewBody = (
                 <span>
-                  {/* <video 
+                  <video 
+                    style={{height:"50px"}}
                     src={imageUrl}
-                    controls
-                    height="100" alt="previously uploaded video"
-                  /> */}
-                  <strong>
-                    Delete previous video bofore uploading new file
-                  </strong>
-                  {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
-                  {/* <video src={imageUrl} height="50"></video> */}
+                    // controls
+                    alt="previously uploaded video"
+                  />
+                  <div>
+                    <strong>
+                    {t('feed.text53', 'Delete previous video file bofore uploading new file')}
+                    </strong>
+                  </div>
                 </span>
               );
             }
@@ -136,7 +151,7 @@ const ImagePreviews = (props) => {
               previousPreviewBody = (
                 <span>
                   <strong>
-                    Delete previous audio file bofore uploading new file
+                    {t('feed.text54', 'Delete previous audio file bofore uploading new file')}
                   </strong>
                   {/* <Img src={thumbnailImageUrls[0]} alt="previous videos"/> */}
                   {/* <video src={imageUrl} height="50"></video> */}

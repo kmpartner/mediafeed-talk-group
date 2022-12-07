@@ -76,28 +76,26 @@ function FeedEditSelectFile(props) {
         />
 
         <div className="feedEdit__aboutMediaFile">
-          <div>Accept Image or Video (mp4, webm) file</div>
+          <div>
+            {t('feed.text45', 'Accept Image file, or Video (mp4, webm) file')}
+          </div>
           <div>
             {!isVideo && (
               <div>
-                {/* {t('feed.text34', 'Image files should be jpg, jpeg, png file, less than 5MB, up to 6 files')} 
-                {' '}
-                ({t('feed.text35', 'Images with more than 1400px of width or height will be resized')})
-                {' '} */}
-                Image files should be jpg, jpeg, png, gif file.
+                {t('feed.text46', 'Image files should be jpg, jpeg, png, gif file.')}
                 {' '} 
-                One file size should be less than 5MB. (Large file will be resized)
+                {t('feed.text47', 'One file size should be less than 5MB. (Large file will be resized)')}
                 {' '}
                 <br/>
-                Accept up to 6 files. In the case of gif file, accept one file.
+                {t('feed.text48', 'Accept up to 6 files. In the case of gif file, accept one file.')}
               </div>
             )}
 
             {isVideo && (
-              <div>
-                Accept one video file. File size should be less than 250MB 
+              <div> 
+                {t('feed.text49', 'Accept one video file. File size should be less than 250MB')}
                 {' '}
-                (file will be resized to smaller size)
+                {t('feed.text50', '(file will be resized to smaller size)')}
               </div>
             )}
           </div>
