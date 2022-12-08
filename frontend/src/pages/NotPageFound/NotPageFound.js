@@ -149,7 +149,9 @@ const NotPageFound = props => {
               >
                 <span className="notPageFound__ButtonNameContainer">
                   <img className="notPageFound__Icon" src={FeedIcon} alt='icon'/> 
-                  <span>Feed Page</span>
+                  <span>
+                    {t("feed.text44", "media post feed")}
+                  </span>
                 </span>
               </Button>
             </Link>
@@ -163,7 +165,9 @@ const NotPageFound = props => {
               >
                 <span className="notPageFound__ButtonNameContainer">
                   <img className="notPageFound__Icon" src={TalkIcon} alt='icon'/>  
-                  <span>Talk Page</span>
+                  <span>
+                    {t("general.text24", "Talk")}
+                  </span>
                 </span>
               </Button>
             </Link>
@@ -177,7 +181,9 @@ const NotPageFound = props => {
               >
                 <span className="notPageFound__ButtonNameContainer">
                   <img className="notPageFound__Icon" src={GroupIcon} alt='icon'/> 
-                  <span>Group Page</span>
+                  <span>
+                    {t("general.text25", "Group Talk")}
+                  </span>
                 </span>
               </Button>
             </Link>
@@ -197,7 +203,7 @@ const NotPageFound = props => {
 
                   <span className="notPageFound__ButtonNameContainer">
                   <img className="notPageFound__Icon" src={LoginIcon} alt='icon'/> 
-                  <span>{t('general.text11')}</span>
+                  <span>{t('general.text11', 'Login')}</span>
                 </span>
 
                 </Button>
@@ -213,7 +219,7 @@ const NotPageFound = props => {
 
                   <span className="notPageFound__ButtonNameContainer">
                   <img className="notPageFound__Icon" src={SignupIcon} alt='icon'/> 
-                  <span>{t('general.text12')}</span>
+                  <span>{t('general.text12', 'Signup')}</span>
                   </span>
                 </Button>
               </a>
@@ -227,7 +233,9 @@ const NotPageFound = props => {
                 >
                   <span className="notPageFound__ButtonNameContainer">
                     <img className="notPageFound__Icon" src={FeedIcon} alt='icon'/> 
-                    <span>Feed Page</span>
+                    <span>
+                      {t("feed.text44", "media post feed")}
+                      </span>
                   </span>
                 </Button>
               </Link>
@@ -241,7 +249,10 @@ const NotPageFound = props => {
                 >
                   <span className="notPageFound__ButtonNameContainer">
                     <img className="notPageFound__Icon" src={GroupIcon} alt='icon'/> 
-                    <span>Group Page</span>
+                    <span>
+                      {/* Group Page */}
+                      {t("general.text25", "Group Talk")}
+                    </span>
                   </span>
                 </Button>
               </Link>
@@ -255,7 +266,10 @@ const NotPageFound = props => {
                 >
                   <span className="notPageFound__ButtonNameContainer">
                     <img className="notPageFound__Icon" src={TalkIcon} alt='icon'/>  
-                    <span>Talk Page</span>
+                    <span>
+                      {/* Talk Page */}
+                      {t("general.text24", "Talk")}
+                    </span>
                   </span>
                 </Button>
               </Link>
