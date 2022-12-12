@@ -23,6 +23,8 @@ const { s3Upload, s3DeleteOne, s3DeleteMany } = require("../../util/image");
 const { testAuth } = require("../../util/auth");
 const { clearImage } = require("../../util/file");
 
+const { getUserSuggestPosts } = require('./feed-filter');
+
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
 aws.config.update({
@@ -62,145 +64,6 @@ const getPosts = async (req, res, next) => {
 
   // console.log('allPosts', allPosts);
   // console.log('allPosts num ', allPosts.length);
-
-
-
-
-
-
-
-  // const createReturnPosts = (posts) => {
-  //   return posts.map((post) => {
-  //     const port = process.env.PORT || 8083;
-
-  //     const imageUrls = [];
-  //     if (post.imageUrls && post.imageUrls.length > 0) {
-  //       if (!process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.imageUrls) {
-  //           imageUrls.push(
-  //             s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: imageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           );
-  //         }
-  //       }
-  //       if (process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.imageUrls) {
-  //           imageUrls.push(`http://localhost:${port}/${imageUrl}`);
-  //         }
-  //       }
-  //     }
-
-  //     const modifiedImageUrls = [];
-  //     if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
-  //       if (!process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.modifiedImageUrls) {
-  //           modifiedImageUrls.push(
-  //             s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: imageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           );
-  //         }
-  //       }
-  //       if (process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.modifiedImageUrls) {
-  //           modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-  //         }
-  //       }
-  //     }
-
-  //     const thumbnailImageUrls = [];
-  //     if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
-  //       if (!process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.thumbnailImageUrls) {
-  //           thumbnailImageUrls.push(
-  //             s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: imageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           );
-  //         }
-  //       }
-  //       if (process.env.S3NOTUSE) {
-  //         for (const imageUrl of post.thumbnailImageUrls) {
-  //           thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-  //         }
-  //       }
-  //     }
-
-  //     let creatorImageUrl = null;
-  //     if (!process.env.S3NOTUSE && post.creatorImageUrl) {
-  //       creatorImageUrl = s3.getSignedUrl("getObject", {
-  //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //         Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
-  //         Expires: 60 * 60,
-  //       });
-  //     }
-
-  //     if (process.env.S3NOTUSE && post.creatorImageUrl) {
-  //       creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
-  //     }
-
-  //     return {
-  //       ...post._doc,
-  //       imagePath: post.imageUrl,
-  //       imageUrl:
-  //         post.imageUrl &&
-  //         post.imageUrl !== "undefined" &&
-  //         post.imageUrl !== "deleted"
-  //           ? s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: post.imageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           : "undefined",
-  //       modifiedImageUrl:
-  //         post.modifiedImageUrl &&
-  //         post.imageUrl &&
-  //         post.imageUrl !== "undefined" &&
-  //         post.imageUrl !== "deleted"
-  //           ? s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: post.modifiedImageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           : undefined,
-  //       thumbnailImageUrl:
-  //         post.thumbnailImageUrl &&
-  //         post.imageUrl &&
-  //         post.imageUrl !== "undefined" &&
-  //         post.imageUrl !== "deleted"
-  //           ? s3.getSignedUrl("getObject", {
-  //               Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //               Key: post.thumbnailImageUrl,
-  //               Expires: 60 * 60,
-  //             })
-  //           : undefined,
-  //       // creatorImageUrl: post.creatorImageUrl
-  //       //     ? s3.getSignedUrl('getObject', {
-  //       //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
-  //       //         Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
-  //       //         Expires: 60 * 60
-  //       //       })
-  //       //     : null,
-  //       creatorImageUrl: creatorImageUrl,
-  //       imageUrls: imageUrls,
-  //       modifiedImageUrls: modifiedImageUrls,
-  //       thumbnailImageUrls: thumbnailImageUrls,
-  //     };
-  //   });
-  // };
-
-
-
-
-
-
 
 
   if (req.query.userpost === "true" || req.query.userpost === "userPosts") {
@@ -246,45 +109,40 @@ const getPosts = async (req, res, next) => {
   } else {
     try {
       // totalItems = await Post.find().countDocuments()
-      // posts = await Post.find()
-      //     .populate('creator')
-      //     .sort({ createdAt: -1 })
-      //     .skip((currentPage - 1) * perPage)
-      //     .limit(perPage);
 
-      // const publicOrUserPosts = allPosts.filter(post => {
-      //     // console.log('post', post)
-      //     // console.log('POST', post.creatorId, req.query.userId)
-      //     return post.public === 'public' || post.creatorId.toString() === req.query.userId;
-      // });
+      let suggestPosts = await getUserSuggestPosts(req, loadNumber);
+      // console.log('sPosts', sPosts);
+      console.log('suggestPosts.length', suggestPosts.length);
 
-      // const before = Date.now()
-      let publicOrUserPosts = await Post.find({
-        $or: [{ public: "public" }, { creatorId: req.query.userId }],
-      })
-        .sort({ createdAt: -1 })
-        // .skip((currentPage - 1) * perPage)
-        .limit(loadNumber);
-      // .limit(10);  // restrict get number
-      // .populate('creator')
+      suggestPosts = createReturnPosts(suggestPosts);
 
-      // filter posts only user access language
-      // const accessLng = req.headers['accept-language'].split(',')[0];
-      // console.log(accessLng);
 
-      // publicOrUserPosts = publicOrUserPosts.filter(post => {
-      //     return post.language.split(',')[0] === accessLng;
-      // });
+      
 
-      totalItems = publicOrUserPosts.length;
-      console.log("publicOrUserPosts totalItems", totalItems);
-      // console.log('pOUPs: ', publicOrUserPosts, totalItems);
+  
+      // let publicOrUserPosts = await Post.find({
+      //   $or: [{ public: "public" }, { creatorId: req.query.userId }],
+      // })
+      //   .sort({ createdAt: -1 })
+      //   // .skip((currentPage - 1) * perPage)
+      //   .limit(loadNumber);
+      // // .limit(10);  // restrict get number
+      // // .populate('creator')
 
-      publicOrUserPosts = createReturnPosts(publicOrUserPosts);
+ 
+      // totalItems = publicOrUserPosts.length;
+      // console.log("publicOrUserPosts totalItems", totalItems);
+      // // console.log('pOUPs: ', publicOrUserPosts, totalItems);
+
+      // publicOrUserPosts = createReturnPosts(publicOrUserPosts);
+
+
+
 
       res.status(200).json({
         message: "Fetched posts successfully.",
-        posts: publicOrUserPosts,
+        // posts: publicOrUserPosts,
+        posts: suggestPosts,
         totalItems: totalItems,
       });
     } catch (err) {

@@ -58,7 +58,8 @@ exports.createMultiImagesPost = async (req, res, next) => {
     const content = req.body.content;
     const b64Simage = req.body.b64Simage;
     const public = req.body.public;
-    const language = req.headers['accept-language'];
+    // const language = req.headers['accept-language'];
+    const language = req.headers['accept-language'] ? req.headers['accept-language'].split(',')[0] : ''; 
     const headers = req.headers;
     const location = JSON.parse(req.query.userLocation);
     const embedUrl = req.body.embedUrl;
@@ -322,7 +323,8 @@ exports.updateMutiImagesPost = async (req, res, next) => {
     const content = req.body.content;
     const b64Simage = req.body.b64Simage;
     const public = req.body.public;
-    const language = req.headers['accept-language'];
+    // const language = req.headers['accept-language'];
+    const language = req.headers['accept-language'] ? req.headers['accept-language'].split(',')[0] : '';
     // const geolocation = user.geolocation;
     const location = JSON.parse(req.query.userLocation);
     // console.log('LOCATION', location);

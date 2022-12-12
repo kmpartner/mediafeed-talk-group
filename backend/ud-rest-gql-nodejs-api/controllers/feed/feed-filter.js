@@ -1,8 +1,10 @@
 const _ = require('lodash');
 
 const aws = require("aws-sdk");
+const jwt = require('jsonwebtoken');
 
 const Post = require("../../models/feed/post.js");
+const User = require('../../models/user/user');
 const UserReactionType = require('../../models/feed/user-reaction-type');
 const UserReaction = require('../../models/feed/user-reaction');
 const FilteredPosts = require('../../models/feed/filtered-posts');
@@ -367,8 +369,142 @@ const createMostReactionPosts = async (req, res, next) => {
 }
 
 
+const getUserSuggestPosts = async (req, limit) => {
+  try {
+    console.log('limit', limit);
+
+    let user;
+    let returnPosts = [];
+    let language; 
+    
+    if (req.headers && req.headers['accept-language']) {
+      language = req.headers['accept-language'].split(',')[0];
+    }
+
+    const authHeader = req.get('Authorization');
+    const token = authHeader.split(' ')[1];
+
+    // function parseJwt (token) {
+    //     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    // }
+
+    const parseJwt = (token) => {
+      try {
+        return JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {
+        return null;
+      }
+    };
+
+    // console.log('token', authHeader, token);
+
+    const parsedToken = parseJwt(token);
+
+    if (parsedToken && parsedToken.userId) {
+      user = await User.findOne({ userId: parsedToken.userId });
+    }
+
+    // console.log('user', user);
+
+    if (user) {
+
+      const followingUserIds = [];
+
+      if (user.followingUserIds && user.followingUserIds.length > 0) {
+        for (const id of user.followingUserIds) {
+          followingUserIds.push(id.userId);
+        }
+      }
+
+      console.log('followingUserIds', followingUserIds);
+      const languagePosts = await Post.find({ 
+        language : language, 
+        public: "public",
+      })
+      .limit(limit);
+      //   .sort({ createdAt: -1 });
+
+      const followingUserPosts = await Post.find({
+          'creatorId': { $in: followingUserIds },
+          public: "public",
+        })
+        // .sort({ createdAt: -1 });
+      
+
+      returnPosts = followingUserPosts.concat(languagePosts);
+      
+      returnPosts = returnPosts.filter(post => {
+        return post.creatorId !== parsedToken.userId;
+      });
+      
+      for (const post of returnPosts) {
+        console.log('creatorId', post.creatorId, post.creatorName);
+      }
+      
+      console.log('returnPosts, languagePosts followingUserPosts', returnPosts.length, languagePosts.length, followingUserPosts.length);
+      // console.log(returnPosts);
+    } 
+    
+    else {
+      returnPosts = await Post.find({ 
+        language : language,
+        public: "public",
+      })
+        .sort({ createdAt: -1 })
+        .limit(limit);
+
+      // console.log('returnPosts.length else', returnPosts.length);
+    }
+
+    returnPosts = _.orderBy(returnPosts, 'createdAt', 'desc');
+
+
+    const publicPosts = await Post.find({
+      $or: [{ public: "public" }],
+    })
+      .sort({ createdAt: -1 })
+      // .skip((currentPage - 1) * perPage)
+      .limit(limit);
+    
+
+    returnPosts = returnPosts.concat(publicPosts);
+
+
+    const uList = [];
+
+    for (const element of returnPosts) {
+      const isInList = uList.find(ele => {
+        return ele._id.toString() === element._id.toString();
+      });
+
+      if (!isInList) {
+        uList.push(element);
+      }
+    }
+
+    console.log('returnPosts.length public', returnPosts.length, publicPosts.length);
+    console.log('uList.length', uList.length);
+    returnPosts = uList.slice(0, limit);
+    // returnPosts = _.orderBy(trimedList, 'createdAt', 'desc');
+    
+    console.log('returnPosts.length after trim', returnPosts.length);
+
+    return returnPosts;
+
+  } catch (err) {
+    console.log(err);
+    return [];
+    // if (!err.statusCode) {
+    //   err.statusCode = 500;
+    // }
+    // next(err);
+  }
+}
+
+
 module.exports = {
   getMostReactionPosts: getMostReactionPosts,
   getMostVisitPosts: getMostVisitPosts,
   createReturnPosts: createReturnPosts,
+  getUserSuggestPosts: getUserSuggestPosts,
 }
