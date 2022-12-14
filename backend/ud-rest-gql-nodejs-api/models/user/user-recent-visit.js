@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const recentVisitSchema = new Schema({
+const userRecentVisitSchema = new Schema({
     userId: { type: String },
     recentVisitPostIds: [{ 
       postId: { type: String },
@@ -23,4 +23,4 @@ const recentVisitSchema = new Schema({
 { timestamps: true }
 )
 
-module.exports = mongoose.model('RecentVisit', recentVisitSchema);
+module.exports = mongoose.model('UserRecentVisit', userRecentVisitSchema);

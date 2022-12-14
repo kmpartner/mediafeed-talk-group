@@ -18,12 +18,15 @@ const Comment = require("../../models/feed/comment");
 const PostVisit = require("../../models/feed/post-visit");
 const PostUserVisit = require('../../models/feed/post-user-visit');
 const FavoritePost = require("../../models/feed/favarite-post");
+const UserRecentVisit = require("../../models/user/user-recent-visit");
+
 const imageModify = require("../../util/image");
 const { s3Upload, s3DeleteOne, s3DeleteMany } = require("../../util/image");
 const { testAuth } = require("../../util/auth");
 const { clearImage } = require("../../util/file");
 
-const { getUserSuggestPosts } = require('./feed-filter');
+// const { getUserSuggestPosts } = require('./feed-filter');
+const { getUserSuggestPosts } = require('./feed-filter-suggest');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -333,6 +336,7 @@ const createPost = async (req, res, next) => {
 
 const getPost = async (req, res, next) => {
   try {
+
     const postId = req.params.postId;
     const post = await Post.findById(postId);
 
@@ -342,8 +346,9 @@ const getPost = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
+
     // console.log('req.body', req.body);
-    // console.log('req.query', req.query);
+    // console.log('req.query getPost', req.query);
 
     let doUrl;
     if (
@@ -373,128 +378,6 @@ const getPost = async (req, res, next) => {
       (decodedToken && decodedToken.userId === post.creatorId)
     ) {
       const port = process.env.PORT || 8083;
-
-
-
-
-
-      // const imageUrls = [];
-      // if (post.imageUrls && post.imageUrls.length > 0) {
-      //   if (!process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.imageUrls) {
-      //       imageUrls.push(
-      //         s3.getSignedUrl("getObject", {
-      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //           Key: imageUrl,
-      //           Expires: 60 * 60 * 24 * 365,
-      //         })
-      //       );
-      //     }
-      //   }
-      //   if (process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.imageUrls) {
-      //       imageUrls.push(`http://localhost:${port}/${imageUrl}`);
-      //     }
-      //   }
-      // }
-
-      // const modifiedImageUrls = [];
-      // if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
-      //   if (!process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.modifiedImageUrls) {
-      //       modifiedImageUrls.push(
-      //         s3.getSignedUrl("getObject", {
-      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //           Key: imageUrl,
-      //           Expires: 60 * 60 * 24 * 365,
-      //         })
-      //       );
-      //     }
-      //   }
-      //   if (process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.modifiedImageUrls) {
-      //       modifiedImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-      //     }
-      //   }
-      // }
-
-      // const thumbnailImageUrls = [];
-      // if (post.thumbnailImageUrls && post.thumbnailImageUrls.length > 0) {
-      //   if (!process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.thumbnailImageUrls) {
-      //       thumbnailImageUrls.push(
-      //         s3.getSignedUrl("getObject", {
-      //           Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //           Key: imageUrl,
-      //           Expires: 60 * 60 * 24 * 365,
-      //         })
-      //       );
-      //     }
-      //   }
-      //   if (process.env.S3NOTUSE) {
-      //     for (const imageUrl of post.thumbnailImageUrls) {
-      //       thumbnailImageUrls.push(`http://localhost:${port}/${imageUrl}`);
-      //     }
-      //   }
-      // }
-
-      // let creatorImageUrl = null;
-      // if (!process.env.S3NOTUSE && post.creatorImageUrl) {
-      //   creatorImageUrl = s3.getSignedUrl("getObject", {
-      //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //     Key: post.creatorImageUrl ? post.creatorImageUrl : "dummy-key",
-      //     Expires: 60 * 60 * 24 * 365,
-      //   });
-      // }
-
-      // if (process.env.S3NOTUSE && post.creatorImageUrl) {
-      //   creatorImageUrl = `http://localhost:${port}/${post.creatorImageUrl}`;
-      // }
-
-      // res.status(200).json({
-      //   message: "Post fetched.",
-      //   post: {
-      //     ...post._doc,
-      //     imageUrl: doUrl ? doUrl : post.imageUrl,
-
-      //     modifiedImageUrl:
-      //       post.modifiedImageUrl &&
-      //       post.imageUrl &&
-      //       post.imageUrl !== "undefined" &&
-      //       post.imageUrl !== "deleted"
-      //         ? s3.getSignedUrl("getObject", {
-      //             Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //             Key: post.modifiedImageUrl,
-      //             Expires: 60 * 60,
-      //             // Expires: 10
-      //           })
-      //         : undefined,
-      //     thumbnailImageUrl:
-      //       post.thumbnailImageUrl &&
-      //       post.imageUrl &&
-      //       post.imageUrl !== "undefined" &&
-      //       post.imageUrl !== "deleted"
-      //         ? s3.getSignedUrl("getObject", {
-      //             Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //             Key: post.thumbnailImageUrl,
-      //             Expires: 60 * 60,
-      //           })
-      //         : undefined,
-
-      //     // creatorImageUrl: post.creatorImageUrl
-      //     // ? s3.getSignedUrl('getObject', {
-      //     //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
-      //     //   Key: post.creatorImageUrl ? post.creatorImageUrl : 'dummy-key',
-      //     //   Expires: 60 * 60
-      //     // })
-      //     // : null,
-      //     creatorImageUrl: creatorImageUrl,
-
-      //     imageUrls: imageUrls,
-      //     modifiedImageUrls: modifiedImageUrls,
-      //     thumbnailImageUrls: thumbnailImageUrls,
-      //   },
-      // });
 
 
       const returnPost = createReturnPost(post);
@@ -542,6 +425,7 @@ const getPost = async (req, res, next) => {
     }
 
     const userId = req.query.userId;
+    // const userId = req.userId;
     const location = JSON.parse(req.query.userLocation);
 
     if (userId) {
@@ -576,6 +460,41 @@ const getPost = async (req, res, next) => {
       await postUserVisit.save();
     }
   
+
+
+    //// store in userRecentVisit
+    if (userId && userId !== 'null' && userId !== post.creatorId) {
+
+      const addData = { 
+        postId: post._id.toString(),
+        creatorId: post.creatorId,
+        time: Date.now(),
+      };
+
+      // console.log('addData', addData);
+      const userRecentVisit = await UserRecentVisit.findOne({ userId: userId });
+
+      if (!userRecentVisit) {
+        const newRecentVisit = new UserRecentVisit({
+          userId: userId,
+          recentVisitPostIds: [addData],
+          recentVisitGroupIds: [],
+          recentVisitTalkUserIds: [],
+        });
+
+        await newRecentVisit.save();
+      } else {
+        const postVisits = userRecentVisit.recentVisitPostIds;
+        let addedList = postVisits.concat(addData);
+
+        if (addedList.length > 1000) {
+          addedList = addedList.slice(-1000);
+        }
+
+        userRecentVisit.recentVisitPostIds = addedList;
+        await userRecentVisit.save();
+      }
+    }
 
 
   }
