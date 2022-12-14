@@ -394,7 +394,8 @@ class Feed extends Component {
 
     fetch(queryEnd, {
       headers: {
-        Authorization: 'Bearer ' + this.props.token
+        // Authorization: 'Bearer ' + this.props.token,
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
       }
     })
       .then(res => {

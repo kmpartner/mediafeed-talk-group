@@ -112,7 +112,7 @@ class SinglePost extends Component {
     // userLocation=${localStorage.getItem('userLocation')}
     fetch(BASE_URL + '/feed/post/' + postId + `?userId=${localStorage.getItem('userId')}&userLocation=${localStorage.getItem('userLocation')}`, {
       headers: {
-        Authorization: 'Bearer ' + this.props.token
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
       }
     })
       .then(res => {
