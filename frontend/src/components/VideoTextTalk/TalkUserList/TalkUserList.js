@@ -7,9 +7,10 @@ import AutoSuggestVideoTextTalk from '../../AutoSuggest/AutoSuggestVideoTextTalk
 import Button from '../../Button/Button';
 import TalkUserListPermission from './TalkUserListPermission';
 
+import { addRecentVisitTalkUserId } from '../../../util/user-recent-visit';
 import { useStore } from '../../../hook-store/store';
 
-// import { BASE_URL } from '../../../App';
+import { BASE_URL } from '../../../App';
 // import './VideoTextTalk.css'
 
 import SampleImage from '../../Image/person-icon-50.jpg';
@@ -41,6 +42,20 @@ const TalkUserList = props => {
     setSuggestList(list);
   }
 
+
+  const addVisitUserIdHandler = async (destUserId) => {
+    try {
+      if (localStorage.getItem('userId') && localStorage.getItem('userId') !== destUserId) {
+        await addRecentVisitTalkUserId(
+          BASE_URL,
+          localStorage.getItem('token'),
+          destUserId,
+        );
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  };
 
   let talkUserList;
   if (props.usersData.length > 0) {
@@ -133,6 +148,8 @@ const TalkUserList = props => {
                     props.noconnectGetUserDestTalkHandler(element.userId);
                     props.showNoconnectTextTalkHandler();
                     props.noconnectDestUserIdHandler(element.userId);
+
+                    addVisitUserIdHandler(element.userId);
                   }}
                   disabled={!isAccepted}
                 >

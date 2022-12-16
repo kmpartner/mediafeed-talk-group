@@ -9,6 +9,7 @@ import GroupImageControll from './GroupImageControll';
 import GroupImageUpload from './GroupImageUpload';
 import { getUserImageUrl } from '../../../util/user';
 import { getLocalTimeElements } from '../../../util/timeFormat';
+import { addRecentVisitGroupId } from '../../../util/user-recent-visit';
 
 import { useStore } from '../../../hook-store/store';
 
@@ -21,7 +22,7 @@ import '../../../pages/GroupTalk/GroupTalk.css';
 import classes from './GroupListItem.module.css'
 
 const GroupListItem = (props) => {
-  // console.log('grouplistItem.js props', props);
+  console.log('grouplistItem.js props', props);
 
   const { 
     group,
@@ -125,10 +126,22 @@ const GroupListItem = (props) => {
     }
   };
 
-  // const getNewImageUrl = (imageUrl) => {
-  //   // console.log('getNewImageUrl')
-  //   setGroupImageUrl(imageUrl);
-  // }
+
+  const addVisitGroupIdHandler = async (groupId, creatorId) => {
+    try {
+      if (localStorage.getItem('userId') && creatorId !== localStorage.getItem('userId')) {
+        await addRecentVisitGroupId(
+          BASE_URL, 
+          localStorage.getItem('token'),
+          groupId, 
+          creatorId
+        );
+        // console.log(resData);
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
 
 
 
@@ -143,6 +156,10 @@ const GroupListItem = (props) => {
         onClick={() => {
           showGroupTalkTextHandler(group.groupRoomId);
           getGroupInfoHandler(group.groupRoomId); 
+          addVisitGroupIdHandler(
+            group.groupRoomId,
+            group.creatorUserId,
+          );
         }}
       >
         <span className={classes.groupListNameContainer}>
