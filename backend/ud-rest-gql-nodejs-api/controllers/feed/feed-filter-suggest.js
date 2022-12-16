@@ -77,9 +77,14 @@ const getUserSuggestPosts = async (req, limit) => {
       const languagePosts = await Post.find({ 
         language : language, 
         public: "public",
+        "creatorId": { "$ne": user.userId },
       })
       .sort({ createdAt: -1 })
       .limit(limit);
+
+      // for (const post of languagePosts) {
+      //   console.log('lngPosts, creatorId', post.creatorId, post.title);
+      // }
 
       const followingUserPosts = await Post.find({
           'creatorId': { $in: followingUserIds },
@@ -185,21 +190,77 @@ const createVisitUserPosts = async (userId, limit) => {
     if (userRecentVisit) {
       const userVisitPostIds = userRecentVisit.recentVisitPostIds;
       
+      const userVisitGroupIds = userRecentVisit.recentVisitGroupIds;
+      const userVisitTalkUserIds = userRecentVisit.recentVisitTalkUserIds;
+
+      const combinedMap = userVisitPostIds
+        .concat(userVisitGroupIds)
+        .concat(userVisitTalkUserIds)
+        .map(element => {
+          // let type = 'post';
+          // if (element.groupId) {
+          //   type = 'group';
+          // }
+          // if (!element.groupId && !element.postId) {
+          //   type = 'talk';
+          // }
+
+          return {
+            userId: element.creatorId ? element.creatorId : element.userId,
+            time: element.time,
+            // type: type, 
+          }
+        });
+
+      // console.log('combinedMap', combinedMap, combinedMap.length);
+      // console.log('gIds, tIds', userVisitGroupIds, userVisitTalkUserIds);
       // console.log('userVisitPostIds last', userVisitPostIds[userVisitPostIds.length -1]);
-      const groupedBy = _.groupBy(userVisitPostIds, 'creatorId');
+      
+      // const groupedBy = _.groupBy(userVisitPostIds, 'creatorId');
   
+      // const gGroupedBy = _.groupBy(userVisitGroupIds, 'creatorId');
+      // const tGroupedBy = _.groupBy(userVisitTalkUserIds, 'userId');
+      
+      const allGroupedBy = _.groupBy(combinedMap, 'userId');
+      // console.log('gGroupedBy tGroupedBy', gGroupedBy, tGroupedBy);
+      // console.log('allGroupedBy', allGroupedBy);
       // console.log('groupedBy', groupedBy);
       
       // // add last visit first
-      let countList = [{
-        userId: userVisitPostIds[userVisitPostIds.length -1].creatorId,
-        count: 1000000,
-      }];
-  
-      for (const key in groupedBy) {
+      let countList = [];
+
+      if (userVisitPostIds.length > 0) {
+        countList.push({
+          userId: userVisitPostIds[userVisitPostIds.length -1].creatorId,
+          count: 1000000,
+        });
+      }
+
+      if (userVisitGroupIds.length > 0) {
+        countList.push({
+            userId: userVisitGroupIds[userVisitGroupIds.length -1].creatorId,
+            count: 1000000,
+        });
+      }
+
+      if (userVisitTalkUserIds.length > 0) {
+        countList.push({
+          userId: userVisitTalkUserIds[userVisitTalkUserIds.length -1].userId,
+          count: 1000000,
+        })
+      }
+
+      // for (const key in groupedBy) {
+      //   countList.push({
+      //     userId: key,
+      //     count: groupedBy[key].length,
+      //   })
+      // }
+
+      for (const key in allGroupedBy) {
         countList.push({
           userId: key,
-          count: groupedBy[key].length,
+          count: allGroupedBy[key].length,
         })
       }
 
@@ -210,7 +271,7 @@ const createVisitUserPosts = async (userId, limit) => {
 
       // console.log('countList', countList);
   
-      for (let i=0; i<3; i++) {
+      for (let i=0; i<9; i++) {
         if (countList[i]) {
           visitIdsForSuggest.push(countList[i].userId);
         }

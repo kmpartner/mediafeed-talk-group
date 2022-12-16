@@ -51,6 +51,7 @@ const feedVideoUploadRoute = require('./routes/feed/feed-video-upload');
 const feedAudioUploadRoute = require('./routes/feed/feed-audio-upload');
 
 const TalkPermissionRoute = require('./routes/user/talk-permission');
+const UserRecentVisitRoute = require('./routes/user/user-recent-visit');
 
 const adRoute = require('./routes/ad/ad');
 
@@ -175,6 +176,8 @@ app.use('/feed-video-upload', videoUpload, feedVideoUploadRoute);
 app.use('/feed-audio-upload', audioUpload, feedAudioUploadRoute);
 
 app.use('/talk-permission', TalkPermissionRoute);
+app.use('/user-recent-visit', UserRecentVisitRoute);
+
 app.use('/ad', adRoute);
 
 app.use(auth);
