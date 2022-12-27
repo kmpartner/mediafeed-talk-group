@@ -3,14 +3,14 @@ import { Fragment, useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
 
-import Loader from '../../../Loader/Loader';
+// import Loader from '../../../Loader/Loader';
 // import TopBarContents from '../GroupTopElements/TopBarContents';
 // import RightContents from '../GroupRightElements/RightContents';
 
 import AdItems from '../AdItems/AdItems';
 // import GetAdList from '../GetAds/GetAdList';
 
-import { storeClickData, getNearAdElements, createDisplayAd } from '../../../../util/ad-visit';
+import { storeClickData, createDisplayAd } from '../../../../util/ad-visit';
 import { storeAdDisplay } from '../../../../util/ad-display';
 
 import { useStore } from '../../../../hook-store/store';
@@ -35,7 +35,7 @@ const AdElementDisplay = (props) => {
   const [store, dispatch] = useStore();
   // console.log('store-in AdElementDisplay.js', store);
   const adList = store.adStore.adList;
-  const videoAdList = store.adStore.videoAdList;
+  // const videoAdList = store.adStore.videoAdList;
 
   const ref = useRef();
   const isVisible = useOnScreen(ref);
@@ -47,9 +47,6 @@ const AdElementDisplay = (props) => {
   const [isDisplayed, setIsDisplayed] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
-  const [displayVideoAd, setDisplayVideoAd] = useState();
-  const [activeVideoList, setActiveVideoList] = useState([]);
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -60,12 +57,7 @@ const AdElementDisplay = (props) => {
     }
   },[adList]);
 
-  // useEffect(() => {
-  //   console.log('AdElementDisplay-props', props);
-  //   //// send display info
-  // },[]);
 
-  
   useEffect(() => {
     // console.log('isVisible', isVisible, displayAd)
     if (isVisible && activeList.length > 0 && displayAd && adType) {
@@ -76,26 +68,17 @@ const AdElementDisplay = (props) => {
         console.log('isVisible, now displayed, adplaceId', adPlaceId);
         setIsDisplayed(true);
 
-        storeAdDisplay(ADNETWORK_URL, 'token', displayAd.adElementId, adPlaceId);
+        // storeAdDisplay(ADNETWORK_URL, localStorage.getItem('token'), displayAd.adElementId, adPlaceId);
+        storeAdDisplayHandler(
+          ADNETWORK_URL, 
+          localStorage.getItem('token'), 
+          displayAd.adElementId, 
+          adPlaceId
+        );
         
       } else {
         console.log('isVisible, already displayed, adplaceId', adPlaceId);
       }
-
-      // if (adType === 'feedList') {
-      //   dispatch('SET_FEEDLIST_DISPLAYED_ADLIST', displayAd);
-
-      //   const feedListDiplayedAdList = store.adStore.feedListDisplayedAdList;
-
-      //   const isExistInList = feedListDiplayedAdList.find(ad => {
-      //     return ad.adElementId === displayAd.adElementId;
-      //   });
-
-      //   if (!isExistInList) {
-      //     console.log('not displayed feedList ads');
-      //   }
-
-      // }
     }
   },[isVisible, activeList, displayAd, adType])
 
@@ -116,46 +99,55 @@ const AdElementDisplay = (props) => {
   },[adList]);
 
 
-  useEffect(() => {
-    if (videoAdList.length > 0) {
-      const activeVideoList = videoAdList.filter(ad => {
-        return ad.start < Date.now() && ad.end > Date.now();
-      });
-      console.log('activeVideoList', activeVideoList);
-      setActiveVideoList(activeVideoList);
-    
-      if (activeVideoList.length > 0) {
-        const displayVideoAd = createDisplayAd(activeVideoList);
-        setDisplayVideoAd(displayVideoAd);
-        console.log('displayVideoAd', displayVideoAd);
+  const adClickHandler = async (displayAd) => {
+    try {
+      if (isClicked) {
+        console.log('already clicked');
+        return;
+      }
+
+      if (isVisible && activeList.length > 0 && displayAd && adType) {
+        setIsClicked(true);
+
+        await storeClickData(
+          ADNETWORK_URL, 
+          localStorage.getItem('token'), 
+          displayAd.adElementId, 
+          adPlaceId, 
+          adType,
+        );
+      }
+
+    } catch(err) {
+      console.log(err);
+
+      if (err.message === 'budget-error' && displayAd) {
+        //// adlist change
+        const deletedList = adList.filter(ad => {
+          return ad.adElementId !== displayAd.adElementId;
+        });
+
+        dispatch('SET_ADLIST', deletedList);
       }
     }
-  },[videoAdList]);
+  };
 
-  // const activeList = adList.filter(ad => {
-  //   return ad.start < Date.now() && ad.end > Date.now();
-  // });
-  // console.log('activeList', activeList);
 
-  // const displayAd = createDisplayAd(activeList);
-  // console.log('displayAd', displayAd);
+  const storeAdDisplayHandler = async (url, token, adElementId, adPlaceId) => {
+    try {
+      await storeAdDisplay(url, token, adElementId, adPlaceId);
+      // console.log(resData);
+    } catch(err) {
+      console.log(err);
 
-  const adClickHandler = () => {
-    if (isClicked) {
-      console.log('already clicked');
-      return;
-    }
+      if (err.message === 'budget-error') {
+        //// adlist change
+        const deletedList = adList.filter(ad => {
+          return ad.adElementId !== adElementId;
+        });
 
-    if (isVisible && activeList.length > 0 && displayAd && adType) {
-      storeClickData(
-        ADNETWORK_URL, 
-        localStorage.getItem('token'), 
-        displayAd.adElementId, 
-        adPlaceId, 
-        adType,
-      );
-
-      setIsClicked(true);
+        dispatch('SET_ADLIST', deletedList);
+      }
     }
   };
 
@@ -173,77 +165,12 @@ const AdElementDisplay = (props) => {
     />
   );
 
-  if (adType === 'video') {
-    adElementDisplayBody = (
-      <AdItems 
-        // ad={adList[0]} 
-        ad={displayVideoAd}
-        // adType={adType ? adType : '300x65'} 
-        adType={adType} 
-        // roomIdParam={roomIdParam}
-        activeList={activeVideoList}
-      />
-    );
-  }
-
-  // if (isLoading) {
-  //   adElementDisplayBody = <div>...loading...</div>;
-  // }
-  // if (isLoading && !roomIdParam) {
-  //   adElementDisplayBody = (
-  //     <AdItems 
-  //       // ad={adList[0]} 
-  //       ad={displayAd}
-  //       adType={adType ? adType : '300x65'} 
-  //       // roomIdParam={roomIdParam}
-  //       activeList={activeList}
-  //   />
-  //   );
-  // }
-  // else {
-  //   adElementDisplayBody = (
-  //     <div>
-  //       <GetAdList />
-  //       {/* {!roomIdParam && activeList.length === 0 && (
-  //         <a className={classes.groupTalkRightElementLink}
-  //           id={adElementId}
-  
-  //           href="https://remeet.watakura.xyz/your-room-from-above-link"
-  //           target="_blank"
-  //           rel="noopener noreferrer"
-  //         >
-  //           <div className={classes.groupTalkTopBarElementContainer}>
-  //             <div className={classes.groupTalkTopBarElement}>
-  //               <TopBarContents />
-  //             </div>
-  //           </div>
-  //         </a>
-  //       )} */}
-        
-  //       {/* {!roomIdParam && activeList.length > 0 && ( */}
-  //       {!roomIdParam && (
-  //         <div
-  //           // onClick={() => storeClickData(ADNETWORK_URL, 'token', adList[2].adElementId, 'some-placeId', '300x65')}
-  //         > 
-  //           <AdItems 
-  //             // ad={adList[0]} 
-  //             ad={displayAd}
-  //             adType={adType ? adType : '300x65'} 
-  //             // roomIdParam={roomIdParam}
-  //             activeList={activeList}
-  //           />
-  //         </div>
-  //       )}
-  
-  //     </div>
-  //   );
-  // }
 
   return (
     <Fragment>
       {/* <div ref={ref}>{isVisible && `Yep, I'm on screen`}</div> */}
       <span ref={ref}>{isVisible && ``}</span>
-      <div onClick={adClickHandler}>
+      <div onClick={() => {adClickHandler(displayAd); }}>
         {adElementDisplayBody}
       </div>
     </Fragment>

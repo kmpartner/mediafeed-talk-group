@@ -1,12 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { withI18n } from "react-i18next";
 
-import RightContents from "../GroupRightElements/RightContents";
-import TopBarContents from "../GroupTopElements/TopBarContents";
+import { storeAdVideoViewVisit } from '../../../../util/ad-visit';
 
-import { ADNETWORKLINK_URL } from "../../../../App";
+import { useStore } from '../../../../hook-store/store';
 
-import GrayImage from '../../../../images/light-gray-square-300.jpg';
+
+import { ADNETWORK_URL, ADNETWORKLINK_URL } from "../../../../App";
+
+// import GrayImage from '../../../../images/light-gray-square-300.jpg';
 import RemeetAdVideo from '../../../../images/remeet-test2-2-darkintro.mp4';
 
 import classes from "./AdItems.module.css";
@@ -21,11 +23,20 @@ const VideoAdItems = (props) => {
     activeList, 
     isVisible,
     setPlayState,
+
+    adPlaceId,
   } = props;
+
+  const [store, dispatch] = useStore();
+  const videoAdList = store.adStore.videoAdList;
 
   const [listenStart, setListenStart] = useState(false);
   const [fallbackDesc, setFallbackDesc] = useState(null);
 
+  const [isMinSec, setIsMinSec] = useState(false);
+  const [playCurrentTime, setPlayCurrentTime] = useState(0);
+
+  const [isClicked, setIsClicked] = useState(false);
 
   // // play and pause controll on visible state
   useEffect(() => {
@@ -81,7 +92,25 @@ const VideoAdItems = (props) => {
       setListenStart(true);
     }
 
+    // // detect updated currentTime
+    videoEl.addEventListener("timeupdate", function (e) {
+      // console.log('timeupdate currentTime', e.target.currentTime);
+      setPlayCurrentTime(e.target.currentTime);
+
+      if (e.target.currentTime > 10) {
+        setIsMinSec(true);
+      }
+    });
+
   },[ad, adType, activeList, listenStart]);
+
+
+  useEffect(() => {
+    if (isMinSec && !isClicked) {
+      //// store view data;
+      adVideoViewClickHandler(ad);
+    }
+  },[isMinSec, isClicked]);
 
 
   // // display fallback desc when adlist not exist 
@@ -105,6 +134,41 @@ const VideoAdItems = (props) => {
 
 
 
+  const adVideoViewClickHandler = async (ad) => {
+    try {
+      if (isClicked) {
+        console.log('already store visit');
+        return;
+      }
+
+      if (isVisible && activeList.length > 0 && ad && adType) {
+        setIsClicked(true);
+
+        await storeAdVideoViewVisit(
+          ADNETWORK_URL, 
+          localStorage.getItem('token'), 
+          ad.adElementId, 
+          adPlaceId, 
+          adType,
+        );
+
+      }
+    } catch(err) {
+      console.log(err);
+
+      if (err.message === 'budget-error' && ad) {
+        //// adlist change (video)
+        const deletedList = videoAdList.filter(vad => {
+          return vad.adElementId !== ad.adElementId;
+        });
+
+        dispatch('SET_VIDEOADLIST', deletedList);
+      }
+    }
+
+  };
+
+
   let bodyVideo300;
 
   if (ad && activeList && activeList.length > 0) {
@@ -113,6 +177,7 @@ const VideoAdItems = (props) => {
         // href={ad.linkUrl}
         href={`${ADNETWORKLINK_URL}?altk=${ad.token}`}
         target="_blank" rel="noopener noreferrer"
+        onClick={() => {adVideoViewClickHandler(ad); }}
       >
         <video 
           // className="body300x300Image"
@@ -177,6 +242,12 @@ const VideoAdItems = (props) => {
         <div className={classes.rightAdsItem}>
           {bodyVideo300}
         </div>
+
+        {/* <div>
+          <div>cur-time: {playCurrentTime}</div>
+          {isMinSec && (<div>is-min-sec</div>)}
+        </div> */}
+
       </div>
     );
     // adItemsBody = (

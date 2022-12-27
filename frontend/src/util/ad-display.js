@@ -19,6 +19,11 @@ export const storeAdDisplay = async (url, token, adElementId, adPlaceId) => {
       });
 
       console.log(response);
+
+      if (response.status === 499) {
+        throw new Error('budget-error');
+      }
+
       if (response.ok) {
         const resData = await response.json();
         console.log(resData);
@@ -31,6 +36,7 @@ export const storeAdDisplay = async (url, token, adElementId, adPlaceId) => {
     } 
     catch (err) {
       console.log(err);
+      throw err;
       // reject(err);
     }
 

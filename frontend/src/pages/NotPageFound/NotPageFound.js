@@ -295,19 +295,15 @@ const NotPageFound = props => {
         />
       )}
       {store.windowValues && (store.windowValues.width >= 768) && (
-        // <AdElementDisplay 
-        //   adType='300x300'
-        //   adPlaceId='toppage-right' 
-        // />
-        // <VideoAdElementDisplay 
-        //   adType='video'
-        //   adPlaceId='toppage-right' 
-        // />
-        <VideoAdElementTime 
-          // adType='video'
-          adType='video300'
+        <AdElementDisplay 
+          adType='300x300'
           adPlaceId='toppage-right' 
         />
+        // <VideoAdElementTime 
+        //   // adType='video'
+        //   adType='video300'
+        //   adPlaceId='toppage-right' 
+        // />
       )}
       
 
