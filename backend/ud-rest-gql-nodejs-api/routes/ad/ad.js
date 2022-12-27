@@ -12,4 +12,6 @@ router.post('/ad-display', adController.storeAdDisplay);
 
 router.post('/ad-visit', adController.storeClickVisit);
 
+router.post('/ad-video-view-visit', adController.storeAdVideoViewVisit);
+
 module.exports = router;
