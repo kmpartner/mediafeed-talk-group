@@ -586,6 +586,7 @@ class SinglePost extends Component {
                   modifiedImagePaths={this.state.modifiedImagePaths}
                   thumbnailImagePaths={this.state.thumbnailImagePaths}
                   postData={this.state.postData}
+                  isLoading={this.state.isLoading}
                 />
               </div>
 

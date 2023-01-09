@@ -295,15 +295,15 @@ const NotPageFound = props => {
         />
       )}
       {store.windowValues && (store.windowValues.width >= 768) && (
-        <AdElementDisplay 
-          adType='300x300'
-          adPlaceId='toppage-right' 
-        />
-        // <VideoAdElementTime 
-        //   // adType='video'
-        //   adType='video300'
+        // <AdElementDisplay 
+        //   adType='300x300'
         //   adPlaceId='toppage-right' 
         // />
+        <VideoAdElementTime 
+          // adType='video'
+          adType='video300'
+          adPlaceId='toppage-right' 
+        />
       )}
       
 
@@ -322,8 +322,8 @@ const NotPageFound = props => {
       </div>   
      
       {/* <button onClick={() => {authForTestHandler(BASE_URL, '60dfe34f948acf20fc03acde')}}>auth-for-test-button-acde</button> */}
-      {/* <button onClick={() => {authForTestHandler(BASE_URL, '61b41d950c71d544c5c32496')}}>auth-for-test-button-2496</button> */}
-      <button onClick={() => {authForTestHandler(BASE_URL, '60e110d91892a4426830768c')}}>auth-for-test-button-768c</button>
+      <button onClick={() => {authForTestHandler(BASE_URL, '61b41d950c71d544c5c32496')}}>auth-for-test-button-2496</button>
+      {/* <button onClick={() => {authForTestHandler(BASE_URL, '60e110d91892a4426830768c')}}>auth-for-test-button-768c</button> */}
       
       <button onClick={logoutForTestHandler}>logout-for-test-button</button> 
 

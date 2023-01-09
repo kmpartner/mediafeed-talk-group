@@ -4,15 +4,8 @@ import Img from "react-cool-img";
 
 import TransBackdrop from '../../../components/Backdrop/TransBackdrop';
 import SmallModal from '../../../components/Modal/SmallModal';
+import SinglePostAd from './SinglePostAd';
 
-// import Backdrop from "../../Backdrop/Backdrop";
-// import Button from "../../Button/Button";
-// import Modal from "../../Modal/Modal";
-// import Input from "../../Form/Input/Input";
-// import InputEmoji from "../../Form/Input/InputEmoji";
-// import FilePicker from "../../Form/Input/FilePicker";
-// import Loader from "../../Loader/Loader";
-// import Image from '../../Image/Image';
 import { isVideoFile, isImageFile, isAudioFile } from "../../../util/image";
 import { BASE_URL } from '../../../App';
 
@@ -28,6 +21,7 @@ const SinglePostImages = (props) => {
     imageUrls,
     modifiedImagePaths,
     postData,
+    isLoading,
   } = props;
 
   const [showFullImageModal, setShowFullImageModal] = useState(false);
@@ -211,9 +205,10 @@ const SinglePostImages = (props) => {
   };
 
   let singlePostImagesBody;
+  let fileType;
   if (imageUrls && imageUrls.length > 0) {
 
-    let fileType
+    // let fileType
     if (modifiedImagePaths && modifiedImagePaths.length > 0) {
       fileType = modifiedImagePaths[0].split('.')[modifiedImagePaths[0].split('.').length -1];
       // console.log(fileType, props.modifiedImagePaths[0]);
@@ -420,8 +415,14 @@ const SinglePostImages = (props) => {
           </div>
         )}
       </div>
-    )     
-      }
+    )}
+
+    
+    {!isLoading && (isVideoFile(fileType) || postData.embedUrl) && (
+      <div style={{padding: "1rem 0"}}>
+        <SinglePostAd adPlaceId={`single-post-under-media-${postData._id}`} postData={postData} /> 
+      </div>
+    )}
 
     </Fragment>;
 };
