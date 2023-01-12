@@ -157,6 +157,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/images-video', express.static(path.join(__dirname, 'images-video')));
 app.use('/images-audio', express.static(path.join(__dirname, 'images-audio')));
 app.use('/images-user', express.static(path.join(__dirname, 'images-user')));
+app.use('/images-group', express.static(path.join(__dirname, 'images-group')));
 
 app.use('/feed', imageUpload, feedRoutes);
 app.use('/auth', userImageUpload, authRoutes);

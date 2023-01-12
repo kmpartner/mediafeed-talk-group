@@ -28,30 +28,50 @@ const s3 = new aws.S3();
 exports.getGroupImages = async (req, res, next) => {
     // console.log('req.body, req.file', req.body, req.file);
     // console.log('req.file.path', req.file.path, 'req.userId', req.userId);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
+
+    
         const groupImages = await GroupImage.find({});
 
         const returnList = [];
 
         for (const image of groupImages) {
+            // console.log('image', image);
+            let returnImageUrl;
+
+            const port = process.env.PORT || 8083;
+            
+            if (!process.env.S3NOTUSE) {
+                returnImageUrl = s3.getSignedUrl('getObject', {
+                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    Key: image.imageUrl ? image.imageUrl : 'dummy-key',
+                    Expires: 60 * 60 * 24 * 365
+                }); 
+            }
+
+            if (process.env.S3NOTUSE) {
+                returnImageUrl = `http://localhost:${port}/${image.imageUrl}`;
+            }
+            // console.log('returnImageUrl', returnImageUrl);
+
             if (image.imageUrl) {
                 returnList.push({
                     groupRoomId: image.groupRoomId,
                     imagePath: image.imagePath,
-                    imageUrl: image.imageUrl 
-                        ? s3.getSignedUrl('getObject', {
-                            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                            Key: image.imageUrl ? image.imageUrl : 'dummy-key',
-                            Expires: 60 * 60 * 24 * 365
-                        }) 
-                        : null,
+                    // imageUrl: image.imageUrl 
+                    //     ? s3.getSignedUrl('getObject', {
+                    //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    //         Key: image.imageUrl ? image.imageUrl : 'dummy-key',
+                    //         Expires: 60 * 60 * 24 * 365
+                    //     }) 
+                    //     : null,
+                    imageUrl: returnImageUrl,
                 })
             }
         }
@@ -87,28 +107,52 @@ exports.getGroupImages = async (req, res, next) => {
 exports.getGroupImage = async (req, res, next) => {
     // console.log('req.body, req.file', req.body, req.file);
     // console.log('req.file.path', req.file.path, 'req.userId', req.userId);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
-    const groupRoomId = req.query.groupRoomId;
-
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
+
+        const groupRoomId = req.query.groupRoomId;
+
+    
         const groupImage = await GroupImage.findOne({ groupRoomId: groupRoomId });
         
+        if (!groupImage) {
+            const error = new Error('group image not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        let returnImageUrl;
+
+        const port = process.env.PORT || 8083;
+        
+        if (!process.env.S3NOTUSE) {
+            returnImageUrl = s3.getSignedUrl('getObject', {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: groupImage.imageUrl ? groupImage.imageUrl : 'dummy-key',
+                Expires: 60 * 60 * 24 * 365
+            });
+        }
+
+        if (process.env.S3NOTUSE) { 
+            returnImageUrl = `http://localhost:${port}/${groupImage.imageUrl}`;
+        }
+
         const imageUrlData = {
             groupRoomId: groupImage.groupRoomId,
             imagePath: groupImage.imagePath,
-            imageUrl: groupImage.imageUrl 
-                ? s3.getSignedUrl('getObject', {
-                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                    Key: groupImage.imageUrl ? groupImage.imageUrl : 'dummy-key',
-                    Expires: 60 * 60 * 24 * 365
-                }) 
-                : null,
+            // imageUrl: groupImage.imageUrl 
+            //     ? s3.getSignedUrl('getObject', {
+            //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            //         Key: groupImage.imageUrl ? groupImage.imageUrl : 'dummy-key',
+            //         Expires: 60 * 60 * 24 * 365
+            //     }) 
+            //     : null,
+            imageUrl: returnImageUrl,
         };
 
         res.status(200).json({ message: 'group image get success', data: imageUrlData });
@@ -124,29 +168,30 @@ exports.getGroupImage = async (req, res, next) => {
 exports.createGroupImage = async (req, res, next) => {
     // console.log('req.body, req.file', req.body, req.file);
     // console.log('req.file.path', req.file.path, 'req.userId', req.userId);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-    if (!req.file) {
-        res.status(422).json({ message: 'file is unacceptable file type or not exits'});
-        // const error = new Error('No image provided');
-        // error.statusCode = 422;
-        // throw error;
-    }
-
-    // const imageCreator = await User.findById(req.userId);
-    // const imageCreator = await User.findOne({ userId: req.userId });
-    const groupRoomId = req.query.groupRoomId;
-    const imageUrl = req.file.path;
-    const location = JSON.parse(req.query.userLocation);
-    let imageCreator = await GroupImage.findOne({ groupRoomId: groupRoomId });
-    // console.log('Location', location);
-
-
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
+        if (!req.file) {
+            // res.status(422).json({ message: 'file is unacceptable file type or not exits'});
+            const error = new Error('No image provided');
+            error.statusCode = 422;
+            throw error;
+        }
+
+        // const imageCreator = await User.findById(req.userId);
+        // const imageCreator = await User.findOne({ userId: req.userId });
+        const groupRoomId = req.query.groupRoomId;
+        const imageUrl = req.file.path;
+        const location = JSON.parse(req.query.userLocation);
+        let imageCreator = await GroupImage.findOne({ groupRoomId: groupRoomId });
+        // console.log('Location', location);
+
+
+    
         if (!imageCreator) {
           imageCreator = new GroupImage({
             groupRoomId: groupRoomId,
@@ -157,45 +202,56 @@ exports.createGroupImage = async (req, res, next) => {
 
           await createSmallGroupImage(imageUrl);
 
+          if (!process.env.S3NOTUSE) {
 
-          var params = {
-              ACL: 'private',
-              // ACL: 'public-read',
-              Bucket: process.env.DO_SPACE_BUCKET_NAME,
-              Body: fs.createReadStream(imageUrl),
-              //   ContentType: 'image/jpeg',
-              // Key: `images/${req.file.originalname}`
-              Key: `${imageUrl}`
-          };
-
-          await s3Upload(params);
-          clearImage(req.file.path);
+              var params = {
+                  ACL: 'private',
+                  // ACL: 'public-read',
+                  Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                  Body: fs.createReadStream(imageUrl),
+                  //   ContentType: 'image/jpeg',
+                  // Key: `images/${req.file.originalname}`
+                  Key: `${imageUrl}`
+              };
+    
+              await s3Upload(params);
+              clearImage(req.file.path);
+          }
 
         }
         else {
           await createSmallGroupImage(imageUrl);
 
-          var params = {
-              ACL: 'private',
-              // ACL: 'public-read',
-              Bucket: process.env.DO_SPACE_BUCKET_NAME,
-              Body: fs.createReadStream(imageUrl),
-              //   ContentType: 'image/jpeg',
-              // Key: `images/${req.file.originalname}`
-              Key: `${imageUrl}`
-          };
+          if (!process.env.S3NOTUSE) {
 
-          await s3Upload(params);
-          clearImage(req.file.path);
-          // fs.unlinkSync(req.file.path);
-
-          if (imageCreator.imageUrl) {
-              const deleteParams = {
+              var params = {
+                  ACL: 'private',
+                  // ACL: 'public-read',
                   Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                  Key: imageCreator.imageUrl
+                  Body: fs.createReadStream(imageUrl),
+                  //   ContentType: 'image/jpeg',
+                  // Key: `images/${req.file.originalname}`
+                  Key: `${imageUrl}`
+              };
+    
+              await s3Upload(params);
+              clearImage(req.file.path);
+              // fs.unlinkSync(req.file.path);
+    
+              if (imageCreator.imageUrl) {
+                  const deleteParams = {
+                      Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                      Key: imageCreator.imageUrl
+                  }
+                  await s3DeleteOne(deleteParams);
+                  clearImage(imageCreator.imageUrl);
               }
-              await s3DeleteOne(deleteParams);
-              clearImage(imageCreator.imageUrl);
+          }
+
+          if (process.env.S3NOTUSE) {
+            if (imageCreator.imageUrl) {
+                clearImage(imageCreator.imageUrl);
+            }
           }
 
 
@@ -205,16 +261,34 @@ exports.createGroupImage = async (req, res, next) => {
           await imageCreator.save();
         }
 
-        const returnData = {
-            groupRoomId: imageCreator.groupRoomId,
-            imagePath: imageCreator.imagePath,
-            imageUrl: imageCreator.imageUrl 
-            ? s3.getSignedUrl('getObject', {
+
+        let returnImageUrl; 
+
+        const port = process.env.PORT || 8083;
+
+        if (!process.env.S3NOTUSE) {
+            returnImageUrl = s3.getSignedUrl('getObject', {
                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
                 Key: imageCreator.imageUrl ? imageCreator.imageUrl : 'dummy-key',
                 Expires: 60 * 60 * 24 * 365
-            }) 
-            : null,
+            });
+        }
+
+        if (process.env.S3NOTUSE) {
+            returnImageUrl = `http://localhost:${port}/${imageCreator.imageUrl}`;
+        }
+
+        const returnData = {
+            groupRoomId: imageCreator.groupRoomId,
+            imagePath: imageCreator.imagePath,
+            // imageUrl: imageCreator.imageUrl 
+            // ? s3.getSignedUrl('getObject', {
+            //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            //     Key: imageCreator.imageUrl ? imageCreator.imageUrl : 'dummy-key',
+            //     Expires: 60 * 60 * 24 * 365
+            // }) 
+            // : null,
+            imageUrl: returnImageUrl,
         }
 
         // res.status(200).json({ message: 'image updated', data: { imageUrl: imageUrl } });
@@ -233,11 +307,11 @@ exports.createGroupImage = async (req, res, next) => {
 // }
 
 exports.deleteGroupImage = async (req, res, next) => {
-    console.log('req.query', req.query);
-    const location = JSON.parse(req.query.userLocation);
-    // console.log('Location', location);
-
     try {
+        console.log('req.query', req.query);
+        const location = JSON.parse(req.query.userLocation);
+        // console.log('Location', location);
+
         // const user = await User.findById(req.userId);
         // const user = await User.findOne({ userId: req.userId });
         const user = await GroupImage.findOne({ groupRoomId: req.query.groupRoomId });
@@ -255,12 +329,25 @@ exports.deleteGroupImage = async (req, res, next) => {
 
         // clearImage(user.imageUrl);
 
-        const deleteParams = {
-            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-            Key: user.imageUrl
+        if (!process.env.S3NOTUSE) {
+            const deleteParams = {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: user.imageUrl
+            }
+            await s3DeleteOne(deleteParams);
+            clearImage(user.imageUrl);
         }
-        await s3DeleteOne(deleteParams);
-        clearImage(user.imageUrl);
+
+        if (process.env.S3NOTUSE) {
+            clearImage(user.imageUrl);
+        }
+
+        // const deleteParams = {
+        //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
+        //     Key: user.imageUrl
+        // }
+        // await s3DeleteOne(deleteParams);
+        // clearImage(user.imageUrl);
 
         
         user.imageUrl = null;
