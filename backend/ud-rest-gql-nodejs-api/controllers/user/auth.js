@@ -663,7 +663,25 @@ exports.getUsers = async (req, res, next) => {
         // console.log('users', users);
 
         const usersData = [];
+
+        const port = process.env.PORT || 8083;
+        
         users.forEach(user => {
+            let imageUrl;
+
+            if (user.imageUrl && !process.env.S3NOTUSE) {
+                imageUrl = s3.getSignedUrl('getObject', {
+                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    Key: user.imageUrl ? user.imageUrl : 'dummy-key',
+                    Expires: 60 * 60 * 24 * 365
+                });
+            }
+            
+            if (user.imageUrl && process.env.S3NOTUSE) {
+                imageUrl = `http://localhost:${port}/${user.imageUrl}`;
+            }
+            
+
             usersData.push({
                 _id: user._id.toString(),
                 userId: user.userId,
@@ -673,14 +691,15 @@ exports.getUsers = async (req, res, next) => {
                 // email: user.email,
                 // imageUrl: user.imageUrl,
                 // fbUserId: user.fbUserId,
-                imageUrl: user.imageUrl 
-                    ? s3.getSignedUrl('getObject', {
-                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                        Key: user.imageUrl ? user.imageUrl : 'dummy-key',
-                        Expires: 60 * 60 * 24 * 365
-                      }) 
-                    : null,
-                createdAt: user.createdAt
+                // imageUrl: user.imageUrl 
+                //     ? s3.getSignedUrl('getObject', {
+                //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                //         Key: user.imageUrl ? user.imageUrl : 'dummy-key',
+                //         Expires: 60 * 60 * 24 * 365
+                //       }) 
+                //     : null,
+                imageUrl: imageUrl,
+                createdAt: user.createdAt,
             });
         });
         
