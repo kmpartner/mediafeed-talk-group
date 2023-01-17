@@ -3,8 +3,12 @@ import { Fragment, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next/hooks";
 import Img from "react-cool-img";
 
+
 import Button from "../../../Button/Button";
 import Loader from "../../../Loader/Loader";
+
+import { useStore } from "../../../../hook-store/store";
+
 import SampleImage from "../../../Image/person-icon-50.jpg";
 
 // import "../../../pages/GroupTalk/GroupTalk.css";
@@ -27,6 +31,10 @@ const TalkUserListControlContents = (props) => {
   } = props;
 
   const [t] = useTranslation("translation");
+
+  const [store, dispatch] = useStore();
+  console.log('store-TalkUserListControlContent', store);
+  const talkPermission = store.talkPermission;
 
   const [showFavoriteList, setShowFavoriteList] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -64,13 +72,19 @@ const TalkUserListControlContents = (props) => {
           });
           console.log(favoriteUserInfo);
 
+          const isAccepted = talkPermission.talkAcceptedUserIds.find(user => {
+            return user.userId === favorite.userId;
+          });
+
+          // console.log('isAccepted', isAccepted);
+
+
           return (
             <div key={favorite.userId}>
               <div className={classes.userInfoContainer}>
                 <span className={classes.userInfoContent}>
                   {favoriteUserInfo.name}
                 </span>
-                <span className={classes.userImageContainer}>
                   {/* <img className="textTalk__UserImageElement" style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
                         src={element.imageUrl ? 
                           // BASE_URL + '/' + element.imageUrl
@@ -79,18 +93,17 @@ const TalkUserListControlContents = (props) => {
                           }
                         alt='user-img'
                       ></img> */}
-                  <Img
-                    className={classes.userImageElement}
-                    style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
-                    src={
-                      favoriteUserInfo.imageUrl
-                        ? // BASE_URL + '/' + element.imageUrl
-                          favoriteUserInfo.imageUrl
-                        : SampleImage
-                    }
-                    alt="user-img"
-                  />
-                </span>
+                <Img
+                  className={classes.userImageElement}
+                  // style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
+                  src={
+                    favoriteUserInfo.imageUrl
+                      ? // BASE_URL + '/' + element.imageUrl
+                        favoriteUserInfo.imageUrl
+                      : SampleImage
+                  }
+                  alt="user-img"
+                />
               </div>
 
               <div className={classes.smallButtons} >
@@ -104,23 +117,33 @@ const TalkUserListControlContents = (props) => {
                 >
                     Group Page
                   </Button> */}
- 
-                <Button design='raised' mode='' size='smaller' 
-                  onClick={() => {
-                    // props.noconnectGetUserDestTalkHandler(element._id);
-                    // props.showNoconnectTextTalkHandler();
-                    // props.noconnectDestUserIdHandler(element._id);
 
-                    noconnectGetUserDestTalkHandler(favorite.userId);
-                    showNoconnectTextTalkHandler();
-                    noconnectDestUserIdHandler(favorite.userId);
-                  }}
-                >
-                  {/* write text */}
-                  {t('groupTalk.text37', 'write text')}
-                </Button>
- 
-                  <Button mode="flat" design="" type="submit" size='smaller'
+                  {isAccepted && (
+                    <Button design='raised' mode='' size='smaller' 
+                      // disabled={!isAccepted}
+                      onClick={() => {
+                        // props.noconnectGetUserDestTalkHandler(element._id);
+                        // props.showNoconnectTextTalkHandler();
+                        // props.noconnectDestUserIdHandler(element._id);
+
+                        noconnectGetUserDestTalkHandler(favorite.userId);
+                        showNoconnectTextTalkHandler();
+                        noconnectDestUserIdHandler(favorite.userId);
+                      }}
+                    >
+                      {t('groupTalk.text37', 'write text')}
+                    </Button>
+                  )}
+
+                  {!isAccepted && (
+                    <Button design='raised' mode='' size='smaller' 
+                      disabled={true}
+                    >
+                      {t('videoTalk.text26', 'not accepted')}
+                    </Button>
+                  )}
+  
+                  <Button mode="raised" design="" type="submit" size='smaller'
                     onClick={() => {
                       setShowDeleteConfirm(true);
                       setSelectedDeleteId(favorite.userId);
@@ -210,7 +233,10 @@ const TalkUserListControlContents = (props) => {
     </div>
   );
 
-  return <Fragment>{talkUserListControlContentsBody}</Fragment>;
+  return <Fragment>
+    {/* <div>userId: {userId}</div> */}
+    {talkUserListControlContentsBody}
+    </Fragment>;
 };
 
 export default TalkUserListControlContents;

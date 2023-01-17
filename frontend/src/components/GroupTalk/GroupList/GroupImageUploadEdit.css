@@ -1,3 +1,10 @@
 .imageUploadEdit__aboutImageFile {
   font-size: 0.8rem;
 }
+
+.groupImageUploadEdit__imagePreview {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

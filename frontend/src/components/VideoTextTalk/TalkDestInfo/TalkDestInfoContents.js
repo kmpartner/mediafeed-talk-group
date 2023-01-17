@@ -56,8 +56,9 @@ const TalkDestInfoContents = (props) => {
         {t('videoTalk.text18', 'Talking User Name')}:
       </div>
       <div className={classes.userInfoContainer}>
-        <span className={classes.userInfoContent}>{DestUserInfo.name}</span>
-        <span className={classes.userImageContainer}>
+        <span className={classes.userInfoContent}>
+          {DestUserInfo.name}
+        </span>
           {/* <img className="textTalk__UserImageElement" style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
                 src={element.imageUrl ? 
                   // BASE_URL + '/' + element.imageUrl
@@ -66,18 +67,17 @@ const TalkDestInfoContents = (props) => {
                   }
                 alt='user-img'
               ></img> */}
-          <Img
-            className={classes.userImageElement}
-            style={!DestUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
-            src={
-              DestUserInfo.imageUrl
-                ? // BASE_URL + '/' + element.imageUrl
-                  DestUserInfo.imageUrl
-                : SampleImage
-            }
-            alt="user-img"
-          />
-        </span>
+        <Img
+          className={classes.userImageElement}
+          style={!DestUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
+          src={
+            DestUserInfo.imageUrl
+              ? // BASE_URL + '/' + element.imageUrl
+                DestUserInfo.imageUrl
+              : SampleImage
+          }
+          alt="user-img"
+        />
       </div>
 
       {isInFavorite ? (

@@ -5,7 +5,11 @@ import Img from "react-cool-img";
 
 import Button from "../../Button/Button";
 import Loader from "../../Loader/Loader";
-import SampleImage from "../../Image/person-icon-50.jpg";
+
+import { useStore } from '../../../hook-store/store';
+
+// import SampleImage from "../../Image/person-icon-50.jpg";
+import GroupImage from '../../../images/group-image-50.jpg';
 
 import "../../../pages/GroupTalk/GroupTalk.css";
 import classes from "./GroupListControllContents.module.css";
@@ -24,6 +28,9 @@ const GroupListControllContents = (props) => {
   } = props;
 
   const [t] = useTranslation("translation");
+
+  const [store, dispatch] = useStore();
+  const groupImageUrls = store.groupImageUrls;
 
   const [showFavoriteList, setShowFavoriteList] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -66,18 +73,31 @@ const GroupListControllContents = (props) => {
     favoriteListBody = (
       <ul>
         {favoriteList.map((favorite) => {
+
+          const groupImageUrlObj = groupImageUrls.find(url => {
+            return url.groupRoomId === favorite.groupRoomId;
+          });
+
+          const imageSrc = groupImageUrlObj ? groupImageUrlObj.imageUrl : GroupImage;
+
           return (
             <div key={favorite.groupRoomId}>
-              {/* groupRoomId: {favorite.groupRoomId} */}
-              {t('groupTalk.text10', 'Group Name')}: 
-                <span className={classes.listElementContent}
-                  // onClick={() => {
-                  //   showGroupTalkTextHandler(favorite.groupRoomId);
-                  //   getGroupInfoHandler(favorite.groupRoomId);
-                  // }}
-                >
-                  {favorite.groupName}
-                </span>
+              <div className={classes.groupFavoriteNameRow}>
+                {t('groupTalk.text10', 'Group Name')}: 
+                  <span className={classes.listElementContent}
+                    // onClick={() => {
+                    //   showGroupTalkTextHandler(favorite.groupRoomId);
+                    //   getGroupInfoHandler(favorite.groupRoomId);
+                    // }}
+                  >
+                    {favorite.groupName}
+                  </span>
+                  <Img 
+                    className={classes.groupFavoriteImage}
+                    src={imageSrc}
+                    alt='groupimage'
+                  />
+              </div>
 
               <div className={classes.smallButtons} >
                 <Button mode="raised" design="" type="submit"

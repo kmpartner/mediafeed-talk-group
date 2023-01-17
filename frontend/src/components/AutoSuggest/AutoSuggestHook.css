@@ -23,5 +23,11 @@
 
 .AutoSuggest__nameElement-name {
   font-weight: bolder;
+}
 
+.AutoSuggest__userImage {
+  height: 2rem;
+  width: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
 }

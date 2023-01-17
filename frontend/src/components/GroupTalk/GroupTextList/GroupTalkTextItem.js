@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next/hooks';
 
 import GroupTalkTextModal from './GroupTalkTextModal';
 import Loader from '../../Loader/Loader';
+
 import { useStore } from '../../../hook-store/store';
+import { getDateTime } from '../../../util/timeFormat';
 
 import classes from './GroupTalkTextItem.module.css';
 
@@ -104,7 +106,7 @@ const GroupTalkTextItem = (props) => {
 
     // console.log('darkMode, colorStyle', localStorage.getItem('darkMode'), colorStyle);
     // console.log('userColor[0]', userColorList[0].bgColor);
-  
+  const sendTime = new Date(inputData.sendAt);
 
   let [month, date, year] = (new Date(inputData.sendAt)).toLocaleDateString().split("/")
   let [hour, minute, second] = (new Date(inputData.sendAt)).toLocaleTimeString().slice(0, 7).split(":")
@@ -188,7 +190,12 @@ const GroupTalkTextItem = (props) => {
         <span className={classes.groupTalkTextItmeNameElement}>{inputData.fromName}</span>
         {userImageSrc &&
           <span className={classes.groupTalkTextItmeNameElement}>
-          <Img src={userImageSrc} height="12.5" alt='user-img' /> 
+          <Img
+            className={classes.groupTalkTextItmeNameImage}
+            src={userImageSrc} 
+            // height="12.5" 
+            alt='user-img' 
+          /> 
           </span>
         }
         {/* <span className={classes.groupTalkTextItmeTimeElement}>
@@ -197,8 +204,9 @@ const GroupTalkTextItem = (props) => {
       </div>
 
       <div className={classes.groupTalkTextItmeTimeElement}>
-          {month}/{date} {hour}:{minute} {xm}
-        </div>
+          {/* {month}/{date} {hour}:{minute} {xm} */}
+          {getDateTime(sendTime)}
+      </div>
 
 
       <div className={classes.groupTalkTextItemReactionButtonsContainer}>

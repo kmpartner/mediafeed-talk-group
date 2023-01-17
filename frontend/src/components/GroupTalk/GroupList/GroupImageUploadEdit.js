@@ -161,8 +161,14 @@ class ImageUploadEdit extends Component {
       if (this.state.imagePreview.split('/')[0] === 'data:image') {
         imagePreviewBody = (
           <div>
-            <img src={this.state.imagePreview} height="30" alt=""></img>
-          </div>);
+            <img 
+              className="groupImageUploadEdit__imagePreview"
+              src={this.state.imagePreview} 
+              height="30" 
+              alt="group preview"
+            />
+          </div>
+        );
       }
       // if (this.state.imagePreview.split('/')[0] !== 'data:image') {
       //   imagePreviewBody = (

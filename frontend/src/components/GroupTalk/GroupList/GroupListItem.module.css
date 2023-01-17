@@ -7,3 +7,17 @@
   margin-right: 0.25rem;
 
 }
+
+.groupListImage {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.groupListCreatorImage {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

@@ -21,3 +21,17 @@
 .groupInfoName {
   margin-right: 0.25rem;
 }
+
+.groupInfoImage {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.groupCreatorImage {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

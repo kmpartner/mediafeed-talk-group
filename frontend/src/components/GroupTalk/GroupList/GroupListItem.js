@@ -22,7 +22,7 @@ import '../../../pages/GroupTalk/GroupTalk.css';
 import classes from './GroupListItem.module.css'
 
 const GroupListItem = (props) => {
-  console.log('grouplistItem.js props', props);
+  // console.log('grouplistItem.js props', props);
 
   const { 
     group,
@@ -164,7 +164,12 @@ const GroupListItem = (props) => {
       >
         <span className={classes.groupListNameContainer}>
           <span className={classes.groupListName}>{group.groupName}</span> 
-          <Img src={groupImageUrl ? groupImageUrl : GroupImage} height="30" alt="group-img" />
+          <Img 
+            className={classes.groupListImage}
+            src={groupImageUrl ? groupImageUrl : GroupImage} 
+            height="30" 
+            alt="group-img" 
+          />
         </span>
       </span>
       
@@ -226,7 +231,12 @@ const GroupListItem = (props) => {
           <span className="groupList-creatorImage">
             {/* <img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
             {/* <Img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
-            <Img src={creatorImageUrl ? creatorImageUrl : SampleImage} height="25" alt='user-img' />
+            <Img 
+              className={classes.groupListCreatorImage}
+              src={creatorImageUrl ? creatorImageUrl : SampleImage} 
+              // height="25" 
+              alt='user-img' 
+            />
           </span>
         </span>
       }

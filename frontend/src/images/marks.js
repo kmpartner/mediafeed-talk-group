@@ -43,4 +43,6 @@ export const marks = {
 
   listUlMark: <i style={{color: 'gray'}} className="fa fa-list-ul" aria-hidden="true"></i>,
   tableMark: <i style={{color: 'gray'}} className="fa fa-table" aria-hidden="true"></i>,
+  infoCircle: <i style={{color: 'gray'}} className="fa fa-info-circle" aria-hidden="true"></i>,
+
 };

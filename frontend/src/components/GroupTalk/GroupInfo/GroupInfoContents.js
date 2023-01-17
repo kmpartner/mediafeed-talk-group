@@ -118,7 +118,12 @@ const GroupInfoContents = (props) => {
         <div className={classes.listElementContent}>
           <span className={classes.groupInfoNameContainer}>
             <span className={classes.groupInfoName}>{groupInfo.groupName}</span>
-            <Img src={groupImageUrl ? groupImageUrl : GroupImage} height="30" alt="group-img" />
+            <Img 
+              className={classes.groupInfoImage}
+              src={groupImageUrl ? groupImageUrl : GroupImage} 
+              // height="30" 
+              alt="group-img" 
+            />
           </span>
         </div>
       </div>
@@ -152,10 +157,15 @@ const GroupInfoContents = (props) => {
       <div className={classes.listElement}>
         {t('groupTalk.text1', 'Creator')}:
         <div className="groupTalkTextList-joinModalCreator">
+            <Img 
+              className={classes.groupCreatorImage}
+              src={creatorImageUrl ? creatorImageUrl : SampleImage} 
+              // height="25" 
+              alt='user-img'
+            />
             <div className={classes.listElementContent}>{creatorInfo.name} </div>
             {/* <img src={creatorInfo.imageUrl? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
             {/* <Img src={creatorInfo.imageUrl? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
-            <Img src={creatorImageUrl ? creatorImageUrl : SampleImage} height="25" alt='user-img' />
         </div>
       </div>
 

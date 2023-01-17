@@ -7,11 +7,22 @@
 
 .groupTalkTextItmeNameElement {
   margin-left: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.groupTalkTextItmeDestUserImage {
+  height: 1.5rem;
+  width: 1.5rem;
+  object-fit: cover;
+  border-radius: 2px;
 }
 
 .groupTalkTextItmeTimeElement {
   margin-left: 0.25rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .groupTalkTextItemReactionButtonsContainer {

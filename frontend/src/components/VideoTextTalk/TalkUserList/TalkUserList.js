@@ -24,6 +24,8 @@ const TalkUserList = props => {
   const [store, dispatch] = useStore();
   // const [suggestInput, setSuggestInput] = useState('');
   const [suggestList, setSuggestList] = useState([]);
+  const [selectedSuggest, setSelectedSuggest] = useState();
+
 
   useEffect(() => {
     // props.getUserTextTalkListHandler();
@@ -58,10 +60,27 @@ const TalkUserList = props => {
   };
 
   let talkUserList;
+
   if (props.usersData.length > 0) {
 
+    let useList = props.usersData;
+
+    if (selectedSuggest) {
+      const withoutSelect = useList.filter(user => {
+        return user.userId !== selectedSuggest.userId;
+      });
+
+      const selectedUser = useList.filter(user => {
+        return user.userId === selectedSuggest.userId;
+      });
+
+      useList = selectedUser.concat(withoutSelect);
+    }
+    
+
     talkUserList = <ul>
-      {props.usersData.map((element, index) => {
+
+      {useList.map((element, index) => {
 
         let isRequesting = false;
         let isRequested = false;
@@ -124,7 +143,8 @@ const TalkUserList = props => {
                     }
                   alt='user-img'
                 ></img> */}
-                <Img className="textTalk__UserImageElement" style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
+                <Img className="textTalk__UserImageElement" 
+                  // style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
                   src={element.imageUrl ? 
                     // BASE_URL + '/' + element.imageUrl
                     element.imageUrl
@@ -183,17 +203,7 @@ const TalkUserList = props => {
 
   return (
     <div>
-
-
-      {/* <div className="textTalk__UserTalkListButton">
-        <Button mode="raised" type="submit" onClick={() => {
-            props.showUserTextTalkListHandler();
-            // props.getUserTextTalkListHandler();
-          }}
-        >
-          {props.showUserTextTalkList ? 'Online Users': 'Text Talk'}
-        </Button>
-      </div> */}
+      
 
 
 
@@ -215,6 +225,7 @@ const TalkUserList = props => {
             showNoconnectTextTalkHandler={props.showNoconnectTextTalkHandler}
             noconnectDestUserIdHandler={props.noconnectDestUserIdHandler}
             userId={props.userId}
+            setSelectedSuggest={setSelectedSuggest}
             getSuggestList={getSuggestList}
           />
         </div>

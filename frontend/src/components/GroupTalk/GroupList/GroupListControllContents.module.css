@@ -17,3 +17,16 @@
   display: flex;
   overflow: auto;
 }
+
+.groupFavoriteNameRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.groupFavoriteImage {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

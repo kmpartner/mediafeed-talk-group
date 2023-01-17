@@ -153,7 +153,7 @@ const AutoSuggestVideoTextTalk = (props) => {
       });
     }
 
-    console.log(nameContain);
+    // console.log(nameContain);
 
     // const returnList = inputLength < 2 ? [] : nameContain;
 
@@ -171,6 +171,7 @@ const AutoSuggestVideoTextTalk = (props) => {
   // input value for every given suggestion.
   const getSuggestionValue = suggestion => {
     console.log(suggestion);
+    props.setSelectedSuggest(suggestion);
     // props.setSearchSelectedUser(suggestion);
     return suggestion.name
   };
@@ -180,37 +181,31 @@ const AutoSuggestVideoTextTalk = (props) => {
     <div className="AutoSuggest__Element">
       <span className="AutoSuggest__ImageContainer">
 
-        {suggestion.imageUrl ?
+        {suggestion.imageUrl &&(
           // <img className="AutoSuggest__ImageElement"
           //   src={suggestion.imageUrl} alt=''
           // ></img>
-          <Img className="AutoSuggest__ImageElement"
+          <Img className="AutoSuggest__userImage"
           src={suggestion.imageUrl} alt='user-img'
           />
-          :
+        )}
+
+        {!suggestion.imageUrl && (
           // <img className="AutoSuggest__ImageElement"
           //   src={SampleImage} alt=''
           // ></img>
-          <Img className="AutoSuggest__ImageElement"
-          src={SampleImage} alt='user-img'
+          <Img className="AutoSuggest__userImage"
+            src={SampleImage} alt='user-img'
           />
-        }
+        )}
+        
 
       </span>
       <span className="AutoSuggest__nameElement">
         {suggestion.name}
       </span>
-      {props.listType === 'listForSuggest' ?
+      {/* {props.listType === 'listForSuggest' ?
         <span>
-          {/* <Button design='' mode='raised' size='smaller'
-          onClick={() => {
-            // console.log(suggestion);
-            props.callUser(suggestion.socketId);
-            setValue('');
-          }}
-        >
-          start talk
-        </Button> */}
           {props.startTalkButton}
         </span>
         :
@@ -232,7 +227,7 @@ const AutoSuggestVideoTextTalk = (props) => {
             write text
         </Button>
         </span>
-      }
+      } */}
     </div>
   );
 

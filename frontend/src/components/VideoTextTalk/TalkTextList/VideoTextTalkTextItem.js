@@ -2,9 +2,12 @@ import React, { Fragment, useState } from 'react';
 
 import { useTranslation } from 'react-i18next/hooks';
 import Linkify from 'react-linkify';
+import Img from "react-cool-img";
 
 import VideoTextTalkModal from './VideoTextTalkModal';
 import VideoTextTalkTextFile from './VideoTextTalkTextFile';
+
+import { getDateTime } from '../../../util/timeFormat';
 
 import classes from './VideoTextTalkTextItem.module.css';
 // import './VideoTextTalk.css'
@@ -93,6 +96,8 @@ const VideoTextTalkTextItem = (props) => {
   let elementStyle = "textTalk-listElement-remote";
   let colorStyle = null;
 
+  let destUserImage;
+
   if (inputData.fromUserId === userId) {
     elementStyle = "textTalk-listElement-local"
     colorStyle={ 
@@ -109,6 +114,16 @@ const VideoTextTalkTextItem = (props) => {
       border: `0.5px solid ${destUser.userColor}`,
      }
   }
+
+  if (destUser.imageUrl && inputData.fromUserId !== userId) {
+    destUserImage = (
+      <Img 
+        className={classes.groupTalkTextItmeDestUserImage}
+        src={destUser.imageUrl}
+      />
+    );
+  }
+
 
   let [month, date, year] = (new Date(inputData.sendAt)).toLocaleDateString().split("/")
   let [hour, minute, second] = (new Date(inputData.sendAt)).toLocaleTimeString().slice(0, 7).split(":")
@@ -134,9 +149,22 @@ const VideoTextTalkTextItem = (props) => {
         </Linkify>
       </div>
 
-      <div className="textTalk-listElement-time">
-        {inputData.fromName} ({month}/{date} {hour}:{minute} {xm})
-        </div>
+      <div className={classes.groupTalkTextItmeNameElement}>
+        <span>
+          {inputData.fromName} 
+        </span>
+        <span>
+          {destUserImage}
+        </span>
+      </div>
+
+      <div 
+      // className="textTalk-listElement-time"
+        className={classes.groupTalkTextItmeTimeElement}
+      >
+        {getDateTime(inputData.sendAt)}
+         {/* ({month}/{date} {hour}:{minute} {xm}) */}
+      </div>
 
       {inputData.fromUserId === userId &&
         <div>{textSettingsBody}</div>

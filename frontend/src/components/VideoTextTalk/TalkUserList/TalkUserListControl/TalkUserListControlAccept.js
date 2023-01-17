@@ -106,19 +106,17 @@ const TalkUserListControlAccept = (props) => {
                 <span className={classes.userInfoContent}>
                   {favoriteUserInfo.name}
                 </span>
-                <span className={classes.userImageContainer}>
-                  <Img
-                    className={classes.userImageElement}
-                    style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
-                    src={
-                      favoriteUserInfo.imageUrl
-                        ? // BASE_URL + '/' + element.imageUrl
-                          favoriteUserInfo.imageUrl
-                        : SampleImage
-                    }
-                    alt="user-img"
-                  />
-                </span>
+                <Img
+                  className={classes.userImageElement}
+                  // style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
+                  src={
+                    favoriteUserInfo.imageUrl
+                      ? // BASE_URL + '/' + element.imageUrl
+                        favoriteUserInfo.imageUrl
+                      : SampleImage
+                  }
+                  alt="user-img"
+                />
               </div>
 
               <div className={classes.smallButtons} >

@@ -11,9 +11,11 @@ import { getUserDataForStore } from '../../util/user';
 import GetWindowData from '../../components/UI/getWindowData';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 import VideoAdElementTime from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/VideoAdElementTime';
-import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
-import './NotPageFound.css';
+import PageDescription from './PageDescription';
 
+import { authPageLink, authSignupPageLink, BASE_URL } from '../../App';
+
+import './NotPageFound.css';
 
 import TalkIcon from '../../images/icons/talkIcon-white-48.png';
 import FeedIcon from '../../images/icons/feedIcon-white-48.png';
@@ -21,11 +23,15 @@ import GroupIcon from '../../images/icons/groupIcon-white-48.png';
 import LoginIcon from '../../images/icons/loginIcon-white-48.png';
 import SignupIcon from '../../images/icons/signupIcon-white-48.png';
 
+import { marks } from '../../images/marks';
+
 const NotPageFound = props => {
   // console.log('need-to-login-props', props);
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
+
+  const [showPageInfo, setShowPageInfo] = useState(false);
 
   // console.log('store in NotPageFound.js', store);
   
@@ -128,6 +134,16 @@ const NotPageFound = props => {
     </div>);
   }
   else {
+    const pageInfoButton = (              
+      <span 
+        onClick={() => {
+          setShowPageInfo(true);
+        }}
+      >
+        {marks.infoCircle}
+      </span>
+    );
+
     body = ( 
     <div className="notPageFound__container">
       {props.isAuth ?
@@ -155,6 +171,8 @@ const NotPageFound = props => {
                 </span>
               </Button>
             </Link>
+
+            <span>{pageInfoButton}</span>
           </div>
 
           <div className="notPageFound__pageButton">
@@ -171,6 +189,8 @@ const NotPageFound = props => {
                 </span>
               </Button>
             </Link>
+
+            <span>{pageInfoButton}</span>
           </div>
 
           <div className="notPageFound__pageButton">
@@ -187,7 +207,11 @@ const NotPageFound = props => {
                 </span>
               </Button>
             </Link>
+
+            <span>{pageInfoButton}</span>
+
           </div>
+
             {/* <Redirect to="/feed/posts" /> */}
           </div>
         :
@@ -239,6 +263,8 @@ const NotPageFound = props => {
                   </span>
                 </Button>
               </Link>
+
+              <span>{pageInfoButton}</span>
             </div>
 
             <div className="notPageFound__pageButton">
@@ -256,6 +282,8 @@ const NotPageFound = props => {
                   </span>
                 </Button>
               </Link>
+
+              <span>{pageInfoButton}</span>
             </div>
 
             <div className="notPageFound__pageButton">
@@ -273,6 +301,8 @@ const NotPageFound = props => {
                   </span>
                 </Button>
               </Link>
+
+              <span>{pageInfoButton}</span>
             </div>
             {/* <Redirect to="/login" /> */}
         </div>
@@ -309,6 +339,10 @@ const NotPageFound = props => {
 
 
       {body}
+
+      {showPageInfo && (
+        <PageDescription />
+      )}
       
 
       <div>
@@ -322,8 +356,8 @@ const NotPageFound = props => {
       </div>   
      
       {/* <button onClick={() => {authForTestHandler(BASE_URL, '60dfe34f948acf20fc03acde')}}>auth-for-test-button-acde</button> */}
-      <button onClick={() => {authForTestHandler(BASE_URL, '61b41d950c71d544c5c32496')}}>auth-for-test-button-2496</button>
-      {/* <button onClick={() => {authForTestHandler(BASE_URL, '60e110d91892a4426830768c')}}>auth-for-test-button-768c</button> */}
+      {/* <button onClick={() => {authForTestHandler(BASE_URL, '61b41d950c71d544c5c32496')}}>auth-for-test-button-2496</button> */}
+      <button onClick={() => {authForTestHandler(BASE_URL, '60e110d91892a4426830768c')}}>auth-for-test-button-768c</button>
       
       <button onClick={logoutForTestHandler}>logout-for-test-button</button> 
 
