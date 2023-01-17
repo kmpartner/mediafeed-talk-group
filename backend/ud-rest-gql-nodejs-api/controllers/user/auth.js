@@ -767,15 +767,34 @@ exports.getUserImageUrl = async (req, res, next) => {
             throw error;
         }
 
+        let returnImageUrl;
+
+        if (user.imageUrl) {
+            const port = process.env.PORT || 8083;
+            
+            if (!process.env.S3NOTUSE) {
+                returnImageUrl = s3.getSignedUrl('getObject', {
+                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                    Key: user.imageUrl ? user.imageUrl : 'dummy-key',
+                    Expires: 60 * 60 * 24 * 30
+                  })
+            }
+    
+            if (process.env.S3NOTUSE) {
+                returnImageUrl = `http://localhost:${port}/${user.imageUrl}`;
+            }
+        }
+
         const returnData = {
             userId: user.userId,
-            imageUrl: user.imageUrl 
-            ? s3.getSignedUrl('getObject', {
-                Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                Key: user.imageUrl ? user.imageUrl : 'dummy-key',
-                Expires: 60 * 60 * 24 * 30
-              })
-            : null,
+            // imageUrl: user.imageUrl 
+            // ? s3.getSignedUrl('getObject', {
+            //     Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            //     Key: user.imageUrl ? user.imageUrl : 'dummy-key',
+            //     Expires: 60 * 60 * 24 * 30
+            //   })
+            // : null,
+            imageUrl: returnImageUrl,
         }
 
         res.status(200).json({ message: 'get user image url data successfully.', data: returnData });
