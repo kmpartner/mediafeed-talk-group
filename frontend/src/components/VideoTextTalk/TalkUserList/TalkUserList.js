@@ -26,10 +26,24 @@ const TalkUserList = props => {
   const [suggestList, setSuggestList] = useState([]);
   const [selectedSuggest, setSelectedSuggest] = useState();
 
+  const [displayList, setDisplayList] = useState([]);
 
   useEffect(() => {
+    if (selectedSuggest) {
+      const withoutSelect = props.usersData.filter(user => {
+        return user.userId !== selectedSuggest.userId;
+      });
+
+      const selectedUser = props.usersData.filter(user => {
+        return user.userId === selectedSuggest.userId;
+      });
+
+      setDisplayList(selectedUser.concat(withoutSelect));
+    } else {
+      setDisplayList(props.usersData);
+    }
     // props.getUserTextTalkListHandler();
-  },[]); 
+  },[selectedSuggest]); 
 
   const withoutUserList = props.usersData.filter(user => {
     // return user._id !== props.userId;
@@ -61,26 +75,28 @@ const TalkUserList = props => {
 
   let talkUserList;
 
-  if (props.usersData.length > 0) {
+  // if (props.usersData.length > 0) {
+  if (displayList.length > 0) {
 
-    let useList = props.usersData;
+    // let useList = props.usersData;
 
-    if (selectedSuggest) {
-      const withoutSelect = useList.filter(user => {
-        return user.userId !== selectedSuggest.userId;
-      });
+    // if (selectedSuggest) {
+    //   const withoutSelect = useList.filter(user => {
+    //     return user.userId !== selectedSuggest.userId;
+    //   });
 
-      const selectedUser = useList.filter(user => {
-        return user.userId === selectedSuggest.userId;
-      });
+    //   const selectedUser = useList.filter(user => {
+    //     return user.userId === selectedSuggest.userId;
+    //   });
 
-      useList = selectedUser.concat(withoutSelect);
-    }
+    //   useList = selectedUser.concat(withoutSelect);
+    // }
     
+    console.log('displayList', displayList);
 
     talkUserList = <ul>
 
-      {useList.map((element, index) => {
+      {displayList.map((element, index) => {
 
         let isRequesting = false;
         let isRequested = false;
@@ -216,7 +232,7 @@ const TalkUserList = props => {
       : null
       }
 
-      {props.showUserTextTalkList && !props.showNoconnectTextTalk ? 
+      {/* {props.showUserTextTalkList && !props.showNoconnectTextTalk ? 
         <div className={suggestList.length > 0 ? "textTalk__UserTalkListSuggest" : "textTalk__UserTalkListNoSuggest"} >
           <AutoSuggestVideoTextTalk
             // userList={props.usersData}
@@ -230,7 +246,7 @@ const TalkUserList = props => {
           />
         </div>
       : null
-      }
+      } */}
 
     </div>
     );
