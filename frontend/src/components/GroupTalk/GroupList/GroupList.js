@@ -26,6 +26,8 @@ const GroupList = (props) => {
   const [selectedSuggest, setSelectedSuggest] = useState(null);
   const [moreClickNum, setMoreClickNum] = useState(0);
   const [listForSuggest, setListForSuggest] = useState([]);
+  
+  const [sortedGroupList, setSortedGroupList] = useState([]);
 
   const initialListNum = 50;
 
@@ -43,6 +45,13 @@ const GroupList = (props) => {
     //   }
     // };
   }, []);
+
+  useEffect(() => {
+    if (props.groupList && sortedGroupList.length === 0) {
+      const sortedGroupList = _.orderBy(props.groupList, ['groupName'], ['asc']);
+      setSortedGroupList(sortedGroupList);
+    }
+  }, [props.groupList]);
 
   // useEffect(() => {
   //   console.log('moreClickNum', moreClickNum);
@@ -139,23 +148,23 @@ const GroupList = (props) => {
 
   
   let groupListBody
-  if (props.groupList.length > 0) {
+  if (props.groupList.length > 0 && sortedGroupList.length > 0) {
     // console.log(props.groupList);
 
-    let sortedGroupList = _.orderBy(props.groupList, ['groupName'], ['asc']);
+    let sortedGList = sortedGroupList;
     // console.log(sortedGroupList);
     
     if (selectedSuggest) {
-      const suggestGroupInfo = props.groupList.find(element => {
+      const suggestGroupInfo = sortedGList.find(element => {
         return selectedSuggest.groupRoomId === element.groupRoomId;
       });
 
-      sortedGroupList = [suggestGroupInfo]
+      sortedGList = [suggestGroupInfo];
       // console.log(sortedGroupList);
     }
 
     groupListBody = <ul>
-      {sortedGroupList.slice(0, initialListNum * (moreClickNum + 1)).map((group) => {
+      {sortedGList.slice(0, initialListNum * (moreClickNum + 1)).map((group) => {
 
         if (props.joinGroupId) {
           return null;

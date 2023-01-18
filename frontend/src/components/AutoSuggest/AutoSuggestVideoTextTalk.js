@@ -7,6 +7,8 @@ import Img from "react-cool-img";
 
 import Button from '../Button/Button';
 import input from '../Form/Input/Input';
+import TalkUserListItem from '../VideoTextTalk/TalkUserList/TalkUserListItem';
+
 import { BASE_URL } from '../../App';
 
 import SampleImage from '../Image/person-icon-50.jpg';
@@ -171,74 +173,91 @@ const AutoSuggestVideoTextTalk = (props) => {
   // input value for every given suggestion.
   const getSuggestionValue = suggestion => {
     console.log(suggestion);
-    props.setSelectedSuggest(suggestion);
+
+    // props.setSelectedSuggest(suggestion);
     // props.setSearchSelectedUser(suggestion);
     return suggestion.name
   };
 
-  // Use your imagination to render suggestions.
-  const renderSuggestion = suggestion => (
-    <div className="AutoSuggest__Element">
-      <span className="AutoSuggest__ImageContainer">
+  // // Use your imagination to render suggestions.
+  // const renderSuggestion = suggestion => (
+  //   <div className="AutoSuggest__Element">
+  //     <span className="AutoSuggest__ImageContainer">
 
-        {suggestion.imageUrl &&(
-          // <img className="AutoSuggest__ImageElement"
-          //   src={suggestion.imageUrl} alt=''
-          // ></img>
-          <Img className="AutoSuggest__userImage"
-          src={suggestion.imageUrl} alt='user-img'
-          />
-        )}
+  //       {suggestion.imageUrl &&(
+  //         // <img className="AutoSuggest__ImageElement"
+  //         //   src={suggestion.imageUrl} alt=''
+  //         // ></img>
+  //         <Img className="AutoSuggest__userImage"
+  //         src={suggestion.imageUrl} alt='user-img'
+  //         />
+  //       )}
 
-        {!suggestion.imageUrl && (
-          // <img className="AutoSuggest__ImageElement"
-          //   src={SampleImage} alt=''
-          // ></img>
-          <Img className="AutoSuggest__userImage"
-            src={SampleImage} alt='user-img'
-          />
-        )}
+  //       {!suggestion.imageUrl && (
+  //         // <img className="AutoSuggest__ImageElement"
+  //         //   src={SampleImage} alt=''
+  //         // ></img>
+  //         <Img className="AutoSuggest__userImage"
+  //           src={SampleImage} alt='user-img'
+  //         />
+  //       )}
         
 
-      </span>
-      <span className="AutoSuggest__nameElement">
-        {suggestion.name}
-      </span>
-      {/* {props.listType === 'listForSuggest' ?
-        <span>
-          {props.startTalkButton}
-        </span>
-        :
-        <span>
-          <Button design='' mode='raised' size='smaller'
-            onClick={() => {
-              // console.log(suggestion);
-              // props.noconnectGetUserDestTalkHandler(suggestion._id);
-              // props.showNoconnectTextTalkHandler();
-              // props.noconnectDestUserIdHandler(suggestion._id);
-              // setValue('');
+  //     </span>
+  //     <span className="AutoSuggest__nameElement">
+  //       {suggestion.name}
+  //     </span>
+  //     {/* {props.listType === 'listForSuggest' ?
+  //       <span>
+  //         {props.startTalkButton}
+  //       </span>
+  //       :
+  //       <span>
+  //         <Button design='' mode='raised' size='smaller'
+  //           onClick={() => {
+  //             // console.log(suggestion);
+  //             // props.noconnectGetUserDestTalkHandler(suggestion._id);
+  //             // props.showNoconnectTextTalkHandler();
+  //             // props.noconnectDestUserIdHandler(suggestion._id);
+  //             // setValue('');
 
-              props.noconnectGetUserDestTalkHandler(suggestion.userId);
-              props.showNoconnectTextTalkHandler();
-              props.noconnectDestUserIdHandler(suggestion.userId);
-              setValue('');
-            }}
-          >
-            write text
-        </Button>
-        </span>
-      } */}
+  //             props.noconnectGetUserDestTalkHandler(suggestion.userId);
+  //             props.showNoconnectTextTalkHandler();
+  //             props.noconnectDestUserIdHandler(suggestion.userId);
+  //             setValue('');
+  //           }}
+  //         >
+  //           write text
+  //       </Button>
+  //       </span>
+  //     } */}
+  //   </div>
+  // );
+
+
+  const renderSuggestion = suggestion => (
+    <div className="AutoSuggest__Element">
+
+      <TalkUserListItem 
+        element={suggestion}
+        noconnectGetUserDestTalkHandler={props.noconnectGetUserDestTalkHandler}
+        showNoconnectTextTalkHandler={props.showNoconnectTextTalkHandler}
+        noconnectDestUserIdHandler={props.noconnectDestUserIdHandler}
+        addVisitUserIdHandler={props.addVisitUserIdHandler}
+      />
+ 
     </div>
   );
 
   const onChange = (event, { newValue }) => {
     setValue(newValue);
 
+
     // props.isSuggestInput(newValue);
     // console.log(props.isSuggestInput(newValue));
 
     // if (newValue.length === 0) {
-    //   // props.setSearchSelectedUser(null);
+    //   props.setSelectedSuggest(null);
     // }
 
   };
