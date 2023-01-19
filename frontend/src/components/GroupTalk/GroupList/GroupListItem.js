@@ -143,6 +143,15 @@ const GroupListItem = (props) => {
     }
   }
 
+  const clickGroupNameHandler = (group) => {
+    showGroupTalkTextHandler(group.groupRoomId);
+    getGroupInfoHandler(group.groupRoomId); 
+    addVisitGroupIdHandler(
+      group.groupRoomId,
+      group.creatorUserId,
+    );
+  };
+
 
 
   const createDate = getLocalTimeElements(group.createdAt)
@@ -152,23 +161,19 @@ const GroupListItem = (props) => {
 
   const groupListItemBody = (
     <div>
-      <span className="groupList-groupName"
-        onClick={() => {
-          showGroupTalkTextHandler(group.groupRoomId);
-          getGroupInfoHandler(group.groupRoomId); 
-          addVisitGroupIdHandler(
-            group.groupRoomId,
-            group.creatorUserId,
-          );
-        }}
-      >
+      <span className="groupList-groupName">
         <span className={classes.groupListNameContainer}>
-          <span className={classes.groupListName}>{group.groupName}</span> 
-          <Img 
+          <span className={classes.groupListName}
+            onClick={() => { clickGroupNameHandler(group); }}
+          >
+            {group.groupName}
+          </span> 
+          <Img
             className={classes.groupListImage}
             src={groupImageUrl ? groupImageUrl : GroupImage} 
             height="30" 
             alt="group-img" 
+            onClick={() => { clickGroupNameHandler(group); }}
           />
         </span>
       </span>
@@ -197,9 +202,9 @@ const GroupListItem = (props) => {
       </div>
 
       <div className="groupList-listElement"
-        onClick={() => {
-          showDescriptionHandler(group.groupRoomId)
-        }}
+        // onClick={() => {
+        //   showDescriptionHandler(group.groupRoomId)
+        // }}
       >
         {/* {group.description && group.description.length > 40 ?
           <span>
@@ -213,7 +218,13 @@ const GroupListItem = (props) => {
           </span>
         } */}
         {/* more information &#9662; */}
-        {t('groupTalk.text21', 'more information')} &#9662;
+        <span className={classes.groupListMoreInfo}
+          onClick={() => {
+            showDescriptionHandler(group.groupRoomId)
+          }}
+        >
+          {t('groupTalk.text21', 'more information')} &#9662;
+        </span>
       </div>
       
       {showDescription && selectedGroupId === group.groupRoomId ? 
@@ -226,7 +237,7 @@ const GroupListItem = (props) => {
         <span className="groupList-creatorContainer groupList-listElement">
           <span>
             {/* creator: {creatorInfo.name} */}
-            {t('groupTalk.text1')}:  {creatorInfo.name}
+            {t('groupTalk.text1')}:  
           </span>
           <span className="groupList-creatorImage">
             {/* <img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
@@ -237,6 +248,9 @@ const GroupListItem = (props) => {
               // height="25" 
               alt='user-img' 
             />
+          </span>
+          <span>
+            {creatorInfo.name}
           </span>
         </span>
       }

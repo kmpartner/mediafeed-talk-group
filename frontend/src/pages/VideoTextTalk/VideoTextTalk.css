@@ -265,6 +265,7 @@
   flex-wrap: wrap;
 
   gap: 0.25rem;
+  padding-bottom: 1rem;
   /* cursor: pointer; */
 }
 

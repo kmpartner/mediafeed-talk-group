@@ -8,6 +8,10 @@
   font-weight: bold;
   margin-right: 1rem;
   margin-bottom: 0.5rem;
+  /* cursor: pointer; */
+}
+
+.infoButtonMark {
   cursor: pointer;
 }
 

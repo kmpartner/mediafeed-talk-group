@@ -49,7 +49,9 @@ const GroupListControll = (props) => {
 
   const infoButton = (      
     <div className={classes.infoButton}>
-      <span onClick={showGroupListControllModalHandler}>
+      <span className={classes.infoButtonMark}
+        onClick={showGroupListControllModalHandler}
+      >
         &#9881; 
         {/* ⚙️ */}
       </span>

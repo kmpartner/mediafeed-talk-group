@@ -111,7 +111,7 @@ const GroupListControllContents = (props) => {
                     {/* Group Page */}
                     Group {t('groupTalk.text30', 'Page')}
                   </Button>
-                  <Button mode="flat" design="" type="submit" size='smaller'
+                  <Button mode="raised" design="" type="submit" size='smaller'
                     onClick={() => {
                       setShowDeleteConfirm(true);
                       setSelectedDeleteId(favorite.groupRoomId);

@@ -121,12 +121,13 @@
 .groupList-groupName {
   font-size: 1.25rem;
   font-weight: bolder;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .groupList-creatorContainer {
   display: flex; 
   align-items: center;
+  gap: 0.25rem;
 }
 
 .groupList-creatorImage {
@@ -135,7 +136,7 @@
 
 .groupList-listElement {
   margin-top: 1rem;
-  cursor: pointer;
+  /* cursor: pointer; */
   /* max-width: 30rem; */
 }
 
@@ -229,7 +230,8 @@
 .groupTalkTextList-joinModalCreator {
   display: flex;
   justify-content: flex-start;
-  align-items: center
+  align-items: center;
+  gap: 0.25rem;
   /* cursor: pointer; */
 }
 
