@@ -24,3 +24,10 @@
   font-weight: bolder;
   margin-top: 1rem;
 }
+
+.grupInfoMemberListImage {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

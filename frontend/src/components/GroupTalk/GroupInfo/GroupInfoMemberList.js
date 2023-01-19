@@ -190,8 +190,9 @@ const GroupInfoMemberList = (props) => {
                       {/* <img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
                       {/* <Img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
                       <Img
+                        className={classes.grupInfoMemberListImage}
                         src={userImageUrl ? userImageUrl : SampleImage}
-                        height="25"
+                        // height="25"
                         alt="user-img"
                       />
                     </div>

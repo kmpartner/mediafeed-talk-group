@@ -11,7 +11,7 @@ import { getUserDescription } from '../../../util/user'
 
 import SampleImage from '../../Image/person-icon-50.jpg';
 
-// import classes from './GroupTalkTextListInfo.module.css'
+import classes from './GroupInfoMemberItem.module.css'
 
 import { GQL_URL, BASE_URL } from '../../../App';
 
@@ -142,11 +142,16 @@ const GroupInfoMembers = (props) => {
       >
         {/* {member.userId}  */}
         <div className="groupTalkTextList-memberListElement">
-        {member.name} 
+        {member.name}
         </div>
         <div className="groupTalkTextList-memberListElement">
           {/* <img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
-          <Img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img' />
+          <Img 
+            className={classes.grupInfoMemberItemImage}
+            src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} 
+            // height="25" 
+            alt='user-img' 
+          />
         </div>
         <div className="groupTalkTextList-memberListElement">
           {isOnline ? ' (online)' : ''}
