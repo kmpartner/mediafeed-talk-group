@@ -81,7 +81,7 @@ const peerConnection = new RTCPeerConnection();
 
 
 const GroupTalk = (props) => {
-  // console.log('GroupTalk.js-props', props);
+  console.log('GroupTalk.js-props', props);
   // const videoRef = React.createRef();
   const currentUrl = new URL(window.location.href);
   const queryParams = currentUrl.searchParams;
@@ -954,6 +954,7 @@ const GroupTalk = (props) => {
           allMemberUserIds={groupInfo.allMemberUserIds}
           deleteGroupMemberHandler={deleteGroupMemberHandler}
           deleteMemberResult={deleteMemberResult}
+          isAuth={props.isAuth}
           isLoading={isLoading}
         />
 

@@ -203,7 +203,7 @@ const GroupInfoMemberList = (props) => {
                     <div>&#9662;</div>
                   </div>
 
-                  {selectedUserId && selectedUserId === member.userId ? (
+                  {selectedUserId && selectedUserId === member.userId && (
                     <div className="groupTalkTextList-descriptionContainer">
                       {userDescription}
 
@@ -213,81 +213,77 @@ const GroupInfoMemberList = (props) => {
 
                       </div>
 
-                      {member.userId !== props.userId ? (
+                      {props.isAuth && member.userId !== props.userId && (
                         <div>
-                        <div className="groupTalkTextList-TalkPageButton">
-                          <Link
-                            to={`/talk-page/?grouptotalk=${member.name}`}
-                            className=""
-                          >
-                            <Button
-                              mode="flat"
-                              type="submit"
-                              design=""
-                              // disabled={!props.replyInput || props.commentLoading}
+                          <div className="groupTalkTextList-TalkPageButton">
+                            <Link
+                              to={`/talk-page/?grouptotalk=${member.name}`}
+                              className=""
                             >
-                              {/* send text in Talk */}
-                              {t("groupTalk.text33", "Send text")} in Talk
-                            </Button>
-                          </Link>
-                        </div>
-
-                        {isCreator &&
-                  props.groupInfo &&
-                  props.groupInfo.creatorUserId !== member.userId && (
-                    <div className={classes.buttonSmall}>
-                      <Button mode="flat" type="submit"
-                        onClick={() => {
-                          setConfirmMemberDelete(!confirmMemberDelete);
-                        }}
-                      >
-                        {/* Delete Member as Creator */}
-                        {t("groupTalk.text34", "Delete Member as Creator")}
-                      </Button>
-                      {confirmMemberDelete && (
-                        <div>
-                          <div className={classes.confirmMessage}>
-                            {/* Do you want to delete this member as creator? */}
-                            {t("groupTalk.text35", "Do you want to delete this member as creator?")}
-                          </div>
-                          <div className={classes.buttonsContainer}>
-                            <Button mode="flat" type="submit"
-                              disabled={props.isLoading}
-                              onClick={() => {
-                                setConfirmMemberDelete(false);
-                              }}
-                            >
-                              {/* Cancel */}
-                              {t("general.text1", "Cancel")}
-                            </Button>
-                            <Button mode="raised" type="submit"
-                              disabled={props.isLoading}
-                              onClick={() => {
-                                props.deleteGroupMemberHandler(
-                                  props.groupInfo.groupRoomId,
-                                  member.userId
-                                );
-                              }}
-                            >
-                              {/* Delete */}
-                              {t("general.text3", "Delete")}
-                            </Button>
+                              <Button
+                                mode="flat"
+                                type="submit"
+                                design=""
+                                // disabled={!props.replyInput || props.commentLoading}
+                              >
+                                {/* send text in Talk */}
+                                {t("groupTalk.text33", "Send text")} in Talk
+                              </Button>
+                            </Link>
                           </div>
 
-                          {props.isLoading && <div><Loader /></div>}
-                    
-                          <div className={classes.resultMessage}>
-                            {props.deleteMemberResult}
-                          </div>
-                          
+                          {/* {isCreator &&
+                            props.groupInfo &&
+                            props.groupInfo.creatorUserId !== member.userId && (
+                              <div className={classes.buttonSmall}>
+                                <Button mode="flat" type="submit"
+                                  onClick={() => {
+                                    setConfirmMemberDelete(!confirmMemberDelete);
+                                  }}
+                                >
+                                  {t("groupTalk.text34", "Delete Member as Creator")}
+                                </Button>
+                                {confirmMemberDelete && (
+                                  <div>
+                                    <div className={classes.confirmMessage}>
+                                      {t("groupTalk.text35", "Do you want to delete this member as creator?")}
+                                    </div>
+                                    <div className={classes.buttonsContainer}>
+                                      <Button mode="flat" type="submit"
+                                        disabled={props.isLoading}
+                                        onClick={() => {
+                                          setConfirmMemberDelete(false);
+                                        }}
+                                      >
+                                        {t("general.text1", "Cancel")}
+                                      </Button>
+                                      <Button mode="raised" type="submit"
+                                        disabled={props.isLoading}
+                                        onClick={() => {
+                                          props.deleteGroupMemberHandler(
+                                            props.groupInfo.groupRoomId,
+                                            member.userId
+                                          );
+                                        }}
+                                      >
+                                        {t("general.text3", "Delete")}
+                                      </Button>
+                                    </div>
+
+                                    {props.isLoading && <div><Loader /></div>}
+                              
+                                    <div className={classes.resultMessage}>
+                                      {props.deleteMemberResult}
+                                    </div>
+                                    
+                                  </div>
+                                )}
+                              </div>
+                            )} */}
                         </div>
                       )}
                     </div>
                   )}
-                        </div>
-                      ) : null}
-                    </div>
-                  ) : null}
                 </div>
 
               </div>
