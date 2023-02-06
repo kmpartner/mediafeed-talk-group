@@ -40,6 +40,8 @@ const TalkUserListControlContents = (props) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedDeleteId, setSelectedDeleteId] = useState("");
 
+  const [showQRCode, setShowQRCode] = useState(false);
+
   // const showFavoriteListHandler = () => {
   //   setShowFavoriteList(!showFavoriteList);
   //   console.log(showFavoriteList);

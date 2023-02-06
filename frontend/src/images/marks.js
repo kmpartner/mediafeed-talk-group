@@ -45,4 +45,5 @@ export const marks = {
   tableMark: <i style={{color: 'gray'}} className="fa fa-table" aria-hidden="true"></i>,
   infoCircle: <i style={{color: 'gray'}} className="fa fa-info-circle" aria-hidden="true"></i>,
 
+  qrcode: <i style={{color: 'gray'}} className="fa fa-qrcode" aria-hidden="true"></i>,
 };

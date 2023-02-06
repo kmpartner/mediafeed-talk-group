@@ -4,12 +4,17 @@ import { useTranslation } from 'react-i18next/hooks';
 import Img from "react-cool-img";
 
 import AutoSuggestVideoTextTalk from '../../AutoSuggest/AutoSuggestVideoTextTalk';
-import Button from '../../Button/Button';
-import TalkUserListPermission from './TalkUserListPermission';
+// import Button from '../../Button/Button';
+// import TalkUserListPermission from './TalkUserListPermission';
 import TalkUserListItem from './TalkUserListItem';
+
+import TalkQRScan from '../TalkQRCode/TalkQRScan';
+import TalkModal from './TalkModal';
 
 import { addRecentVisitTalkUserId } from '../../../util/user-recent-visit';
 import { useStore } from '../../../hook-store/store';
+
+import { marks } from '../../../images/marks';
 
 import { BASE_URL } from '../../../App';
 // import './VideoTextTalk.css'
@@ -31,7 +36,9 @@ const TalkUserList = props => {
   // const [user30List, setUser30List] = useState([]);
   const [userTrimList, setUserTrimList] = useState([]);
   const [withoutUserList, setWithoutUserList] = useState([]);
-
+  
+  const [startScan, setStartScan] = useState(false);
+  
   useEffect(() => {
 
     if (props.usersData && withoutUserList.length === 0) {
@@ -247,7 +254,7 @@ const TalkUserList = props => {
       : null
       }
 
-      {props.showUserTextTalkList && !props.showNoconnectTextTalk ? 
+      {props.showUserTextTalkList && !props.showNoconnectTextTalk &&
         <div className={suggestList.length > 0 ? "textTalk__UserTalkListSuggest" : "textTalk__UserTalkListNoSuggest"} >
           <AutoSuggestVideoTextTalk
             // userList={props.usersData}
@@ -261,8 +268,27 @@ const TalkUserList = props => {
 
             addVisitUserIdHandler={props.addVisitUserIdHandler}
           />
+
+          <div
+            onClick={() => {
+              setStartScan(!startScan);
+            }}
+          >
+            {marks.qrcode} QR Scan
+          </div>
+          {startScan && (
+            <div>
+              <TalkModal
+                showModalHandler={() => {setStartScan(false); }}
+              >
+                <TalkQRScan />
+              </TalkModal>
+            </div>
+          )}
+          {/* {startScan && (
+            <TalkQRScan />
+          )} */}
         </div>
-      : null
       }
 
     </div>

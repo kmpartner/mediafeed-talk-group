@@ -25,9 +25,16 @@
     }
   };
 
-export const addAcceptUserId = async (url, token, acceptUserId) => {
+export const addAcceptUserId = async (url, token, acceptUserId, isQRToken) => {
   try {
-    const result = await fetch(url + '/talk-permission/accept', {
+
+    let requestUrl = url + '/talk-permission/accept';
+    
+    if (isQRToken) {
+      requestUrl = url + '/talk-permission/accept-qr';
+    }
+
+    const result = await fetch(requestUrl, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,

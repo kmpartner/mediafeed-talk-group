@@ -7,6 +7,7 @@ import Img from "react-cool-img";
 import TalkModal from '../TalkModal';
 import TalkUserListControllContents from './TalkUserListControlContents';
 import TalkUserListControlAccept from './TalkUserListControlAccept';
+import TalkUserListControlQRcode from './TaklUserListControlQRCode';
 
 import { marks } from '../../../../images/marks';
 import classes from './TalkUserListControl.module.css'
@@ -95,6 +96,7 @@ const TalkUserListControl = (props) => {
         <TalkModal 
           showModalHandler={showTalkUserListControllModalHandler}
         >
+          <TalkUserListControlQRcode />
           {talkUserListControllContents}
           {talkUserListControllAccept}
         </TalkModal>

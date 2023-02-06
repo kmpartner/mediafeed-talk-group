@@ -340,6 +340,12 @@
   top: 125px;
   width: 95%;
   width: 50%;
+
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  /* justify-content: space-between; */
+  width: 100%;
 }
 
 .textTalk_NoconnectMessage {
