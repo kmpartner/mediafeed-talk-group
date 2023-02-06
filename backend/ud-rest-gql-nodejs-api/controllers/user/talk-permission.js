@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const User = require('../../models/user/user');
 const TalkPermission = require('../../models/user/talk-permission');
 
@@ -501,6 +503,55 @@ const checkUserAccept = async (req, res, next) => {
   }
 };
 
+
+const getTokenForQR = async (req, res, next) => {
+  try {
+
+    const user = await User.findOne({ userId: req.userId });
+
+    if (!user) {
+        const error = new Error('user not found.');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const uId = user._id.toString();
+    // console.log('uId', user, uId);
+
+    const nowSecond = Math.floor(Date.now() / 1000);
+    // const expire = nowSecond + (60 * 60 * 24*365)  // 1year later
+    // const expire = nowSecond + parseInt(process.env.JWT_EXPIRE_TIME);
+    const expire = Math.floor(nowSecond + 3600);
+    const token = jwt.sign(
+      {
+        // email: loadedUser.email,
+        // userId: loadedUser._id.toString(),
+        uId: uId,
+        // userId: loadedUser.userId,
+        // name: loadedUser.name,
+
+        exp: expire,
+        iat: nowSecond,
+
+        qrToken: true,
+      },
+      process.env.JWT_KEY
+      // { expiresIn: '1d' }
+    );
+
+    res.status(200).json({ 
+      message: 'get token for QR success', 
+      data: token,
+    });
+
+  } catch (err) {
+      if (!err.statusCode) {
+          err.statusCode = 500;
+      }
+      next(err);
+  }
+};
+
 module.exports = {
   getUserTalkPermission,
   addAcceptUserId,
@@ -508,4 +559,5 @@ module.exports = {
   addRequestingUserId,
   deleteRequestingUserId,
   checkUserAccept,
+  getTokenForQR,
 }
