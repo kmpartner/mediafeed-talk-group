@@ -1397,7 +1397,10 @@ export class Server {
         }
 
 
-        const userDestTalk = talkWithDest.talk.find((talk: any) => {
+        // const userDestTalk = talkWithDest.talk.find((talk: any) => {
+        //   return talk.pairId === `${user.userId}-${data.destUser.userId}`
+        // });
+        const userDestTalk = socketConnection.talk.find((talk: any) => {
           return talk.pairId === `${user.userId}-${data.destUser.userId}`
         });
 

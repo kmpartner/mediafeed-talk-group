@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require('fs');
 // const path = require('path');
+const fetch = require('node-fetch');
 require('dotenv').config();
 const { s3Upload, s3DeleteMany, clearImage, createSmallImage, makeModifiedPath, resizeVideo, getVideoInfo, } = require('../util/file-upload-utils');
 const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,6 +23,32 @@ const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (req.body.userId !== req.userId) {
             throw new Error('userId error');
         }
+        const toUserId = req.body.toUserId;
+        const authHeader = req.get('Authorization');
+        if (!authHeader) {
+            const error = new Error('Not authenticated.');
+            // error.statusCode = 401;
+            throw error;
+        }
+        const result = yield fetch(process.env.UDRESTAPI_URL +
+            `/talk-permission/check-user-accept?toUserId=${toUserId}`, {
+            method: 'GET',
+            headers: {
+                // Authorization: 'Bearer ' + data.token,
+                Authorization: authHeader,
+                'Content-Type': 'application/json'
+            },
+        });
+        const resData = yield result.json();
+        console.log(resData);
+        if (!resData.data) {
+            const error = new Error('not authorized!');
+            // error.statusCode = 403;
+            throw error;
+            // return;
+        }
+        console.log('user-accepted');
+        // throw new Error('error-error');
         const files = req.files;
         // const files = [req.file];
         const fileUrls = [];
@@ -235,15 +262,18 @@ const videoUpload = (file) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log('paths', file.path, resizedPath);
     // console.log('files', file, resizedVideo);
     // throw new Error('error-error');
-    var params = {
-        ACL: 'private',
-        // ACL: 'public-read',
-        Bucket: process.env.DO_SPACE_BUCKET_NAME,
-        Body: fs.createReadStream(file.path),
-        //   ContentType: 'image/jpeg',
-        // Key: `images/${req.file.originalname}`
-        Key: `${file.path}`
-    };
+    var params;
+    if (!resizedVideo) {
+        params = {
+            ACL: 'private',
+            // ACL: 'public-read',
+            Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            Body: fs.createReadStream(file.path),
+            //   ContentType: 'image/jpeg',
+            // Key: `images/${req.file.originalname}`
+            Key: `${file.path}`
+        };
+    }
     if (resizedVideo) {
         params = {
             ACL: 'private',
