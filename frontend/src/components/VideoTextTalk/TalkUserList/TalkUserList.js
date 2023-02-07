@@ -274,7 +274,7 @@ const TalkUserList = props => {
               setStartScan(!startScan);
             }}
           >
-            {marks.qrcode} QR Scan
+            {marks.qrcode} USER QR Scan
           </div>
           {startScan && (
             <div>

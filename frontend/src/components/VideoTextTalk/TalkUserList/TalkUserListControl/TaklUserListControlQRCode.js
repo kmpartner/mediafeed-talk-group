@@ -5,7 +5,7 @@ import Img from "react-cool-img";
 
 
 // import Button from "../../../Button/Button";
-// import Loader from "../../../Loader/Loader";
+import Loader from "../../../Loader/Loader";
 
 // import TalkQRScan from "./TalkQRScan";
 
@@ -23,16 +23,16 @@ const TalkUserListControlQRCode = (props) => {
   // console.log("TalkUserListControllContents.js-props", props);
 
   const {
-    userId,
-    usersData,
-    favoriteUsers, 
-    editFavoriteUsersHandler,
-    editFavoriteUsersResult,
-    noconnectGetUserDestTalkHandler,
-    showNoconnectTextTalk,
-    showNoconnectTextTalkHandler,
-    noconnectDestUserIdHandler,
-    isLoading,
+    // userId,
+    // usersData,
+    // favoriteUsers, 
+    // editFavoriteUsersHandler,
+    // editFavoriteUsersResult,
+    // noconnectGetUserDestTalkHandler,
+    // showNoconnectTextTalk,
+    // showNoconnectTextTalkHandler,
+    // noconnectDestUserIdHandler,
+    // isLoading,
   } = props;
 
   const [t] = useTranslation("translation");
@@ -44,11 +44,14 @@ const TalkUserListControlQRCode = (props) => {
   const [createdQR, setCreatedQR] = useState();
   const [showQRCode, setShowQRCode] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   // const [startScan, setStartScan] = useState(false);
 
   useEffect(() => {
     const makeQRHandler = async () => {
       try {
+        setIsLoading(true);
+
         const tokenForQR = await getTokenForQR(BASE_URL, localStorage.getItem('token')); 
 
         console.log('tokenForQR', tokenForQR);
@@ -70,14 +73,19 @@ const TalkUserListControlQRCode = (props) => {
           }
         }
 
+        setIsLoading(false);
+
       } catch(err) {
         console.log(err);
+        setIsLoading(false);
       }
     };
 
-    makeQRHandler();
+    if (showQRCode) {
+      makeQRHandler();
+    }
 
-  },[]);
+  },[showQRCode]);
 
 
   const getTokenForQR = async (url, token) => {
@@ -136,6 +144,7 @@ const TalkUserListControlQRCode = (props) => {
   )
 
   return <Fragment>
+      {isLoading && <Loader />}
       {talkUserListControlQRcodeBody}
     </Fragment>;
 };

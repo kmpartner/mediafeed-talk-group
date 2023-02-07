@@ -70,7 +70,7 @@ const TalkQRScan = (props) => {
         const resultObj = JSON.parse(result);
         console.log(resultObj);
   
-        if (resultObj.token) {
+        if (resultObj.token && resultObj.userId) {
           setScanFinish(true);
   
           const acceptedResult = await addAcceptUserIdHandler(
@@ -87,13 +87,17 @@ const TalkQRScan = (props) => {
           );
 
           setAcceptFinish(true);
+
+          setTimeout(() => {
+            window.location.reload();
+          },1000*5);
         }
     
       }
 
     } catch(err) {
       console.log(err);
-      setError('add-user-failed');
+      setError('Failed to add user');
     }
 
 	}
@@ -122,7 +126,8 @@ const TalkQRScan = (props) => {
   };
 
 	const previewStyle = {
-		height: 240,
+		// height: 240,
+    height: 320,
 		width: 320,
 	}
 
@@ -148,9 +153,21 @@ const TalkQRScan = (props) => {
           {result && scanFinish && 'scan-finish'}
         </div> */}
 
-        <div className={classes.result}>
-          {error}
-        </div>
+        {error && (
+          <div className={classes.result}>
+            <span>
+              {error}
+            </span>
+            <button
+              onClick={() => { 
+                setScanFinish(false);
+                setError('');
+               }}
+            >
+              Scan Again
+            </button>
+          </div>
+        )}
         {/* <div className={classes.result}>
           {result && <div>{result}</div>}
         </div>		 */}
@@ -160,7 +177,14 @@ const TalkQRScan = (props) => {
 
   if (acceptFinish) {
     talkQRScanBody = (
-      <div>add-user-success</div>
+      <div>
+        <div>
+          Add User Success
+        </div>
+        <div>
+          You can find added user in your accept user list.
+        </div>
+      </div>
     )
   }
 
