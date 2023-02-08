@@ -23,34 +23,41 @@ const PageDescription = (props) => {
     <div className="pageDescription">
       <div className="pageDescriptionContent">
         <div>
-          <strong>Media Post Feed</strong>
+          <strong>
+            {t("notFound.text5", "Media Post Feed")}
+          </strong>
         </div>
         <p>
-          In media post feed, you can upload and share photos and videos.
+          {t("notFound.text6", "In media post feed, you can upload and share photos and videos.")}
           {' '}
-          Writing comments on photos or videos enables to communicate and interact with other users.
+          {t("notFound.text7", "Writing comments on photos or videos enables to communicate and interact with other users.")}
         </p>
       </div>
       <div className="pageDescriptionContent">
         <div>
-          <strong>Group Talk</strong>
+          <strong>
+            {t("notFound.text8", "Group Talk")}
+            </strong>
         </div>
         <p>
-          In group talk page, you can interact with many users with common interest.
+          {t("notFound.text9", "In group talk page, you can interact with many users with common interest.")}
           {' '}
-          It is possible to create groups of your favorite topics.
+          {t("notFound.text10", "It is possible to create groups of your favorite topics.")}
           {' '}
-          You can communicate and share ideas in group talk page.
+          {t("notFound.text11", "You can communicate and share ideas in group talk page.")}
         </p>
       </div>
       <div className="pageDescriptionContent">
         <div>
-          <strong>Talk</strong>
+          <strong>
+            {t("notFound.text12", "Talk")}
+          </strong>
           </div>
         <p>
-          In Talk page, you can communicate with specified users one to one.
+          
+          {t("notFound.text13", "In Talk page, you can communicate with specified users one to one.")}
           {' '}
-          Talk page is suitable for sending text messages and text chatting.
+          {t("notFound.text14", "Talk page is suitable for sending text messages and text chatting.")}
         </p>
       </div>
     </div>

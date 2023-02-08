@@ -274,7 +274,9 @@ const TalkUserList = props => {
               setStartScan(!startScan);
             }}
           >
-            {marks.qrcode} USER QR Scan
+            {marks.qrcode} 
+            {' '}
+            {t("videoTalk.text28", "QR Code Scan")}
           </div>
           {startScan && (
             <div>

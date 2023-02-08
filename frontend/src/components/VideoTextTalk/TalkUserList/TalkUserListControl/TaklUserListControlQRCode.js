@@ -124,16 +124,20 @@ const TalkUserListControlQRCode = (props) => {
         onClick={() => {
           setShowQRCode(!showQRCode);
         }}
-      >
-        display-qr-code {marks.qrcode} {marks.triangleDown}
+      > 
+        {t("videoTalk.text29", "Display QR Code")}
+        {' '}
+        {marks.qrcode}
+        {' '}
+        {marks.triangleDown}
       </div>
       {showQRCode && (
         <div>
-          User who scanned this QR code will be accepted to talk with you.
+          {t("videoTalk.text30", "User who scanned this QR code will be accepted to talk with you.")}
           <br/>
-          Let other users to scan this QR code.
+          {t("videoTalk.text31", "Let other users scan this QR code.")}
           <br/>
-          QR code scanner exist at this user list page in their device.
+          {t("videoTalk.text32", "QR code scanner exist at this user list page in their device.")}
           <img 
             style={{height: "160px"}}
             src={createdQR}

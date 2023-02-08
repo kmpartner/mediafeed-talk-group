@@ -90,14 +90,16 @@ const TalkQRScan = (props) => {
 
           setTimeout(() => {
             window.location.reload();
-          },1000*5);
+          },1000*10);
         }
     
       }
 
     } catch(err) {
       console.log(err);
-      setError('Failed to add user');
+      setError(
+        `${t("videoTalk.text37", "Failed to add user")}`
+      );
     }
 
 	}
@@ -134,7 +136,9 @@ const TalkQRScan = (props) => {
 
   let talkQRScanBody = (
     <div>
-      <div>Scan Other User's QR Code to talk</div>
+      <div>
+        {t("videoTalk.text33", " Scan Other User's QR Code to talk")}
+      </div>
       <div className={classes.container}>
         <QrReader
           // delay={500}
@@ -164,7 +168,7 @@ const TalkQRScan = (props) => {
                 setError('');
                }}
             >
-              Scan Again
+              {t("videoTalk.text34", "Scan Again")}
             </button>
           </div>
         )}
@@ -179,10 +183,11 @@ const TalkQRScan = (props) => {
     talkQRScanBody = (
       <div>
         <div>
-          Add User Success
+          
+          {t("videoTalk.text35", "Add User Success")}
         </div>
         <div>
-          You can find added user in your accept user list.
+          {t("videoTalk.text36", "You can find added user in your accept user list.")}
         </div>
       </div>
     )
