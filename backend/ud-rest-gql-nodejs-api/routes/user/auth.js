@@ -93,6 +93,8 @@ router.get('/user-imageurl', authController.getUserImageUrl);
 
 router.post('/user-imageurl', authController.postGetUserImageUrl);
 
+router.post('/user-imageurls', authController.postGetUserImageUrls);
+
 router.post('/reset', authController.postReset);
 
 router.get('/passwordreset', authController.getResetPasswordTokenUser);

@@ -47,6 +47,8 @@ const userReactionRoute = require('./routes/feed/user-reaction');
 const groupImageRoute = require('./routes/group-image/group-image');
 const feedMultiImageRoute = require('./routes/feed/feed-multi-images');
 const feedFilterRoute = require('./routes/feed/feed-filter');
+const feedFilterRecentRoute = require('./routes/feed/feed-filter-recent');
+
 const feedVideoUploadRoute = require('./routes/feed/feed-video-upload');
 const feedAudioUploadRoute = require('./routes/feed/feed-audio-upload');
 
@@ -173,6 +175,7 @@ app.use('/user-reaction', userReactionRoute);
 app.use('/group-image', groupImageUpload, groupImageRoute);
 app.use('/feed-images', imagesUpload, feedMultiImageRoute);
 app.use('/feed-filter', feedFilterRoute);
+app.use('/feed-filter-recent', feedFilterRecentRoute);
 app.use('/feed-video-upload', videoUpload, feedVideoUploadRoute);
 app.use('/feed-audio-upload', audioUpload, feedAudioUploadRoute);
 

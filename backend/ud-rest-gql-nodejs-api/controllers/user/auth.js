@@ -859,6 +859,58 @@ exports.postGetUserImageUrl = async (req, res, next) => {
 };
 
 
+exports.postGetUserImageUrls = async (req, res, next) => {
+    try {
+        const userIds = req.body.userIds;
+
+        const users = await User.find({ 
+            'userId': { $in: userIds }
+         });
+
+        const returnList = users.map(user => {
+            let doUrl;
+
+            if (user.imageUrl) {
+                doUrl = s3.getSignedUrl('getObject',
+                    {
+                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                        Key: `${user.imageUrl}`,
+                        Expires: 60 * 60 * 24 * 30
+                    }
+                );
+            }
+    
+            const port = process.env.PORT || 8083;
+    
+            let returnImageUrl = null;
+    
+            if (process.env.S3NOTUSE && user.imageUrl) {
+                returnImageUrl = `http://localhost:${port}/${user.imageUrl}`;
+            }
+            if (!process.env.S3NOTUSE && user.imageUrl) {
+                returnImageUrl = doUrl;
+            }
+
+            return {
+                userId: user.userId,
+                imageUrl: returnImageUrl,
+            };
+        });
+
+        res.status(200).json({ 
+            message: 'get user image urls data successfully.', 
+            data: returnList
+        });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+
 
 
 exports.postReset = async (req, res, next) => {
