@@ -163,6 +163,21 @@
   overflow-y: auto;
 }
 
+.hotPostsModal {
+  position: fixed;
+  width: 90%;
+  height: 90%;
+  left: 5%;
+  top: 0vh;
+  /* background: white; */
+  background: var(--background-color);
+  border: 0.5px solid #999;
+  border-radius: 5px;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(179, 130, 130, 0.26);
+  overflow-y: auto;
+}
+
 .modal--error {
   height: 30%;
 }

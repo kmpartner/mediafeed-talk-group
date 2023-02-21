@@ -3,6 +3,7 @@ import { withI18n } from "react-i18next";
 
 import RightContents from "../GroupRightElements/RightContents";
 import TopBarContents from "../GroupTopElements/TopBarContents";
+import RecentHotPosts from "../../../Feed/RightElement/RecentHotPosts";
 
 import { ADNETWORKLINK_URL } from "../../../../App";
 
@@ -171,6 +172,10 @@ const AdItems = (props) => {
       <div className={classes.rightAdsContainer}>
         <div className={classes.rightAdsItem}>
           {body300x300}
+        </div>
+
+        <div style={{height:"350px", width:"300px", border:"", marginTop:"1rem"}}>
+          <RecentHotPosts />
         </div>
       </div>
     );

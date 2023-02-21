@@ -78,7 +78,7 @@
 @media (min-width: 768px) {
   .groupTalkRightElements {
     display: block;
-    position: fixed;
+    /* position: fixed; */
     /* left: 34rem; */
     right: 5px;
     top: 75px;
@@ -108,7 +108,7 @@
     right: 0px;
     top: 65px;
     /* border: 3px solid red; */
-    height: 700px;
+    /* height: 700px; */
     max-height: calc(100vh - 70px);
     width: 330px;
     overflow-y: auto;

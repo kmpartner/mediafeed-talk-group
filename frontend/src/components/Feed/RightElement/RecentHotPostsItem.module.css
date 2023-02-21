@@ -1,0 +1,43 @@
+.hotPostsItem {
+  padding-bottom: 1rem;
+}
+
+.hotPostsItemName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.hotPostsItemCreatorName {
+  padding-left: 0.25rem;
+}
+
+.hotPostSmallVideosYouTubeMark {
+  background-color: rgba(0,0,0,0.01);
+  color: red;
+  position: absolute;
+  /* top: 0; */
+  /* right: 5px; */
+  top: 20%;
+  right:30%;
+  font-size: 1rem;
+}
+
+.hotPostSmallVideosVideoMark {
+  background-color: rgba(0,0,0,0.01);
+  /* color: lightgray; */
+  color: gray;
+  position: absolute;
+  /* top: 0; */
+  /* right: 5px; */
+  top: 20%;
+  right: 30%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hotPostTextLink {
+  color: var(--color);
+  text-decoration: none;
+}

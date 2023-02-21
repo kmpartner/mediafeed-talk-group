@@ -1,0 +1,24 @@
+.recentHotPosts {
+  padding: 1rem;
+  background-color: var(--recentHotPosts-background);
+  border-radius: 4px;
+}
+
+.recentHotPosts li {
+  list-style: none;
+}
+
+.recentHotPostsTitle {
+  text-align: center;
+  font-weight: bold;
+}
+
+.recentHotPostsModalClose {
+  text-align: right;
+}
+
+.recentHotPostsModalCloseButton {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}

@@ -906,6 +906,38 @@ export const postGetUserImageUrl = (url, token, userId) => {
   })
 };
 
+export const postGetUserImageUrls = (url, token, userIds) => {
+  // console.log('in resetpasswordhandler');
+  return new Promise((resolve, reject) => {
+
+    fetch(url + `/auth/user-imageurls`, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userIds: userIds,
+        })
+      })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Getting user imageUrl failed!");
+        }
+        return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        resolve({ message: 'Get user imageUrl result', data: resData.data });
+      })
+      .catch(err => {
+        console.log(err);
+        // reject({ message: 'Get user imageUrl color failed', error: err });
+      });
+
+  })
+};
+
 
 // export const validateAuth = (url, token, userId) => {
 //   return new Promise((resolve, reject) => {

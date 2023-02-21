@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import Select from 'react-select';
 import { withI18n } from "react-i18next";
+
+import Backdrop from '../../Backdrop/Backdrop';
+import SmallModal from '../../Modal/SmallModal';
+import RecentHotPostsModalContent from '../RightElement/RecentHotPostsModalContent';
+
+import { getRecentMostVisitLngPosts } from '../../../util/feed/feed-filter-recent';
+import { BASE_URL } from '../../../App';
 
 import classes from './PostSelect.module.css';
 
@@ -15,6 +22,10 @@ function PostSelect(props) {
     showRecentVisitPostsHandler,
     isAuth
   } = props;
+
+  const [hotPosts, setHotPosts] = useState([]);
+  const [showHotPostsModal, setShowHotPostsModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const customStyles = {
     // control: (styles) => ({ 
@@ -58,6 +69,7 @@ function PostSelect(props) {
     { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
     { value: 'most-like-posts', label: `${t('feed.text27', 'Most Favorited Posts')}` },
     { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
+    { value: 'recent-hot-posts', label: `${t('feed.textxxx', 'Hot Posts You May Like')}` },
     // { value: 'other-post-select', label: 'other-post1' },
     // { value: 'other-post-select2', label: 'other-post2' },
   ];
@@ -70,6 +82,7 @@ function PostSelect(props) {
       { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
       { value: 'most-like-posts', label: `${t('feed.text27', 'Most Favorited Posts')}` },
       { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
+      { value: 'recent-hot-posts', label: `${t('feed.textxxx', 'Hot Posts You May Like')}` },
       // { value: 'other-post-select', label: 'other-post1' },
       // { value: 'other-post-select2', label: 'other-post2' },
     ]
@@ -78,6 +91,7 @@ function PostSelect(props) {
   const placeholder = `${t('feed.text3')}`;
              
   const [selectedOption, setSelectedOption] = useState(null);
+
 
   useEffect(() => {
 
@@ -107,6 +121,13 @@ function PostSelect(props) {
         showRecentVisitPostsHandler();
       }
 
+      if (selectedOption.value === 'recent-hot-posts') {
+        if (hotPosts.length === 0) {
+          getRecentHotPostsHandler();
+        }
+        setShowHotPostsModal(true);
+      }
+
       //// set default posts path if pathname is diffrent from '/feed/posts'
       if (window.location.pathname !== '/feed/posts') {
         props.history.push(`/feed/posts`);
@@ -116,17 +137,72 @@ function PostSelect(props) {
 
   },[selectedOption]);
 
+
+  const getRecentHotPostsHandler = async () => {
+    try {
+      setIsLoading(true);
+
+      const resData = await getRecentMostVisitLngPosts(
+        BASE_URL,
+        localStorage.getItem('token'),
+      );
+
+      // console.log('you may like', resData);
+      if (resData && resData.posts) {
+        setHotPosts(resData.posts);
+      }
+
+      setIsLoading(false);
+
+    } catch(err) {
+      console.log(err);
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className={classes.postSelectContainer}>
-        <Select
-          defaultValue={selectedOption}
-          onChange={setSelectedOption}
-          options={options}
-          placeholder={placeholder}
-          styles={customStyles}
-          isSearchable={false}
-        />
-    </div>
+    <Fragment>
+      <div className={classes.postSelectContainer}>
+          <Select
+            defaultValue={selectedOption}
+            onChange={setSelectedOption}
+            options={options}
+            placeholder={placeholder}
+            styles={customStyles}
+            isSearchable={false}
+          />
+      </div>
+
+      {showHotPostsModal && (
+        <div>
+          <Backdrop onClick={() => {
+            setShowHotPostsModal(false);
+          }} />
+          <SmallModal style="hotPostsModal">
+            <div>
+              <div className={classes.postSelectModalClose}
+                onClick={() => {
+                  setShowHotPostsModal(false);
+                }}
+              >
+                <span className={classes.postSelectModalCloseButton}>
+                  X
+                </span>
+              </div>
+
+              <div>Recent Hot Posts You May Like</div>
+              <div>
+                <RecentHotPostsModalContent 
+                  hotPosts={hotPosts}
+                  isLoading={isLoading}
+                />
+              </div>
+            </div>
+          </SmallModal>
+        </div>
+      )}
+
+    </Fragment>
   );
 }
 

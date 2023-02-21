@@ -13,6 +13,7 @@ body.light-mode {
   --textTalk-textBackground: rgb(240, 240, 240);
   --textTalk-textContainerBackground: whitesmoke;
   --textTalk-textContainerBackground: rgb(245, 245, 245);
+  --recentHotPosts-background: rgb(240, 240, 240);
   --white-black: #ffff;
   --black-white: #000;
   --groupTextColor: #000;
@@ -31,6 +32,7 @@ body.dark-mode {
   --input-background: rgb(44, 44, 44);
   --textTalk-textBackground: rgb(53, 53, 53);
   --textTalk-textContainerBackground: rgb(34, 34, 34);
+  --recentHotPosts-background: rgb(53, 53, 53);
   --white-black: #000;
   --black-white: white;
   --groupTextColor: ghostwhite;
