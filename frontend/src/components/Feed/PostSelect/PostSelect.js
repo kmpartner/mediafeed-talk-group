@@ -69,7 +69,7 @@ function PostSelect(props) {
     { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
     { value: 'most-like-posts', label: `${t('feed.text27', 'Most Favorited Posts')}` },
     { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
-    { value: 'recent-hot-posts', label: `${t('feed.textxxx', 'Hot Posts You May Like')}` },
+    { value: 'recent-hot-posts', label: `${t('feed.text58', 'Hot Posts You May Like')}` },
     // { value: 'other-post-select', label: 'other-post1' },
     // { value: 'other-post-select2', label: 'other-post2' },
   ];
@@ -82,7 +82,7 @@ function PostSelect(props) {
       { value: 'most-visit-posts', label: `${t('feed.text26', 'Most Visited Posts')}` },
       { value: 'most-like-posts', label: `${t('feed.text27', 'Most Favorited Posts')}` },
       { value: 'recent-visit-posts', label: `${t('feed.text28', 'Recent Visit Posts')}` },
-      { value: 'recent-hot-posts', label: `${t('feed.textxxx', 'Hot Posts You May Like')}` },
+      { value: 'recent-hot-posts', label: `${t('feed.text58', 'Hot Posts You May Like')}` },
       // { value: 'other-post-select', label: 'other-post1' },
       // { value: 'other-post-select2', label: 'other-post2' },
     ]
@@ -190,7 +190,7 @@ function PostSelect(props) {
                 </span>
               </div>
 
-              <div>Recent Hot Posts You May Like</div>
+              {/* <div>Recent Hot Posts You May Like</div> */}
               <div>
                 <RecentHotPostsModalContent 
                   hotPosts={hotPosts}

@@ -96,7 +96,7 @@ function RecentHotPosts(props) {
     <div className={classes.recentHotPosts}>
       
       <div className={classes.recentHotPostsTitle}>
-        Recent Hot Posts
+        {t('feed.text56', 'Recent Hot Posts')}
       </div>
 
       <ul>
@@ -115,7 +115,7 @@ function RecentHotPosts(props) {
       <Button mode="flat" design="" size="smaller" 
         onClick={() => { setShowHotPostsModal(true); }}
       >
-        Display More Hot Posts
+        {t('feed.text57', 'Display More Hot Posts')}
       </Button>
 
       {showHotPostsModal && (
