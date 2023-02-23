@@ -54,6 +54,11 @@ function RecentHotPostsItem(props) {
 
   let postImagesBody;
 
+  let postImagesStyle = null;
+
+  if (post.modifiedImageUrls.length > 0) {
+    postImagesStyle = { maxWidth:"100px" };
+  }
   // //// audio file case
   // const firstImageUrl = post.imageUrls[0];
   // // console.log(imageFileName);
@@ -71,6 +76,7 @@ function RecentHotPostsItem(props) {
   // }
 
   if (post.modifiedImageUrls && post.modifiedImageUrls.length > 0) {
+
     // postImagesBody = <ul>{post.modifiedImageUrls.map(url => {
       postImagesBody = <ul>{post.imageUrls.map((url, index) => {
       
@@ -85,6 +91,8 @@ function RecentHotPostsItem(props) {
         width: '100%',
         maxWidth: '30px',
         maxHeight: '30px',
+        width: "30px",
+        height: "30px",
         objectFit: 'cover',
         borderRadius: '4px'
       };
@@ -127,7 +135,7 @@ function RecentHotPostsItem(props) {
             {/* <Img src={post.thumbnailImageUrls[0]} alt="post videos"/> */}
             <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
               <video 
-                style={{ maxWidth: '100%', maxHeight: '30px'}}
+                style={{ maxWidth: '100%', maxHeight: '60px'}}
                 // src={post.imageUrls[0]} 
                 src={post.modifiedImageUrls[0]} 
                 muted 
@@ -194,16 +202,17 @@ function RecentHotPostsItem(props) {
     recentHotPostsItemBody = (
       <div className={classes.hotPostsItem}>
         <div className={classes.hotPostsItemName}>
-
-          {postImagesBody}
+          <div style={postImagesStyle}>
+            {postImagesBody}
+          </div>
 
           {post.embedUrl &&
-              <div>
+              <div style={{maxWidth: "100px"}}>
                 <Link to={linkToPost} target={postLinkTarget} rel="noopener noreferrer">
                   <div className="post__SmallVideos">
                     {/* <Img src={youTubeThumbnailUrl} alt="post videos" width="160" /> */}
                     <Img 
-                      style={{ maxWidth: '100%', maxHeight: '30px'}}
+                      style={{ maxWidth: '100%', maxHeight: '60px'}}
                       src={youTubeThumbnailUrl} alt="post videos" 
                       // width="200"
                       // height="150" 
@@ -221,7 +230,16 @@ function RecentHotPostsItem(props) {
             <Link className={classes.hotPostTextLink}
               to={linkToPost} target={postLinkTarget} rel="noopener noreferrer"
             >
-              {post.title}
+              {post.title.length > 30 && (
+                <span>
+                  {post.title.slice(0,30)}....
+                </span>
+              )}
+              {post.title.length <= 30 && (
+                <span>
+                  {post.title}
+                </span>
+              )}
             </Link>
 
         </div>

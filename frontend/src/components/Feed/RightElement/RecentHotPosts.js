@@ -115,7 +115,7 @@ function RecentHotPosts(props) {
       <Button mode="flat" design="" size="smaller" 
         onClick={() => { setShowHotPostsModal(true); }}
       >
-        show-more-hot-posts
+        Display More Hot Posts
       </Button>
 
       {showHotPostsModal && (
