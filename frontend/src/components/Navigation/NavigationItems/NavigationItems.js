@@ -1,6 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next/hooks";
+
+import { appInstallHandler } from '../../../util/ui-util';
+import { useStore } from "../../../hook-store/store";
+
 import { authSignupPageLink, authPageLink } from "../../../App";
 import "./NavigationItems.css";
 
@@ -24,6 +28,10 @@ import HomeIcon from "../../../images/icons/homeIcon-48.png";
 
 const NavigationItems = (props) => {
   const [t] = useTranslation("translation");
+
+  const [store, dispatch] = useStore();
+  console.log('NavigationItems-store', store);
+  const { deferredPrompt } = store;
 
   const navItems = [
     {
@@ -199,6 +207,25 @@ const NavigationItems = (props) => {
               <img src={LogoutIcon} alt="icon" />
             </span>
             <span>{t("nav.text5", "Logout")}</span>
+          </span>
+        </button>
+      </li>
+    ),
+
+    deferredPrompt && (
+      <li
+        className={["navigation-item", props.mobile ? "mobile" : ""].join(" ")}
+        key="logout"
+      >
+        <button onClick={() => { appInstallHandler(deferredPrompt); }}>
+          {/* Logout */}
+          {/* {t('nav.text5')} */}
+
+          <span className="navigation-item-mobile-titleContainer">
+            <span className="navigation-item-mobile-titleIcon">
+              {/* <img src={LogoutIcon} alt="icon" /> */}
+            </span>
+            <span>Install App</span>
           </span>
         </button>
       </li>

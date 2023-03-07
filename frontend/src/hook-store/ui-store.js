@@ -93,6 +93,13 @@ const configureStore = () => {
         talkPermission: payload,
       }
     },
+    SET_DEFERREDPROMPT: (state, payload) => {
+      return {
+        ...state,
+        deferredPrompt: payload,
+      }
+    },
+
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -115,6 +122,8 @@ const configureStore = () => {
     bowserData: null,
 
     talkPermission: null,
+
+    deferredPrompt: null,
     // lastPage: 0,
     // notification: {
     //   status: null,

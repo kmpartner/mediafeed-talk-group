@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import i18n from './i18n';
 
 import Button from './components/Button/Button';
+import GetDefferredPrompt from './components/UI/GetDeferredPrompt';
 import Layout from './components/Layout/Layout';
 import LivePost from './pages/Live/LivePost';
 import Loader from './components/Loader/Loader';
@@ -982,6 +983,7 @@ class App extends Component {
                 <GetWindowData 
                   setWindowValues={() => {}}
                 />
+                <GetDefferredPrompt />
                 
                 </div>
                   <div></div>
