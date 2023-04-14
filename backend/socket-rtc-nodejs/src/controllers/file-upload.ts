@@ -14,6 +14,7 @@ const {
   makeModifiedPath,
   resizeVideo,
   getVideoInfo,
+  createThumbnail,
  } = require('../util/file-upload-utils');
 
 
@@ -67,6 +68,7 @@ const fileUpload = async (req: any, res: any, next: any) => {
 
     const fileUrls = [];
     const miniFileUrls = [];
+    const fileSizes = [];
 
     
     // const error = new Error('not authorized!');
@@ -93,6 +95,10 @@ const fileUpload = async (req: any, res: any, next: any) => {
       if (file.mimetype.split('/')[0] === 'video' || file.mimetype.split('/')[0] === 'audio') {
         const videoPath = await videoUpload(file);
         fileUrls.push(videoPath);
+        fileSizes.push({
+          filePath: videoPath,
+          fileSize: file.size,
+        });
       }
 
       // if (file.mimetype.split('/')[0] === 'audio') {
@@ -103,6 +109,10 @@ const fileUpload = async (req: any, res: any, next: any) => {
       else {
         await otherUpload(file);
         fileUrls.push(file.path);
+        fileSizes.push({
+          filePath: file.path,
+          fileSize: file.size,
+        });
       }
 
     }
@@ -111,8 +121,11 @@ const fileUpload = async (req: any, res: any, next: any) => {
     //// return file paths for emit data
     const returnData = {
       fileUrls: fileUrls,
+      fileSizes: fileSizes,
       // miniFileUrls: miniFileUrls,
     }
+
+    console.log('returnData', returnData)
   
     res.status(200).json({ message: 'file uploaded', data: returnData });
 
@@ -292,6 +305,7 @@ const videoUpload = async (file: any) => {
   const audioLength = 150;
 
   let resizedVideo;
+  let thumbnailPath;
   const resizedPath = makeModifiedPath(file.path, 'resize');
 
 
@@ -328,7 +342,20 @@ const videoUpload = async (file: any) => {
         resizedVideo = await resizeVideo(file.path, resizedPath, videoLength, 270);
       }
     }
-  
+
+
+    // //// create thumbnail for later replace
+    // const fileName = file.path.split("/")[file.path.split("/").length - 1];
+    // const noExtFileName = path.parse(fileName).name;
+    // const ext = path.parse(fileName).ext;
+    
+    // let pathForThumbnailList = file.path.split('/');
+    // pathForThumbnailList.pop();
+    // const thumbnailFolderPath = pathForThumbnailList.join('/');
+    // const thumbnailFileName = noExtFileName + '-thumbnail' + '.jpg';
+    // thumbnailPath = thumbnailFolderPath + '/' + thumbnailFileName;   
+    
+    // await createThumbnail(file.path, thumbnailFileName, thumbnailFolderPath);
   }
 
 
@@ -379,11 +406,25 @@ const videoUpload = async (file: any) => {
     };
   }
 
+
+  // var paramsThumbnail = {
+  //   // ACL: "public-read",
+  //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
+  //   Body: fs.createReadStream(thumbnailPath),
+  //   //   ContentType: 'image/jpeg',
+  //   Key: `${thumbnailPath}`,
+  // };
+
+
   //// upload files 
   if (!process.env.S3NOTUSE) {
     await s3Upload(params);
+    // await s3Upload(paramsThumbnail);
+
     // await s3Upload(paramsModify);
+    
     clearImage(file.path);
+    // clearImage(thumbnailPath);
 
     if (resizedVideo) {
       clearImage(resizedPath);

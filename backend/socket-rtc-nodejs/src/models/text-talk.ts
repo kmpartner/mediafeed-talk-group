@@ -49,6 +49,10 @@ const textSchema = {
   filePaths: [{
     type: String,
   }],
+  fileSizes: [{
+    filePath: { type: String },
+    fileSize: { type: Number },
+  }],
   // miniFileUrls: [{
   //   typ: String,
   // }],

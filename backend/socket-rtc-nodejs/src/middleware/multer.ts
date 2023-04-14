@@ -14,6 +14,10 @@ const fileStorage = multer.diskStorage({
 });
 
 
+// const acceptImageExt = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
+// const acceptVideoExt = ['.mp4', '.webm'];
+// const acceptAudioExt = ['.mp3', '.wav', '.weba'];
+
 const fileFilter = (req: any, file: any, cb: any) => {
   if (
     file.mimetype === 'image/png' ||

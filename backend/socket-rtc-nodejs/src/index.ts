@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 import { Server } from "./server";
- 
+
 const db = require('./db');
+const { deleteOldMediaFiles } = require('./util/file-old-delete');
 
 require('dotenv').config();
 
@@ -24,6 +25,7 @@ mongoose.connect(
     // const listen = server.listen(port => {
     //   console.log(`Server is listening on http://localhost:${port}, sr-talk`);
     //  });
+    deleteOldMediaFiles();
 
     db.initDb((err: any, db: any) => {
       if (err) {
