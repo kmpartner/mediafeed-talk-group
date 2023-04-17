@@ -11,7 +11,7 @@ const Comment = require('../../models/feed/comment');
 
 exports.commentAction = async (req, res, next) => {
     // console.log(req.body);
-    io.getIO().emit('comments', { action: 'comment-action' });
+    // io.getIO().emit('comments', { action: 'comment-action' });
     res.json({ message: "response from commentAction controllers for socket" });
 }
 
@@ -134,7 +134,7 @@ exports.createPostComment = async (req, res, next) => {
         await comment.save();
         // post.comments.push(comment);
 
-        io.getIO().emit('comments', { action: 'comment-action', comment: comment });
+        // io.getIO().emit('comments', { action: 'comment-action', comment: comment });
 
         res.status(200).json({ message: 'Comment Created.', data: comment });
 
@@ -183,7 +183,7 @@ exports.deletePostComment = async (req, res, next) => {
             throw error;
         }
 
-        io.getIO().emit('comments', { action: 'comment-action', deleteCommentId: commentId });
+        // io.getIO().emit('comments', { action: 'comment-action', deleteCommentId: commentId });
         res.status(200).json({ message: 'Comment Deleted' });
 
     } catch (err) {

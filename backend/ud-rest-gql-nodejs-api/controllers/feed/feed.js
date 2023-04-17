@@ -40,7 +40,7 @@ const s3 = new aws.S3();
 
 const feedAction = async (req, res, next) => {
   // console.log(req.body);
-  io.getIO().emit("posts", { action: "action" });
+  // io.getIO().emit("posts", { action: "action" });
   res.json({ message: "response from getPosts controllers for socket" });
 };
 
@@ -235,18 +235,18 @@ const createPost = async (req, res, next) => {
       // user.posts.push(post);
       // await user.save()
 
-      io.getIO().emit("posts", {
-        action: "create",
-        post: {
-          ...post._doc,
-          // creator: {
-          //     // _id: req.userId,
-          //     _id: user._id,
-          //     userId: req.userId,
-          //     name: user.name
-          // }
-        },
-      });
+      // io.getIO().emit("posts", {
+      //   action: "create",
+      //   post: {
+      //     ...post._doc,
+      //     // creator: {
+      //     //     // _id: req.userId,
+      //     //     _id: user._id,
+      //     //     userId: req.userId,
+      //     //     name: user.name
+      //     // }
+      //   },
+      // });
       res.status(201).json({
         message: "Post created Successfully",
         post: post,
@@ -685,7 +685,7 @@ const updatePost = async (req, res, next) => {
 
     const result = await post.save();
 
-    io.getIO().emit("posts", { action: "update", post: result });
+    // io.getIO().emit("posts", { action: "update", post: result });
     res.status(200).json({ message: "Post updated", post: result });
   } catch (err) {
     if (!err.statusCode) {
@@ -771,7 +771,7 @@ const deletePost = async (req, res, next) => {
     ////delete favorite post
     await FavoritePost.deleteMany({ postId: postId });
 
-    io.getIO().emit("posts", { action: "delete", post: postId });
+    // io.getIO().emit("posts", { action: "delete", post: postId });
 
     res.status(200).json({ message: "Deleted post." });
   } catch (err) {
@@ -849,7 +849,7 @@ const deletePostImage = async (req, res, next) => {
 
     await post.save();
 
-    io.getIO().emit("posts", { action: "delete", post: postId });
+    // io.getIO().emit("posts", { action: "delete", post: postId });
 
     res
       .status(200)

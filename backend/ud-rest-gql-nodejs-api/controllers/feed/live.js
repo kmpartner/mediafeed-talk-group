@@ -35,11 +35,11 @@ aws.config.update({
 });
 const s3 = new aws.S3();
 
-const feedAction = async (req, res, next) => {
-  // console.log(req.body);
-  io.getIO().emit("posts", { action: "action" });
-  res.json({ message: "response from getPosts controllers for socket" });
-};
+// const feedAction = async (req, res, next) => {
+//   // console.log(req.body);
+//   io.getIO().emit("posts", { action: "action" });
+//   res.json({ message: "response from getPosts controllers for socket" });
+// };
 
 
 const getLivePost = async (req, res, next) => {

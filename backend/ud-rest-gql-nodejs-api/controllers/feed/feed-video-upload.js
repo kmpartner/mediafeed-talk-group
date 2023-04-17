@@ -121,18 +121,18 @@ exports.createVideoPost = async (req, res, next) => {
             // user.posts.push(post);
             // await user.save()
 
-            io.getIO().emit('posts', {
-                action: 'create',
-                post: { 
-                    ...post._doc, 
-                    // creator: { 
-                    //     // _id: req.userId,
-                    //     _id: user._id,
-                    //     userId: req.userId,
-                    //     name: user.name 
-                    // } 
-                }
-            });
+            // io.getIO().emit('posts', {
+            //     action: 'create',
+            //     post: { 
+            //         ...post._doc, 
+            //         // creator: { 
+            //         //     // _id: req.userId,
+            //         //     _id: user._id,
+            //         //     userId: req.userId,
+            //         //     name: user.name 
+            //         // } 
+            //     }
+            // });
 
             const returnPost = createReturnPost(post);
 
@@ -284,18 +284,18 @@ exports.createVideoPost = async (req, res, next) => {
         }
 
         //// send update data
-        io.getIO().emit('posts', { 
-            action: 'create-action',
-            message: `image-upload-finish ${image.filename}`,
-            imageData: image,
-        });
+        // io.getIO().emit('posts', { 
+        //     action: 'create-action',
+        //     message: `image-upload-finish ${image.filename}`,
+        //     imageData: image,
+        // });
     }
 
 
-    io.getIO().emit('posts', { 
-        action: 'upload-finish',
-        message: `images-upload-finish`,
-    });
+    // io.getIO().emit('posts', { 
+    //     action: 'upload-finish',
+    //     message: `images-upload-finish`,
+    // });
 
 
     // const imageUrl = req.file.path;
@@ -500,17 +500,17 @@ exports.updateVideoPost = async (req, res, next) => {
                 }    
                 
                 
-                io.getIO().emit('posts', { 
-                    action: 'update-action',
-                    message: `image-upload-finish ${image.filename}`,
-                    imageData: image,
-                });
+                // io.getIO().emit('posts', { 
+                //     action: 'update-action',
+                //     message: `image-upload-finish ${image.filename}`,
+                //     imageData: image,
+                // });
             }
 
-            io.getIO().emit('posts', { 
-                action: 'upload-finish',
-                message: `images-upload-finish`,
-            });
+            // io.getIO().emit('posts', { 
+            //     action: 'upload-finish',
+            //     message: `images-upload-finish`,
+            // });
 
     }
 
@@ -546,7 +546,7 @@ exports.updateVideoPost = async (req, res, next) => {
 
         const result = await post.save();
 
-        io.getIO().emit('posts', { action: 'update', post: result });
+        // io.getIO().emit('posts', { action: 'update', post: result });
         
         const returnPost = createReturnPost(post);
         res.status(200).json({ 
@@ -686,7 +686,7 @@ exports.deleteVideoPost = async (req, res, next) => {
         ////delete favorite post
         await FavoritePost.deleteMany({ postId: postId });
 
-        io.getIO().emit('posts', { action: 'delete', post: postId });
+        // io.getIO().emit('posts', { action: 'delete', post: postId });
 
         res.status(200).json({ message: 'Deleted post.' });
 
@@ -862,7 +862,7 @@ exports.deletePostVideo = async (req, res, next) => {
 
         const returnPost = createReturnPost(post);
         
-        io.getIO().emit('posts', { action: 'delete', post: postId });
+        // io.getIO().emit('posts', { action: 'delete', post: postId });
 
         res.status(200).json({ 
             message: 'Deleted post images.',
