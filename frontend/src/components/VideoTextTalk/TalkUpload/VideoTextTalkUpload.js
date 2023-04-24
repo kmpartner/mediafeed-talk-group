@@ -137,9 +137,16 @@ const VideoTextTalkUpload = props => {
 
       if (result.data) {
         const fileUrls = result.data.data.fileUrls;
+        const fileSizes = result.data.data.fileSizes;
 
-        const forText = textInput ? textInput : 'write text here';
-        noconnectTextPostHandler(forText, noconnectDestUserId, fileUrls);
+        const forText = textInput.trim() ? textInput : 'your file';
+        
+        noconnectTextPostHandler(
+          forText, 
+          noconnectDestUserId, 
+          fileUrls,
+          fileSizes,
+        );
         // console.log(fileUrls);
       }
       
@@ -206,29 +213,29 @@ const VideoTextTalkUpload = props => {
       {!selectedType && (
         <div>
           <div className={classes.talkUploadTitle}>
-            select-file-type
+            Select file type
           </div>
           <div className={classes.talkUploadSelectButtons}>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('image') }}
             >
-              image-file
+              Image
             </Button>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('video') }}
             >
-              video-file
+              Video
             </Button>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('audio') }}
             >
-              audio-file
+              Audio
             </Button>
-            <Button mode="raised" type="submit"
+            {/* <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('other') }}
             >
               other-file
-            </Button>
+            </Button> */}
           </div>
         </div>
       )}
@@ -236,37 +243,63 @@ const VideoTextTalkUpload = props => {
       {selectedType === 'image' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            select-image
+            Select Image
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="image/jpg,image/jpeg,image/png,image/gif" 
           />
+          <div>
+            <div>File size shoud be less than 100MB.</div>
+            <div>File will be compressed to smaller size.</div>
+            <div>accept file type, image: (jpeg, jpg, png, gif, webp)</div>
+            {sizeError && (
+              <div><strong>{sizeError}</strong></div>
+            )}
+          </div>
         </div>
       )}
       {selectedType === 'video' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            select-video
+            Select Video
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="video/mp4,video/webm" 
           />
+          <div>
+            <div>File size shoud be less than 100MB</div>
+            <div>File with more than 90 seconds length will be trimed.</div>
+            <div>File will be deleted after 1 month</div>
+            <div>accept file type, video: (mp4, webm)</div>
+            {sizeError && (
+              <div><strong>{sizeError}</strong></div>
+            )}
+          </div>
         </div>
       )}
       {selectedType === 'audio' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            select-audio
+            Select Audio
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="audio/mp3,audio/wav,audio/weba" 
           />
+          <div>
+            <div>File size shoud be less than 100MB</div>
+            <div>File with more than 90 seconds length will be trimed.</div>
+            <div>File will be deleted after 1 month</div>
+            <div>accept file type, audio:(mp3, wav)</div>
+            {sizeError && (
+              <div><strong>{sizeError}</strong></div>
+            )}
+          </div>
         </div>
       )}
       {selectedType === 'other' && (
@@ -279,18 +312,27 @@ const VideoTextTalkUpload = props => {
             onChange={fileSelectHandler} 
             // accept=".pdf" 
           />
+          <div>
+            <div>File size shoud be less than 100MB</div>
+            <div>File with more than 90 second length will be trimed.</div>
+            <div>(accept file type, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
+            {sizeError && (
+              <div><strong>{sizeError}</strong></div>
+            )}
+          </div>
         </div>
       )}
 
-      {selectedType && (
+      {/* {selectedType && (
         <div>
-          <div>File size shoud be less than 100MB, File with more than 90 second length will be trimed.</div>
+          <div>File size shoud be less than 100MB</div>
+          <div>File with more than 90 second length will be trimed.</div>
           <div>(accept file type, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
           {sizeError && (
             <div><strong>{sizeError}</strong></div>
           )}
         </div>
-      )}
+      )} */}
 
       {selectedFiles && (
         <VideoTextTalkUpladPreview 
@@ -305,7 +347,7 @@ const VideoTextTalkUpload = props => {
           <Button mode="" type=""
             onClick={() => { resetSelectedFiles(); }}
           >
-            go-back
+            Go back
           </Button>
         </div>
       )}
@@ -342,7 +384,7 @@ const VideoTextTalkUpload = props => {
             loading={isTextPosting || isLoading}
             onClick={() => {showUploadModalHandler(false); }}
           >
-            cancel-close
+            Cancel
           </Button>
           <Button mode="raised" type="submit"
             disabled={isTextPosting || isLoading || sizeError}
@@ -356,7 +398,7 @@ const VideoTextTalkUpload = props => {
                 );
             }}
           >
-            upload-and-post
+            Upload
           </Button>
         </div>
       )}

@@ -11,39 +11,40 @@ function FeedSocketAction(props) {
 
   const [store, dispatch] = useStore();
 
-  useEffect(() => {
-    const socket = openSocket(BASE_URL);
-    socket.on('posts', data => {
+  // useEffect(() => {
+  //   const socket = openSocket(BASE_URL);
+  //   // console.log('socket feedSocket', socket);
+  //   socket.on('posts', data => {
 
-      //// other actions in Feed.js
+  //     //// other actions in Feed.js
       
-      if (data.action === 'create-action' || data.action === 'update-action') {
-        console.log('socket-action-data create update', data);
-          dispatch('SHOW_NOTIFICATION', {
-            status: 'pending',
-            title: '',
-            message: `Stored ${data.imageData.originalname}`,
-          });
+  //     if (data.action === 'create-action' || data.action === 'update-action') {
+  //       console.log('socket-action-data create update', data);
+  //         dispatch('SHOW_NOTIFICATION', {
+  //           status: 'pending',
+  //           title: '',
+  //           message: `Stored ${data.imageData.originalname}`,
+  //         });
 
-      }
+  //     }
 
-      if (data.action === 'upload-finish') {
-        console.log('socket-action-data create update', data);
+  //     if (data.action === 'upload-finish') {
+  //       console.log('socket-action-data create update', data);
         
-        // dispatch('SHOW_NOTIFICATION', {
-        //   status: 'pending',
-        //   title: '',
-        //   message: `Images upload finished`,
-        // });
+  //       // dispatch('SHOW_NOTIFICATION', {
+  //       //   status: 'pending',
+  //       //   title: '',
+  //       //   message: `Images upload finished`,
+  //       // });
         
-        setTimeout(() => {
-          dispatch('CLEAR_NOTIFICATION');
-        }, 1000*3);
-      }
+  //       setTimeout(() => {
+  //         dispatch('CLEAR_NOTIFICATION');
+  //       }, 1000*3);
+  //     }
   
   
-    })
-  },[]);
+  //   })
+  // },[]);
 
 
   useEffect(() => {

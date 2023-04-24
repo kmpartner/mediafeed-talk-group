@@ -554,7 +554,7 @@ const VideoTextTalk = (props) => {
     setIsLoading(true);
   };
 
-  const noconnectTextPostHandler = (text, toUserId, filePaths) => {
+  const noconnectTextPostHandler = (text, toUserId, filePaths, fileSizes) => {
     socketState.emit('text-send', {
       from: userSocketId,
       fromUserId: userId,
@@ -568,6 +568,8 @@ const VideoTextTalk = (props) => {
       token: localStorage.getItem('token'),
       fileUrls: filePaths ? filePaths : [],
       filePaths: filePaths ? filePaths : [],
+
+      fileSizes: fileSizes ? fileSizes : [],
 
       getMoreNum: getMoreNum,
     });

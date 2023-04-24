@@ -83,7 +83,7 @@ const GroupTalkSocket = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  console.log('store in GroupTalk.js', store);
+  // console.log('store in GroupTalk.js', store);
 
  
   useEffect(() => {

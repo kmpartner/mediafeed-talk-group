@@ -17,11 +17,12 @@ export const createImagePreviews = async (files) => {
   
       if (
         file.type.split('/')[0] === 'image' 
-        && file.size > 1000 * 10**3 
+        // && file.size > 1000 * 10**3 
         && fileType !== 'gif'
         ) {
   
-        const compImg = await createCompressedImage(file);
+        // const compImg = await createCompressedImage(file);
+        const compImg = await createCompressedImage(file, 0.8, 500, 500);
         
         if (compImg && compImg.size < file.size) {
           image = new File([compImg], file.name, {type: file.type, lastModified: Date.now()});

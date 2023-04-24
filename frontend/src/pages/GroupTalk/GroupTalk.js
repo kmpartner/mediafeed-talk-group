@@ -95,7 +95,7 @@ const GroupTalk = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
-  console.log('store in GroupTalk.js', store);
+  // console.log('store in GroupTalk.js', store);
 
   const [userSocket, setUserSocket] = useState('');
   const [userSocketId, setUserSocketId] = useState('');
@@ -159,6 +159,13 @@ const GroupTalk = (props) => {
   const [editFavoriteGroupsResult, setEditFavoriteGroupsResult] = useState('');
   
   const [groupTextReactions, setGroupTextReactions] = useState([]);
+  
+  // const [getMoreNum, setGetMoreNum] = useState(1);
+  // const [isMoreText, setIsMoreText] = useState(false);
+  
+  // const [listScrollTop, setListScrollTop] = useState(0);
+
+  // const [initialLoad, setInitialLoad] = useState(true);
   // const [isReactionPosting, setIsReactionPosting] = useState(false);
   // const [emitUserInfo, setEmitUserInfo] = useState({});
   // let socket;
@@ -392,6 +399,14 @@ const GroupTalk = (props) => {
     setEditFavoriteGroupsResult('');
 
     setGroupTextReactions([]);
+
+
+    // setGetMoreNum(1);
+    // setIsMoreText(false);
+
+    // setListScrollTop(0);
+
+    // setInitialLoad(true);
     // setIsReactionPosting(false);
   };
 
@@ -984,6 +999,8 @@ const GroupTalk = (props) => {
           getGroupInfoHandler={getGroupInfoHandler}
           groupTalkId={groupTalkId}
           groupTextDeleteHandler={groupTextDeleteHandler}
+          // getMoreNum={getMoreNum}
+          // setGetMoreNum={setGetMoreNum}
           isLoading={isLoading}
         />
 

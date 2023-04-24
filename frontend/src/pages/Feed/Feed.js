@@ -107,22 +107,22 @@ class Feed extends Component {
 
     this.loadPosts();
 
-    const socket = openSocket(BASE_URL);
-    socket.on('posts', data => {
-      if (data.action === 'create') {
-        // this.addPost(data.post);
-      } else if (data.action === 'update') {
-        // this.updatePost(data.post);
-      } else if (data.action === 'delete') {
-        // this.loadPosts();
-      } else if (data.action === 'action') {
-        console.log('IN SOCKET.ON action');
-        // this.loadPosts();
-      }
+    // const socket = openSocket(BASE_URL);
+    // socket.on('posts', data => {
+    //   if (data.action === 'create') {
+    //     // this.addPost(data.post);
+    //   } else if (data.action === 'update') {
+    //     // this.updatePost(data.post);
+    //   } else if (data.action === 'delete') {
+    //     // this.loadPosts();
+    //   } else if (data.action === 'action') {
+    //     console.log('IN SOCKET.ON action');
+    //     // this.loadPosts();
+    //   }
 
-       //// other actions in FeedSocketAction.js
+    //    //// other actions in FeedSocketAction.js
        
-    })
+    // })
 
     if (localStorage.getItem('deletePostId') && localStorage.getItem('deletePostData') ) {
       console.log('deletePostData', JSON.parse(localStorage.getItem('deletePostData')));

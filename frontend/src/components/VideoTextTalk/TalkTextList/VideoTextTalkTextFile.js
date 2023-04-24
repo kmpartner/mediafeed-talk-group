@@ -87,35 +87,36 @@ const VideoTextTalkTextFile = (props) => {
         fileImageBody = (
           <div>
             <Backdrop 
-            onClick={() => { 
-              setShowSepImage(!showSepImage); 
-            }}
+              onClick={() => { 
+                setShowSepImage(!showSepImage); 
+              }}
             />
             <SmallModal style={classes.sepImageModal}>
               <div>
-                <div>
-                  <span 
+                <div className={classes.sepImageModalClose}>
+                  <span className={classes.sepImageModalCloseButton}
                     onClick={() => { 
                       setShowSepImageHandler(false);
                     }}
                   >
-                    close
+                    X
                   </span>
                 </div>
-                <div>
-                  <Img
-                  // src={inputData.fileUrls[0]} 
-                  src={fileImageUrl}
-                  alt="image in text" 
+                <div className={classes.sepImageModalImageContainer}>
+                  <Img 
+                    className={classes.sepImageModalImage}
+                    // src={inputData.fileUrls[0]} 
+                    src={fileImageUrl}
+                    alt="image in text" 
                   />
                 </div>
 
-                <div>
+                {/* <div>
                   <a style={{color: 'gray', textDecoration: "none" }}
                     href={fileImageUrl} target="_blank" rel="noopener noreferrer">
                     downlad-file
                   </a>
-                </div>
+                </div> */}
               </div>
             </SmallModal>
           </div>
@@ -135,14 +136,14 @@ const VideoTextTalkTextFile = (props) => {
             src={fileImageUrl}
             alt="video in text" 
           />
-          <div
+          {/* <div
             onClick={() => {
               const videoEl = document.getElementById(fileImageUrl);
               videoEl.requestPictureInPicture();
             }}
           >
             p-in-p
-          </div>
+          </div> */}
         </div>
       );
 
@@ -243,12 +244,12 @@ const VideoTextTalkTextFile = (props) => {
             <div>
               {originalName}
             </div>
-            <div>
+            {/* <div>
               <a style={{color: 'gray', textDecoration: "none" }}
                 href={fileImageUrl} target="_blank" rel="noopener noreferrer">
                 downlad-file
               </a>
-            </div>
+            </div> */}
           </div>
         );
       }
@@ -261,6 +262,9 @@ const VideoTextTalkTextFile = (props) => {
 
   return (
     <Fragment>
+      {/* {inputData.sendAt + 1000*6*1 < Date.now() && (
+        <div>temp-file-deleted</div>
+      )} */}
       {fileImageBody}
     </Fragment>
   );

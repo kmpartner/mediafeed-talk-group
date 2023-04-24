@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { withI18n } from "react-i18next";
 
+import ImageEditorLink from '../../../../pages/NotPageFound/ImageEditorLink';
 import FilePicker from '../../../Form/Input/FilePicker';
 import EmbedMedia from './EmbedMedia';
 
@@ -99,6 +100,10 @@ function FeedEditSelectFile(props) {
               </div>
             )}
           </div>
+
+          <p>
+              <ImageEditorLink />
+          </p>
         </div>
       </div>
       }

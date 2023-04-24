@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next/hooks";
 
-import Button from "../../components/Button/Button";
-import Loader from "../../components/Loader/Loader";
+import ImageEditorLink from "./ImageEditorLink";
 import { useStore } from "../../hook-store/store";
 
 import "./PageDescription.css";
@@ -31,6 +30,9 @@ const PageDescription = (props) => {
           {t("notFound.text6", "In media post feed, you can upload and share photos and videos.")}
           {' '}
           {t("notFound.text7", "Writing comments on photos or videos enables to communicate and interact with other users.")}
+        </p>
+        <p>
+          <ImageEditorLink />
         </p>
       </div>
       <div className="pageDescriptionContent">

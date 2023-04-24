@@ -161,20 +161,25 @@ export const makeQrcode = (textData) => {
 //       );
 //   });
 
-export const createCompressedImage = (file) => {
+export const createCompressedImage = (file, tQuality, tMaxHeight, tMaxWidth) => {
   return new Promise((resolve, reject) => {
     const image = file;
 
     let quality = 0.8;
+    
     if (file.size > 3 * 10**6) {
       quality = 0.6;
+    }
+
+    if (tQuality) {
+      quality = tQuality;
     }
     // console.log('quality', quality);
 
     new Compressor(image, {
       quality: quality, // 0.6 can also be used, but its not recommended to go below.
-      maxHeight: 1400,
-      maxWidth: 1400,
+      maxHeight: tMaxHeight ? tMaxHeight : 1400,
+      maxWidth: tMaxWidth ? tMaxWidth : 1400,
       success: (compressedResult) => {
         // compressedResult has the compressed file.
         // Use the compressed file to upload the images to your server.        
