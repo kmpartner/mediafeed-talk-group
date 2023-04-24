@@ -43,14 +43,14 @@ const fileFilter = (req: any, file: any, cb: any) => {
 const multerLimits = { 
   fileSize: process.env.MULTER_SIZE_LIMIT_MB
     ? 10**6 * Number(process.env.MULTER_SIZE_LIMIT_MB) 
-    : 1024 * 1024 * 5 
+    : 1024 * 1024 * 100
 };
 
 
 exports.filesUpload = multer({
   storage: fileStorage,
-  // limits: multerLimits,
-  // fileFilter: fileFilter
+  limits: multerLimits,
+  fileFilter: fileFilter
 }).array('files', 1)
 
 exports.fileUpload = multer({

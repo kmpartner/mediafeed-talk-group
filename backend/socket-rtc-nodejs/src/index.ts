@@ -25,7 +25,7 @@ mongoose.connect(
     // const listen = server.listen(port => {
     //   console.log(`Server is listening on http://localhost:${port}, sr-talk`);
     //  });
-    deleteOldMediaFiles();
+    //// deleteOldMediaFiles();
 
     db.initDb((err: any, db: any) => {
       if (err) {
