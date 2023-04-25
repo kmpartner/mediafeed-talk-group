@@ -14,7 +14,7 @@ const ImageEditorLink = (props) => {
 
   return <Fragment>
       <span>
-        When you need to edit your image files before upload, you can use simple image editor
+        {t('notFound.text15', 'When you need to edit your image files before upload, you can use simple image editor')}
         {' '}
         at Kura Image Photo
         {' '}
@@ -23,7 +23,9 @@ const ImageEditorLink = (props) => {
           target="_blank"
           rel="nofollow noopener noreferrer"
         >
-          Link to image editor site
+          <strong>
+            {t('notFound.text16', 'Link to image editor site')}
+          </strong>
         </a>)
 
       </span>

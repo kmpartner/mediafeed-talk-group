@@ -54,9 +54,9 @@ const VideoTextTalkInput = props => {
           {t('general.text26', 'Send')}
         </Button>
         <Button mode="" type=""
-        onClick={() => { showUploadModalHandler(true); }}
+          onClick={() => { showUploadModalHandler(true); }}
         >
-          upload file
+          {t('talkUpload01', 'upload file')}
         </Button>
         {showUploadModal && (
           <div>

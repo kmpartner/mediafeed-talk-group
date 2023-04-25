@@ -46,4 +46,8 @@ export const marks = {
   infoCircle: <i style={{color: 'gray'}} className="fa fa-info-circle" aria-hidden="true"></i>,
 
   qrcode: <i style={{color: 'gray'}} className="fa fa-qrcode" aria-hidden="true"></i>,
+
+  fileImage: <i style={{color: ''}} className="fa fa-file-image-o" aria-hidden="true"></i>,
+  fileVideo: <i style={{color: ''}} className="fa fa-file-video-o" aria-hidden="true"></i>,
+  fileAudio: <i style={{color: ''}} className="fa fa-file-audio-o" aria-hidden="true"></i>,
 };

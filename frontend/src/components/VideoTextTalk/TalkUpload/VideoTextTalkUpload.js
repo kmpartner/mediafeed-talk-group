@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import axios from 'axios';
 
 import Button from '../../Button/Button';
+import ImageEditorLink from '../../../pages/NotPageFound/ImageEditorLink';
 import InputEmoji from '../../Form/Input/InputEmoji';
 import Loader from '../../Loader/Loader';
 import VideoTextTalkUpladPreview from './VideoTextTalkUploadPreview';
@@ -22,6 +23,7 @@ import { useStore } from '../../../hook-store/store';
 
 import { SOCKET_URL } from '../../../App';
 
+import { marks } from '../../../images/marks';
 import classes from './VideoTextTalkUpload.module.css';
 
 const VideoTextTalkUpload = props => {
@@ -213,28 +215,28 @@ const VideoTextTalkUpload = props => {
       {!selectedType && (
         <div>
           <div className={classes.talkUploadTitle}>
-            Select file type
+            {t('talkUpload02', 'Select file type')}
           </div>
           <div className={classes.talkUploadSelectButtons}>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('image') }}
             >
-              Image
+              {marks.fileImage} {t('talkUpload03', 'Image')}
             </Button>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('video') }}
             >
-              Video
+              {marks.fileVideo} {t('talkUpload04', 'Video')}
             </Button>
             <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('audio') }}
             >
-              Audio
+              {marks.fileAudio} {t('talkUpload05', 'Audio')}
             </Button>
             {/* <Button mode="raised" type="submit"
               onClick={() => { setSelectedTypeHandler('other') }}
             >
-              other-file
+              {t('talkUpload14', 'other file')} 
             </Button> */}
           </div>
         </div>
@@ -243,17 +245,19 @@ const VideoTextTalkUpload = props => {
       {selectedType === 'image' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            Select Image
+            {t('talkUpload03', 'Image')}
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="image/jpg,image/jpeg,image/png,image/gif" 
           />
-          <div>
-            <div>File size shoud be less than 100MB.</div>
-            <div>File will be compressed to smaller size.</div>
-            <div>accept file type, image: (jpeg, jpg, png, gif, webp)</div>
+          <div className={classes.talkUploadAboutFile}>
+            <div>{t('talkUpload06', 'File size should be less than 100MB.')}</div>
+            <div>{t('talkUpload07', 'File will be resized to smaller size.')}</div>
+            <div>{t('talkUpload08', 'accept file type')} (jpeg, jpg, png)</div>
+            <br/>
+            <ImageEditorLink />
             {sizeError && (
               <div><strong>{sizeError}</strong></div>
             )}
@@ -263,18 +267,18 @@ const VideoTextTalkUpload = props => {
       {selectedType === 'video' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            Select Video
+            {t('talkUpload04', 'Video')}
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="video/mp4,video/webm" 
           />
-          <div>
-            <div>File size shoud be less than 100MB</div>
-            <div>File with more than 90 seconds length will be trimed.</div>
-            <div>File will be deleted after 1 month</div>
-            <div>accept file type, video: (mp4, webm)</div>
+          <div className={classes.talkUploadAboutFile}>
+            <div>{t('talkUpload06', 'File size should be less than 100MB.')}</div>
+            <div>{t('talkUpload09', 'File with more than 90 seconds length will be trimed.')}</div>
+            <div>{t('talkUpload10', 'File will be deleted after 1 month.')}</div>
+            <div>{t('talkUpload08', 'accept file type')} (mp4)</div>
             {sizeError && (
               <div><strong>{sizeError}</strong></div>
             )}
@@ -284,28 +288,28 @@ const VideoTextTalkUpload = props => {
       {selectedType === 'audio' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            Select Audio
+            {t('talkUpload05', 'Audio')}
           </div>
           <input 
             type='file' 
             onChange={fileSelectHandler} 
             accept="audio/mp3,audio/wav,audio/weba" 
           />
-          <div>
-            <div>File size shoud be less than 100MB</div>
-            <div>File with more than 90 seconds length will be trimed.</div>
-            <div>File will be deleted after 1 month</div>
-            <div>accept file type, audio:(mp3, wav)</div>
+          <div className={classes.talkUploadAboutFile}>
+            <div>{t('talkUpload06', 'File size should be less than 100MB.')}</div>
+            <div>{t('talkUpload09', 'File with more than 90 seconds length will be trimed.')}</div>
+            <div>{t('talkUpload10', 'File will be deleted after 1 month.')}</div>
+            <div>{t('talkUpload08', 'accept file type')} (mp3, wav)</div>
             {sizeError && (
               <div><strong>{sizeError}</strong></div>
             )}
           </div>
         </div>
       )}
-      {selectedType === 'other' && (
+      {/* {selectedType === 'other' && (
         <div>
           <div className={classes.talkUploadSelectFileTitle}>
-            select-other
+            {t('talkUpload14', 'other file')} 
           </div>
           <input 
             type='file' 
@@ -313,26 +317,16 @@ const VideoTextTalkUpload = props => {
             // accept=".pdf" 
           />
           <div>
-            <div>File size shoud be less than 100MB</div>
-            <div>File with more than 90 second length will be trimed.</div>
-            <div>(accept file type, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
+            <div>{t('talkUpload06', 'File size should be less than 100MB.')}</div>
+            <div>{t('talkUpload09', 'File with more than 90 seconds length will be trimed.')}</div>
+            <div>({t('talkUpload08', 'accept file type')}, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
             {sizeError && (
               <div><strong>{sizeError}</strong></div>
             )}
           </div>
         </div>
-      )}
-
-      {/* {selectedType && (
-        <div>
-          <div>File size shoud be less than 100MB</div>
-          <div>File with more than 90 second length will be trimed.</div>
-          <div>(accept file type, image: (jpeg, jpg, png, gif, webp), video: (mp4, webm), audio:(mp3, wav) )</div>
-          {sizeError && (
-            <div><strong>{sizeError}</strong></div>
-          )}
-        </div>
       )} */}
+
 
       {selectedFiles && (
         <VideoTextTalkUpladPreview 
@@ -347,7 +341,7 @@ const VideoTextTalkUpload = props => {
           <Button mode="" type=""
             onClick={() => { resetSelectedFiles(); }}
           >
-            Go back
+            {t('talkUpload11', 'Go back')}
           </Button>
         </div>
       )}
@@ -384,7 +378,7 @@ const VideoTextTalkUpload = props => {
             loading={isTextPosting || isLoading}
             onClick={() => {showUploadModalHandler(false); }}
           >
-            Cancel
+            {t('talkUpload12', 'Cancel')}
           </Button>
           <Button mode="raised" type="submit"
             disabled={isTextPosting || isLoading || sizeError}
@@ -398,7 +392,7 @@ const VideoTextTalkUpload = props => {
                 );
             }}
           >
-            Upload
+            {t('talkUpload13', 'Upload')}
           </Button>
         </div>
       )}
