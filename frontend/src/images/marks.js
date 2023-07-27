@@ -50,4 +50,6 @@ export const marks = {
   fileImage: <i style={{color: ''}} className="fa fa-file-image-o" aria-hidden="true"></i>,
   fileVideo: <i style={{color: ''}} className="fa fa-file-video-o" aria-hidden="true"></i>,
   fileAudio: <i style={{color: ''}} className="fa fa-file-audio-o" aria-hidden="true"></i>,
+
+  externalLink: <i className="fa fa-external-link" aria-hidden="true"></i>,
 };

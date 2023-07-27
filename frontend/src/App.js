@@ -39,6 +39,8 @@ import GroupTalk from './pages/GroupTalk/GroupTalk';
 import GetAd from './components/GroupTalk/GroupAdElements/GetAds/GetAds';
 import GetWindowData from './components/UI/getWindowData';
 
+import HeadMetaTag from './components/UI/HeadMetaTag';
+
 import './App.css';
 
 // import * as firebase from "firebase/app";
@@ -985,9 +987,10 @@ class App extends Component {
                 />
                 <GetDefferredPrompt />
                 
+                <HeadMetaTag />
                 </div>
-                  <div></div>
-                  <div>-</div>
+                  {/* <div></div> */}
+                  {/* <div>-</div> */}
 
             </div>
             
