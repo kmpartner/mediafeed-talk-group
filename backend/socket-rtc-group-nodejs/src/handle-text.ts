@@ -1,6 +1,7 @@
 const GroupTalk = require('./models/group-talk');
 const GroupTalkReaction = require('./models/group-talk-reaction');
 const { authUserId } = require('./util/auth');
+const { createReturnPost } = require('./util/file-upload-utils');
 
 import { Error } from 'mongoose';
 //// interface import
@@ -40,6 +41,9 @@ exports.handleGroupTextSend = (socket: any) => {
         sendAt: data.sendAt,
         language: data.language,
         geolocation: data.geolocation,
+        fileUrls : data.fileUrls,
+        filePaths: data.filePaths,
+        fileSizes: data.fileSizes,
       };
 
 
@@ -70,12 +74,24 @@ exports.handleGroupTextSend = (socket: any) => {
         // members: group.members,
       };
 
+
+      const fileUrlsTalks = groupTalk.talks.map((talk: GroupTextInfo) => {
+        return createReturnPost(talk);
+      });
+
+      const fileUrlsGroupObj = {
+        ...groupObj,
+        talks: fileUrlsTalks,
+      }
+
       socket.emit('update-group', {
-        group: groupObj,
+        // group: groupObj,
+        group: fileUrlsGroupObj,
       });
 
       socket.to(data.groupRoomId).emit('update-group', {
-        group: groupObj,
+        // group: groupObj,
+        group: fileUrlsGroupObj,
       });
 
 
@@ -103,10 +119,13 @@ exports.handleGroupTextSend = (socket: any) => {
       //   token: null,
       // }
 
+      // console.log('last talks', groupTalk.talks[groupTalk.talks.length -1]);
+
       socket.emit('group-text-send-result', {
         message: 'group text send success',
         idsForPush: idsForPush,
-        textData: textData
+        // textData: textData,
+        textData: createReturnPost(groupTalk.talks[groupTalk.talks.length -1]),
       });
 
     } 
@@ -191,12 +210,24 @@ exports.handleGroupTextDelete = (socket: any) => {
         // members: group.members,
       };
 
+      
+      const fileUrlsTalks = groupTalk.talks.map((talk: GroupTextInfo) => {
+        return createReturnPost(talk);
+      });
+
+      const fileUrlsGroupObj = {
+        ...groupObj,
+        talks: fileUrlsTalks,
+      }
+
       socket.emit('update-group', {
-        group: groupObj,
+        // group: groupObj,
+        group: fileUrlsGroupObj,
       });
 
       socket.to(data.groupRoomId).emit('update-group', {
-        group: groupObj,
+        // group: groupObj,
+        group: fileUrlsGroupObj
       });
 
 

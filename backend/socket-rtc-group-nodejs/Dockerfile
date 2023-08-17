@@ -1,4 +1,11 @@
+# FROM node:10-alpine
+
+# RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+
+
 FROM node:10-alpine
+
+RUN apk add --no-cache gettext librsvg ghostscript imagemagick graphicsmagick ffmpeg
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 

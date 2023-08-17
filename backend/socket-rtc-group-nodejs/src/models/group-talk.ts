@@ -33,6 +33,17 @@ const groupTextSchema = {
   geolocation: {
     type: Object
   },
+
+  fileUrls: [{
+    type: String,
+  }],
+  filePaths: [{
+    type: String,
+  }],
+  fileSizes: [{
+    filePath: { type: String },
+    fileSize: { type: Number },
+  }],
 }
 
 

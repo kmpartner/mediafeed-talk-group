@@ -18,6 +18,7 @@ const GroupConnection = require('./models/group-connection');
 // const TestRoutes = require('./routes/test');
 const groupTalkRoutes = require('./routes/group-talk');
 const groupPushRoutes = require('./routes/group-push');
+const fileUploadRoutes = require('./routes/file-upload');
 
 const { authUserId } = require('./util/auth');
 
@@ -31,6 +32,7 @@ const {
 const { handleEditGroup, handleDeleteGroup, handleGetGroup } = require('./handle-edit-group');
 const { handleDeleteGroupMember } = require('./handle-group-member');
 const { handleGroupUser } = require('./handle-user');
+const { createReturnPost } = require('./util/file-upload-utils');
 
 require('dotenv').config();
 
@@ -84,6 +86,9 @@ export interface GroupTextInfo {
   sendAt: number,
   language: string,
   geolocation: any,
+  fileUrls? : string[],
+  filePaths?: string[],
+  fileSizes?: string[],
 }
 
 
@@ -157,9 +162,17 @@ export class Server {
       ];
       var origin = req.headers.origin;
       console.log(origin);
+
+      
+      //// for deploy
       if (allowedOrigins.indexOf(origin) > -1) {
         res.setHeader('Access-Control-Allow-Origin', origin);
       }
+
+      //// for dev
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       if (req.method === 'OPTIONS') {
@@ -181,9 +194,13 @@ export class Server {
 
     })
 
+    // console.log('group-files path', path.join('', 'group-files'))
+    this.app.use('/group-files', express.static(path.join('', 'group-files')));
+    
     // this.app.use('/test', TestRoutes);
     this.app.use('/group-talk', groupTalkRoutes);
     this.app.use('/group-push', groupPushRoutes);
+    this.app.use('/file-upload', fileUploadRoutes);
 
     // this.app.get("/", (req, res) => {
     //   res.sendFile("index.html");
@@ -701,8 +718,18 @@ export class Server {
           });
 
           if (gRoomId && withoutUserGroupObj) {
+            const fileUrlsTalks = withoutUserGroupObj.talks.map((talk: GroupTextInfo) => {
+              return createReturnPost(talk);
+            });
+  
+            const fileUrlsGroupObj = {
+              ...withoutUserGroupObj,
+              talks: fileUrlsTalks,
+            }
+
             socket.to(gRoomId).emit('update-group', {
-              group: withoutUserGroupObj,
+              // group: withoutUserGroupObj,
+              group: fileUrlsGroupObj,
             });
           }
         }
@@ -1279,13 +1306,26 @@ export class Server {
               socket.emit('join-group-result', {
                 message: 'join group success'
               })
+
+
+              
+              const fileUrlsTalks = groupObj.talks.map((talk: GroupTextInfo) => {
+                return createReturnPost(talk);
+              });
+    
+              const fileUrlsGroupObj = {
+                ...groupObj,
+                talks: fileUrlsTalks,
+              }
   
               socket.emit('update-group', {
-                group: groupObj,
+                // group: groupObj,
+                group: fileUrlsGroupObj,
               });
   
               socket.to(group.groupRoomId).emit('update-group', {
-                group: groupObj,
+                // group: groupObj,
+                group: fileUrlsGroupObj,
               });
     
             });
