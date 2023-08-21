@@ -35,6 +35,20 @@ const NavigationItems = (props) => {
 
   const navItems = [
     {
+      id: "home",
+      text: "Home",
+      // text: t('nav.text1'),
+      link: "/",
+      auth: false,
+    },
+    {
+      id: "home",
+      text: "Home",
+      // text: t('nav.text1'),
+      link: "/",
+      auth: true,
+    },
+    {
       id: "feed",
       // text: 'feed',
       // text: t('nav.text1'),
@@ -70,14 +84,6 @@ const NavigationItems = (props) => {
       text: t("general.text25", "Group Talk"),
       link: "/group-talk-page",
       auth: true,
-    },
-
-    {
-      id: "home",
-      text: "Home",
-      // text: t('nav.text1'),
-      link: "/",
-      auth: false,
     },
     {
       id: "feed",

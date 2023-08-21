@@ -565,9 +565,8 @@ const GroupTalk = (props) => {
     }
   };
 
-  const groupTextPostHandler = (text, groupRoomId) => {
+  const groupTextPostHandler = (text, groupRoomId, filePaths, fileSizes) => {
     if (props.isAuth) {
-
       if (userSocketId && userId) {
       
         socketState.emit('group-text-send', {
@@ -582,6 +581,11 @@ const GroupTalk = (props) => {
           language: navigator.languages[0],
           geolocation: JSON.parse(localStorage.getItem('userLocation')),
           token: lsToken,
+
+          fileUrls: filePaths ? filePaths : [],
+          filePaths: filePaths ? filePaths : [],
+    
+          fileSizes: fileSizes ? fileSizes : [],
         });
   
         deleteDraftInput('group', groupTalkId);

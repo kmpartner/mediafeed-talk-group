@@ -6,6 +6,7 @@ import Img from "react-cool-img";
 import Linkify from 'react-linkify';
 import { useTranslation } from 'react-i18next/hooks';
 
+import GroupTalkTextFile from './GroupTalkTextFile';
 import GroupTalkTextModal from './GroupTalkTextModal';
 import Loader from '../../Loader/Loader';
 
@@ -145,6 +146,7 @@ const GroupTalkTextItem = (props) => {
             groupTalkTextId={inputData._id}
             fromUserId={inputData.fromUserId}
             // groupTextDeleteHandler={groupTextDeleteHandler}
+            inputData={inputData}
             isLoading={isLoading}
             // modalContent={deleteMemberModalContent}
           />
@@ -180,6 +182,11 @@ const GroupTalkTextItem = (props) => {
   
   const talkElement = (
     <div className={elementStyle} style={colorStyle}>
+
+      <GroupTalkTextFile 
+        inputData={inputData}
+      />
+
       <div className="textTalk-listElement-text">
       <Linkify componentDecorator={componentDecorator}>
         {inputData.text}

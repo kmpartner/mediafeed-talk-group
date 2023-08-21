@@ -62,6 +62,23 @@ const PageDescription = (props) => {
           {t("notFound.text14", "Talk page is suitable for sending text messages and text chatting.")}
         </p>
       </div>
+      <div className="pageDescriptionContent">
+        <div>
+          <strong>
+            watakura your site
+          </strong>
+          </div>
+        <p>
+          <a 
+            href={'https://wpsite.watakura.xyz'}
+            rel="noopener noreferrer" target="_blank"
+          >
+            watakura your site
+          </a>
+          {' '}
+          enables you to create your site or blog.
+        </p>
+      </div>
     </div>
   );
 

@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
+import Backdrop from '../../Backdrop/Backdrop';
 import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
+import SmallModal from '../../Modal/SmallModal';
+import GroupUpload from '../GroupUpload/GroupUpload';
 
 import { authPageLink, authSignupPageLink } from '../../../App';
+
+import classes from './GroupTalkTextInput.module.css';
 
 const GroupTalkTextInput = props => {
   // console.log('GroupTalkTextInput.js-props', props);
 
   const [t] = useTranslation('translation');
+  
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const showUploadModalHandler = (value) => {
+    setShowUploadModal(value);
+  };
 
   let inputBody;
   if (props.isAuth && props.isMember) {
@@ -45,8 +56,30 @@ const GroupTalkTextInput = props => {
         >
           {t('general.text26', 'Send')}
         </Button>
+        <Button mode="" type=""
+          onClick={() => { showUploadModalHandler(true); }}
+        >
+          {t('talkUpload01', 'upload file')}
+        </Button>
       </div>
 
+      {showUploadModal && (
+          <div>
+            <Backdrop onClick={() => { showUploadModalHandler(false); }}/>
+            <SmallModal style={classes.uploadModal}>
+              <GroupUpload
+                showUploadModalHandler={showUploadModalHandler}
+                // textInput={props.textInput}
+                // noconnectDestUserId={props.noconnectDestUserId}
+                // noconnectTextPostHandler={props.noconnectTextPostHandler}
+                
+                joinGroupId={props.joinGroupId}
+                groupTextPostHandler={props.groupTextPostHandler}
+                isTextPosting={props.isTextPosting}
+              />
+            </SmallModal>
+          </div>
+        )}
       {/* {props.showGroupTextInputElement ?
           <div
             className="groupTalk__showInputButton"
