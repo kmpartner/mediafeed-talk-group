@@ -4,9 +4,11 @@ const { authUserId } = require('./util/auth');
 import { Error } from 'mongoose';
 
 //// interface import
-import { groupElement } from './server';
+import { groupElement, GroupTextInfo } from './server';
 
 const GroupVisit = require('./models/group-visit');
+
+const { createReturnPost } = require('./util/file-upload-utils');
 
 
 exports.handleEditGroup = (socket: any) => {
@@ -300,8 +302,18 @@ exports.handleGetGroup = (socket: any) => {
         // members: group.members,
     }
 
+    const fileUrlsTalks = groupInfo.talks.map((talk: GroupTextInfo) => {
+      return createReturnPost(talk);
+    });
+
+    const fileUrlsGroupObj = {
+      ...groupObj,
+      talks: fileUrlsTalks,
+    }
+
     socket.emit('update-group', {
-      group: groupObj,
+        // group: groupObj,
+        group: fileUrlsGroupObj,
     });
 
     // console.log('groupInfo', groupInfo);
