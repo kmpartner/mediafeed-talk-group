@@ -67,20 +67,38 @@ const GroupTalkTextFile = (props) => {
 
     if (isImageFile(fileExt)) {
       if (!showSepImage) {
-        fileImageBody = (
-          <div 
-            onClick={() => {
-              setShowSepImageHandler(true);
-            }}
-          >
-            <Img className={classes.textTalkFileImage}
-            // style={{ maxWidth: "200px"}} 
-            // src={inputData.fileUrls[0]} 
-            src={fileImageUrl}
-            alt="image in text" 
-            />
-          </div>
-        );
+
+        if (!inputData.fileUrls[0].startsWith('https')) {
+          fileImageBody = (
+            <div
+              onClick={() => {
+                setShowSepImageHandler(true);
+              }}
+            >
+              <img className={classes.textTalkFileImage}
+                // style={{ maxWidth: "200px"}} 
+                // src={inputData.fileUrls[0]} 
+                src={null}
+                alt="image file not found" 
+              />
+            </div>
+          )
+        } else {
+          fileImageBody = (
+            <div 
+              onClick={() => {
+                setShowSepImageHandler(true);
+              }}
+            >
+              <Img className={classes.textTalkFileImage}
+                // style={{ maxWidth: "200px"}} 
+                // src={inputData.fileUrls[0]} 
+                src={fileImageUrl}
+                alt="image in text" 
+              />
+            </div>
+          );
+        }
       }
 
       if (showSepImage) {
