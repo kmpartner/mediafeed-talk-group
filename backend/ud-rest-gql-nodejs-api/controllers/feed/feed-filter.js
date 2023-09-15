@@ -10,6 +10,9 @@ const UserReaction = require('../../models/feed/user-reaction');
 const FilteredPosts = require('../../models/feed/filtered-posts');
 const UserRecentVisit = require('../../models/user/user-recent-visit');
 
+// const Redis = require('redis');
+const { createClient } = require('redis');
+
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
 aws.config.update({
@@ -21,7 +24,7 @@ aws.config.update({
 const s3 = new aws.S3();
 
 const getMostVisitPosts = async (req, res, next) => {
-  // console.log("req.query in getPosts", req.query);
+  console.log("req.query in getMostVisitPosts", req.query);
   // const currentPage = req.query.page || 1;
   // const perPage = 20;
   // const loadLimit = 10000;
@@ -37,6 +40,11 @@ const getMostVisitPosts = async (req, res, next) => {
 
 
   try {
+    if (req.redisCachedData && req.redisCachedData.posts && 
+      req.redisCachedData.posts.length > 0
+    ) {
+      return res.status(200).json(req.redisCachedData);
+    }
 
     let mostVisitPosts = await FilteredPosts.findOne({ name: 'mostVisitPosts' });
 
@@ -56,6 +64,62 @@ const getMostVisitPosts = async (req, res, next) => {
       totalItems: mostVisitPosts.posts.length,
     });
 
+
+    //// store data in redis for cache
+    if (req.redisKey) {
+      // const redisClient = await connectRedis();
+
+      const redisHost = process.env.REDIS_HOST;
+      const redisClient = createClient({
+          url: `redis://@${redisHost}:6379`
+      });
+
+      redisClient.on("error", function(error) {
+        console.error(error);
+        redisClient.quit();
+        return;
+      });
+
+      redisClient.on("connect", async function(connect) {
+        if (redisClient) {
+
+          redisClient.get(req.redisKey, function(err, data) {
+            console.log(data);
+          });
+          
+          redisClient.setex(
+            req.redisKey, 
+            60*60, 
+            JSON.stringify({
+              message: "Fetched most visit posts successfully. cs",
+              posts: mostVisitPosts.posts,
+              totalItems: mostVisitPosts.posts.length,
+            }),
+          );
+
+          redisClient.quit();
+
+          // redisClient.set(
+          //   req.redisKey, 
+          //   JSON.stringify({
+          //     message: "Fetched most visit posts successfully. cs",
+          //     posts: mostVisitPosts.posts,
+          //     totalItems: mostVisitPosts.posts.length,
+          //   }),
+          //   'EX',
+          //   10
+          //   // {
+          //   //   EX: 60*60, // expire second
+          //   //   NX: true,  // set a key when not exist in redis
+          //   // }
+          // );
+    
+          // await redisClient.disconnect();
+        }
+      })
+  
+    }
+
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -67,7 +131,6 @@ const getMostVisitPosts = async (req, res, next) => {
 
 const createMostVisitPosts = async (req, res, next) => {
   try {
-
     let popularPosts = await Post.find({ public: "public" })
       .sort({ totalVisit: -1 })
       // .skip((currentPage - 1) * perPage)
@@ -241,6 +304,13 @@ const createReturnPosts = (posts) => {
 
 const getMostReactionPosts = async (req, res, next) => {
   try {
+
+    if (req.redisCachedData && req.redisCachedData.posts && 
+          req.redisCachedData.posts.length > 0
+      ) {
+      return res.status(200).json(req.redisCachedData);
+    }
+
       const type = req.query.type;
       // console.log('type', type);
 
@@ -267,6 +337,62 @@ const getMostReactionPosts = async (req, res, next) => {
         totalItems: mostLikePosts.posts.length,
       });
       // res.status(200).json({message: 'most like posts get success', data: { posts: mostLikePosts.posts } });
+
+
+      if (req.redisKey) {
+        //// store data in redis for cache
+        // const redisClient = await connectRedis();
+
+        const redisHost = process.env.REDIS_HOST;
+        const redisClient = createClient({
+            url: `redis://@${redisHost}:6379`
+        });
+
+        redisClient.on("error", function(error) {
+          console.error(error);
+          redisClient.quit();
+          return;
+        });
+
+        redisClient.on("connect", async function(connect) {
+          if (redisClient) {
+  
+            redisClient.get(req.redisKey, function(err, data) {
+              console.log(data);
+            });
+            
+            redisClient.setex(
+              req.redisKey, 
+              60*60, 
+              JSON.stringify({
+                message: `Fetched most ${type} posts successfully. cs`,
+                posts: mostLikePosts.posts,
+                totalItems: mostLikePosts.posts.length,
+              }),
+            );
+  
+            redisClient.quit();
+  
+  
+            // const redisSetResult = await redisClient.set(
+            //   req.redisKey,
+            //   JSON.stringify({
+            //     message: `Fetched most ${type} posts successfully. cs`,
+            //     posts: mostLikePosts.posts,
+            //     totalItems: mostLikePosts.posts.length,
+            //   }),
+            //   {
+            //     EX: 60*60, // expire second
+            //     // EX: 10,
+            //     NX: true,  // set a key when not exist in redis
+            //   }
+            // );
+    
+            // await redisClient.disconnect();
+          }
+        });
+
+      }
 
   } catch (err) {
     if (!err.statusCode) {

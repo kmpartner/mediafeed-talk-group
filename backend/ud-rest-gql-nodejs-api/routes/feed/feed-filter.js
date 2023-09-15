@@ -5,6 +5,7 @@ const { body } = require('express-validator');
 const feedFilterController = require('../../controllers/feed/feed-filter');
 // const isAuth = require('../middleware/is-auth');
 const isAuth = require('../../middleware/is-auth');
+const redisCacheCheck = require('../../middleware/redis-cache-check');
 
 const router = express.Router();
 
@@ -15,9 +16,14 @@ const router = express.Router();
 router.get(
     '/most-visit-posts', 
     // isAuth, 
+    redisCacheCheck,
     feedFilterController.getMostVisitPosts
 );
 
-router.get('/most-reaction-posts', feedFilterController.getMostReactionPosts);
+router.get(
+    '/most-reaction-posts', 
+    redisCacheCheck,
+    feedFilterController.getMostReactionPosts
+);
 
 module.exports = router;
