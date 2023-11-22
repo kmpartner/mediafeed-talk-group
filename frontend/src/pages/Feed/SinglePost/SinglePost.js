@@ -33,10 +33,15 @@ import { getPostFavoriteUserList } from '../../../util/follow';
 
 import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
+
+import { marks } from '../../../images/marks';
+import { marksIonicon } from '../../../images/marksIonicon';
 import './SinglePost.css';
 
 import SinglePostAd from './SinglePostAd';
-import AdElementDisplay from '../../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+
+import ShareButtons from '../../../components/Share/ShareButtons';
+// import AdElementDisplay from '../../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 // import GetWindowData from '../../../components/UI/getWindowData';
 // import GroupRightElements from '../../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
 // import GroupTopElements from '../../../components/GroupTalk/GroupAdElements/GroupTopElements/GroupTopElements';
@@ -469,16 +474,23 @@ class SinglePost extends Component {
       shareElement = (
         <div>
             <div className="single-post__shareElementTitle" onClick={this.showShareElementHandler}>
-              {t('feed.text30', 'Share This Post')} &#9662;
+            {marks.shareAltMark} {t('feed.text30', 'Share This Post')} &#9662;
             </div>
             <div className="single-post__shareElementContainer">
-              {this.state.showShareElement ? 
-                <a className="single-post__shareElement" href={`https://twitter.com/intent/tweet?text=post link: https://watakura.xyz/feed/${this.props.match.params.postId}`}
-                  target="_blank" rel="noreferrer noopener"
-                >
-                  <img src={twitterButton} height="40"></img>
-                </a>
-                : null
+              {this.state.showShareElement && 
+                <span>                
+                  <ShareButtons
+                    linkUrl={window.location.href}
+                    content={'share this one'}
+                    iconSize={40} 
+                    iconRound={true}
+                  />
+                  {/* <a className="single-post__shareElement" href={`https://twitter.com/intent/tweet?text=post link: https://watakura.xyz/feed/${this.props.match.params.postId}`}
+                    target="_blank" rel="noreferrer noopener"
+                  >
+                    <img src={twitterButton} height="40"></img>
+                  </a> */}
+                </span>
               }
   
               {this.state.showShareElement && this.state.geolocation && this.props.isAuth && 
