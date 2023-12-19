@@ -63,15 +63,18 @@ import {
 } from 'react-share';
 
 import { useStore } from "../../hook-store/store";
+
+import { marks } from "../../images/marks";
 import "./ShareButtons.css";
 
 const ShareButtons = (props) => {
   const { 
     linkUrl, 
+    showLink,
     content, 
     iconSize, 
     iconRound, 
-    iconRadius 
+    iconRadius,
   } = props;
 
   const [store, dispatch] = useStore();
@@ -81,15 +84,60 @@ const ShareButtons = (props) => {
   const size = iconSize || 60;
   const round = iconRound || false;
 
+  const [linkClicked, setLinkClicked] = useState(false);
 
   // const handleEmailOnClick = () => {
   //   window.location.href = encodeURI(`mailto:?subject=Subject Here&body=Hi,\n\nYou Can bla Bla bla`);
   // };
+  const linkCopyHandler = (copyText) => {
+    navigator.clipboard.writeText(copyText);
 
-  let singlePostShareBody;
+    setLinkClicked(true);
 
-  singlePostShareBody = (
-    <div className="shareButtonsContainer">
+    setTimeout(() => {
+      setLinkClicked(false);
+    }, 1000*3)
+  };
+
+  let displayLink
+
+  if (shareUrl) {
+    displayLink = shareUrl.slice(0, 25) + '....'
+  }
+
+
+  let shareButtonsBody;
+
+  shareButtonsBody = (
+    <div>
+      {showLink && (
+        <div>
+          {linkClicked && (
+            <div className="shareButtonsLinkCopyResult">
+              copied
+            </div>
+          )}
+          <div className="shareButtonsLinkContainer">
+              <span>
+                {/* <div>
+                  Link
+                </div> */}
+                <div title={shareUrl}>
+                  {displayLink} 
+                </div>
+              </span>
+              <span className="shareButtonsLinkCopyButton"
+                title="copy" 
+                onClick={() => {
+                  linkCopyHandler(shareUrl);
+                }}
+              >
+                {marks.copyMark}
+              </span>
+          </div>
+        </div>
+      )}
+      <div className="shareButtonsContainer">
         <FacebookShareButton
           url={shareUrl}
           quote={`${postContent}`}
@@ -249,13 +297,14 @@ const ShareButtons = (props) => {
         >
           <EmailIcon size={size} round={round} />
         </EmailShareButton>
+      </div>
     </div>
   );
   
 
   return (
     <Fragment>
-      {singlePostShareBody}
+      {shareButtonsBody}
 
     </Fragment>
   );

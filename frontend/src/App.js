@@ -40,6 +40,7 @@ import GetAd from './components/GroupTalk/GroupAdElements/GetAds/GetAds';
 import GetWindowData from './components/UI/getWindowData';
 
 import HeadMetaTag from './components/UI/HeadMetaTag';
+import SharePage from './pages/SharePage/SharePage';
 
 import './App.css';
 
@@ -84,7 +85,7 @@ export const ADNETWORK_URL = process.env.REACT_APP_DEV_BASE_URL;
 export const ADNETWORKLINK_URL = process.env.REACT_APP_DEV_ADNETWORKLINK_URL;
 export const LIVE_URL = process.env.REACT_APP_DEV_LIVE_URL;
 export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
-
+export const SHAREURLS = ['http://localhost:8503', 'http://localhost:8504','http://localhost:8505'];
 
 //// test-deploy urls (use canary services in backend)  
 //// Don't Forget update servicewoker file for build
@@ -101,7 +102,7 @@ export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 // export const ADNETWORKLINK_URL = process.env.REACT_APP_ADNETWORKLINK_URL;
 // export const LIVE_URL = process.env.REACT_APP_TEST_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
-
+// export const SHAREURLS = ['https://do-bucket-image-photo-app-test.web.app', ];
 
 //// do urls deploy  Don't Forget update servicewoker file for build
 // export const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -117,7 +118,7 @@ export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 // export const ADNETWORKLINK_URL = process.env.REACT_APP_ADNETWORKLINK_URL;
 // export const LIVE_URL = process.env.REACT_APP_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
-
+// export const SHAREURLS = ['https://kura-image-photo.spaceeight.net',];
 
 // export let BASE_URL;
 // export let GQL_URL;
@@ -813,6 +814,12 @@ class App extends Component {
             <LivePost {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
           )}
         />
+        <Route
+          path="/share"
+          render={props => (
+            <SharePage {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
+          )}
+        />
         {/* <Route
           path="/"
           exact
@@ -898,6 +905,12 @@ class App extends Component {
           path="/livepost"
           render={props => (
             <LivePost {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
+          )}
+        />
+        <Route
+          path="/share"
+          render={props => (
+            <SharePage {...props} userId={this.state.userId} token={this.state.token} isAuth={this.state.isAuth} />
           )}
         />
           {/* <Route

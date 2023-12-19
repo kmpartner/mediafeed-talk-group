@@ -7,9 +7,11 @@ import App from './App';
 
 import configureUiStore from './hook-store/ui-store';
 import configureAdStore from './hook-store/ad-store';
+import configureShareStore from './hook-store/share-store';
 
 configureUiStore();
 configureAdStore();
+configureShareStore();
 
 ReactDOM.render(
   <BrowserRouter>

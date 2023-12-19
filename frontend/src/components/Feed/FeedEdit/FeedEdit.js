@@ -102,6 +102,8 @@ class FeedEdit extends Component {
     formInputChanged: false,
     imageUploading: false,
     embedUrlValue: '',
+
+    isSharePostStart: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -367,6 +369,11 @@ class FeedEdit extends Component {
         }
       }
 
+
+      if (this.state.isSharePostStart) {
+        updatedForm.image.valid = true;
+      }
+
       let formIsValid = true;
       for (const inputName in updatedForm) {
         formIsValid = formIsValid && updatedForm[inputName].valid;
@@ -546,8 +553,21 @@ class FeedEdit extends Component {
 
 
   render() {
-    const { t } = this.props;
+    const { t, shareFile } = this.props;
 
+
+    //// handle share file input
+    // if (shareFile && !this.state.postForm.image.value) {
+    //   this.postInputChangeHandler('image', '', [shareFile]);
+    // }
+
+    if (shareFile && !this.state.isSharePostStart) {
+      this.setState({ isSharePostStart: true }, () => {
+        this.postInputChangeHandler('image', '', [shareFile]);
+      })
+    }
+
+    
 
     let imagePreviewBody;
     // console.log(this.state.imagePreview);
@@ -738,12 +758,22 @@ class FeedEdit extends Component {
               value={this.state.postForm['title'].value}
             />
 
-            <FeedEditSelectFile 
-              postInputChangeHandler={this.postInputChangeHandler}
-              inputBlurHandler={this.inputBlurHandler}
-              state={this.state}
-              embedUrlChangeHandler={this.embedUrlChangeHandler}
-            />
+            {!shareFile && (
+              <FeedEditSelectFile 
+                postInputChangeHandler={this.postInputChangeHandler}
+                inputBlurHandler={this.inputBlurHandler}
+                state={this.state}
+                embedUrlChangeHandler={this.embedUrlChangeHandler}
+              />
+            )}
+
+            {/* {shareFile && (
+              <img 
+                style={{ maxHeight: "150px", maxWidth: "150px"}}
+                src={URL.createObjectURL(shareFile)}
+                alt='share file preview'
+              />
+            )} */}
 
             {/* <div className="new-post__preview-image">
               {imagePreviewBody}

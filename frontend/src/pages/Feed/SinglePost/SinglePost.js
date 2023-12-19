@@ -484,6 +484,7 @@ class SinglePost extends Component {
                     content={'share this one'}
                     iconSize={40} 
                     iconRound={true}
+                    showLink={true}
                   />
                   {/* <a className="single-post__shareElement" href={`https://twitter.com/intent/tweet?text=post link: https://watakura.xyz/feed/${this.props.match.params.postId}`}
                     target="_blank" rel="noreferrer noopener"
