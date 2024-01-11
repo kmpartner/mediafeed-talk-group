@@ -18,9 +18,15 @@ import { letterBlocks } from '../../../util/color-style';
 const GroupList = (props) => {
   console.log('grouplist.js props', props);
 
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  const shareGroupIdParam = queryParams.get('shareGroupId');
+  const shareFileTypeParam = queryParams.get('shareFileType');
+
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
+  const { shareFile } = store.shareStore;
   // console.log('store in groupList.js', store);
 
   const [selectedSuggest, setSelectedSuggest] = useState(null);
@@ -107,6 +113,20 @@ const GroupList = (props) => {
   },[props.groupList]);
 
 
+  useEffect(() => {
+    if (shareFile && shareGroupIdParam) {
+      props.showGroupTalkTextHandler(
+        shareGroupIdParam, 
+        shareGroupIdParam,
+        shareFileTypeParam,
+      );
+      props.getGroupInfoHandler(shareGroupIdParam); 
+      // props.addVisitGroupIdHandler(
+      //   group.groupRoomId,
+      //   group.creatorUserId,
+      // );
+    }
+  },[shareFile, shareGroupIdParam]);
   // const getSuggestList = (list) => {
   //   setSuggestList(list);
   // }

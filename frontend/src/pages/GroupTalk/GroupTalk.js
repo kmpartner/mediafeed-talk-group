@@ -771,9 +771,13 @@ const GroupTalk = (props) => {
     setIsMember(memberState);
   };
 
-  const showGroupTalkTextHandler = (groupRoomId) => {
+  const showGroupTalkTextHandler = (groupRoomId, shareGroupId, shareFileType) => {
     if (!showGroupTalkText) {
-      props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}`);
+      if (shareGroupId && shareFileType) {
+        props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}&shareGroupId=${shareGroupId}&shareFileType=${shareFileType}`);  
+      } else {
+        props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}`);
+      }
       // props.history.push(`/group-talk-page/${groupRoomId}`);
     }
     else {

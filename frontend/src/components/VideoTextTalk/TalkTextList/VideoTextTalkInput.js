@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
 import Backdrop from '../../Backdrop/Backdrop';
@@ -7,18 +7,42 @@ import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
 import SmallModal from '../../Modal/SmallModal';
 import VideoTextTalkUpload from '../TalkUpload/VideoTextTalkUpload';
+import VideoTextTalkShareUpload from '../TalkUpload/VideoTextTalkShareUpload';
+
+import { useStore } from '../../../hook-store/store';
 
 import classes from './VideoTextTalkInput.module.css';
 
 const VideoTextTalkInput = props => {
   // console.log('VideoTextTalkInput.js-props', props);
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  const shareUserIdParam = queryParams.get('shareUserId');
+  // const shareFileTypeParam = queryParams.get('shareFileType');
 
   const [t] = useTranslation('translation');
 
+  const [store, dispatch] = useStore();
+  const { shareFile } = store.shareStore;
+
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showShareUploadModal, setShowShareUploadModal] = useState(false);
+
+
+  useEffect(() => {
+    if (shareUserIdParam && shareFile) {
+      setShowShareUploadModal(true);
+    } else {
+      setShowShareUploadModal(false);
+    }
+  },[shareUserIdParam, shareFile]);
 
   const showUploadModalHandler = (value) => {
     setShowUploadModal(value);
+  };
+
+  const showShareUploadModalHandler = (value) => {
+    setShowShareUploadModal(value);
   };
 
   return (
@@ -76,6 +100,23 @@ const VideoTextTalkInput = props => {
           <SmallModal>small-modal-content</SmallModal>
         )} */}
       </div>
+      
+
+      
+      {shareFile && showShareUploadModal && (
+        <div>
+          <Backdrop onClick={() => { showShareUploadModalHandler(false); }}/>
+            <SmallModal style={classes.uploadModal}>
+              <VideoTextTalkShareUpload
+                showUploadModalHandler={showShareUploadModalHandler}
+                // textInput={props.textInput}
+                noconnectDestUserId={props.noconnectDestUserId}
+                noconnectTextPostHandler={props.noconnectTextPostHandler}
+                isTextPosting={props.isTextPosting}
+              />
+            </SmallModal>
+          </div>
+      )}
     </div>
   );
 }

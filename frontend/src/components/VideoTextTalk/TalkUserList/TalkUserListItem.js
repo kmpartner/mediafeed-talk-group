@@ -71,6 +71,24 @@ const TalkUserListItem = props => {
     }
   }
 
+  const startWriteTextHandler = () => {
+    props.noconnectGetUserDestTalkHandler(element.userId);
+    props.showNoconnectTextTalkHandler();
+    props.noconnectDestUserIdHandler(element.userId);
+
+    addVisitUserIdHandler(element.userId);
+  };
+
+  
+  //// start write text when shareUserId param exist
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  const shareUserIdParam = queryParams.get('shareUserId');
+
+  if (element && element.userId === shareUserIdParam) {
+    startWriteTextHandler();
+  }
+
 
   let talkUserListItemBody
 
@@ -105,11 +123,13 @@ const TalkUserListItem = props => {
       <span>
         <Button design='raised' mode='' size='smaller' 
           onClick={() => {
-            props.noconnectGetUserDestTalkHandler(element.userId);
-            props.showNoconnectTextTalkHandler();
-            props.noconnectDestUserIdHandler(element.userId);
+            // props.noconnectGetUserDestTalkHandler(element.userId);
+            // props.showNoconnectTextTalkHandler();
+            // props.noconnectDestUserIdHandler(element.userId);
 
-            addVisitUserIdHandler(element.userId);
+            // addVisitUserIdHandler(element.userId);
+
+            startWriteTextHandler();
           }}
           disabled={!isAccepted}
         >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
 import Backdrop from '../../Backdrop/Backdrop';
@@ -6,6 +6,9 @@ import Button from '../../Button/Button';
 import InputEmoji from '../../Form/Input/InputEmoji';
 import SmallModal from '../../Modal/SmallModal';
 import GroupUpload from '../GroupUpload/GroupUpload';
+import GroupShareUpload from '../GroupUpload/GroupShareUpload';
+
+import { useStore } from '../../../hook-store/store';
 
 import { authPageLink, authSignupPageLink } from '../../../App';
 
@@ -13,14 +16,37 @@ import classes from './GroupTalkTextInput.module.css';
 
 const GroupTalkTextInput = props => {
   // console.log('GroupTalkTextInput.js-props', props);
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  // const queryGroupId = queryParams.get('groupRoomId');
+  const shareGroupIdParam = queryParams.get('shareGroupId');
+  const shareFileTypeParam = queryParams.get('shareFileType');
+
 
   const [t] = useTranslation('translation');
   
+  const [store, dispatch] = useStore();
+  const { shareFile } = store.shareStore;
+
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showShareUploadModal, setShowShareUploadModal] = useState(false);
+
+  useEffect(() => {
+    if (shareGroupIdParam && shareFileTypeParam && shareFile) {
+      setShowShareUploadModal(true);
+    } else {
+      setShowShareUploadModal(false);
+    }
+  },[shareGroupIdParam, shareFileTypeParam, shareFile]);
 
   const showUploadModalHandler = (value) => {
     setShowUploadModal(value);
   };
+
+  const showShareUploadModalHandler = (value) => {
+    setShowShareUploadModal(value);
+  };
+
 
   let inputBody;
   if (props.isAuth && props.isMember) {
@@ -80,6 +106,24 @@ const GroupTalkTextInput = props => {
             </SmallModal>
           </div>
         )}
+
+      {shareFile && showShareUploadModal && (
+        <div>
+          <Backdrop onClick={() => { showShareUploadModalHandler(false); }}/>
+            <SmallModal style={classes.uploadModal}>
+            <GroupShareUpload
+                showUploadModalHandler={showShareUploadModalHandler}
+                // textInput={props.textInput}
+                // noconnectDestUserId={props.noconnectDestUserId}
+                // noconnectTextPostHandler={props.noconnectTextPostHandler}
+                
+                joinGroupId={props.joinGroupId}
+                groupTextPostHandler={props.groupTextPostHandler}
+                isTextPosting={props.isTextPosting}
+              />
+            </SmallModal>
+          </div>
+      )}
       {/* {props.showGroupTextInputElement ?
           <div
             className="groupTalk__showInputButton"

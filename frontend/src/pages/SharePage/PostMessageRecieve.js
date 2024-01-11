@@ -84,7 +84,7 @@ const PostMessageRecieve = (props) => {
 
     return () => {
       window.removeEventListener('message', messageProcessHandler);
-      dispatch('SET_SHAREFILE', null);
+      // dispatch('SET_SHAREFILE', null);
     }
   }, [isAuth]);
 

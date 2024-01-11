@@ -78,7 +78,8 @@ const GroupTalkTextFile = (props) => {
               <img className={classes.textTalkFileImage}
                 // style={{ maxWidth: "200px"}} 
                 // src={inputData.fileUrls[0]} 
-                src={null}
+                // src={null}
+                src={fileImageUrl}
                 alt="image file not found" 
               />
             </div>

@@ -1,0 +1,7 @@
+
+.sharePageActions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+}

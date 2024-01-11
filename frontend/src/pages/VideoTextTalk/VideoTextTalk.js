@@ -16,6 +16,7 @@ import TalkUserList from '../../components/VideoTextTalk/TalkUserList/TalkUserLi
 import TalkUserListControl from '../../components/VideoTextTalk/TalkUserList/TalkUserListControl/TalkUserListControl';
 import TalkUserListNotify from '../../components/VideoTextTalk/TalkUserList/TalkUserListNotify/TalkUserListNotify';
 import TalkPermission from '../../components/VideoTextTalk/TalkPermission/TalkPermission';
+import TalkShare from '../../components/VideoTextTalk/TalkShare/TalkShare';
 // import TopBarContents from '../../components/GroupTalk/GroupAdElements/GroupTopElements/TopBarContents';
 import VideoTextTalkInput from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkInput';
 import VideoTextTalkTextList from '../../components/VideoTextTalk/TalkTextList/VideoTextTalkTextList';
@@ -800,6 +801,16 @@ const VideoTextTalk = (props) => {
 
   let connectButton;
   if (!userSocketId && userId && userName && usersData.length > 0) {
+    
+    const currentUrl = new URL(window.location.href);
+    const queryParams = currentUrl.searchParams;
+    const shareUserIdParam = queryParams.get('shareUserId');
+
+    //// when shareUserId param exist, go to user list to proceed for user select
+    if (shareUserIdParam && !connectClick) {
+      setConnectClick(true);
+    }
+
     connectButton = (
       <div>
         <Button mode="raised" type="submit" 
@@ -820,6 +831,9 @@ const VideoTextTalk = (props) => {
           )}
         </div>
         
+        {/* <TalkShare 
+          setConnectClick={setConnectClick}
+        /> */}
       </div>
     );
   }

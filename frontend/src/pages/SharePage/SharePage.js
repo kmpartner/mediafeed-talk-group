@@ -8,13 +8,15 @@ import Loader from "../../components/Loader/Loader";
 // import FeedEdit from "../../components/Feed/FeedEdit/FeedEdit";
 import PostMessageRecieve from "./PostMessageRecieve";
 import SharePageFeed from "./SharePageFeed";
+import SharePageTalk from './SharePageTalk';
+import SharePageGroup from "./SharePageGroup";
 
 import { useStore } from "../../hook-store/store";
 // import { getUserDataForStore } from "../../util/user";
 
 
-import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
-
+// import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
+import classes from './SharePage.module.css';
 
 const SharePage = (props) => {
   // console.log('PostMessageRecieve-props', props);
@@ -47,15 +49,23 @@ const SharePage = (props) => {
           isAuth={isAuth}
         />
 
-        <div>
-          {shareFile && (
+        {shareFile && (
+          <div className={classes.sharePageActions}>
             <Button design="raised" type="submit" 
             onClick={() => { setIsFeedHandler(true); }}
             >
               Post image to feed
             </Button>
-          )}
-        </div>
+            <SharePageTalk 
+              isAuth={isAuth}
+              history={history}
+            />
+            <SharePageGroup
+              isAuth={isAuth}
+              history={history}
+            />
+          </div>
+        )}
 
 
         {shareFile && isFeedPost && (
