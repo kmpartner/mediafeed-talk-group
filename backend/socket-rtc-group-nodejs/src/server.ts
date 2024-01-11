@@ -19,6 +19,7 @@ const GroupConnection = require('./models/group-connection');
 const groupTalkRoutes = require('./routes/group-talk');
 const groupPushRoutes = require('./routes/group-push');
 const fileUploadRoutes = require('./routes/file-upload');
+const groupUserRoutes = require('./routes/group-user');
 
 const { authUserId } = require('./util/auth');
 
@@ -201,6 +202,7 @@ export class Server {
     this.app.use('/group-talk', groupTalkRoutes);
     this.app.use('/group-push', groupPushRoutes);
     this.app.use('/file-upload', fileUploadRoutes);
+    this.app.use('/group-user', groupUserRoutes);
 
     // this.app.get("/", (req, res) => {
     //   res.sendFile("index.html");
