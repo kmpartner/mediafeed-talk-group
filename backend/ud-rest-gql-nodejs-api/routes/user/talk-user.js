@@ -13,4 +13,14 @@ router.get('/talk-accepted-users',
   talkUserController.getTalkAcceptedUsers,
 );
 
+router.get('/talk-permission-users', 
+  isAuth, 
+  talkUserController.getTalkPermissionUsers,
+);
+
+router.get('/talk-display-users', 
+  isAuth, 
+  talkUserController.getTalkDisplayUsers,
+);
+
 module.exports = router;
