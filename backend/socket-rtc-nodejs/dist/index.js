@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require('mongoose');
 const server_1 = require("./server");
 const db = require('./db');
+const { deleteOldMediaFiles } = require('./util/file-old-delete');
 require('dotenv').config();
 const server = new server_1.Server();
 // server.listen(port => {
@@ -16,6 +17,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONG
     // const listen = server.listen(port => {
     //   console.log(`Server is listening on http://localhost:${port}, sr-talk`);
     //  });
+    //// deleteOldMediaFiles();
     db.initDb((err, db) => {
         if (err) {
             console.log(err);

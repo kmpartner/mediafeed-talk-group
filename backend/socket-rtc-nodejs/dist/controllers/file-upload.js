@@ -13,7 +13,7 @@ const fs = require('fs');
 // const path = require('path');
 const fetch = require('node-fetch');
 require('dotenv').config();
-const { s3Upload, s3DeleteMany, clearImage, createSmallImage, makeModifiedPath, resizeVideo, getVideoInfo, } = require('../util/file-upload-utils');
+const { s3Upload, s3DeleteMany, clearImage, createSmallImage, makeModifiedPath, resizeVideo, getVideoInfo, createThumbnail, } = require('../util/file-upload-utils');
 const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('req.body', req.body);
@@ -53,6 +53,7 @@ const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         // const files = [req.file];
         const fileUrls = [];
         const miniFileUrls = [];
+        const fileSizes = [];
         // const error = new Error('not authorized!');
         // // error.statusCode = 403;
         // throw error;
@@ -71,6 +72,10 @@ const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             if (file.mimetype.split('/')[0] === 'video' || file.mimetype.split('/')[0] === 'audio') {
                 const videoPath = yield videoUpload(file);
                 fileUrls.push(videoPath);
+                fileSizes.push({
+                    filePath: videoPath,
+                    fileSize: file.size,
+                });
             }
             // if (file.mimetype.split('/')[0] === 'audio') {
             //   const audioPath = await audioUpload(file);
@@ -79,12 +84,18 @@ const fileUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             else {
                 yield otherUpload(file);
                 fileUrls.push(file.path);
+                fileSizes.push({
+                    filePath: file.path,
+                    fileSize: file.size,
+                });
             }
         }
         //// return file paths for emit data
         const returnData = {
             fileUrls: fileUrls,
+            fileSizes: fileSizes,
         };
+        console.log('returnData', returnData);
         res.status(200).json({ message: 'file uploaded', data: returnData });
     }
     catch (err) {
@@ -219,6 +230,7 @@ const videoUpload = (file) => __awaiter(void 0, void 0, void 0, function* () {
     const videoLength = 90;
     const audioLength = 150;
     let resizedVideo;
+    let thumbnailPath;
     const resizedPath = makeModifiedPath(file.path, 'resize');
     if (file.mimetype.split('/')[0] === 'audio') {
         resizedVideo = yield resizeVideo(file.path, resizedPath, audioLength, 1);
@@ -248,6 +260,16 @@ const videoUpload = (file) => __awaiter(void 0, void 0, void 0, function* () {
                 resizedVideo = yield resizeVideo(file.path, resizedPath, videoLength, 270);
             }
         }
+        // //// create thumbnail for later replace
+        // const fileName = file.path.split("/")[file.path.split("/").length - 1];
+        // const noExtFileName = path.parse(fileName).name;
+        // const ext = path.parse(fileName).ext;
+        // let pathForThumbnailList = file.path.split('/');
+        // pathForThumbnailList.pop();
+        // const thumbnailFolderPath = pathForThumbnailList.join('/');
+        // const thumbnailFileName = noExtFileName + '-thumbnail' + '.jpg';
+        // thumbnailPath = thumbnailFolderPath + '/' + thumbnailFileName;   
+        // await createThumbnail(file.path, thumbnailFileName, thumbnailFolderPath);
     }
     if (resizedVideo) {
         const resizedInfo = yield getVideoInfo(resizedPath);
@@ -285,11 +307,20 @@ const videoUpload = (file) => __awaiter(void 0, void 0, void 0, function* () {
             Key: `${resizedPath}`
         };
     }
+    // var paramsThumbnail = {
+    //   // ACL: "public-read",
+    //   Bucket: process.env.DO_SPACE_BUCKET_NAME,
+    //   Body: fs.createReadStream(thumbnailPath),
+    //   //   ContentType: 'image/jpeg',
+    //   Key: `${thumbnailPath}`,
+    // };
     //// upload files 
     if (!process.env.S3NOTUSE) {
         yield s3Upload(params);
+        // await s3Upload(paramsThumbnail);
         // await s3Upload(paramsModify);
         clearImage(file.path);
+        // clearImage(thumbnailPath);
         if (resizedVideo) {
             clearImage(resizedPath);
         }

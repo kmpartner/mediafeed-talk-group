@@ -44,6 +44,10 @@ const textSchema = {
     filePaths: [{
             type: String,
         }],
+    fileSizes: [{
+            filePath: { type: String },
+            fileSize: { type: Number },
+        }],
 };
 const textTalkSchema = Schema({
     userId: {

@@ -10,6 +10,9 @@ const fileStorage = multer.diskStorage({
         cb(null, new Date().toISOString() + `-${Math.floor(Math.random() * Math.pow(10, 6)).toString()}crid-` + file.originalname);
     }
 });
+// const acceptImageExt = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
+// const acceptVideoExt = ['.mp4', '.webm'];
+// const acceptAudioExt = ['.mp3', '.wav', '.weba'];
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
@@ -33,10 +36,12 @@ const fileFilter = (req, file, cb) => {
 const multerLimits = {
     fileSize: process.env.MULTER_SIZE_LIMIT_MB
         ? Math.pow(10, 6) * Number(process.env.MULTER_SIZE_LIMIT_MB)
-        : 1024 * 1024 * 5
+        : 1024 * 1024 * 100
 };
 exports.filesUpload = multer({
     storage: fileStorage,
+    limits: multerLimits,
+    fileFilter: fileFilter
 }).array('files', 1);
 exports.fileUpload = multer({
     storage: fileStorage,

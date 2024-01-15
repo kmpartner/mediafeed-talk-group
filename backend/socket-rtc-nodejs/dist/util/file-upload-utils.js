@@ -15,6 +15,11 @@ const aws = require('aws-sdk');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpeg_static = require('ffmpeg-static');
 const gm = require('gm');
+// const {
+//   acceptAudioExt,
+//   acceptImageExt,
+//   acceptVideoExt,
+// } = require('../middleware/multer');
 require('dotenv').config();
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -76,25 +81,24 @@ const clearImage = (filePath) => {
     // console.log('filePath', filePath);
     fs.unlink(filePath, (err) => console.log(err));
 };
-const acceptImageExt = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
-const acceptVideoExt = ['.mp4', '.webm'];
-const acceptAudioExt = ['.mp3', '.wav', '.weba'];
-const isAudioFile = (fileName) => {
-    // const fileNameArray = fileName.split('.');
-    const ext = path.parse(fileName).ext;
-    // console.log('fileName, ext', fileName, ext);
-    let matchType;
-    if (ext) {
-        matchType = acceptAudioExt.find(type => type === ext.toLowerCase());
-    }
-    // console.log(matchType);
-    if (matchType) {
-        return true;
-    }
-    else {
-        return false;
-    }
-};
+// const acceptImageExt = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
+// const acceptVideoExt = ['.mp4', '.webm'];
+// const acceptAudioExt = ['.mp3', '.wav', '.weba'];
+// const isAudioFile = (fileName: string) => {
+//   // const fileNameArray = fileName.split('.');
+//   const ext = path.parse(fileName).ext;
+//   // console.log('fileName, ext', fileName, ext);
+//   let matchType;
+//   if (ext) {
+//     matchType = acceptAudioExt.find((type: string) => type === ext.toLowerCase());
+//   }
+//   // console.log(matchType);
+//   if (matchType) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// };
 const createSmallImage = (imageUrl, modifiedImageUrl) => {
     console.log(imageUrl, modifiedImageUrl);
     return new Promise((resolve, reject) => {
@@ -152,6 +156,30 @@ const resizeVideo = (imageUrl, modifiedImageUrl, duration, width) => {
             .saveToFile(modifiedImageUrl);
     });
 };
+const createThumbnail = (imageUrl, filename, distFolderPath) => {
+    return new Promise((resolve, reject) => {
+        ffmpeg(imageUrl)
+            // setup event handlers
+            // .on('filenames', function(filename) {
+            //     console.log('screenshots are ' + filenames.join(', '));
+            // })
+            .on('end', function () {
+            console.log('screenshots were saved');
+            resolve({ message: 'screenshots were saved' });
+        })
+            .on('error', function (err) {
+            console.log('an error happened: ' + err.message);
+            reject({ message: "error occured " + err });
+        })
+            // take 2 screenshots at predefined timemarks and size
+            .takeScreenshots({
+            count: 1,
+            filename: filename,
+            timemarks: ['50%'],
+            size: '?x100'
+        }, distFolderPath);
+    });
+};
 const getVideoInfo = (imageUrl) => {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(imageUrl, (error, videoInfo) => {
@@ -200,9 +228,10 @@ module.exports = {
     s3Upload,
     s3DeleteMany,
     clearImage,
-    isAudioFile,
+    // isAudioFile,
     createSmallImage,
     resizeVideo,
+    createThumbnail,
     getVideoInfo,
     makeModifiedPath,
     createReturnPost,
