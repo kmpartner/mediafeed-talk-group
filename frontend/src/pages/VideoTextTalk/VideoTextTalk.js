@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
 import openSocket from 'socket.io-client';
 import Img from "react-cool-img";
+import _ from 'lodash';
 
 import WebStream from './WebStream';
 
@@ -25,12 +26,18 @@ import VideoTextTalkSocket from './VideoTextTalkSocket';
 import { getUserData, getUserDataForStore, getUsers, getUserLocation, updateUserColor } from '../../util/user';
 import { getLocalTimeElements } from '../../util/timeFormat';
 import { getRandomBgColor } from '../../util/color-style';
-
 import { 
   storeDraftInput, 
   getDraftInput, 
   deleteDraftInput 
 } from '../../util/style';
+
+import { 
+  getTalkPermissionUsers,
+  getTalkSuggestUsers,
+  getTalkDisplayUsers,
+ } from '../../util/talk/talk-user';
+
 import { useStore } from '../../hook-store/store';
 
 import { GQL_URL, BASE_URL, SOCKET_URL, SOCKET_SURL, PUSH_URL } from '../../App';
@@ -44,6 +51,7 @@ import SampleImage from '../../components/Image/person-icon-50.jpg';
 // import "firebase/firestore";
 
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
+import TalkUserListControlQRCode from '../../components/VideoTextTalk/TalkUserList/TalkUserListControl/TaklUserListControlQRCode';
 // import TalkRightElements from '../../components/VideoTextTalk/TalkRightElements/TalkRightElements';
 
 
@@ -210,14 +218,30 @@ const VideoTextTalk = (props) => {
       if (store.usersData.length === 0) {
         setIsLoading(true);
         
-        getUsers(BASE_URL, localStorage.getItem('token'))
+        // getUsers(BASE_URL, localStorage.getItem('token'))
+        // .then(result => {
+        //   console.log(result);
+        //   setUsersData(result.usersData);
+  
+        //   dispatch('SET_USERSDATA', result.usersData);
+  
+        //   setIsLoading(false);
+        // })
+
+        let userList = [];
+        
+        getTalkDisplayUsers(BASE_URL, localStorage.getItem('token'))
         .then(result => {
           console.log(result);
-          setUsersData(result.usersData);
+
+          userList = result.data;
+
+          setUsersData(userList);
   
-          dispatch('SET_USERSDATA', result.usersData);
+          dispatch('SET_USERSDATA', userList);
   
-          setIsLoading(false);
+          // setIsLoading(false);
+
         })
         .catch(err => {
           console.log(err);

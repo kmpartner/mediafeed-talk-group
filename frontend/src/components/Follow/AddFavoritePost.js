@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
-import Button from '../../components/Button/Button'
+import Button from '../Button/Button'
 import Loader from '../Loader/Loader';
 import {
   getUserLocation,

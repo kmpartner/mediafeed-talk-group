@@ -3,8 +3,8 @@ import { useEffect, useState, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next/hooks';
 
-import Button from '../../components/Button/Button';
-import Loader from '../../components/Loader/Loader';
+import Button from '../Button/Button';
+import Loader from '../Loader/Loader';
 import { useStore } from '../../hook-store/store';
 
 import classes from './LiveEmbed.module.css';

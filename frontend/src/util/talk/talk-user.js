@@ -23,3 +23,57 @@ export const getTalkAcceptedUsers = async (url, token) => {
     throw err;
   }
 };
+
+
+export const getTalkPermissionUsers = async (url, token) => {
+  try {
+    const result = await fetch(url + '/talk-user/talk-permission-users', {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const resData = await result.json();
+
+    console.log(result, resData);
+    // dispatch('SET_TALKPERMISSION', resData.data);
+
+    if (!result.ok) {
+      throw new Error('error occured');
+    }
+
+    return resData;
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+
+export const getTalkDisplayUsers = async (url, token) => {
+  try {
+    const result = await fetch(url + '/talk-user/talk-display-users', {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    const resData = await result.json();
+
+    console.log(result, resData);
+    // dispatch('SET_TALKPERMISSION', resData.data);
+
+    if (!result.ok) {
+      throw new Error('error occured');
+    }
+
+    return resData;
+  } catch(err) {
+    console.log(err);
+    throw err;
+  }
+};
