@@ -7,9 +7,11 @@ import openSocket from 'socket.io-client';
 // import WebStream from './WebStream';
 
 import { useStore } from '../../hook-store/store';
+import { getUsersForGroup } from '../../util/user';
 
 import { 
   SOCKET_GROUP_SURL, 
+  BASE_URL,
 } from '../../App';
 
 import '../VideoTextTalk/VideoTextTalk.css'
@@ -359,53 +361,78 @@ const GroupTalkSocket = (props) => {
 
     });
 
-    socket.on('update-group', data => {
-      console.log('update-group data', data);
-
-      const talks = data.group.talks;
-
-      // ////check user wrote last text of talks
-      // if (talks.length > 0 &&
-      //   talks.length !== groupTalkInputList.length &&
-      //   talks[talks.length - 1].fromUserId === userId
-      // ) {
-
-      //   setGroupTextInput('');
-      // }
-
-      setGroupTalkInputList(talks);
-
-      if (!groupInfo || !groupTalkId || !groupAllMemberList.length === 0) {
-        setGroupInfo(data.group);
-        setGroupTalkId(data.group.groupRoomId);
-
-
-        //// get group text reactions
-        socket.emit('get-group-text-reactions', {
-          userId: userId,
-          groupRoomId: data.group.groupRoomId,
-        });
-        
-
-        if (groupAllMemberList.length === 0) {
+    socket.on('update-group', async (data) => {
+      try {
+        console.log('update-group data', data);
   
-          const allMemberList = [];
+        const talks = data.group.talks;
   
-          for (const user of data.group.allMemberUserIds) {
-            const userInUsersData = usersData.find(element => {
-              return element.userId === user.userId;
-            });
-    
-            if (userInUsersData) {
-              allMemberList.push(userInUsersData);
-            }
+        // ////check user wrote last text of talks
+        // if (talks.length > 0 &&
+        //   talks.length !== groupTalkInputList.length &&
+        //   talks[talks.length - 1].fromUserId === userId
+        // ) {
+  
+        //   setGroupTextInput('');
+        // }
+  
+        setGroupTalkInputList(talks);
+  
+        if (!groupInfo || !groupTalkId || !groupAllMemberList.length === 0) {
+          setGroupInfo(data.group);
+          setGroupTalkId(data.group.groupRoomId);
+  
+  
+          //// get group text reactions
+          socket.emit('get-group-text-reactions', {
+            userId: userId,
+            groupRoomId: data.group.groupRoomId,
+          });
+          
+          const memberIdList = [];
+  
+          for (const id of data.group.allMemberUserIds) {
+            memberIdList.push(id.userId);
           }
-    
-          setGroupAllMemberList(allMemberList);
-        }
-      }
   
-      setIsLoading(false);
+          const resData = await getUsersForGroup(
+            BASE_URL,
+            localStorage.getItem('token'),
+            memberIdList,
+          );
+  
+          console.log('resData', resData);
+          
+          if (resData.usersData) {
+            setGroupAllMemberList(resData.usersData);
+          }
+  
+  
+          // if (groupAllMemberList.length === 0) {
+    
+          //   const allMemberList = [];
+  
+          //   for (const user of data.group.allMemberUserIds) {
+          //     const userInUsersData = usersData.find(element => {
+          //       return element.userId === user.userId;
+          //     });
+      
+          //     if (userInUsersData) {
+          //       allMemberList.push(userInUsersData);
+          //     }
+          //   }
+      
+          //   setGroupAllMemberList(allMemberList);
+          // }
+        }
+    
+        setIsLoading(false);
+
+      } catch(err) {
+        console.log(err);
+        setIsLoading(false);
+      }
+      
       
       
     });

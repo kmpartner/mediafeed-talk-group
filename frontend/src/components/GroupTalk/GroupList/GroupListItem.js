@@ -41,22 +41,32 @@ const GroupListItem = (props) => {
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
+  const { 
+    groupCreatorInfoList,
+    groupCreatorImageUrls,
+   } = store.groupStore;
   // console.log('store in GroupListItem.js', store);
   // const groupImageUrls = store.groupImageUrls;
   // console.log('groupImageUrls', groupImageUrls);
+  // console.log(creatorInfoList)
 
   const [showDescription, setShowDescription] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [showKeywords, setShowKeywords] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [creatorInfo, setCreatorInfo] = useState();
-  const [creatorImageUrl, setCreatorImageUrl] = useState('');
   
   const [groupImageUrl, setGroupImageUrl] = useState('');
 
   useEffect(() => {
-    if (!creatorInfo && usersData.length > 0 && showDescription) {
-      const creatorInfo = usersData.find(element => {
+    if (!creatorInfo && groupCreatorInfoList && 
+        groupCreatorInfoList.length > 0 && showDescription
+    ) {
+      // const creatorInfo = usersData.find(element => {
+      //   return element.userId === group.creatorUserId
+      // });
+
+      const creatorInfo = groupCreatorInfoList.find(element => {
         return element.userId === group.creatorUserId
       });
 
@@ -64,10 +74,13 @@ const GroupListItem = (props) => {
       // console.log('creatorInfo', creatorInfo);
 
       if (creatorInfo && creatorInfo.imagePath) {
-        getCreatorImageUrlHandler(creatorInfo.userId);
+        getCreatorImageUrlHandler(
+          creatorInfo.userId,
+          groupCreatorImageUrls,
+        );
       }
     }
-  },[usersData, showDescription]);
+  },[groupCreatorInfoList, showDescription]);
 
   useEffect(() => {
     if (group && store.groupImageUrls.length > 0) {
@@ -114,14 +127,24 @@ const GroupListItem = (props) => {
   }
 
 
-  const getCreatorImageUrlHandler = async (creatorId) => {
+  const getCreatorImageUrlHandler = async (creatorId, creatorImageUrls) => {
+    const isInUrlList = creatorImageUrls.find(element => {
+      return creatorId === element.userId;
+    });
+
+    if (isInUrlList) {
+      return;
+    }
+    
     const creatorImageUrl = await getUserImageUrl(
       BASE_URL,
       localStorage.getItem('token'),
       creatorId,
     );
+
     if (creatorImageUrl) {
-      setCreatorImageUrl(creatorImageUrl.imageUrl)
+      const addedList = creatorImageUrls.push(creatorImageUrl);
+      dispatch('SET_GROUPCREATORIMAGEURLS', addedList)
       // console.log('creatorImageUrl', creatorImageUrl)
     }
   };
@@ -158,6 +181,18 @@ const GroupListItem = (props) => {
   // console.log(createDate);
   const displayTime = createDate.year + '-' + createDate.month + '-' + createDate.day;
 
+
+  let cImageUrl;
+
+  if (creatorInfo && groupCreatorImageUrls && groupCreatorImageUrls.length > 0) {
+    const cImageUrlObj = groupCreatorImageUrls.find(element => {
+      return element.userId === creatorInfo.userId;
+    });
+
+    if (cImageUrlObj) {
+      cImageUrl = cImageUrlObj.imageUrl;
+    }
+  }
 
   const groupListItemBody = (
     <div>
@@ -244,7 +279,8 @@ const GroupListItem = (props) => {
             {/* <Img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
             <Img 
               className={classes.groupListCreatorImage}
-              src={creatorImageUrl ? creatorImageUrl : SampleImage} 
+              // src={creatorImageUrl ? creatorImageUrl : SampleImage} 
+              src={cImageUrl ? cImageUrl: SampleImage}
               // height="25" 
               alt='user-img' 
             />

@@ -312,10 +312,16 @@ export const getUsers = (url, token) => {
   })
 };
 
-export const getUsersForGroup = (url, token) => {
+export const getUsersForGroup = (url, token, groupMemberIds) => {
   return new Promise((resolve, reject) => {
 
-    fetch(url + '/auth/getusers-for-group', {
+    let fullUrl = url + '/auth/getusers-for-group';
+
+    if (groupMemberIds) {
+      fullUrl = url + `/auth/getusers-for-group?groupMemberIds=${JSON.stringify(groupMemberIds)}`;
+    }
+
+    fetch(fullUrl, {
       method: 'GET',
       headers: {
         Authorization: 'Bearer ' + token

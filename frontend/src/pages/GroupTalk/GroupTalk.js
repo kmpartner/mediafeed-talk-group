@@ -33,7 +33,15 @@ import GroupTopElements from '../../components/GroupTalk/GroupAdElements/GroupTo
 import GroupRightElements from '../../components/GroupTalk/GroupAdElements/GroupRightElements/GroupRightElements';
 import GroupTalkSocket from './GroupTalkSocket';
 import Loader from '../../components/Loader/Loader';
-import { getUserData, getUserDataForStore, getUsers, getUsersRest, getUsersForGroup, getUserLocation, updateUserColor } from '../../util/user';
+import { 
+  getUserData, 
+  getUserDataForStore, 
+  getUsers, 
+  getUsersRest, 
+  getUsersForGroup, 
+  getUserLocation, 
+  updateUserColor 
+} from '../../util/user';
 import { getLocalTimeElements } from '../../util/timeFormat';
 import { getRandomBgColor } from '../../util/color-style';
 
@@ -210,9 +218,19 @@ const GroupTalk = (props) => {
         getUsersForGroup(BASE_URL, localStorage.getItem('token'))
         .then(result => {
           console.log(result);
+
           setUsersData(result.usersData);
 
           dispatch('SET_GROUP_USERSDATA', result.usersData);
+
+
+          // const onlyUserList = result.usersData.filter(user => {
+          //   return user.userId === localStorage.getItem('userId');
+          // })
+
+          // setUsersData(onlyUserList);
+          // dispatch('SET_GROUP_USERSDATA', onlyUserList);
+
         })
         .catch(err => {
           console.log(err);

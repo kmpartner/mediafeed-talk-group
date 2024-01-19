@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import AutoSuggestGroupList from '../../AutoSuggest/AutoSuggestGroupList'
 import GroupListItem from './GroupListItem';
 import { useStore } from '../../../hook-store/store';
+import { getUsersForGroup } from '../../../util/user';
 
 import { BASE_URL } from '../../../App';
 import '../../../pages/GroupTalk/GroupTalk.css';
@@ -27,6 +28,10 @@ const GroupList = (props) => {
 
   const [store, dispatch] = useStore();
   const { shareFile } = store.shareStore;
+  const { 
+    groupCreatorInfoList,
+    // groupCreatorImageUrls,
+   } = store.groupStore;
   // console.log('store in groupList.js', store);
 
   const [selectedSuggest, setSelectedSuggest] = useState(null);
@@ -127,6 +132,27 @@ const GroupList = (props) => {
       // );
     }
   },[shareFile, shareGroupIdParam]);
+
+
+
+  useEffect(() => {
+    if (!selectedSuggest && sortedGroupList.length > 0) {
+      const groupsForCreator = sortedGroupList.slice(0, initialListNum * (moreClickNum + 1));
+      getCreatorInfoListHandler(groupsForCreator, groupCreatorInfoList);
+    }
+
+    if (selectedSuggest) {
+      const suggestGroupInfo = sortedGroupList.find(element => {
+        return selectedSuggest.groupRoomId === element.groupRoomId;
+      });
+
+      getCreatorInfoListHandler([suggestGroupInfo], groupCreatorInfoList);
+    }
+
+  },[sortedGroupList, selectedSuggest]);
+
+
+
   // const getSuggestList = (list) => {
   //   setSuggestList(list);
   // }
@@ -164,6 +190,43 @@ const GroupList = (props) => {
         // return Promise;
     })
   }
+
+
+  const getCreatorInfoListHandler = async (displayGroups, creatorInfoList) => {
+    try {
+      const creatorIds = [];
+
+      for (const group of displayGroups) {
+        const isInInfoList = creatorInfoList.find(user => {
+          return user.userId === group.creatorUserId;
+        });
+
+        if (!isInInfoList) {
+          creatorIds.push(group.creatorUserId);
+        }
+      }
+
+      if (creatorIds.length === 0) {
+        return;
+      }
+
+      const resData = await getUsersForGroup(
+        BASE_URL,
+        localStorage.getItem('token'),
+        creatorIds,
+      );
+  
+      console.log('resData', resData);
+      
+      if (resData && resData.usersData && resData.usersData.length > 0) {
+        const addedList = creatorInfoList.concat(resData.usersData);
+
+        dispatch('SET_GROUPCREATORINFOLIST', addedList);
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  };
   
 
   
