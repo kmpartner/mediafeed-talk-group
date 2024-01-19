@@ -716,33 +716,60 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUsersForGroup = async (req, res, next) => {
     try {
-        const users = await User.find();
-        if (!users) {
-            const error = new Error('Could not find users.');
-            error.statusCode = 404;
-            throw error;
+        const returnList = [];
+
+        let groupMemberIds = req.query.groupMemberIds;
+
+        if (groupMemberIds) {
+            groupMemberIds = JSON.parse(groupMemberIds);
         }
 
-        // console.log('users', users);
 
-        const usersData = [];
-        users.forEach(user => {
-            usersData.push({
-                _id: user._id.toString(),
-                userId: user.userId,
-                name: user.name,
-                userColor: user.userColor,
-                // description: user.description,
-                // email: user.email,
-                // imageUrl: user.imageUrl,
-                // fbUserId: user.fbUserId,
-                // imageUrl: user.imageUrl,
-                imagePath: user.imagePath,
-                createdAt: user.createdAt
-            });
-        });
+        if (groupMemberIds && groupMemberIds.length > 0) {
+            for (const memberId of groupMemberIds) {
+                const user = await User.findOne({ userId: memberId });
+
+                if (user) {
+                    returnList.push({
+                        _id: user._id.toString(),
+                        userId: user.userId,
+                        name: user.name,
+                        userColor: user.userColor,
+                        // description: user.description,
+                        // email: user.email,
+                        // imageUrl: user.imageUrl,
+                        // fbUserId: user.fbUserId,
+                        // imageUrl: user.imageUrl,
+                        imagePath: user.imagePath,
+                        createdAt: user.createdAt
+                    })
+                }
+            }
+        }
+
         
-        res.status(200).json({ message: 'get users data for group successfully.', data: usersData });
+        if (returnList.length === 0) {
+            const oneUsers = await User.find().limit(1);
+
+            returnList.push({
+                _id: oneUsers[0]._id.toString(),
+                userId: oneUsers[0].userId,
+                name: oneUsers[0].name,
+                userColor: oneUsers[0].userColor,
+                // description: oneUsers[0].description,
+                // email: oneUsers[0].email,
+                // imageUrl: oneUsers[0].imageUrl,
+                // fbUserId: oneUsers[0].fbUserId,
+                // imageUrl: oneUsers[0].imageUrl,
+                imagePath: oneUsers[0].imagePath,
+                createdAt: oneUsers[0].createdAt
+            })
+        }
+        
+        res.status(200).json({ 
+            message: 'get users data for group successfully.', 
+            data: returnList, 
+        });
 
     } catch (err) {
         if (!err.statusCode) {
