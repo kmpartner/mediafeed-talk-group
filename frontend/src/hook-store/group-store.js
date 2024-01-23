@@ -12,15 +12,6 @@ const configureStore = () => {
         }
       };
     },
-    SET_GROUPCREATORIMAGEURLS: (state, payload) => {
-      return {
-        // ...state,
-        groupStore: {
-          ...state.groupStore,
-          groupCreatorImageUrls: payload
-        }
-      };
-    },
     // SET_I18NEXT: (state, payload) => {
     //   return { 
     //     notification: state.notification,
@@ -32,7 +23,6 @@ const configureStore = () => {
   initStore(actions, {
     groupStore: {
       groupCreatorInfoList: [],
-      groupCreatorImageUrls: [],
     }
   });
 };

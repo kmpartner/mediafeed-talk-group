@@ -30,7 +30,6 @@ const GroupList = (props) => {
   const { shareFile } = store.shareStore;
   const { 
     groupCreatorInfoList,
-    // groupCreatorImageUrls,
    } = store.groupStore;
   // console.log('store in groupList.js', store);
 
