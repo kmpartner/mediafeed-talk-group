@@ -75,10 +75,10 @@ const getTalkPermissionUsers = async (req, res, next) => {
     const permissionUsers = [];
 
     if (talkPermission) {
-      const combinedIds = talkPermission.talkAcceptUserIds.concat(
-        talkPermission.talkAcceptedUserIds).concat(
-          talkPermission.talkRequestedUserIds).concat(
-          talkPermission.talkRequestingUserIds);
+      const combinedIds = talkPermission.talkAcceptUserIds
+        .concat(talkPermission.talkAcceptedUserIds)
+        .concat(talkPermission.talkRequestedUserIds)
+        .concat(talkPermission.talkRequestingUserIds);
 
       const uniqList = _.uniqBy(combinedIds, ['userId']);
 
@@ -144,10 +144,10 @@ const getTalkDisplayUsers = async (req, res, next) => {
     const permissionUsers = [];
 
     if (talkPermission) {
-      const combinedIds = talkPermission.talkAcceptUserIds.concat(
-        talkPermission.talkAcceptedUserIds).concat(
-          talkPermission.talkRequestedUserIds).concat(
-          talkPermission.talkRequestingUserIds);
+      const combinedIds = talkPermission.talkAcceptUserIds
+        .concat(talkPermission.talkAcceptedUserIds)
+        .concat(talkPermission.talkRequestedUserIds)
+        .concat(talkPermission.talkRequestingUserIds);
 
       const uniqList = _.uniqBy(combinedIds, ['userId']);
 
@@ -192,7 +192,9 @@ const getTalkDisplayUsers = async (req, res, next) => {
       }
     }
 
-    const suggestUsers = await createTalkSuggestUsers();
+    const suggestUsers = await createTalkSuggestUsers(req.userId);
+
+    console.log('suggestUsers.length', suggestUsers.length);
 
     const onlySuggestUsers = [];
 
@@ -205,8 +207,12 @@ const getTalkDisplayUsers = async (req, res, next) => {
         onlySuggestUsers.push(user);
       }
     }
+
+    console.log('onlySuggestUsers.length', onlySuggestUsers.length);
   
     const returnUsers = permissionUsers.concat(onlySuggestUsers);
+
+    console.log('returnUsers.length', returnUsers.length);
 
     res.status(200).json({
       message: 'get talk display users success', 
@@ -222,9 +228,69 @@ const getTalkDisplayUsers = async (req, res, next) => {
 };
 
 
-const createTalkSuggestUsers = async () => {
+const createTalkSuggestUsers = async (userId) => {
   try {
-      //// inpmliment filter later
+
+    let userLanguage;
+    let bUserLanguage;
+
+    if (userId) {
+      const user = await User.findOne({ userId: userId });
+
+      if (!user) {
+        const error = new Error('user not found');
+        error.statusCode = 400;
+        throw error;
+      }
+
+      if (user.acceptLanguage && user.acceptLanguage.split(',').length > 1) {
+        userLanguage = user.acceptLanguage.split(',')[0];
+
+        // console.log(user.acceptLanguage)
+        if (userLanguage && userLanguage.split('-').length > 1) {
+          bUserLanguage = userLanguage.split('-')[0];
+
+          // console.log('bUserLanguage', bUserLanguage);
+        }
+      }
+    }
+
+    // console.log('userLanguage', userLanguage, bUserLanguage);
+
+
+    let suggestUserList = []
+
+      if (userLanguage) {
+        // const languageUsers =  await User.find({ acceptLanguage: userLanguage });
+        const languageUsers =  await User.find({ 
+          acceptLanguage: { "$regex": `${userLanguage},`, "$options": "i" }
+        })
+        suggestUserList = languageUsers;
+        // console.log('languageUsers', languageUsers);
+
+        if (bUserLanguage) {
+          const bLanguageUsers =  await User.find({ 
+            acceptLanguage: { "$regex": `${bUserLanguage},`, "$options": "i" }
+          });
+
+          suggestUserList = suggestUserList.concat(bLanguageUsers);
+        }
+      }
+
+
+      if (suggestUserList.length < 10000) {
+        const userList = await User.find()
+          .limit(100000);
+
+        suggestUserList = suggestUserList.concat(userList);
+      }
+
+      // console.log('suggestUserList', suggestUserList);
+      
+      const uniqList = _.uniqBy(suggestUserList, ['userId']);
+
+      // console.log('uniqList', uniqList);
+
       const userList = await User.find()
         .limit(100000);
 
