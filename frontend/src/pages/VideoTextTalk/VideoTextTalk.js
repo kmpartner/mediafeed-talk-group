@@ -75,6 +75,7 @@ const VideoTextTalk = (props) => {
 
 
   const [store, dispatch] = useStore();
+  const { talkUsersData } = store.talkStore;
   // console.log('store in VideoTextTalk', store);
 
   const [userSocket, setUserSocket] = useState('');
@@ -95,7 +96,7 @@ const VideoTextTalk = (props) => {
   const [tryingToCallUser, setTryingToCallUser] = useState('');
   const [talkStartAt, setTalkStartAt] = useState('');
   const [callReject, setCallReject] = useState(false);
-  const [usersData, setUsersData] = useState([]);
+  // const [usersData, setUsersData] = useState([]);
   const [noUserMessage, setNoUserMessage] = useState('');
   const [userTextTalkList, setUserTextTalkList] = useState([]);
   const [showUserTextTalkList, setShowUserTextTalkList] = useState(true);
@@ -215,7 +216,7 @@ const VideoTextTalk = (props) => {
   
   
   
-      if (store.usersData.length === 0) {
+      if (talkUsersData.length === 0) {
         setIsLoading(true);
         
         // getUsers(BASE_URL, localStorage.getItem('token'))
@@ -236,9 +237,10 @@ const VideoTextTalk = (props) => {
 
           userList = result.data;
 
-          setUsersData(userList);
+          // setUsersData(userList);
   
-          dispatch('SET_USERSDATA', userList);
+          // dispatch('SET_USERSDATA', userList);
+          dispatch('SET_TALKUSERSDATA', userList);
   
           // setIsLoading(false);
 
@@ -255,20 +257,20 @@ const VideoTextTalk = (props) => {
   }, [userId, props.isAuth]);
 
   // // set local usersData state when users data exist in store
-  useEffect(() => {
-    if (store.usersData.length > 0 && usersData.length === 0) {
-      setUsersData(store.usersData);
-    }
-  },[userId, store.usersData]);
+  // useEffect(() => {
+  //   if (store.usersData.length > 0 && usersData.length === 0) {
+  //     setUsersData(store.usersData);
+  //   }
+  // },[userId, store.usersData]);
 
   useEffect(() => {
     setIsLoading(true);
 
-    if (userId && usersData.length > 0 && userName) {
+    if (userId && talkUsersData.length > 0 && userName) {
       setIsLoading(false);
     }
 
-    if (!userSocketId && userId && userName && usersData.length > 0) {
+    if (!userSocketId && userId && userName && talkUsersData.length > 0) {
       // socketConnectHandler()
     }
 
@@ -276,7 +278,7 @@ const VideoTextTalk = (props) => {
       setIsLoading(false);
     }
 
-  }, [userId, usersData, userSocketId, userName, props.isAuth]);
+  }, [userId, talkUsersData, userSocketId, userName, props.isAuth]);
 
  
 
@@ -459,7 +461,7 @@ const VideoTextTalk = (props) => {
     setTryingToCallUser('');
     setTalkStartAt('');
     setCallReject(false);
-    setUsersData([]);
+    // setUsersData([]);
     setNoUserMessage('');
     setUserTextTalkList([]);
     setShowUserTextTalkList(true);
@@ -761,8 +763,8 @@ const VideoTextTalk = (props) => {
         }
 
         let aboutUser;
-        if (usersData) {
-          aboutUser = usersData.find(element => {
+        if (talkUsersData) {
+          aboutUser = talkUsersData.find(element => {
             // console.log('usersData element', element);
             // return element._id === user.userId;
             return element.userId === user.userId;
@@ -824,7 +826,7 @@ const VideoTextTalk = (props) => {
   }
 
   let connectButton;
-  if (!userSocketId && userId && userName && usersData.length > 0) {
+  if (!userSocketId && userId && userName && talkUsersData.length > 0) {
     
     const currentUrl = new URL(window.location.href);
     const queryParams = currentUrl.searchParams;
@@ -861,14 +863,14 @@ const VideoTextTalk = (props) => {
       </div>
     );
   }
-  if (userSocketId && userId && userName && usersData.length > 0) {
+  if (userSocketId && userId && userName && talkUsersData.length > 0) {
 
   }
 
 
   if (
       userSocketId && userId && userName 
-      && usersData.length > 0 && textTalkId
+      && talkUsersData.length > 0 && textTalkId
   ) {
       connectButton = (
         <Button mode="raised" design="" type="submit" 
@@ -1108,7 +1110,7 @@ const VideoTextTalk = (props) => {
                   <div>
                     <TalkDestInfo
                       userId={userId}
-                      usersData={usersData}
+                      usersData={talkUsersData}
                       favoriteUsers={favoriteUsers}
                       editFavoriteUsersHandler={editFavoriteUsersHandler}
                       editFavoriteUsersResult={editFavoriteUsersResult}
@@ -1124,7 +1126,7 @@ const VideoTextTalk = (props) => {
                         userName={userName}
                         userId={userId}
                         noconnectDestUserId={noconnectDestUserId}
-                        usersData={usersData}
+                        usersData={talkUsersData}
                         favoriteUsers={favoriteUsers}
                         editFavoriteUsersHandler={editFavoriteUsersHandler}
                         editFavoriteUsersResult={editFavoriteUsersResult}
@@ -1218,7 +1220,7 @@ const VideoTextTalk = (props) => {
             <div>
               <TalkUserListControl
                 userId={userId}
-                usersData={usersData}
+                usersData={talkUsersData}
                 favoriteUsers={favoriteUsers}
                 editFavoriteUsersHandler={editFavoriteUsersHandler}
                 editFavoriteUsersResult={editFavoriteUsersResult}
@@ -1231,7 +1233,7 @@ const VideoTextTalk = (props) => {
 
               <TalkUserListNotify
                 userId={userId}
-                usersData={usersData}
+                usersData={talkUsersData}
                 favoriteUsers={favoriteUsers}
                 editFavoriteUsersHandler={editFavoriteUsersHandler}
                 editFavoriteUsersResult={editFavoriteUsersResult}
@@ -1244,7 +1246,7 @@ const VideoTextTalk = (props) => {
 
               <TalkUserList
                 userTextTalkList={userTextTalkList}
-                usersData={usersData}
+                usersData={talkUsersData}
                 socketId={userSocketId}
                 userId={userId}
                 userName={userName}

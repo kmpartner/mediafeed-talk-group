@@ -9,11 +9,13 @@ import configureUiStore from './hook-store/ui-store';
 import configureAdStore from './hook-store/ad-store';
 import configureShareStore from './hook-store/share-store';
 import configureGroupStore from './hook-store/group-store';
+import configureTalkStore from './hook-store/talk-store';
 
 configureUiStore();
 configureAdStore();
 configureShareStore();
 configureGroupStore();
+configureTalkStore();
 
 ReactDOM.render(
   <BrowserRouter>
