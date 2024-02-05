@@ -62,7 +62,7 @@ const PageDescription = (props) => {
           {t("notFound.text14", "Talk page is suitable for sending text messages and text chatting.")}
         </p>
       </div>
-      <div className="pageDescriptionContent">
+      {/* <div className="pageDescriptionContent">
         <div>
           <strong>
             watakura your site
@@ -78,7 +78,7 @@ const PageDescription = (props) => {
           {' '}
           enables you to create your site or blog.
         </p>
-      </div>
+      </div> */}
     </div>
   );
 

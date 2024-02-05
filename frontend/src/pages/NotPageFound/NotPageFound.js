@@ -212,7 +212,7 @@ const NotPageFound = props => {
 
           </div>
 
-          <div className="notPageFound__pageButton">
+          {/* <div className="notPageFound__pageButton">
               <a 
                 href={'https://wpsite.watakura.xyz'}
                 rel="noopener noreferrer" target="_blank"
@@ -222,14 +222,13 @@ const NotPageFound = props => {
                 // disabled={!props.replyInput || props.commentLoading}
                 >
                   <span className="notPageFound__ButtonNameContainer">
-                    {/* <img className="notPageFound__Icon" src={TalkIcon} alt='icon'/>   */}
                     <span>
                       create your site or blog {marks.externalLink}
                     </span>
                   </span>
                 </Button>
               </a>
-            </div>
+            </div> */}
 
             {/* <Redirect to="/feed/posts" /> */}
           </div>
@@ -324,7 +323,7 @@ const NotPageFound = props => {
               <span>{pageInfoButton}</span>
             </div>
             
-            <div className="notPageFound__pageButton">
+            {/* <div className="notPageFound__pageButton">
               <a 
                 href={'https://wpsite.watakura.xyz'}
                 rel="noopener noreferrer" target="_blank"
@@ -334,15 +333,13 @@ const NotPageFound = props => {
                 // disabled={!props.replyInput || props.commentLoading}
                 >
                   <span className="notPageFound__ButtonNameContainer">
-                    {/* <img className="notPageFound__Icon" src={TalkIcon} alt='icon'/>   */}
                     <span>
                       create your site or blog {marks.externalLink}
                     </span>
                   </span>
                 </Button>
               </a>
-            </div>
-            {/* <Redirect to="/login" /> */}
+            </div> */}
         </div>
       }
     </div>
