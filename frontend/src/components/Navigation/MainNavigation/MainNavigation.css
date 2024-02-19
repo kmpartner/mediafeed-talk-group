@@ -59,6 +59,23 @@
   text-decoration: none;
 }
 
+.main-nav__notify {
+  position: relative;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.main-nav__notifyNum {
+  color: white;
+  background: red;
+  position: absolute;
+  right: -0.2rem;
+  top: -0.3rem;
+  font-size: 1rem;
+  border-radius: 2rem;
+  padding: 0.2rem;
+}
+
 @media (min-width: 768px) {
   .main-nav__items {
     display: flex;

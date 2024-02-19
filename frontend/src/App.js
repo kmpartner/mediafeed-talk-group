@@ -41,6 +41,7 @@ import GetWindowData from './components/UI/getWindowData';
 
 import HeadMetaTag from './components/UI/HeadMetaTag';
 import SharePage from './pages/SharePage/SharePage';
+import GetPageNotification from './components/PageNotification/GetPageNotification';
 
 import './App.css';
 
@@ -1001,6 +1002,10 @@ class App extends Component {
                 <GetDefferredPrompt />
                 
                 <HeadMetaTag />
+
+                <GetPageNotification 
+                  isAuth={this.state.isAuth}
+                />
                 </div>
                   {/* <div></div> */}
                   {/* <div>-</div> */}

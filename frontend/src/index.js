@@ -10,12 +10,14 @@ import configureAdStore from './hook-store/ad-store';
 import configureShareStore from './hook-store/share-store';
 import configureGroupStore from './hook-store/group-store';
 import configureTalkStore from './hook-store/talk-store';
+import configurePageNotificationStore from './hook-store/page-notification-store';
 
 configureUiStore();
 configureAdStore();
 configureShareStore();
 configureGroupStore();
 configureTalkStore();
+configurePageNotificationStore();
 
 ReactDOM.render(
   <BrowserRouter>
