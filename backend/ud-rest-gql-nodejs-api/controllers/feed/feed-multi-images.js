@@ -23,6 +23,10 @@ const { testAuth } = require('../../util/auth');
 const { clearImage, isAudioFile } = require('../../util/file');
 const { createReturnPost } = require('./feed');
 
+const { 
+    addFeedPostPageNotification,
+} = require('../../util/page-notification/page-notification-util.js');
+
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
 aws.config.update({
@@ -166,6 +170,8 @@ exports.createMultiImagesPost = async (req, res, next) => {
                 // }
             })
 
+            addFeedPostPageNotification(req.userId, post);
+            
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;
@@ -551,6 +557,7 @@ exports.updateMutiImagesPost = async (req, res, next) => {
 
 
 exports.deleteMultiImagePost = async (req, res, next) => {
+    try {
     const postId = req.params.postId;
     console.log('postId in deleteMutiImagePost', postId);
     
@@ -661,7 +668,7 @@ exports.deleteMultiImagePost = async (req, res, next) => {
 
     }
 
-    try {
+    // try {
 
         // throw new Error('error-error');
 

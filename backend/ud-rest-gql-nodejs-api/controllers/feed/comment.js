@@ -8,6 +8,7 @@ const Post = require('../../models/feed/post.js');
 const User = require('../../models/user/user');
 const Comment = require('../../models/feed/comment');
 
+const { addFeedPostCommentPageNotification } = require('../../util/page-notification/page-notification-util.js');
 
 exports.commentAction = async (req, res, next) => {
     // console.log(req.body);
@@ -138,6 +139,11 @@ exports.createPostComment = async (req, res, next) => {
 
         res.status(200).json({ message: 'Comment Created.', data: comment });
 
+        addFeedPostCommentPageNotification(
+            comment,
+            post.creatorId,
+        );
+        
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

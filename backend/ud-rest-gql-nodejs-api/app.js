@@ -56,6 +56,8 @@ const TalkPermissionRoute = require('./routes/user/talk-permission');
 const talkUserRoute = require('./routes/user/talk-user');
 const UserRecentVisitRoute = require('./routes/user/user-recent-visit');
 
+const PageNotificationRoute = require('./routes/page-notification/page-notification');
+
 const adRoute = require('./routes/ad/ad');
 
 const db = require('./db');
@@ -183,6 +185,8 @@ app.use('/feed-audio-upload', audioUpload, feedAudioUploadRoute);
 app.use('/talk-permission', TalkPermissionRoute);
 app.use('/talk-user', talkUserRoute);
 app.use('/user-recent-visit', UserRecentVisitRoute);
+
+app.use('/page-notification', PageNotificationRoute);
 
 app.use('/ad', adRoute);
 

@@ -336,6 +336,76 @@ const createTalkSuggestUsers = async (userId) => {
   }
 };
 
+
+
+const getUserSearchResult = async (req, res, next) => {
+  try {
+    const input = req.query.input;
+
+    let searchList = [];
+
+    if (input && input.length <= 5) {
+      searchList = await User.find({ 
+        name: input,
+      });
+    } 
+
+    if (input && input.length > 5 && input.length <= 20) {
+      searchList = await User.find({ 
+        "name": { "$regex": `${input}`, "$options": "i" }
+      });
+    } 
+
+    const uniqList = _.uniqBy(searchList, ['userId']);
+
+    const returnUsers = [];
+
+    for (const user of uniqList) {
+        const port = process.env.PORT || 8083;
+        let imageUrl;
+
+        if (user.imageUrl && !process.env.S3NOTUSE) {
+            imageUrl = s3.getSignedUrl('getObject', {
+                Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                Key: user.imageUrl ? user.imageUrl : 'dummy-key',
+                Expires: 60 * 60 * 24 * 365
+            });
+        }
+        
+        if (user.imageUrl && process.env.S3NOTUSE) {
+            imageUrl = `http://localhost:${port}/${user.imageUrl}`;
+        }
+
+        returnUsers.push({
+          userId: user.userId,
+          // email: acceptedUser.email,
+          imageUrl: imageUrl,
+          name: user.name,
+          imagePath: user.imagePath,
+          description: user.description,
+
+          _id: user._id.toString(),
+          userColor: user.userColor,
+
+          createdAt: user.createdAt,
+        });
+      
+    }
+
+    res.status(200).json({
+      message: 'get user search result success', 
+      data: returnUsers,
+    });
+  }
+
+  catch (err) {
+    if (!err.statusCode) {
+        err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 module.exports = {
   getTalkAcceptedUsers,
   getTalkPermissionUsers,
