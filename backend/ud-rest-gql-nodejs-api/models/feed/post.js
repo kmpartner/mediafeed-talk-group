@@ -104,6 +104,8 @@ const postSchema = Schema({
     geolocation: {
         type: Object
     },
+    pageNotificationSend: { type: Boolean },
+    pushNotificationSend: { type: Boolean },
     // lastUpdateTime: {
     //     type: Number
     // },

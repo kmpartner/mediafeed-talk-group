@@ -26,6 +26,9 @@ const { createReturnPost } = require('./feed');
 const { 
     addFeedPostPageNotification,
 } = require('../../util/page-notification/page-notification-util.js');
+const {
+    sendMessagePushNotification,    
+} = require('../../util/push-notification/message-push-notification-util.js');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -171,6 +174,7 @@ exports.createMultiImagesPost = async (req, res, next) => {
             })
 
             addFeedPostPageNotification(req.userId, post);
+            sendMessagePushNotification(req.userId, post);
             
         } catch (err) {
             if (!err.statusCode) {
@@ -544,6 +548,15 @@ exports.updateMutiImagesPost = async (req, res, next) => {
             // post: result 
             post: returnPost,
         });
+
+        if (post.public === 'public' && !post.pageNotificationSend) {
+            addFeedPostPageNotification(req.userId, post);
+        }
+
+        if (post.publc === 'public' && !post.pushNotificationSend) {
+            sendMessagePushNotification(req.userId, post);
+        }
+
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

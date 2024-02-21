@@ -9,6 +9,7 @@ const User = require('../../models/user/user');
 const Comment = require('../../models/feed/comment');
 
 const { addFeedPostCommentPageNotification } = require('../../util/page-notification/page-notification-util.js');
+const { sendCommentPushNotification } = require('../../util/push-notification/comment-push-notification-util.js');
 
 exports.commentAction = async (req, res, next) => {
     // console.log(req.body);
@@ -143,6 +144,13 @@ exports.createPostComment = async (req, res, next) => {
             comment,
             post.creatorId,
         );
+        
+        if (comment.creatorId !== post.creatorId) {
+            sendCommentPushNotification(
+                comment,
+                post.creatorId,
+            );
+          }
         
     } catch (err) {
         if (!err.statusCode) {

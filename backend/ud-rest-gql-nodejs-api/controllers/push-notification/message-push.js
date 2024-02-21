@@ -4,7 +4,7 @@ const PushSubscription = require('../../models/push-notification/push-subscripti
 const FavoritePost = require('../../models/feed/favarite-post');
 const FollowerTable = require('../../models/feed/follower-table');
 const messagePush = require('../../models/push-notification/message-push');
-
+const Post = require('../../models/feed/post.js');
 // const Follow = require('../models/follow');
 // const pushNotify = require('../models/push-notify');
 
@@ -22,116 +22,121 @@ const vapidData = {
 };
 
 
-exports.pushTest2 = async (req, res, next) => {
-  // console.log('req.body', req.body);
-  // const userId = req.body.userId;
-  const userId = req.userId;
-  const postData = req.body.postData;
-  // console.log('postData', postData);
+// exports.pushTest2 = async (req, res, next) => {
+//   try {
+//     // console.log('req.body', req.body);
+//     // const userId = req.body.userId;
+//     const userId = req.userId;
+//     const postData = req.body.postData;
+//     // console.log('postData', postData);
 
-  if (postData.public !== 'public') {
-    return;
-  }
+ 
+//     if (postData.public !== 'public') {
+//       return;
+//     }
 
-  // const followData = await db.getDb().collection("follows").find({}).toArray();
-  const favoritePostData = await FavoritePost.find({
-    postId: postData._id
-  });
-  const followerTableData = await FollowerTable.find({
-    followingUserId: userId
-  });
+//     // const followData = await db.getDb().collection("follows").find({}).toArray();
+//     const favoritePostData = await FavoritePost.find({
+//       postId: postData._id
+//     });
+//     const followerTableData = await FollowerTable.find({
+//       followingUserId: userId
+//     });
 
-  // return;
-  const candidateIds = [];
+//     // return;
+//     const candidateIds = [];
 
-  for (const element of favoritePostData) {
-    if (element.userId !== userId) {
-      candidateIds.push(element.userId);
-    }
-  }
+//     for (const element of favoritePostData) {
+//       if (element.userId !== userId) {
+//         candidateIds.push(element.userId);
+//       }
+//     }
 
-  for (const element of followerTableData) {
-    if (element.userId !== userId) {
-      candidateIds.push(element.userId);
-    }
-  }
+//     for (const element of followerTableData) {
+//       if (element.userId !== userId) {
+//         candidateIds.push(element.userId);
+//       }
+//     }
 
-  console.log('candidateIds', candidateIds);
+//     console.log('candidateIds', candidateIds);
 
-  if (candidateIds.length === 0) {
-    return;
-  }
+//     if (candidateIds.length === 0) {
+//       return;
+//     }
 
-  function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-  }
+//     function onlyUnique(value, index, self) {
+//       return self.indexOf(value) === index;
+//     }
 
-  var uniqueIds = candidateIds.filter(onlyUnique);
-  console.log('uniqueIds', uniqueIds);
+//     var uniqueIds = candidateIds.filter(onlyUnique);
+//     console.log('uniqueIds', uniqueIds);
 
 
-  try {
+//   // try {
 
-    webpush.setVapidDetails(
-      vapidData.mailto,
-      vapidData.vapidKeys.publicKey,
-      vapidData.vapidKeys.privateKey
-    );
+//     webpush.setVapidDetails(
+//       vapidData.mailto,
+//       vapidData.vapidKeys.publicKey,
+//       vapidData.vapidKeys.privateKey
+//     );
     
-    const pushData = await db.getDb().collection("pushsubscriptions").find().toArray();
-    // console.log('pushData', pushData);
+//     const pushData = await db.getDb().collection("pushsubscriptions").find().toArray();
+//     // console.log('pushData', pushData);
     
-    const subPushData = [];
-    for (const data of pushData) {
-      const isInUniqueIds = uniqueIds.find(element => {
-        return element === data.userId;
-      });
+//     const subPushData = [];
+//     for (const data of pushData) {
+//       const isInUniqueIds = uniqueIds.find(element => {
+//         return element === data.userId;
+//       });
 
-      if (isInUniqueIds) {
-        subPushData.push(data);
-      }
-    }
+//       if (isInUniqueIds) {
+//         subPushData.push(data);
+//       }
+//     }
 
-    console.log('subPushData', subPushData);
-    if (subPushData.length === 0) {
-      return;
-    }
+//     console.log('subPushData', subPushData);
+//     if (subPushData.length === 0) {
+//       return;
+//     }
 
 
-    const pushContent = {
-      title: `post update by user ${postData.creatorName}`,
-      content: `${postData.title}`,
-      openUrl: `/feed/${postData ? postData._id : 'posts'}`,
-      // postData: postData
-    };
+//     const pushContent = {
+//       title: `post update by user ${postData.creatorName}`,
+//       content: `${postData.title}`,
+//       openUrl: `/feed/${postData ? postData._id : 'posts'}`,
+//       // postData: postData
+//     };
     
-    // const sendPushData = await sendPush(pushData, pushContent);
-    const sendPushData = await sendPush(subPushData, pushContent);
-    console.log('sendPushData', sendPushData);
+//     // const sendPushData = await sendPush(pushData, pushContent);
+//     const sendPushData = await sendPush(subPushData, pushContent);
+//     console.log('sendPushData', sendPushData);
 
-    const pushNotifyRecord = new messagePush({
-      pushTime: Date.now(),
-      pushContent: pushContent,
-      pushUserIds: sendPushData.sendIdList,
-      clientUserId: userId,
-    });
-    await pushNotifyRecord.save();
+//     const pushNotifyRecord = new messagePush({
+//       pushTime: Date.now(),
+//       pushContent: pushContent,
+//       pushUserIds: sendPushData.sendIdList,
+//       clientUserId: userId,
+//     });
+//     await pushNotifyRecord.save();
 
-    // console.log('pushNotifyRecord', pushNotifyRecord);
 
-    res.status(200).json({ 
-      message: 'Push notification send', 
-      data: pushNotifyRecord
-      });
+//     // post.pushNotificationSend = true;
+//     // await post.save();
+//     // console.log('pushNotifyRecord', pushNotifyRecord);
 
-  }  catch (err) {
-    if (!err.statusCode) {
-        err.statusCode = 500;
-    }
-    next(err);
-  }
+//     res.status(200).json({ 
+//       message: 'Push notification send', 
+//       data: pushNotifyRecord
+//       });
 
-}
+//   }  catch (err) {
+//     if (!err.statusCode) {
+//         err.statusCode = 500;
+//     }
+//     next(err);
+//   }
+
+// }
 
 
 const sendPush = (subscriptions, payloadObj) => {

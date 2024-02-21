@@ -7,7 +7,7 @@ const router = express.Router();
 
 // router.get('/', pushNotifyController.exampleGet);
 
-router.post('/test-push', isAuth, messagePushController.pushTest2);
+// router.post('/test-push', isAuth, messagePushController.pushTest2);
 
 // router.post('/xxxxx', messagePushController.pushTest3)
 module.exports = router;

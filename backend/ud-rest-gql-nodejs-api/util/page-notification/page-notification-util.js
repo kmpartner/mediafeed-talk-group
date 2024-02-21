@@ -77,6 +77,10 @@ const addFeedPostPageNotification = async (userId, postData) => {
     if (postData.public !== 'public') {
       return;
     }
+
+    if (postData.pageNotificationSend) {
+      return;
+    }
     
     let isImageFile = false;
 
@@ -138,6 +142,9 @@ const addFeedPostPageNotification = async (userId, postData) => {
         );
       }
     }
+
+    postData.pageNotificationSend = true;
+    await postData.save();
 
   }  catch (err) {
     console.log(err);
