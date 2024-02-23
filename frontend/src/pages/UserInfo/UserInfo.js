@@ -19,6 +19,7 @@ import SmallModal from '../../components/Modal/SmallModal';
 import TransBackdrop from '../../components/Backdrop/TransBackdrop';
 import PushNotificationControl from '../../components/PushNotification/PushNotificationControl';
 
+import { useStore } from '../../hook-store/store';
 import {
   getUserData,
   getUserLocation,
@@ -43,6 +44,9 @@ const UserInfo = props => {
   const selectedLanguage = resources[i18n.language].translation.LANGUAGE;
 
   const [t] = useTranslation('translation');
+
+  const [store, dispatch] = useStore();
+  const { userNameData } = store;
 
   const [showSmallModal, setShowSmallModal] = useState(false);
   const [followingUsers, setFollowingUsers] = useState([]);
@@ -369,15 +373,16 @@ const UserInfo = props => {
 
         <div className="userInfo__infoContent">
           <span>
-            {/* name: */}
-            {t('userInfo.text2')}:
+            {t('userInfo.text2', 'name')}:
             </span>
-          <span className="userInfo__userImage">{userName}</span>
-          <span className="userInfo__editText" onClick={() => { setIsNameUpdate(!isNameUpdate) }}>
+          <span className="userInfo__userImage">
+            {userNameData && (<span>{userNameData.name}</span>)} 
+            {!userNameData && (<span>{userName}</span>)} 
+          </span>
+          {/* <span className="userInfo__editText" onClick={() => { setIsNameUpdate(!isNameUpdate) }}>
             <Button mode="flat" type="submit">
-              {/* (edit) */}
-              ({t('general.text5')})
-          </Button></span>
+              ({t('general.text5', '(edit)')})
+          </Button></span> */}
         </div>
         <div>
           {isNameUpdate ?
@@ -448,12 +453,11 @@ const UserInfo = props => {
               alt="" height="25" 
             /> */}
           </span>
-          <span className="userInfo__editText" onClick={() => { setIsImageUpdate(!isImageUpdate) }}>
+          {/* <span className="userInfo__editText" onClick={() => { setIsImageUpdate(!isImageUpdate) }}>
             <Button mode="flat" type="submit">
-              {/* (edit) */}
-              ({t('general.text5')})
+              ({t('general.text5', '(edit)')})
             </Button>
-          </span>
+          </span> */}
         </div>
 
         <div>

@@ -18,9 +18,6 @@ import MobileNavigation from './components/Navigation/MobileNavigation/MobileNav
 import ErrorHandler from './components/ErrorHandler/ErrorHandler';
 import FeedPage from './pages/Feed/Feed';
 import SinglePostPage from './pages/Feed/SinglePost/SinglePost';
-import LoginPage from './pages/Auth/Login';
-import UserActions from './pages/Auth/UserActions';
-import SignupPage from './pages/Auth/Signup';
 // import ImageUpload from './pages/ImageUpload/ImageUpload';
 import TermsOfUse from './pages/Terms/TermsOfUse';
 import PrivacyPolicy from './pages/Terms/PrivacyPolicy';
@@ -42,6 +39,7 @@ import GetWindowData from './components/UI/getWindowData';
 import HeadMetaTag from './components/UI/HeadMetaTag';
 import SharePage from './pages/SharePage/SharePage';
 import GetPageNotification from './components/PageNotification/GetPageNotification';
+import SetUserNameData from './components/Auth/SetUserNameData';
 
 import './App.css';
 
@@ -1006,6 +1004,7 @@ class App extends Component {
                 <GetPageNotification 
                   isAuth={this.state.isAuth}
                 />
+                <SetUserNameData />
                 </div>
                   {/* <div></div> */}
                   {/* <div>-</div> */}

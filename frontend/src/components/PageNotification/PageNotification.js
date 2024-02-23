@@ -53,10 +53,13 @@ const PageNotification = (props) => {
   }
   let pageNotifyListBody;
 
-  if (
-    pageNotification && pageNotification.pageNotificationList &&
-    pageNotification.pageNotificationList.length > 0 
-  ) {
+  // if (
+  //   pageNotification && pageNotification.pageNotificationList &&
+  //   pageNotification.pageNotificationList.length > 0 
+  // ) {
+    if (
+      pageNotification?.pageNotificationList?.length > 0 
+    ) {
 
     pageNotifyListBody = (
       <div>

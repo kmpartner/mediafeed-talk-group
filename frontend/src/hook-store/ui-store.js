@@ -99,6 +99,12 @@ const configureStore = () => {
         deferredPrompt: payload,
       }
     },
+    SET_USERNAMEDATA: (state, payload) => {
+      return {
+        ...state,
+        userNameData: payload,
+      }
+    },
 
     // SET_I18NEXT: (state, payload) => {
     //   return { 
@@ -124,6 +130,7 @@ const configureStore = () => {
     talkPermission: null,
 
     deferredPrompt: null,
+    userNameData: null,
     // lastPage: 0,
     // notification: {
     //   status: null,

@@ -49,23 +49,26 @@ const PostMessageRecieve = (props) => {
         window.opener.postMessage(sendData, 'http://localhost:8503/image-editor');
         window.opener.postMessage(sendData, 'http://localhost:8503/image-cleaner');
         window.opener.postMessage(sendData, 'http://localhost:8503/image-combiner');
+        window.opener.postMessage(sendData, 'http://localhost:8503/image-fusion');      
         window.opener.postMessage(sendData, 'http://localhost:8504/image-xyz');
         window.opener.postMessage(sendData, 'http://localhost:8505');
       }
 
       if (SHAREURLS[0] === 'https://do-bucket-image-photo-app-test.web.app') {
         window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app');
-        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app' + '/image-editor');
-        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app' + '/image-cleaner');
-        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app' + '/image-combiner');
+        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app/image-editor');
+        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app/image-cleaner');
+        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app/image-combiner');
+        window.opener.postMessage(sendData, 'https://do-bucket-image-photo-app-test.web.app/image-fusion');
         window.opener.postMessage(sendData, 'https://draw-dreamer-test.spaceeight.net');
       }
 
       if (SHAREURLS[0] === 'https://kura-image-photo.spaceeight.net') {
         window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net');
-        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net' + '/image-editor');
-        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net' + '/image-cleaner');
-        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net' + '/image-combiner');
+        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net/image-editor');
+        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net/image-cleaner');
+        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net/image-combiner');
+        window.opener.postMessage(sendData, 'https://kura-image-photo.spaceeight.net/image-fusion');
         window.opener.postMessage(sendData, 'https://kura-draw-dreamer.spaceeight.net');
       }
 
@@ -93,6 +96,7 @@ const PostMessageRecieve = (props) => {
   function messageProcessHandler(event) {
     const token = '12345';
 
+    console.log("message-event", event.data.token, event.data);
     const isOriginExist = SHAREURLS.find(
       (url) => url === event.origin
     );

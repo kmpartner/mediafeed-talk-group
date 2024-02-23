@@ -66,8 +66,10 @@
 }
 
 .main-nav__notifyNum {
-  color: white;
-  background: red;
+  /* color: white; */
+  /* background: red; */
+  color: var(--color);
+  background: var(--background-color);
   position: absolute;
   right: -0.2rem;
   top: -0.3rem;

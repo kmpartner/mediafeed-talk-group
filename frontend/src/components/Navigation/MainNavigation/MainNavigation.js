@@ -80,7 +80,8 @@ const MainNavigation = props => {
 
   useEffect(() => {
     if (pageNotification) {
-      setNewPageNotifyListHandler(pageNotification);
+      console.log('notify', pageNotification.pageNotificationList.length)
+      // setNewPageNotifyListHandler(pageNotification);
     }
   },[pageNotification]);
 
@@ -94,26 +95,30 @@ const MainNavigation = props => {
     
   }
 
-  const setNewPageNotifyListHandler = (pageNotification) => {
-    // let isNewPageNotifyNum = 0;
-    if (pageNotification && pageNotification.pageNotificationList && 
-        pageNotification.pageNotificationList.length > 0
-    ) {
-        const newNotifyList = [];
+  // const setNewPageNotifyListHandler = (pageNotification) => {
+  //   // let isNewPageNotifyNum = 0;
+  //   if (pageNotification && pageNotification.pageNotificationList && 
+  //       pageNotification.pageNotificationList.length > 0
+  //   ) {
+  //       const newNotifyList = [];
         
-        for (const notify of pageNotification.pageNotificationList) {
-          if (notify.creationTime >= pageNotification.lastOpenTime) {
-            newNotifyList.push(notify);
-          }
-        }
-        // isNewPageNotifyNum = newNotifyList.length;
-        if (newNotifyList.length > 0) {
-          setNewpageNotifyList(newNotifyList);
-        }
-      }
-  };
+  //       for (const notify of pageNotification.pageNotificationList) {
+  //         if (notify.creationTime >= pageNotification.lastOpenTime) {
+  //           newNotifyList.push(notify);
+  //         }
+  //       }
+  //       // isNewPageNotifyNum = newNotifyList.length;
+  //       if (newNotifyList.length > 0) {
+  //         setNewpageNotifyList(newNotifyList);
+  //       }
+  //     }
+  // };
   
+  let notifyNum = 0;
 
+  if (pageNotification?.pageNotificationList?.length > 0) {
+    notifyNum = pageNotification?.pageNotificationList?.length;
+  }
 
   return (
     <Fragment>
@@ -229,13 +234,13 @@ const MainNavigation = props => {
               }}
             >
               {marks.bellMark}
-              {!isPageNotfyOpen && newPageNotifyList.length > 0 && (
+              {!isPageNotfyOpen && notifyNum > 0 && (
                 <span className='main-nav__notifyNum'>
-                  {newPageNotifyList.length > 20 && (
-                    <span>+20</span>
+                  {notifyNum > 20 && (
+                    <span>20+</span>
                   )}
-                  {newPageNotifyList.length <= 20 && (
-                    <span>{newPageNotifyList.length}</span>
+                  {notifyNum <= 20 && (
+                    <span>{notifyNum}</span>
                   )}
                 </span>
               )}
