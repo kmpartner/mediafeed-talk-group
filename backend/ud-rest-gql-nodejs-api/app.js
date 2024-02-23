@@ -57,6 +57,7 @@ const talkUserRoute = require('./routes/user/talk-user');
 const UserRecentVisitRoute = require('./routes/user/user-recent-visit');
 
 const PageNotificationRoute = require('./routes/page-notification/page-notification');
+const userNameDataRoute = require('./routes/user-name-data/user-name-data');
 
 const adRoute = require('./routes/ad/ad');
 
@@ -187,6 +188,7 @@ app.use('/talk-user', talkUserRoute);
 app.use('/user-recent-visit', UserRecentVisitRoute);
 
 app.use('/page-notification', PageNotificationRoute);
+app.use('/user-name-data', userNameDataRoute);
 
 app.use('/ad', adRoute);
 
