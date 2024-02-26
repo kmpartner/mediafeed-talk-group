@@ -1,15 +1,15 @@
 import { BASE_URL, GQL_URL } from '../App';
 import jwt from 'jsonwebtoken';
 
-// import * as firebase from "firebase/app";
+// // import * as firebase from "firebase/app";
 
-// // Add the Firebase services that you want to use
-// import "firebase/auth";
-// import "firebase/firestore";
+// // // Add the Firebase services that you want to use
+// // import "firebase/auth";
+// // import "firebase/firestore";
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+// import firebase from 'firebase/compat/app';
+// import 'firebase/compat/auth';
+// import 'firebase/compat/firestore';
 
 export const getUserData = (url, token) => {
   return new Promise((resolve, reject) => {
@@ -693,52 +693,52 @@ export const getNewPasswordTokenUser = (url, email) => {
   })
 }
 
-export const resetPassword = (url, email, password, passwordToken, code) => {
-  // console.log('in resetpasswordhandler');
-  return new Promise((resolve, reject) => {
+// export const resetPassword = (url, email, password, passwordToken, code) => {
+//   // console.log('in resetpasswordhandler');
+//   return new Promise((resolve, reject) => {
 
-    fetch(url + `/auth/passwordreset`, {
-      method: 'POST',
-      headers: {
-        // Authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        passwordToken: passwordToken
-        })
-      })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error("Updating password failed!");
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
+//     fetch(url + `/auth/passwordreset`, {
+//       method: 'POST',
+//       headers: {
+//         // Authorization: 'Bearer ' + token,
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         email: email,
+//         password: password,
+//         passwordToken: passwordToken
+//         })
+//       })
+//       .then(res => {
+//         if (res.status !== 200 && res.status !== 201) {
+//           throw new Error("Updating password failed!");
+//         }
+//         return res.json();
+//       })
+//       .then(resData => {
+//         console.log(resData);
 
-            return firebase.auth().confirmPasswordReset(code, password)
-              .then(result => {
-                // Update successful.
-                console.log('password update success');
-                resolve({ message: 'password update success', data: resData });
-              })
-              .catch(err => {
-                // An error happened.
-                console.log(err);
-                reject({ message: 'Update password failed', error: err });
-              });
+//             return firebase.auth().confirmPasswordReset(code, password)
+//               .then(result => {
+//                 // Update successful.
+//                 console.log('password update success');
+//                 resolve({ message: 'password update success', data: resData });
+//               })
+//               .catch(err => {
+//                 // An error happened.
+//                 console.log(err);
+//                 reject({ message: 'Update password failed', error: err });
+//               });
         
 
-      })
-      .catch(err => {
-        console.log(err);
-        reject({ message: 'Update password failed', error: err });
-      });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         reject({ message: 'Update password failed', error: err });
+//       });
 
-  })
-};
+//   })
+// };
 
 export const updateUserInfo = (url, token, userId, email, name, firebaseUserData, fierbaseAdditionalUserInfo) => {
   // console.log('in resetpasswordhandler');

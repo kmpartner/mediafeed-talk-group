@@ -2,7 +2,6 @@ import React, { Component, Fragment, Suspense } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { withI18n } from "react-i18next";
 import { I18nextProvider } from 'react-i18next';
-import jwt from 'jsonwebtoken';
 
 import i18n from './i18n';
 
@@ -49,25 +48,25 @@ import './App.css';
 // import "firebase/auth";
 // import "firebase/firestore";
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+// import firebase from 'firebase/compat/app';
+// import 'firebase/compat/auth';
+// import 'firebase/compat/firestore';
 
-// TODO: Replace the following with your app's Firebase project configuration
-// TODO: Replace the following with your app's Firebase project configuration
-var firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
-  authDomain: process.env.REACT_APP_FIREBASE_PROJECTID + ".firebaseapp.com",
-  databaseURL: "https://" + process.env.REACT_APP_FIREBASE_PROJECTID + ".firebaseio.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJECTID,
-  storageBucket: process.env.REACT_APP_FIREBASE_PROJECTID + ".appspot.com",
-  messagingSenderId: "327377228340",
-  appId: "1:327377228340:web:b9e2ff48f5d5c02bb13061",
-  measurementId: "G-6BYDDFRPNX"
-};
+// // TODO: Replace the following with your app's Firebase project configuration
+// // TODO: Replace the following with your app's Firebase project configuration
+// var firebaseConfig = {
+//   apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+//   authDomain: process.env.REACT_APP_FIREBASE_PROJECTID + ".firebaseapp.com",
+//   databaseURL: "https://" + process.env.REACT_APP_FIREBASE_PROJECTID + ".firebaseio.com",
+//   projectId: process.env.REACT_APP_FIREBASE_PROJECTID,
+//   storageBucket: process.env.REACT_APP_FIREBASE_PROJECTID + ".appspot.com",
+//   messagingSenderId: "327377228340",
+//   appId: "1:327377228340:web:b9e2ff48f5d5c02bb13061",
+//   measurementId: "G-6BYDDFRPNX"
+// };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// // Initialize Firebase
+// firebase.initializeApp(firebaseConfig);
 
 
 //// dev urls
@@ -192,7 +191,7 @@ class App extends Component {
           return;
         }
         if (new Date(expiryDate) <= new Date()) {
-          this.logoutHandler();
+          this.logoutHandler2();
           return;
         }
         const userId = localStorage.getItem('userId');
@@ -208,18 +207,18 @@ class App extends Component {
         this.setAutoLogout(remainingMilliseconds);
     
         //firebase user
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            // User is signed in.
-            console.log('fb user', user);
-            this.setState({
-              firebaseUser: user
-            })
-          } else {
-            // User is signed out.
-            console.log('no fb user')
-          }
-        });
+        // firebase.auth().onAuthStateChanged((user) => {
+        //   if (user) {
+        //     // User is signed in.
+        //     console.log('fb user', user);
+        //     this.setState({
+        //       firebaseUser: user
+        //     })
+        //   } else {
+        //     // User is signed out.
+        //     console.log('no fb user')
+        //   }
+        // });
     
         // this.props.history.push('/');
 
@@ -227,7 +226,7 @@ class App extends Component {
       .catch(err => {
         console.log(err);
 
-        this.logoutHandler();
+        this.logoutHandler2();
         
         err.message = 'Login failed ...';
 
@@ -365,28 +364,28 @@ class App extends Component {
       () => console.log(this.state.darkMode))
   }
 
-  logoutHandler = () => {
-    firebase.auth().signOut().then(function () {
-      // Sign-out successful.
-      console.log('fb logouted');
-    }).catch(function (error) {
-      // An error happened.
-      console.log('fb logout failed');
-    });
+  // logoutHandler = () => {
+  //   firebase.auth().signOut().then(function () {
+  //     // Sign-out successful.
+  //     console.log('fb logouted');
+  //   }).catch(function (error) {
+  //     // An error happened.
+  //     console.log('fb logout failed');
+  //   });
 
-    this.setState({ isAuth: false, token: null, name: '' });
-    localStorage.removeItem('token');
-    localStorage.removeItem('expiryDate');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('name');
-    localStorage.removeItem('userLocation');
+  //   this.setState({ isAuth: false, token: null, name: '' });
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('expiryDate');
+  //   localStorage.removeItem('userId');
+  //   localStorage.removeItem('name');
+  //   localStorage.removeItem('userLocation');
 
-    localStorage.removeItem('casTGT');
-    localStorage.removeItem('tokenForCasTGT');
-    localStorage.removeItem('TGTexp');
-    this.props.history.push('/');
-    window.location.reload();
-  };
+  //   localStorage.removeItem('casTGT');
+  //   localStorage.removeItem('tokenForCasTGT');
+  //   localStorage.removeItem('TGTexp');
+  //   this.props.history.push('/');
+  //   window.location.reload();
+  // };
 
   logoutHandler2 = () => {
 
@@ -404,295 +403,295 @@ class App extends Component {
     // window.location.reload();
   };
 
-  loginHandler = (event, authData) => {
-    event.preventDefault();
-    this.setState({ authLoading: true });
+  // loginHandler = (event, authData) => {
+  //   event.preventDefault();
+  //   this.setState({ authLoading: true });
 
-    //// firebase login then mongo
-    let fbUserInfo;
+  //   //// firebase login then mongo
+  //   let fbUserInfo;
 
-    firebase.auth().signInWithEmailAndPassword(authData.email, authData.password)
-      .then(res => {
-        console.log(res);
+  //   firebase.auth().signInWithEmailAndPassword(authData.email, authData.password)
+  //     .then(res => {
+  //       console.log(res);
 
 
 
-        fbUserInfo = res.user;
-        console.log(fbUserInfo);
-        this.setState({ isEmailVerified: fbUserInfo.emailVerified });
+  //       fbUserInfo = res.user;
+  //       console.log(fbUserInfo);
+  //       this.setState({ isEmailVerified: fbUserInfo.emailVerified });
         
-        if (!fbUserInfo.emailVerified) {
-          // alert('not email verfied')
-          throw new Error('not_email_verify');
-        }
+  //       if (!fbUserInfo.emailVerified) {
+  //         // alert('not email verfied')
+  //         throw new Error('not_email_verify');
+  //       }
 
 
 
-        ////login to mongo
-        return fetch(BASE_URL + '/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: authData.email,
-            password: authData.password
-          })
-        })
-          .then(res => {
-            if (res.status === 422) {
-              // throw new Error('Validation failed.');
-              throw new Error(
-                // "Validation failed. Make sure the email address isn't used yet!"
-                i18n.t('auth.text11')
-              );
-            }
-            if (res.status !== 200 && res.status !== 201) {
-              console.log('Error!');
-              // throw new Error('Could not authenticate you!');
-              // throw new Error('User login failed!')
-              throw new Error(i18n.t('auth.text12'));
-            }
-            return res.json();
-          })
-          .then(resData => {
-            console.log(resData);
-            this.setState({
-              isAuth: true,
-              token: resData.token,
-              authLoading: false,
-              userId: resData.userId,
-              name: resData.name,
-              imageUrl: resData.imageUrl
-            });
+  //       ////login to mongo
+  //       return fetch(BASE_URL + '/auth/login', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({
+  //           email: authData.email,
+  //           password: authData.password
+  //         })
+  //       })
+  //         .then(res => {
+  //           if (res.status === 422) {
+  //             // throw new Error('Validation failed.');
+  //             throw new Error(
+  //               // "Validation failed. Make sure the email address isn't used yet!"
+  //               i18n.t('auth.text11')
+  //             );
+  //           }
+  //           if (res.status !== 200 && res.status !== 201) {
+  //             console.log('Error!');
+  //             // throw new Error('Could not authenticate you!');
+  //             // throw new Error('User login failed!')
+  //             throw new Error(i18n.t('auth.text12'));
+  //           }
+  //           return res.json();
+  //         })
+  //         .then(resData => {
+  //           console.log(resData);
+  //           this.setState({
+  //             isAuth: true,
+  //             token: resData.token,
+  //             authLoading: false,
+  //             userId: resData.userId,
+  //             name: resData.name,
+  //             imageUrl: resData.imageUrl
+  //           });
 
-            // console.log(new Date(resData.exp * 1000));
-            localStorage.setItem('token', resData.token);
-            localStorage.setItem('userId', resData.userId);
-            localStorage.setItem('name', resData.name);
+  //           // console.log(new Date(resData.exp * 1000));
+  //           localStorage.setItem('token', resData.token);
+  //           localStorage.setItem('userId', resData.userId);
+  //           localStorage.setItem('name', resData.name);
 
-            // const remainingMilliseconds = 60 * 60 * 1000 * 24;
-            // const expiryDate = new Date(
-            //   new Date().getTime() + remainingMilliseconds
-            // );
-            const remainingMilliseconds = resData.exp * 1000 - new Date().getTime()
-            const expiryDate = new Date(resData.exp * 1000);
-            // console.log(expiryDate, resData.exp * 1000, new Date().getTime(), remainingMilliseconds);
+  //           // const remainingMilliseconds = 60 * 60 * 1000 * 24;
+  //           // const expiryDate = new Date(
+  //           //   new Date().getTime() + remainingMilliseconds
+  //           // );
+  //           const remainingMilliseconds = resData.exp * 1000 - new Date().getTime()
+  //           const expiryDate = new Date(resData.exp * 1000);
+  //           // console.log(expiryDate, resData.exp * 1000, new Date().getTime(), remainingMilliseconds);
 
-            localStorage.setItem('expiryDate', expiryDate.toISOString());
-            this.setAutoLogout(remainingMilliseconds);
+  //           localStorage.setItem('expiryDate', expiryDate.toISOString());
+  //           this.setAutoLogout(remainingMilliseconds);
 
-            // this.props.history.replace('/');
-            this.props.history.push('/feed/posts');
+  //           // this.props.history.replace('/');
+  //           this.props.history.push('/feed/posts');
 
-            const emailVerifyState = fbUserInfo.emailVerified ? 'verified' : ''
-            return updateEmailVerified(emailVerifyState, fbUserInfo.uid, BASE_URL, localStorage.getItem('token'))
-          })
-          .then(result => {
-            console.log(result);
-          })
-        // .catch(err => {
-        //   console.log(err);
-        //   this.setState({
-        //     isAuth: false,
-        //     authLoading: false,
-        //     error: err
-        //   });
-        // });
+  //           const emailVerifyState = fbUserInfo.emailVerified ? 'verified' : ''
+  //           return updateEmailVerified(emailVerifyState, fbUserInfo.uid, BASE_URL, localStorage.getItem('token'))
+  //         })
+  //         .then(result => {
+  //           console.log(result);
+  //         })
+  //       // .catch(err => {
+  //       //   console.log(err);
+  //       //   this.setState({
+  //       //     isAuth: false,
+  //       //     authLoading: false,
+  //       //     error: err
+  //       //   });
+  //       // });
 
-      })
-      .catch((err) => {
-        // Handle Errors here.
-        console.log(err);
-        // console.log(err.message);
-        if (err.message === 'not_email_verify') {
-          err.message = (
-            <div>
-              <div>
-                {/* Email Verification is required to Login. Please send Email for verification to your Email address. */}
-                {i18n.t('auth.text32')}
-              </div>
-              <Button design="raised" type="submit" onClick={this.fbSendVerificationEmail}>
-                {/* Send Email for verification */}
-                {i18n.t('auth.text33')}
-              </Button>
-              {/* <div>
-                {this.state.sendVerifyMailMessage}
-              </div> */}
-            </div>
-          );
-        }
+  //     })
+  //     .catch((err) => {
+  //       // Handle Errors here.
+  //       console.log(err);
+  //       // console.log(err.message);
+  //       if (err.message === 'not_email_verify') {
+  //         err.message = (
+  //           <div>
+  //             <div>
+  //               {/* Email Verification is required to Login. Please send Email for verification to your Email address. */}
+  //               {i18n.t('auth.text32')}
+  //             </div>
+  //             <Button design="raised" type="submit" onClick={this.fbSendVerificationEmail}>
+  //               {/* Send Email for verification */}
+  //               {i18n.t('auth.text33')}
+  //             </Button>
+  //             {/* <div>
+  //               {this.state.sendVerifyMailMessage}
+  //             </div> */}
+  //           </div>
+  //         );
+  //       }
 
-        // var errorCode = error.code;
-        // var errorMessage = error.message;
-        if (err.code === 'auth/wrong-password') {
-          // err.message = 'Invalid Password was Entered'
-          err.message = i18n.t('auth.text13');
-        }
-        if (err.code === 'auth/user-not-found') {
-          // err.message = 'Entered email address was not found'
-          err.message = i18n.t('auth.text14');
-        }
-        this.setState({
-          isAuth: false,
-          authLoading: false,
-          error: err
-        });
-      });
-  };
+  //       // var errorCode = error.code;
+  //       // var errorMessage = error.message;
+  //       if (err.code === 'auth/wrong-password') {
+  //         // err.message = 'Invalid Password was Entered'
+  //         err.message = i18n.t('auth.text13');
+  //       }
+  //       if (err.code === 'auth/user-not-found') {
+  //         // err.message = 'Entered email address was not found'
+  //         err.message = i18n.t('auth.text14');
+  //       }
+  //       this.setState({
+  //         isAuth: false,
+  //         authLoading: false,
+  //         error: err
+  //       });
+  //     });
+  // };
 
-  signupHandler = (event, authData) => {
-    event.preventDefault();
-    this.setState({ authLoading: true });
+  // signupHandler = (event, authData) => {
+  //   event.preventDefault();
+  //   this.setState({ authLoading: true });
 
-    //// fb siginup then mongo
-    firebase.auth().createUserWithEmailAndPassword(
-      authData.signupForm.email.value, authData.signupForm.password.value
-    )
-      .then(res => {
-        console.log(res);
+  //   //// fb siginup then mongo
+  //   firebase.auth().createUserWithEmailAndPassword(
+  //     authData.signupForm.email.value, authData.signupForm.password.value
+  //   )
+  //     .then(res => {
+  //       console.log(res);
 
-        //// mongo signup
-        return fetch(BASE_URL + '/auth/signup', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: authData.signupForm.email.value,
-            password: authData.signupForm.password.value,
-            name: authData.signupForm.name.value
-          })
-        })
-          .then(res => {
-            if (res.status === 422) {
-              throw new Error(
-                // "Validation failed. Make sure the email address isn't used yet!"
-                i18n.t('auth.text11')
-              );
-            }
-            if (res.status !== 200 && res.status !== 201) {
-              console.log('Error!');
-              // throw new Error('Creating a user failed!');
-              // throw new Error('User creation failed!');
-              throw new Error(i18n.t('auth.text15'));
-            }
-            return res.json();
-          })
-          .then(resData => {
-            console.log(resData);
+  //       //// mongo signup
+  //       return fetch(BASE_URL + '/auth/signup', {
+  //         method: 'PUT',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({
+  //           email: authData.signupForm.email.value,
+  //           password: authData.signupForm.password.value,
+  //           name: authData.signupForm.name.value
+  //         })
+  //       })
+  //         .then(res => {
+  //           if (res.status === 422) {
+  //             throw new Error(
+  //               // "Validation failed. Make sure the email address isn't used yet!"
+  //               i18n.t('auth.text11')
+  //             );
+  //           }
+  //           if (res.status !== 200 && res.status !== 201) {
+  //             console.log('Error!');
+  //             // throw new Error('Creating a user failed!');
+  //             // throw new Error('User creation failed!');
+  //             throw new Error(i18n.t('auth.text15'));
+  //           }
+  //           return res.json();
+  //         })
+  //         .then(resData => {
+  //           console.log(resData);
 
-            var user = firebase.auth().currentUser;
-            firebase.auth().useDeviceLanguage();
+  //           var user = firebase.auth().currentUser;
+  //           firebase.auth().useDeviceLanguage();
             
-            user.sendEmailVerification().then(() => {
-              // Email sent.
-              this.setState({
-                // sendVerifyMailMessage: 'Verification Mail was sent. Plese check your email and verify. (also chack in spam mail)',
-                sendVerifyMailMessage: i18n.t('auth.text31'),
-                isAuth: false, 
-                authLoading: false
-              });
-            }).catch((err) => {
-              // An error happened.
-              console.log(err);
-              this.setState({
-                isAuth: false,
-                authLoading: false,
-                error: err
-              });
-            });
+  //           user.sendEmailVerification().then(() => {
+  //             // Email sent.
+  //             this.setState({
+  //               // sendVerifyMailMessage: 'Verification Mail was sent. Plese check your email and verify. (also chack in spam mail)',
+  //               sendVerifyMailMessage: i18n.t('auth.text31'),
+  //               isAuth: false, 
+  //               authLoading: false
+  //             });
+  //           }).catch((err) => {
+  //             // An error happened.
+  //             console.log(err);
+  //             this.setState({
+  //               isAuth: false,
+  //               authLoading: false,
+  //               error: err
+  //             });
+  //           });
 
-            // this.setState({ isAuth: false, authLoading: false });
-            // this.props.history.replace('/');
-          })
-        // .catch(err => {
-        //   console.log(err);
-        //   this.setState({
-        //     isAuth: false,
-        //     authLoading: false,
-        //     error: err
-        //   });
-        // });
+  //           // this.setState({ isAuth: false, authLoading: false });
+  //           // this.props.history.replace('/');
+  //         })
+  //       // .catch(err => {
+  //       //   console.log(err);
+  //       //   this.setState({
+  //       //     isAuth: false,
+  //       //     authLoading: false,
+  //       //     error: err
+  //       //   });
+  //       // });
 
-      })
-      .catch((err) => {
-        // Handle Errors here.
-        console.log(err);
-        if (err.code === 'auth/email-already-in-use') {
-          // err.message = 'The email address is already in use by another account.';
-          err.message = i18n.t('auth.text16');
-        }
+  //     })
+  //     .catch((err) => {
+  //       // Handle Errors here.
+  //       console.log(err);
+  //       if (err.code === 'auth/email-already-in-use') {
+  //         // err.message = 'The email address is already in use by another account.';
+  //         err.message = i18n.t('auth.text16');
+  //       }
 
-        this.setState({
-          isAuth: false,
-          authLoading: false,
-          error: err
-        });
-        // var errorCode = error.code;
-        // var errorMessage = error.message;
-        // ...
-      });
-  };
+  //       this.setState({
+  //         isAuth: false,
+  //         authLoading: false,
+  //         error: err
+  //       });
+  //       // var errorCode = error.code;
+  //       // var errorMessage = error.message;
+  //       // ...
+  //     });
+  // };
 
   setAutoLogout = milliseconds => {
     setTimeout(() => {
-      this.logoutHandler();
+      this.logoutHandler2();
     }, milliseconds);
   };
 
-  fbSendVerificationEmail = () => {
-    // set error message for display in error modal
-    const loadingMessage = (<Loader />);
-    this.setState({
-      error: {
-        message: loadingMessage
-      }
-    });
+  // fbSendVerificationEmail = () => {
+  //   // set error message for display in error modal
+  //   const loadingMessage = (<Loader />);
+  //   this.setState({
+  //     error: {
+  //       message: loadingMessage
+  //     }
+  //   });
 
-    var user = firebase.auth().currentUser;
-    firebase.auth().useDeviceLanguage();
+  //   var user = firebase.auth().currentUser;
+  //   firebase.auth().useDeviceLanguage();
     
-    user.sendEmailVerification()
-    .then(() => {
-      // Email sent.
-      console.log('verification email send');
+  //   user.sendEmailVerification()
+  //   .then(() => {
+  //     // Email sent.
+  //     console.log('verification email send');
 
-      this.setState({
-        sendVerifyMailMessage: "Verification Mail was sent. Plese check your email and verify (also chack in spam mail).",
-        isAuth: false, 
-        authLoading: false,
-      });
+  //     this.setState({
+  //       sendVerifyMailMessage: "Verification Mail was sent. Plese check your email and verify (also chack in spam mail).",
+  //       isAuth: false, 
+  //       authLoading: false,
+  //     });
 
-      //// throw error, just for display in error modal
-      throw new Error('Verification_Mail_was_sent');
+  //     //// throw error, just for display in error modal
+  //     throw new Error('Verification_Mail_was_sent');
       
-      // firebase.auth().signOut().then(function() {
-      //     // Sign-out successful.
-      //     console.log('signout success');
-      //   }).catch(function(error) {
-      //     // An error happened.
-      //     console.log('signout failed');
-      //   });
+  //     // firebase.auth().signOut().then(function() {
+  //     //     // Sign-out successful.
+  //     //     console.log('signout success');
+  //     //   }).catch(function(error) {
+  //     //     // An error happened.
+  //     //     console.log('signout failed');
+  //     //   });
 
-    })
-    .catch((err) => {
-      // An error happened.
-      console.log(err);
-      // console.log('verification mail send failed');
+  //   })
+  //   .catch((err) => {
+  //     // An error happened.
+  //     console.log(err);
+  //     // console.log('verification mail send failed');
 
-      if (err.message === 'Verification_Mail_was_sent') {
-        // err.message = 'Verification Mail was sent. Plese check your email and verify (also chack in spam mail).'
-        err.message = i18n.t('auth.text31');
-      }
+  //     if (err.message === 'Verification_Mail_was_sent') {
+  //       // err.message = 'Verification Mail was sent. Plese check your email and verify (also chack in spam mail).'
+  //       err.message = i18n.t('auth.text31');
+  //     }
 
-      this.setState({
-        isAuth: false,
-        authLoading: false,
-        error: err
-      });
-    });
-  }
+  //     this.setState({
+  //       isAuth: false,
+  //       authLoading: false,
+  //       error: err
+  //     });
+  //   });
+  // }
 
   // ResetPasswordHandler = () => {
   //   console.log('in reset passwordHandler');
@@ -947,7 +946,7 @@ class App extends Component {
                 <Toolbar>
                   <MainNavigation
                     onOpenMobileNav={this.mobileNavHandler.bind(this, true)}
-                    onLogout={this.logoutHandler}
+                    onLogout={this.logoutHandler2}
                     isAuth={this.state.isAuth}
                     token={this.state.token}
                     name={this.state.name}
@@ -961,7 +960,7 @@ class App extends Component {
                   open={this.state.showMobileNav}
                   mobile
                   onChooseItem={this.mobileNavHandler.bind(this, false)}
-                  onLogout={this.logoutHandler}
+                  onLogout={this.logoutHandler2}
                   isAuth={this.state.isAuth}
                   token={this.state.token}
                   name={this.state.name}
