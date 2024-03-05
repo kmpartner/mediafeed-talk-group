@@ -20,4 +20,9 @@ router.put('/update-read-state',
   pageNotificationController.updatePageNotificationReadState,
 );
 
+router.put('/add-page-notification-data-for-talk-group', 
+  isAuth, 
+  pageNotificationController.addPageNotificationDataForTalkGroup,
+);
+
 module.exports = router;

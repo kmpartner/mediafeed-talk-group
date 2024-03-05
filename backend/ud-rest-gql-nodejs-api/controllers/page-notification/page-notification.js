@@ -1,5 +1,7 @@
 const PageNotification = require('../../models/page-notification/page-notification');
 
+const { storePageNotificationData } = require('../../util/page-notification/page-notification-util');
+
 const getPageNotification = async (req, res, next) => {
   try {
     const userId = req.userId;
@@ -102,8 +104,51 @@ const updatePageNotificationReadState = async (req, res, next) => {
   }
 };
 
+
+const addPageNotificationDataForTalkGroup = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const {
+      storeUserId,
+      page,
+      title,
+      message,
+      dataForNotification,
+     } = req.body;
+
+
+    const pageNotification = await PageNotification.findOne({ userId: storeUserId });
+    
+    if (!pageNotification) {
+      const error = new Error('pageNotification not found');
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const updatedPageNotification = await storePageNotificationData(
+      storeUserId,
+      title,
+      message,
+      null,
+      dataForNotification,
+      page,
+    );
+
+    res.status(200).json({ 
+      message: `add page notification data for ${page} success`,
+      // data: updatedPageNotification, 
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 module.exports = {
   getPageNotification,
   updatePageNotificationLastOpenTime,
   updatePageNotificationReadState,
+  addPageNotificationDataForTalkGroup,
 };
