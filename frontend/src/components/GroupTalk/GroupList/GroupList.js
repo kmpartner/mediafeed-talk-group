@@ -24,6 +24,8 @@ const GroupList = (props) => {
   const shareGroupIdParam = queryParams.get('shareGroupId');
   const shareFileTypeParam = queryParams.get('shareFileType');
 
+  const pageNotificationGroupRoomIdParam = queryParams.get('pageNotificationGroupRoomId');
+
   const [t] = useTranslation('translation');
 
   const [store, dispatch] = useStore();
@@ -131,6 +133,21 @@ const GroupList = (props) => {
       // );
     }
   },[shareFile, shareGroupIdParam]);
+
+  useEffect(() => {
+    if (pageNotificationGroupRoomIdParam) {
+      props.showGroupTalkTextHandler(
+        pageNotificationGroupRoomIdParam, 
+        pageNotificationGroupRoomIdParam,
+        null,
+      );
+      props.getGroupInfoHandler(pageNotificationGroupRoomIdParam); 
+      // props.addVisitGroupIdHandler(
+      //   group.groupRoomId,
+      //   group.creatorUserId,
+      // );
+    }
+  },[pageNotificationGroupRoomIdParam]);
 
 
 

@@ -30,10 +30,38 @@ const PageNotificationItem = (props) => {
     const currentPath = window.location.pathname + window.location.search;
     let notifyLink = currentPath;
 
-    if (notify.page === 'feed' && notify.dataForNotification && notify.dataForNotification.postId) {
+    if (notify.page === 'feed' && notify.dataForNotification?.postId) {
       notifyLink = `/feed/${notify.dataForNotification.postId}`;
       // console.log(notify.dataForNotification.postId)
       displayPage = 'Feed';
+    }
+
+    if (notify.page === 'talk' ) {
+      notifyLink = `/talk-page`;
+      
+      if (notify.dataForNotification?.fromUserId) {
+        notifyLink = `/talk-page?pageNotificationUserId=${notify.dataForNotification.fromUserId}`;
+      }
+      // console.log(notify.dataForNotification.postId)
+      displayPage = 'talk';
+    }
+
+    if (notify.page === 'group' ) {
+
+      notifyLink = `/group-talk-page`;
+
+      if (notify.dataForNotification?.groupRoomId) { 
+        notifyLink = `/group-talk-page?pageNotificationGroupRoomId=${notify.dataForNotification.groupRoomId}`;
+      }
+
+      // notifyLink = `/feed/${notify.dataForNotification.postId}`;
+      // console.log(notify.dataForNotification.postId)
+      
+      displayPage = 'group';
+
+      if (notify.dataForNotification?.groupName) {
+        displayPage = `group, ${notify.dataForNotification.groupName}`;
+      }
     }
 
 

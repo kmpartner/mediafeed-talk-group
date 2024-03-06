@@ -832,8 +832,14 @@ const VideoTextTalk = (props) => {
     const queryParams = currentUrl.searchParams;
     const shareUserIdParam = queryParams.get('shareUserId');
 
+    const pageNotificationUserIdParam = queryParams.get('pageNotificationUserId');
+
     //// when shareUserId param exist, go to user list to proceed for user select
     if (shareUserIdParam && !connectClick) {
+      setConnectClick(true);
+    }
+
+    if (pageNotificationUserIdParam && !connectClick) {
       setConnectClick(true);
     }
 

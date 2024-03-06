@@ -85,7 +85,13 @@ const TalkUserListItem = props => {
   const queryParams = currentUrl.searchParams;
   const shareUserIdParam = queryParams.get('shareUserId');
 
+  const pageNotificationUserIdParam = queryParams.get('pageNotificationUserId');
+
   if (element && element.userId === shareUserIdParam) {
+    startWriteTextHandler();
+  }
+
+  if (element && element.userId === pageNotificationUserIdParam) {
     startWriteTextHandler();
   }
 
