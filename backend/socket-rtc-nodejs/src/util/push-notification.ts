@@ -3,6 +3,8 @@ const webpush = require('web-push');
 // const PushSubscription = require('../models/push-subscription');
 // const groupPush = require('../models/group-push');
 const TalkPush = require('../models/talk-push');
+const { getUserNameData } = require('./get-user-name-data-util');
+
 
 require('dotenv').config();
 
@@ -199,23 +201,26 @@ export const pushTextToUser2 = (userId: string, textData: any) => {
       modifyContent = textData.text.slice(0,100) + '.....'
     } 
 
+    const userNameData = await getUserNameData(textData, textData.fromUserId);
+
     const pushContent = {
-      title: `new text from user ${textData.fromName}`,
+      title: `new text from user ${userNameData?.name}`,
       content: `${modifyContent}`,
-      openUrl: `/talk-page/?grouptotalk=${textData.fromName}`,
+      // openUrl: `/talk-page/?grouptotalk=${textData.fromName}`,
+      openUrl: `/talk-page/?pageNotificationUserId=${textData.fromName}`,
       // postData: postData
     };
     
     const sendPushData: any = await sendPush(pushData, pushContent);
     // console.log('sendPushData', sendPushData);
 
-    const pushNotifyRecord = new TalkPush({
-      pushTime: Date.now(),
-      pushContent: pushContent,
-      pushUserIds: sendPushData.sendIdList,
-      clientUserId: userId,
-    });
-    await pushNotifyRecord.save();
+    // const pushNotifyRecord = new TalkPush({
+    //   pushTime: Date.now(),
+    //   pushContent: pushContent,
+    //   pushUserIds: sendPushData.sendIdList,
+    //   clientUserId: userId,
+    // });
+    // await pushNotifyRecord.save();
 
     // console.log('pushNotifyRecord', pushNotifyRecord);
 
@@ -226,10 +231,11 @@ export const pushTextToUser2 = (userId: string, textData: any) => {
 
     resolve({ 
         message: 'Push notification send', 
-        data: pushNotifyRecord
+        // data: pushNotifyRecord,
+        data: pushContent,
       });
 
-  }  catch (err) {
+  }  catch (err: any) {
     if (!err.statusCode) {
         err.statusCode = 500;
     }

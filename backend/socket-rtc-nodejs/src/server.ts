@@ -23,6 +23,7 @@ const fileUploadRoutes = require('./routes/file-upload');
 const { fileUpload } = require('./middleware/multer');
 const { handlePushNotification } = require('./handle-push');
 const { createReturnPost } = require('./util/file-upload-utils');
+const { addPageNotificationData } = require('./util/page-notification');
 
 require('dotenv').config();
 
@@ -1122,6 +1123,11 @@ export class Server {
             });
           }
         }
+
+        addPageNotificationData(
+          data,
+          destUserTalk.text[userDestTalk.text.length -1]._id.toString(),
+        );
 
       });
 
