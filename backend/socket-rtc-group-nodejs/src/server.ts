@@ -90,6 +90,10 @@ export interface GroupTextInfo {
   fileUrls? : string[],
   filePaths?: string[],
   fileSizes?: string[],
+  
+  token?: string,
+  groupName?: string,
+  textId?: string,
 }
 
 

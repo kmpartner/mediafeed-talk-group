@@ -2,6 +2,7 @@ const GroupTalk = require('./models/group-talk');
 const GroupTalkReaction = require('./models/group-talk-reaction');
 const { authUserId } = require('./util/auth');
 const { createReturnPost } = require('./util/file-upload-utils');
+const { addPageNotificationData } = require('./util/page-notification');
 
 import { Error } from 'mongoose';
 //// interface import
@@ -127,6 +128,16 @@ exports.handleGroupTextSend = (socket: any) => {
         // textData: textData,
         textData: createReturnPost(groupTalk.talks[groupTalk.talks.length -1]),
       });
+
+
+      addPageNotificationData(
+        {
+          ...data,
+          groupName: groupTalk.groupName,
+          textId: groupTalk.talks[groupTalk.talks.length - 1]._id.toString(),
+        }, 
+        idsForPush
+      );
 
     } 
     catch(err: any) {

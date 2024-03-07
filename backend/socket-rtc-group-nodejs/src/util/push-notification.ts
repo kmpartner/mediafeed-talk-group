@@ -2,6 +2,7 @@ const webpush = require('web-push');
 
 // const PushSubscription = require('../models/push-subscription');
 const groupPush = require('../models/group-push');
+const { getUserNameData } = require('./get-user-name-data-util');
 
 require('dotenv').config();
 
@@ -273,7 +274,9 @@ export const pushTextToUsers2 = (
       //   .collection("pushsubscriptions")
       //   .find({ userId: textData.toUserId })
       //   .toArray();
-  
+
+      const userNameData = await getUserNameData(textData, textData.fromUserId);
+
       // const allSubscriptions = await PushSubscription.find({});
       let pushData: any[] = [];
   
@@ -305,22 +308,23 @@ export const pushTextToUsers2 = (
       } 
   
       const pushContent = {
-        title: `new text in Group`,
+        title: `new text in Group by ${userNameData?.name}`,
         content: `${modifyContent}`,
-        openUrl: `/group-talk-page/?groupRoomIdPush=${groupRoomId}`,
+        // openUrl: `/group-talk-page/?groupRoomIdPush=${groupRoomId}`,
+        openUrl: `/group-talk-page/?pageNotificationGroupRoomId=${groupRoomId}`,
         // postData: postData
       };
       
       const sendPushData: any = await sendPush(pushData, pushContent);
       // console.log('sendPushData', sendPushData);
   
-      const pushNotifyRecord = new groupPush({
-        pushTime: Date.now(),
-        pushContent: pushContent,
-        pushUserIds: sendPushData.sendIdList,
-        clientUserId: userId,
-      });
-      await pushNotifyRecord.save();
+      // const pushNotifyRecord = new groupPush({
+      //   pushTime: Date.now(),
+      //   pushContent: pushContent,
+      //   pushUserIds: sendPushData.sendIdList,
+      //   clientUserId: userId,
+      // });
+      // await pushNotifyRecord.save();
 
       // const pushNotifyRecord = {
       //   pushTime: Date.now(),
@@ -333,7 +337,8 @@ export const pushTextToUsers2 = (
   
       resolve({ 
         message: 'Push notification send', 
-        data: pushNotifyRecord
+        // data: pushNotifyRecord,
+        data: pushContent,
       });
       // res.status(200).json({ 
       //   message: 'Push notification send', 
