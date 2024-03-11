@@ -13,11 +13,21 @@ const configureStore = () => {
         }
       };
     },
+    SET_PAGENOTIFICATION_CREATORUSERNAMEDATALIST: (state, payload) => {
+      return {
+        // ...state,
+        pageNotificationStore: {
+          ...state.pageNotificationStore,
+          pageNotificationCreatorUserNameDataList: payload,
+        }
+      };
+    },
   };
 
   initStore(actions, {
     pageNotificationStore: {
-      pageNotification: null
+      pageNotification: null,
+      pageNotificationCreatorUserNameDataList: [],
     }
   });
 };
