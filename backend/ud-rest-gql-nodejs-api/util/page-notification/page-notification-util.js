@@ -137,6 +137,8 @@ const addFeedPostPageNotification = async (userId, postData) => {
           { 
             postId: postData._id.toString(),
             isImageFile: isImageFile,
+            postCreatorId: postData.creatorId,
+            postCreatorName: postData.creatorName,
           },
           'feed',
         );
@@ -181,6 +183,7 @@ const addFeedPostCommentPageNotification = async (commentData, postCreatorId) =>
               postId: postId,
               commentCreatorId: commentData.creatorId,
               commentId: commentData._id.toString(),
+              commentCreatorName: commentData.creatorName,
               // isImageFile: isImageFile,
             },
             'feed',
@@ -200,6 +203,7 @@ const addFeedPostCommentPageNotification = async (commentData, postCreatorId) =>
         postId: postId,
         commentCreatorId: commentData.creatorId,
         commentId: commentData._id.toString(),
+        commentCreatorName: commentData.creatorName,
         // isImageFile: isImageFile,
       },
       'feed',

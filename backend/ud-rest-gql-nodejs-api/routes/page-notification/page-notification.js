@@ -25,4 +25,9 @@ router.put('/add-page-notification-data-for-talk-group',
   pageNotificationController.addPageNotificationDataForTalkGroup,
 );
 
+router.get('/creator-user-name-data-list', 
+  isAuth, 
+  pageNotificationController.getPageNotificationCreatorUserNameDataList,
+);
+
 module.exports = router;

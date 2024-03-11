@@ -1,6 +1,8 @@
+const _ = require('lodash');
 const PageNotification = require('../../models/page-notification/page-notification');
 
 const { storePageNotificationData } = require('../../util/page-notification/page-notification-util');
+const { getUserNameDataList } = require('../../util/user-name-data/user-name-data-util');
 
 const getPageNotification = async (req, res, next) => {
   try {
@@ -146,9 +148,86 @@ const addPageNotificationDataForTalkGroup = async (req, res, next) => {
   }
 };
 
+
+const getPageNotificationCreatorUserNameDataList = async (req, res, next) => {
+  try {
+
+    const pageNotification = await PageNotification.findOne({ userId: req.userId });
+    
+    if (!pageNotification) {
+      const error = new Error('pageNotification not found');
+      error.statusCode = 404;
+      throw error;
+    };
+
+    const usersForNameData = [];
+
+    for (const notify of pageNotification.pageNotificationList) {
+      const dataForNotification = notify.dataForNotification;
+
+      if (notify.page === 'feed') {
+        if (dataForNotification.postCreatorId) {
+          usersForNameData.push({
+            userId: dataForNotification.postCreatorId,
+            name: dataForNotification.postCreatorName,
+          })
+        }
+
+        if (dataForNotification.commentCreatorId) {
+          usersForNameData.push({
+            userId: dataForNotification.commentCreatorId,
+            name: dataForNotification.commentCreatorName,
+          })
+        }
+
+      }
+
+      if (notify.page === 'talk') {
+        if (dataForNotification.fromUserId) {
+          usersForNameData.push({
+            userId: dataForNotification.fromUserId,
+            name: dataForNotification.fromName,
+          })
+        }
+      }
+
+      if (notify.page === 'group') {
+        if (dataForNotification.fromUserId) {
+          usersForNameData.push({
+            userId: dataForNotification.fromUserId,
+            name: dataForNotification.fromName,
+          })
+        }
+      }
+    }
+
+    const uniqList = _.uniqBy(usersForNameData, ['userId']);
+
+    const authHeader = req.get('Authorization');
+    const token = authHeader.split(' ')[1];
+    
+    const userNameDataList = await getUserNameDataList(
+        token,
+        uniqList,
+      );
+
+    res.status(200).json({ 
+      message: "get PageNotification Creator UserNameDataList success",
+      data: userNameDataList, 
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+
 module.exports = {
   getPageNotification,
   updatePageNotificationLastOpenTime,
   updatePageNotificationReadState,
   addPageNotificationDataForTalkGroup,
+  getPageNotificationCreatorUserNameDataList,
 };

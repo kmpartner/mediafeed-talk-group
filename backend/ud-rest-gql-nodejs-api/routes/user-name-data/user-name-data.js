@@ -12,10 +12,10 @@ router.get('/',
   userNameDataController.getUserNameData,
 );
 
-router.put('/user-name', 
-  isAuth,
-  userNameDataController.updateUserName,
-);
+// router.put('/user-name', 
+//   isAuth,
+//   userNameDataController.updateUserName,
+// );
 
 
 module.exports = router;
