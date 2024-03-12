@@ -34,6 +34,7 @@ export const addPageNotificationData = async (textData: any, textId: any) => {
           sendAt: textData.sendAt,
           textId: textId,
           filePaths: textData.filePaths,
+          fromName: userNameData?.name,
         },
       }),
     });
