@@ -37,6 +37,7 @@ export const addPageNotificationData = async (textData: GroupTextInfo, idsForPus
             
             textId: textData.textId,
             filePaths: textData.filePaths,
+            fromName: userNameData?.name,
           },
         }),
       });
