@@ -105,6 +105,12 @@ const configureStore = () => {
         userNameData: payload,
       }
     },
+    SET_NAMEDATALIST: (state, payload) => {
+      return {
+        ...state,
+        nameDataList: payload,
+      }
+    },
 
     // SET_I18NEXT: (state, payload) => {
     //   return { 
@@ -131,6 +137,7 @@ const configureStore = () => {
 
     deferredPrompt: null,
     userNameData: null,
+    nameDataList: [],
     // lastPage: 0,
     // notification: {
     //   status: null,

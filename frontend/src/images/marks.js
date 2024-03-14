@@ -53,6 +53,8 @@ export const marks = {
 
   externalLink: <i className="fa fa-external-link" aria-hidden="true"></i>,
 
-  shareAltMark: <i class="fa fa-share-alt" aria-hidden="true"></i>
+  shareAltMark: <i class="fa fa-share-alt" aria-hidden="true"></i>,
+  externalLinkMark: <i style={{color: 'gray'}} className="fa fa-external-link" aria-hidden="true"></i>,
+
 };
 

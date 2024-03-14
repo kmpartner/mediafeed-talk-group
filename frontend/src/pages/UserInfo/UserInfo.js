@@ -31,8 +31,11 @@ import {
 import { getFollowedUserList } from '../../util/follow'
 import {
   BASE_URL,
-  // GQL_URL 
+  USERACCOUNTPAGE_URL,
+  // GQL_URL,
 } from '../../App'
+
+import { marks } from '../../images/marks';
 import './UserInfo.css';
 
 
@@ -370,35 +373,38 @@ const UserInfo = props => {
   } else {
     body = (
       <div>
-
         <div className="userInfo__infoContent">
           <span>
             {t('userInfo.text2', 'name')}:
             </span>
           <span className="userInfo__userImage">
-            {userNameData && (<span>{userNameData.name}</span>)} 
-            {!userNameData && (<span>{userName}</span>)} 
+            {!userNameData && (
+                <span>{userName}</span>
+            )} 
+
+            {userNameData && (
+              <span>
+                <span>
+                  {userNameData.name}
+                </span>
+                {/* <a
+                  href={`${USERACCOUNTPAGE_URL}?tokenForCasTGT=${localStorage.getItem('tokenForCasTGT')}&TGTexp=${localStorage.getItem('TGTexp')}`}
+                  target="_blank" rel="noopener noreferrer"
+                >
+                  <Button mode="flat" type="submit"
+                    title={'go to user account page for update'}
+                  >
+                    {t('general.text5', '(edit)')} {marks.externalLinkMark}
+                  </Button>
+                </a> */}
+              </span>
+            )} 
           </span>
-          {/* <span className="userInfo__editText" onClick={() => { setIsNameUpdate(!isNameUpdate) }}>
-            <Button mode="flat" type="submit">
-              ({t('general.text5', '(edit)')})
-          </Button></span> */}
         </div>
-        <div>
+        
+        {/* <div>
           {isNameUpdate ?
             <section>
-              {/* <form onSubmit={() => { updateUserNameHandler(nameInput) }}>
-                <Input
-                  type="text"
-                  placeholder="New Name..."
-                  control="input"
-                  onChange={nameInputChangeHandler}
-                  value={nameInput}
-                />
-                <Button mode="raised" type="submit" disabled={!nameInput.trim()}>
-                  Update
-                </Button>
-              </form> */}
               <Input
                 type="text"
                 placeholder="Name, less than 20 characters..."
@@ -414,20 +420,50 @@ const UserInfo = props => {
                   disabled={!nameInput || !nameInput.trim() || nameInput.length > 20}
                   onClick={() => { updateUserNameHandler(nameInput) }}
                 >
-                  {/* Update */}
-                  {t('general.text6')}
+                  {t('general.text6', 'Update')}
                 </Button>
               </div>
 
             </section>
             : null
           }
-        </div>
+        </div> */}
 
-        <div className="userInfo__infoContent">
+        {userNameData && (
+          <div className="userInfo__infoContent">
+            <span>
+              {t('userInfo.text3', 'image')}:
+            </span>
+
+            {userNameData.imageUrl && (
+              <Img className="userInfo__userImageFile" 
+                src={userNameData.imageUrl}
+                alt="" // height="25" 
+              />
+            )}
+            {!userNameData.imageUrl && (
+              <Img className="userInfo__userImage" 
+                src={SampleImage}
+                alt="" height="25" 
+              />
+            )}
+
+            {/* <a
+              href={`${USERACCOUNTPAGE_URL}?tokenForCasTGT=${localStorage.getItem('tokenForCasTGT')}&TGTexp=${localStorage.getItem('TGTexp')}`}
+              target="_blank" rel="noopener noreferrer"
+            >
+              <Button mode="flat" type="submit"
+                title={'go to user account page for update'}
+              >
+                {t('general.text5', '(edit)')} {marks.externalLinkMark}
+              </Button>
+            </a> */}
+          </div>
+        )}
+
+        {/* <div className="userInfo__infoContent">
           <span>
-            {/* image:  */}
-            {t('userInfo.text3')}:
+            {t('userInfo.text3', 'image')}:
           </span>
           <span>
             {userImageUrl
@@ -446,18 +482,7 @@ const UserInfo = props => {
                   />
                 )
             }
-            {/* <img className="userInfo__userImage" src={BASE_URL + '/' + userImageUrl} alt="" height="25" ></img> */}
-            {/* <Img className="userInfo__userImage" 
-              // src={userImageUrl}
-              src={userImageUrl && userImageUrl.startsWith('https://') ? userImageUrl : BASE_URL + '/' + userImageUrl}
-              alt="" height="25" 
-            /> */}
           </span>
-          {/* <span className="userInfo__editText" onClick={() => { setIsImageUpdate(!isImageUpdate) }}>
-            <Button mode="flat" type="submit">
-              ({t('general.text5', '(edit)')})
-            </Button>
-          </span> */}
         </div>
 
         <div>
@@ -473,7 +498,7 @@ const UserInfo = props => {
               />
             </div>
             : null}
-        </div>
+        </div> */}
 
 
         <div className="userInfo__infoContent">

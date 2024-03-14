@@ -84,6 +84,7 @@ export const ADNETWORKLINK_URL = process.env.REACT_APP_DEV_ADNETWORKLINK_URL;
 export const LIVE_URL = process.env.REACT_APP_DEV_LIVE_URL;
 export const BOOKLIVE_URL = process.env.REACT_APP_DEV_BOOKLIVE_URL;
 export const SHAREURLS = ['http://localhost:8503', 'http://localhost:8504','http://localhost:8505'];
+export const USERACCOUNTPAGE_URL = window.location.href;
 
 //// test-deploy urls (use canary services in backend)  
 //// Don't Forget update servicewoker file for build
@@ -101,6 +102,8 @@ export const SHAREURLS = ['http://localhost:8503', 'http://localhost:8504','http
 // export const LIVE_URL = process.env.REACT_APP_TEST_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
 // export const SHAREURLS = ['https://do-bucket-image-photo-app-test.web.app', ];
+// export const USERACCOUNTPAGE_URL = window.location.href;
+
 
 //// do urls deploy  Don't Forget update servicewoker file for build
 // export const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -117,6 +120,8 @@ export const SHAREURLS = ['http://localhost:8503', 'http://localhost:8504','http
 // export const LIVE_URL = process.env.REACT_APP_LIVE_URL
 // export const BOOKLIVE_URL = process.env.REACT_APP_BOOKLIVE_URL;
 // export const SHAREURLS = ['https://kura-image-photo.spaceeight.net',];
+// export const USERACCOUNTPAGE_URL = window.location.href;
+
 
 // export let BASE_URL;
 // export let GQL_URL;
