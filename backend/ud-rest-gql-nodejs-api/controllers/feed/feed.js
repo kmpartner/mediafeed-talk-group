@@ -27,6 +27,7 @@ const { clearImage } = require("../../util/file");
 
 // const { getUserSuggestPosts } = require('./feed-filter');
 const { getUserSuggestPosts } = require('./feed-filter-suggest');
+const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -119,10 +120,6 @@ const getPosts = async (req, res, next) => {
 
       suggestPosts = createReturnPosts(suggestPosts);
 
-
-      
-
-  
       // let publicOrUserPosts = await Post.find({
       //   $or: [{ public: "public" }, { creatorId: req.query.userId }],
       // })
@@ -139,14 +136,27 @@ const getPosts = async (req, res, next) => {
 
       // publicOrUserPosts = createReturnPosts(publicOrUserPosts);
 
+      const userIdsForNameList = [];
 
+      for (const post of suggestPosts) {
+        userIdsForNameList.push(post.creatorId);
+      }
 
+      let userNameDataList = [];
+      const authHeader = req.get('Authorization');
+
+      if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+        // console.log('userNameDataList', userNameDataList);
+      }
 
       res.status(200).json({
         message: "Fetched posts successfully.",
         // posts: publicOrUserPosts,
         posts: suggestPosts,
         totalItems: totalItems,
+        userNameDataList: userNameDataList,
       });
     } catch (err) {
       if (!err.statusCode) {

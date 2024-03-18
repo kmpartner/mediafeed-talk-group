@@ -13,6 +13,8 @@ const UserRecentVisit = require('../../models/user/user-recent-visit');
 // const Redis = require('redis');
 const { createClient } = require('redis');
 
+const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
+
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
 aws.config.update({
@@ -43,7 +45,26 @@ const getMostVisitPosts = async (req, res, next) => {
     if (req.redisCachedData && req.redisCachedData.posts && 
       req.redisCachedData.posts.length > 0
     ) {
-      return res.status(200).json(req.redisCachedData);
+
+      const userIdsForNameList = [];
+
+      for (const post of req.redisCachedData.posts) {
+        userIdsForNameList.push(post.creatorId);
+      }
+
+      let userNameDataList = [];
+      const authHeader = req.get('Authorization');
+
+      if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+        // console.log('userNameDataList', userNameDataList);
+      }
+
+      return res.status(200).json({
+        ...req.redisCachedData,
+        userNameDataList: userNameDataList,
+      });
     }
 
     let mostVisitPosts = await FilteredPosts.findOne({ name: 'mostVisitPosts' });
@@ -58,10 +79,26 @@ const getMostVisitPosts = async (req, res, next) => {
       mostVisitPosts = await createMostVisitPosts(req, res, next);
     }
 
+    const userIdsForNameList = [];
+
+    for (const post of mostVisitPosts.posts) {
+      userIdsForNameList.push(post.creatorId);
+    }
+
+    let userNameDataList = [];
+    const authHeader = req.get('Authorization');
+
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+      // console.log('userNameDataList', userNameDataList);
+    }
+
     res.status(200).json({
       message: "Fetched most visit posts successfully.",
       posts: mostVisitPosts.posts,
       totalItems: mostVisitPosts.posts.length,
+      userNameDataList: userNameDataList,
     });
 
 
@@ -307,8 +344,27 @@ const getMostReactionPosts = async (req, res, next) => {
 
     if (req.redisCachedData && req.redisCachedData.posts && 
           req.redisCachedData.posts.length > 0
-      ) {
-      return res.status(200).json(req.redisCachedData);
+    ) {
+
+        const userIdsForNameList = [];
+
+        for (const post of req.redisCachedData.posts) {
+          userIdsForNameList.push(post.creatorId);
+        }
+  
+        let userNameDataList = [];
+        const authHeader = req.get('Authorization');
+  
+        if (authHeader) {
+          const token = authHeader.split(' ')[1];
+          userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+          // console.log('userNameDataList', userNameDataList);
+        }  
+
+        return res.status(200).json({
+          ...req.redisCachedData,
+          userNameDataList: userNameDataList,
+        });
     }
 
       const type = req.query.type;
@@ -331,10 +387,28 @@ const getMostReactionPosts = async (req, res, next) => {
         throw error;
       }
 
+      const userIdsForNameList = [];
+
+      for (const post of mostLikePosts.posts) {
+        userIdsForNameList.push(post.creatorId);
+      }
+
+      console.log('userIdsForNameList',userIdsForNameList)
+
+      let userNameDataList = [];
+      const authHeader = req.get('Authorization');
+
+      if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+        // console.log('userNameDataList', userNameDataList);
+      }
+      
       res.status(200).json({
         message: `Fetched most ${type} posts successfully.`,
         posts: mostLikePosts.posts,
         totalItems: mostLikePosts.posts.length,
+        userNameDataList: userNameDataList,
       });
       // res.status(200).json({message: 'most like posts get success', data: { posts: mostLikePosts.posts } });
 

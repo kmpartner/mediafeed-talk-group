@@ -10,6 +10,7 @@ const Comment = require('../../models/feed/comment');
 
 const { addFeedPostCommentPageNotification } = require('../../util/page-notification/page-notification-util.js');
 const { sendCommentPushNotification } = require('../../util/push-notification/comment-push-notification-util.js');
+const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
 
 exports.commentAction = async (req, res, next) => {
     // console.log(req.body);
@@ -36,9 +37,29 @@ exports.getPostComments = async (req, res, next) => {
 
         const comments = await Comment.find({ postId: postId }).sort({ createdAt: -1 });
         // console.log('comments', comments);
+        
+        const userIdsForNameList = [];
+
+        for (const comment of comments) {
+          userIdsForNameList.push(comment.creatorId);
+        }
+  
+        
+        let userNameDataList = [];
+        const authHeader = req.get('Authorization');
+  
+        if (authHeader) {
+          const token = authHeader.split(' ')[1];
+          userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+          // console.log('userNameDataList', userNameDataList);
+        }
 
         // io.getIO().emit('posts', { action: 'delete', post: postId });
-        res.status(200).json({ message: 'Get comments successfully', comments: comments });
+        res.status(200).json({ 
+            message: 'Get comments successfully', 
+            comments: comments,
+            userNameDataList: userNameDataList,
+        });
 
         const post = await Post.findById(postId);
     
