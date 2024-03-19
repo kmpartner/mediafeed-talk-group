@@ -53,13 +53,14 @@ const getMostVisitPosts = async (req, res, next) => {
       }
 
       let userNameDataList = [];
+      let token;
       const authHeader = req.get('Authorization');
-
+      
       if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
-        // console.log('userNameDataList', userNameDataList);
+        token = authHeader.split(' ')[1];
       }
+
+      userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
 
       return res.status(200).json({
         ...req.redisCachedData,
@@ -86,13 +87,14 @@ const getMostVisitPosts = async (req, res, next) => {
     }
 
     let userNameDataList = [];
+    let token;
     const authHeader = req.get('Authorization');
-
+    
     if (authHeader) {
-      const token = authHeader.split(' ')[1];
-      userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
-      // console.log('userNameDataList', userNameDataList);
+      token = authHeader.split(' ')[1];
     }
+
+    userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
 
     res.status(200).json({
       message: "Fetched most visit posts successfully.",
@@ -353,14 +355,15 @@ const getMostReactionPosts = async (req, res, next) => {
         }
   
         let userNameDataList = [];
+        let token;
         const authHeader = req.get('Authorization');
-  
+        
         if (authHeader) {
-          const token = authHeader.split(' ')[1];
-          userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
-          // console.log('userNameDataList', userNameDataList);
-        }  
-
+          token = authHeader.split(' ')[1];
+        }
+  
+        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+  
         return res.status(200).json({
           ...req.redisCachedData,
           userNameDataList: userNameDataList,
@@ -396,14 +399,15 @@ const getMostReactionPosts = async (req, res, next) => {
       console.log('userIdsForNameList',userIdsForNameList)
 
       let userNameDataList = [];
+      let token;
       const authHeader = req.get('Authorization');
-
-      if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
-        // console.log('userNameDataList', userNameDataList);
-      }
       
+      if (authHeader) {
+        token = authHeader.split(' ')[1];
+      }
+
+      userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+
       res.status(200).json({
         message: `Fetched most ${type} posts successfully.`,
         posts: mostLikePosts.posts,

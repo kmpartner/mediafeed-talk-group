@@ -143,14 +143,16 @@ const getPosts = async (req, res, next) => {
       }
 
       let userNameDataList = [];
+      let token;
       const authHeader = req.get('Authorization');
-
+      
       if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
-        // console.log('userNameDataList', userNameDataList);
+        token = authHeader.split(' ')[1];
       }
 
+      userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+
+      // console.log(userNameDataList);
       res.status(200).json({
         message: "Fetched posts successfully.",
         // posts: publicOrUserPosts,
