@@ -23,6 +23,37 @@ export const getUserNameData = async (url, token) => {
   }
 };
 
+
+export const updateLsNameDataList = (addList, userNameData) => {
+  let lsNameDataList = localStorage.getItem('lsNameDataList');
+
+  if (lsNameDataList) {
+    lsNameDataList = JSON.parse(lsNameDataList);
+  } else {
+    lsNameDataList = [];
+  }
+
+  let useAddList = addList;
+
+  if (userNameData) {
+    useAddList = addList.concat(userNameData);
+  }
+
+  const deletedList = lsNameDataList.filter(element => {
+    const isInList = useAddList.find(ele => {
+      return ele.userId === element.userId;
+    });
+
+    if (!isInList) {
+      return element;
+    }
+  });
+
+  const newList = deletedList.concat(useAddList).slice(-100000);
+
+  localStorage.setItem('lsNameDataList', JSON.stringify(newList));
+};
+
 // export const updateUserNameDataName = async (url, token, newName) => {
 //   try {
 //     const result = await fetch(url + `/user-name-data/user-name`, {

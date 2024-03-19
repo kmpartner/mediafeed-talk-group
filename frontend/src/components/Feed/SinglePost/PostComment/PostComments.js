@@ -13,6 +13,7 @@ import {
   createPostCommentUserReaction
 } from '../../../../util/userReaction';
 import { postGetUserImageUrl } from '../../../../util/user';
+import { updateLsNameDataList } from '../../../../util/user-name-data/user-name-data-util';
 
 import { BASE_URL, GQL_URL, PUSH_URL } from '../../../../App';
 import './PostComment.css';
@@ -192,6 +193,10 @@ const PostComments = props => {
         // setPostCommentList(resData.data.comments);
 
         setPostCommentList(resData.comments);
+
+        if (resData.userNameDataList?.length > 0) {
+          updateLsNameDataList(resData.userNameDataList);
+        }
         setCommentLoading(false);
       })
       .catch(err => {

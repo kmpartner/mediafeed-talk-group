@@ -5,7 +5,10 @@ import { useTranslation } from "react-i18next/hooks";
 // import jwt from "jsonwebtoken";
 
 import { useStore } from "../../hook-store/store";
-import { getUserNameData } from '../../util/user-name-data/user-name-data-util';
+import { 
+  getUserNameData,
+  updateLsNameDataList,
+} from '../../util/user-name-data/user-name-data-util';
 // import { logoutHandler } from "../../util/user/user";
 
 import { BASE_URL } from "../../App";
@@ -17,7 +20,10 @@ const SetUserNameData = (props) => {
   const [t] = useTranslation("translation");
 
   const [store, dispatch] = useStore();
-  const { isAuth } = store;
+  const { 
+    isAuth, 
+    userNameData,
+  } = store;
 
   // const lsToken = localStorage.getItem("tokenForCasTGT");
 
@@ -63,6 +69,13 @@ const SetUserNameData = (props) => {
       getUserNameDataHandler();
     }
   },[isAuth]);
+
+  //// add user's userNameData in lsNameDataList
+  useEffect(() => {
+    if (userNameData) {
+      updateLsNameDataList([], userNameData);
+    }
+  },[userNameData]);
 
   const getUserNameDataHandler = async () => {
     try {

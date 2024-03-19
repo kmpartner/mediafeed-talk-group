@@ -22,6 +22,7 @@ import { postUpdatePushHandler } from '../../util/pushNotification'
 import { createWithAdIndexList } from '../../util/ad-visit';
 import { deleteLsFavoritePost, updateLsFavoritePosts } from '../../util/feed/favorite-post';
 import { isAudioFile, isVideoFile } from '../../util/image';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 import AdElementDisplay from '../../components/GroupTalk/GroupAdElements/AdElememtDisplay/AdElementDisplay';
 
 import GetWindowData from '../../components/UI/getWindowData';
@@ -453,6 +454,10 @@ class Feed extends Component {
         }
         // localStorage.removeItem('selectedPostId');
 
+
+        if (resData?.userNameDataList?.length > 0) {
+          updateLsNameDataList(resData.userNameDataList);
+        }
 
         // if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         //   console.log(window.innerHeight + window.scrollY, document.body.offsetHeight);
