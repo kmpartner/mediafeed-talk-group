@@ -14,7 +14,7 @@ const FollowerTable = require('../../models/feed/follower-table');
 const FavoritePost = require('../../models/feed/favarite-post');
 const { update } = require('../../models/user/user');
 const { KnownTypeNames } = require('graphql/validation/rules/KnownTypeNames');
-
+const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -85,6 +85,8 @@ exports.getFollowingUsers = async (req, res, next) => {
                         userId: addUser.userId,
                         name: addUser.name,
                         imageUrl: returnImageUrl,
+                        // name: null,
+                        // imageUrl: null,
                         // imageUrl: addUser.imageUrl && addUser.imageUrl !== 'undefined' && addUser.imageUrl !== 'deleted'
                         //     ? s3.getSignedUrl('getObject', {
                         //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
@@ -100,8 +102,27 @@ exports.getFollowingUsers = async (req, res, next) => {
         }
         // console.log('returnUserList', returnUserList);
         
-        // res.status(200).json({ message: 'followingUsers of userId found.', data: userInfoList });
-        res.status(200).json({ message: 'followingUsers of userId found.', data: returnUserList });
+        const userIdsForNameList = [];
+
+        for (const user of returnUserList) {
+          userIdsForNameList.push(user.userId);
+        }
+
+        let userNameDataList = [];
+        let token;
+        const authHeader = req.get('Authorization');
+        
+        if (authHeader) {
+          token = authHeader.split(' ')[1];
+        }
+  
+        userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+  
+        res.status(200).json({ 
+            message: 'followingUsers of userId found.', 
+            data: returnUserList,
+            userNameDataList: userNameDataList,
+        });
 
 
         //// store in followingUserIds in User
@@ -655,33 +676,44 @@ exports.getFavoritePostUserList = async (req, res, next) => {
                 postId: postId 
             });
 
-            // console.log('favoritePosetElements', favoritePostElements);
-            
-            const users = await User.find({});
+
+            // const users = await User.find({});
+
+            // const favoriteUserList = [];
+
+            // for (const element of favoritePostElements) {
+            //     // const userInfo = await User.findOne({ userId: element.userId });
+            //     const userInfo = users.find(user => user.userId === element.userId);
+            //     // console.log('userInfo', userInfo);
+            //     if (userInfo) {
+            //         favoriteUserList.push({
+            //             _id: userInfo._id.toString(),
+            //             userId: userInfo.userId,
+            //             name: userInfo.name,
+            //             // imageUrl: userInfo.imageUrl,
+            //             imageUrl: userInfo.imageUrl && userInfo.imageUrl !== 'undefined' && userInfo.imageUrl !== 'deleted'
+            //             ? s3.getSignedUrl('getObject', {
+            //                 Bucket: process.env.DO_SPACE_BUCKET_NAME,
+            //                 Key: userInfo.imageUrl,
+            //                 Expires: 60 * 60 * 24 * 365
+            //             })
+            //             // : 'undefined',
+            //             : null,
+            //             createdAt: userInfo.createdAt,
+            //         });
+            //     }
+            // }
 
             const favoriteUserList = [];
 
+            const userIdsForNameList = [];
+
             for (const element of favoritePostElements) {
-                // const userInfo = await User.findOne({ userId: element.userId });
-                const userInfo = users.find(user => user.userId === element.userId);
-                // console.log('userInfo', userInfo);
-                if (userInfo) {
-                    favoriteUserList.push({
-                        _id: userInfo._id.toString(),
-                        userId: userInfo.userId,
-                        name: userInfo.name,
-                        // imageUrl: userInfo.imageUrl,
-                        imageUrl: userInfo.imageUrl && userInfo.imageUrl !== 'undefined' && userInfo.imageUrl !== 'deleted'
-                        ? s3.getSignedUrl('getObject', {
-                            Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                            Key: userInfo.imageUrl,
-                            Expires: 60 * 60 * 24 * 365
-                        })
-                        // : 'undefined',
-                        : null,
-                        createdAt: userInfo.createdAt,
-                    });
-                }
+                favoriteUserList.push({
+                    userId: element.userId,
+                })
+
+                userIdsForNameList.push(element.userId);
             }
 
             const returnData = {
@@ -689,8 +721,22 @@ exports.getFavoritePostUserList = async (req, res, next) => {
                 favoritedByList: favoriteUserList 
             };
 
+            let userNameDataList = [];
+            let token;
+            const authHeader = req.get('Authorization');
+            
+            if (authHeader) {
+              token = authHeader.split(' ')[1];
+            }
+      
+            userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+      
 
-            res.status(200).json({ message: 'post favorite users list found.', data: returnData });
+            res.status(200).json({ 
+                message: 'post favorite users list found.', 
+                data: returnData,
+                userNameDataList: userNameDataList,
+            });
     
         } catch (err) {
             if (!err.statusCode) {

@@ -25,20 +25,20 @@ exports.getPostComments = async (req, res, next) => {
         const postId = req.query.postId;
         // console.log('postId:', postId);
 
-        // const post = await Post.findById(postId);
+        const post = await Post.findById(postId);
         // // const user = await User.findById(req.userId);
         // // console.log('user', user);
 
-        // if (!post) {
-        //     const error = new Error('Could not find post.');
-        //     error.statusCode = 404;
-        //     throw error;
-        // }
+        if (!post) {
+            const error = new Error('Could not find post.');
+            error.statusCode = 404;
+            throw error;
+        }
 
         const comments = await Comment.find({ postId: postId }).sort({ createdAt: -1 });
         // console.log('comments', comments);
         
-        const userIdsForNameList = [];
+        const userIdsForNameList = [post.creatorId];
 
         for (const comment of comments) {
           userIdsForNameList.push(comment.creatorId);
@@ -62,7 +62,7 @@ exports.getPostComments = async (req, res, next) => {
             userNameDataList: userNameDataList,
         });
 
-        const post = await Post.findById(postId);
+        // const post = await Post.findById(postId);
     
         if (post) {
             post.totalComment = comments.length;
