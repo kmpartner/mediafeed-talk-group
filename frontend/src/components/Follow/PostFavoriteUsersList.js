@@ -72,7 +72,17 @@ const PostFavoriteUsersList = props => {
   if (favoriteUsers.length === 0) {
       favoriteUsersList = (<div>no users</div>);
     } else {
+      const lsNameDataList = localStorage.getItem('lsNameDataList');
+
       favoriteUsersList = favoriteUsers.map(user => {
+        let nameData;
+
+        if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+          nameData = JSON.parse(lsNameDataList).find(element => {
+            return element.userId === user.userId;
+          });
+        }
+
         return (
           <div key={user.userId}>
             {/* <div onClick={() => {
@@ -85,10 +95,7 @@ const PostFavoriteUsersList = props => {
             <div className="post__AuthorElement">
               <span className="post__AuthorImageContainer">
                 
-                {user.imageUrl ?
-                  // <img className="post__AuthorImageElement"
-                  //   src={BASE_URL + '/' + user.imageUrl} alt=""
-                  // />
+                {/* {user.imageUrl ?
                   <img className="post__AuthorImageElement"
                     src={user.imageUrl} alt=""
                   />
@@ -96,10 +103,25 @@ const PostFavoriteUsersList = props => {
                   <img className="post__AuthorImageElement"
                     src={SampleImage} alt=""
                   />
-                }
-                
+                } */}
+                {nameData?.imageUrl && (
+                  <img className="post__AuthorImageElement"
+                    // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                    src={nameData.imageUrl} 
+                  />
+                )}
+                {!nameData?.imageUrl && (
+                  <img className="post__AuthorImageElement"
+                    src={SampleImage} alt=""
+                  />
+                )}
               </span>
-              <span className="post__AuthorName">{user.name}</span>
+              <span className="post__AuthorName">
+                {/* {user.name} */}
+                {nameData && (
+                  <span>{nameData.name}</span>
+                )}
+              </span>
               <span>
                 <Button mode="flat" design="" size="smaller" onClick={() => {
                   props.setSelectedCreatorId(user.userId, user.name);

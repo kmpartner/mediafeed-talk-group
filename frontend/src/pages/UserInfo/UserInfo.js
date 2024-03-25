@@ -25,8 +25,8 @@ import {
   getUserLocation,
   updateUserName,
   updateUserDescription,
-  getFollowingUsers,
-  getUsers
+  // getFollowingUsers,
+  // getUsers
 } from '../../util/user';
 import { getFollowedUserList } from '../../util/follow'
 import {
@@ -227,28 +227,28 @@ const UserInfo = props => {
     props.history.push(`/feed/userposts/${uid}`);
   }
 
-  const getFollowingUsersHandler = () => {
+  // const getFollowingUsersHandler = () => {
 
-    if (!showFollowingUsers) {
-      setIsLoading(true);
-      getFollowingUsers(
-        localStorage.getItem('userId'), 
-        BASE_URL, 
-        localStorage.getItem('token')
-      )
-      .then(result => {
-        console.log(result);
-        setFollowingUsers(result.data);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.log(err);
-        setIsLoading(false);
-      });
-    }
+  //   if (!showFollowingUsers) {
+  //     setIsLoading(true);
+  //     getFollowingUsers(
+  //       localStorage.getItem('userId'), 
+  //       BASE_URL, 
+  //       localStorage.getItem('token')
+  //     )
+  //     .then(result => {
+  //       console.log(result);
+  //       setFollowingUsers(result.data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       setIsLoading(false);
+  //     });
+  //   }
 
-    setShowFollowingUsers(!showFollowingUsers);
-  }
+  //   setShowFollowingUsers(!showFollowingUsers);
+  // }
 
   const showSmallModalHandler = () => {
     setShowSmallModal(!showSmallModal);

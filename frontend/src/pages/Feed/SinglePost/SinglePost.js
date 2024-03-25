@@ -30,6 +30,7 @@ import { isImageFile, isVideoFile } from '../../../util/image';
 import * as favoritePostUtils from '../../../util/feed/favorite-post';
 import { getDate } from '../../../util/timeFormat';
 import { getPostFavoriteUserList } from '../../../util/follow';
+import { updateLsNameDataList } from '../../../util/user-name-data/user-name-data-util';
 
 import { BASE_URL } from '../../../App';
 import twitterButton from '../../../images/twitter-icon-50.png';
@@ -203,6 +204,10 @@ class SinglePost extends Component {
             favoriteUsers: result.data.favoritedByList,
             isLoading: false,
            });
+
+           if (result.userNameDataList?.length > 0) {
+            updateLsNameDataList(result.userNameDataList, null)
+           }
           
            resolve('favorite users get success');
         })

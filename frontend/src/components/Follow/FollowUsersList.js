@@ -8,11 +8,12 @@ import ErrorHandler from '../ErrorHandler/ErrorHandler';
 import Loader from '../Loader/Loader';
 import { 
   // getUsers, 
-  addFollowingUser, 
-  deleteFollowingUser,
+  // addFollowingUser, 
+  // deleteFollowingUser,
   getFollowingUsers,
-  getFollowingUser,
+  // getFollowingUser,
 } from '../../util/user';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 // import { useStore } from '../../hook-store/store';
 import { BASE_URL, GQL_URL } from '../../App';
 import './Follow.css'
@@ -51,7 +52,7 @@ const FollowUsersList = props => {
   
         if (
           (parsedData.userId && parsedData.userId !== lsUserId) ||
-          parsedData.getDate < Date.now() - 1000 * 60 * 60
+          parsedData.getDate < Date.now() - 1000 * 60 * 60 * 24
         ) {
           retrieveFollowingUsers();
         } else {
@@ -86,6 +87,10 @@ const FollowUsersList = props => {
         })
       );
 
+      if (result.userNameDataList?.length > 0) {
+        updateLsNameDataList(result.userNameDataList, null);
+      }
+
       setIsLoading(false);
     })
     .catch(err => {
@@ -104,67 +109,6 @@ const FollowUsersList = props => {
     setShowUsers(!showUsers);
   };
 
-  // const getFollowUserHandler = () => {
-  //   setIsLoading(true);
-
-  //   getFollowingUser(
-  //     props.postCreator_id,
-  //     GQL_URL, 
-  //     localStorage.getItem('token')
-  //   )
-  //   .then(result => {
-  //     console.log(result);
-  //     setIsLoading(false);
-  //     setIsFollowing(true);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     // catchError(err);
-  //     setIsLoading(false);
-  //   });
-  // };
-
-  // const addFollowIdHandler = () => {
-  //   setIsLoading(true);
-
-  //   addFollowingUser(
-  //     localStorage.getItem('userId'), 
-  //     props.postCreator_id, 
-  //     GQL_URL, 
-  //     localStorage.getItem('token')
-  //   )    
-  //   .then(result => {
-  //     console.log(result);
-  //     setIsFollowing(true);
-  //     setIsLoading(false);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     catchError(err);
-  //     setIsLoading(false);
-  //   });
-  // };
-
-  // const deleteFollowIdHandler = () => {
-  //   setIsLoading(true);
-
-  //   deleteFollowingUser(
-  //     localStorage.getItem('userId'), 
-  //     props.postCreator_id, 
-  //     GQL_URL, 
-  //     localStorage.getItem('token')
-  //   )
-  //   .then(result => {
-  //     console.log(result);
-  //     setIsFollowing(false);
-  //     setIsLoading(false);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     catchError(err);
-  //     setIsLoading(false);
-  //   });
-  // };
 
   const catchError = error => {
     setError(error);
@@ -185,7 +129,21 @@ const FollowUsersList = props => {
     if (followingUsers.length === 0) {
       followingUsersBody = (<div>no users</div>);
     } else {
+      
+      const lsNameDataList = localStorage.getItem('lsNameDataList');
+
       followingUsersBody = followingUsers.map(user => {
+        
+        let nameData;
+
+        if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+          nameData = JSON.parse(lsNameDataList).find(element => {
+            return element.userId === user.userId;
+          });
+        }
+
+        // console.log(user, nameData);
+        
         return (
           <div key={user.userId}>
             {/* <div onClick={() => {
@@ -197,10 +155,7 @@ const FollowUsersList = props => {
             <div className="post__AuthorElement">
               <span className="post__AuthorImageContainer">
 
-                {user.imageUrl ?
-                  // <img className="post__AuthorImageElement"
-                  //   src={BASE_URL + '/' + user.imageUrl} alt=""
-                  // />
+                {/* {user.imageUrl ?
                   <img className="post__AuthorImageElement"
                     src={user.imageUrl} alt=""
                   />
@@ -208,10 +163,26 @@ const FollowUsersList = props => {
                   <img className="post__AuthorImageElement"
                     src={SampleImage} alt=""
                   />
-                }
+                } */}
+                {nameData?.imageUrl && (
+                  <img className="post__AuthorImageElement"
+                    // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                    src={nameData.imageUrl} 
+                  />
+                )}
+                {!nameData?.imageUrl && (
+                  <img className="post__AuthorImageElement"
+                    src={SampleImage} alt=""
+                  />
+                )}
                 
               </span>
-              <span className="post__AuthorName">{user.name}</span>
+              <span className="post__AuthorName">
+                {/* {user.name} */}
+                {nameData && (
+                  <span>{nameData.name}</span>
+                )}
+              </span>
               <span>
                 <Button mode="flat" design="" size="smaller" onClick={() => {
                   props.setSelectedCreatorId(user.userId, user.name);

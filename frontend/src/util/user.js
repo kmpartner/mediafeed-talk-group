@@ -397,7 +397,11 @@ export const getFollowingUsers = (userId, url, token) => {
       .then(resData => {
         console.log(resData);
 
-        resolve({ message: 'followingUsers get success', data: resData.data });
+        resolve({ 
+          message: 'followingUsers get success', 
+          data: resData.data,
+          userNameDataList: resData.userNameDataList,
+         });
       })
       .catch(err => {
         console.log(err);

@@ -57,7 +57,14 @@ const Post = props => {
   // const postLinkTarget = window.innerWidth < 768 && '_blank';
   const postLinkTarget = '_blank';
 
-
+  const lsNameDataList = localStorage.getItem('lsNameDataList');
+  let nameData;
+  if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+    nameData = JSON.parse(lsNameDataList).find(element => {
+      return element.userId === props.postData?.creatorId;
+    });
+  }
+  // console.log('nameData', nameData);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSmallModal, setShowSmallModal] = useState(false);
@@ -156,6 +163,7 @@ const Post = props => {
           // setSelectedCreatorId={props.setSelectedCreatorId}
           // resetPostPage={props.resetPostPage}
           showSmallModalHandler={showSmallModalHandler}
+          nameData={nameData}
         />
       </SmallModal>
     </div>
@@ -349,8 +357,17 @@ const Post = props => {
             }</Link>
         </div>
         <h3 className="post__meta" onClick={showSmallModalHandler}>
-          {/* Posted by {props.author} on {props.date} {props.public === 'private' &&  props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null} */}
-          {t('feed.text8')} {props.author} 
+          {/* {t('feed.text8', 'Posted by')} {props.author}  */}
+          {nameData && (
+            <span> {t('feed.text8', 'Posted by')} {nameData.name}</span>
+          )}
+          {' '}
+          {nameData?.imageUrl && (
+            <img 
+              style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+              src={nameData.imageUrl} 
+            />
+          )}
           <br/> 
           ({props.postDate && getDate(props.postDate)}) {props.public === 'private' && props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null}
           {/* <img src={BASE_URL + '/' + props.creatorImageUrl} alt="" height="20"></img> */}

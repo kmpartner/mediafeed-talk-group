@@ -46,7 +46,11 @@ export const getPostFavoriteUserList = (url, postId) => {
       .then(resData => {
         console.log(resData);
   
-        resolve({ message: 'follow favorite users get success', data: resData.data });
+        resolve({ 
+          message: 'follow favorite users get success', 
+          data: resData.data,
+          userNameDataList: resData.userNameDataList,
+        });
       })
       .catch(err => {
         console.log(err);

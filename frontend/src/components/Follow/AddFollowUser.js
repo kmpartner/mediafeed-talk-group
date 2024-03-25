@@ -8,10 +8,10 @@ import ErrorHandler from '../ErrorHandler/ErrorHandler';
 
 import Loader from '../Loader/Loader';
 import { 
-  getUsers, 
+  // getUsers, 
   addFollowingUserId, 
   deleteFollowingUserId,
-  getFollowingUsers,
+  // getFollowingUsers,
   getFollowingUser,
 } from '../../util/user';
 import { BASE_URL } from '../../App';

@@ -8,11 +8,12 @@ import AddFollowUser from '../Follow/AddFollowUser';
 import FollowUsersList from '../Follow/FollowUsersList';
 import Loader from '../Loader/Loader';
 import { 
-  getUsers, 
+  // getUsers, 
   // addFollowingUserId, 
   // deleteFollowingUserId,
   getFollowingUsers
 } from '../../util/user';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 // import { useStore } from '../../hook-store/store';
 
 import { BASE_URL } from '../../App';
@@ -64,7 +65,7 @@ const UserModalContents = props => {
   
         if (
           (parsedData.userId && parsedData.userId !== lsUserId) ||
-          parsedData.getDate < Date.now() - 1000 * 60 * 60
+          parsedData.getDate < Date.now() - 1000 * 60 * 60 * 24
         ) {
           getFollowIdsHandler();
         }
@@ -95,6 +96,10 @@ const UserModalContents = props => {
           data: result.data
         })
       );
+
+      if (result.userNameDataList?.length > 0) {
+        updateLsNameDataList(result.userNameDataList, null);
+      }
 
       setIsLoading(false);
     })
@@ -194,8 +199,7 @@ const UserModalContents = props => {
                     props.showSmallModalHandler();
                   }}
                 >
-                  {/* show user posts */}
-                  {t('feed.text2')}
+                  {t('feed.text2', 'show user posts')}
                 </Button>
               </span>
           </div>
@@ -204,10 +208,7 @@ const UserModalContents = props => {
         
         <div className="post__AuthorElement userModalContent__selectedUser">
           <span className="post__AuthorImageContainer">
-            {props.creatorImageUrl ?
-              // <img className="post__AuthorImageElement"
-              //   src={BASE_URL + '/' + props.creatorImageUrl} alt=""
-              // />
+            {/* {props.creatorImageUrl ?
               <img className="post__AuthorImageElement"
                 src={props.creatorImageUrl} alt=""
               />
@@ -215,9 +216,25 @@ const UserModalContents = props => {
               <img className="post__AuthorImageElement"
                 src={SampleImage} alt=""
               />
-            }
+            } */}
+            {props.nameData?.imageUrl && (
+              <img className="post__AuthorImageElement"
+                // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={props.nameData.imageUrl} 
+              />
+            )}
+            {!props.nameData?.imageUrl && (
+              <img className="post__AuthorImageElement"
+                src={SampleImage} alt=""
+              />
+            )}
           </span>
-          <span className="post__AuthorName">{props.author}</span>
+          <span className="post__AuthorName">
+            {/* {props.author} */}
+            {props.nameData && (
+              <span>{props.nameData.name}</span>
+            )}
+          </span>
           <span>
           <Button mode="flat" design="" size="smaller" onClick={() => {
             props.setSelectedCreatorId(props.postCreatorUserId, props.author);
@@ -225,8 +242,7 @@ const UserModalContents = props => {
             props.showSmallModalHandler();
           }}
           >
-            {/* show user posts */}
-            {t('feed.text2')}
+            {t('feed.text2', 'show user posts')}
           </Button>
           </span>
 
@@ -254,12 +270,6 @@ const UserModalContents = props => {
         
         : null
         }
-
-        
-        {/* <hr />
-        <div>xxx-yyy</div>
-        <div>yyy-zzz</div> */}
-
       </div>
     );
   }
