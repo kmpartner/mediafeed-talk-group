@@ -515,6 +515,16 @@ class SinglePost extends Component {
       );
     }
 
+
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+    let nameData;
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      nameData = JSON.parse(lsNameDataList).find(element => {
+        return element.userId === this.state.postData?.creatorId;
+      });
+    }
+
+
     return (
       <div>
         <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
@@ -542,6 +552,7 @@ class SinglePost extends Component {
                       setSelectedCreatorId={this.showSelectedUserPosts}
                       resetPostPage={() => { }}
                       showSmallModalHandler={this.showSmallModalHandler}
+                      nameData={nameData}
                     />
                   </SmallModal>
                 </div>
@@ -613,20 +624,33 @@ class SinglePost extends Component {
                 : null}
 
               <h1>{this.state.title}</h1>
-              <h2 onClick={() => {
-                this.selectPostAuthorHandler({
-                  userId: this.state.authorId,
-                  name: this.state.author,
-                  imageUrl: this.state.creatorImageUrl
-                })
-              }}
-              >
-                {/* Created by {this.state.author} on {this.state.date} */}
-                {t('feed.text9')} {this.state.author} 
-                <br/>
-                {/* ({this.state.date}) */}
-                ({getDate(this.state.postDate)})
-              {/* <img src={BASE_URL + '/' + this.state.creatorImageUrl} alt="" height="20"></img> */}
+              <h2>
+                <span
+                  onClick={() => {
+                    this.selectPostAuthorHandler({
+                      userId: this.state.authorId,
+                      name: this.state.author,
+                      imageUrl: this.state.creatorImageUrl
+                    })
+                  }}
+                >
+                  {/* {t('feed.text9', 'Created by')} {this.state.author}  */}
+                  {nameData && (
+                    <span> 
+                      {t('feed.text8', 'Posted by')} {nameData.name}
+                    </span>
+                  )}
+                  {' '}
+                  {nameData?.imageUrl && (
+                    <img 
+
+                      style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                      src={nameData.imageUrl} 
+                    />
+                  )}
+                  <br/>
+                  ({getDate(this.state.postDate)})
+                </span>
               </h2>
               
               {this.state.content.split("\n").length >1 ?

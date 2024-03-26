@@ -1506,7 +1506,7 @@ class Feed extends Component {
           
           {this.state.selectedCreatorId ? 
             <div>
-              {this.state.selectedCreatorName}'s posts     
+              {/* {this.state.selectedCreatorName}'s posts      */}
               {/* <Button mode="flat" type="submit" onClick={this.resetSelectedCreatorId}>
                 back to posts
               </Button> */}

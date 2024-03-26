@@ -356,20 +356,31 @@ const Post = props => {
             : props.content
             }</Link>
         </div>
-        <h3 className="post__meta" onClick={showSmallModalHandler}>
+        <h3>
           {/* {t('feed.text8', 'Posted by')} {props.author}  */}
-          {nameData && (
-            <span> {t('feed.text8', 'Posted by')} {nameData.name}</span>
-          )}
-          {' '}
-          {nameData?.imageUrl && (
-            <img 
-              style={{height: "1rem", width: "1rem", objectFit: "cover"}}
-              src={nameData.imageUrl} 
-            />
-          )}
+          <span className="post__meta"
+            onClick={showSmallModalHandler}
+          >
+            {nameData && (
+              <span> 
+                {t('feed.text8', 'Posted by')} {nameData.name}
+              </span>
+            )}
+            {' '}
+            {nameData?.imageUrl && (
+              <img 
+
+                style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={nameData.imageUrl} 
+              />
+            )}
+          </span>
           <br/> 
-          ({props.postDate && getDate(props.postDate)}) {props.public === 'private' && props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null}
+          <span className="post__meta"
+            onClick={showSmallModalHandler}
+          >
+            ({props.postDate && getDate(props.postDate)}) {props.public === 'private' && props.postCreatorUserId === localStorage.getItem('userId') ? 'private' : null}
+          </span>
           {/* <img src={BASE_URL + '/' + props.creatorImageUrl} alt="" height="20"></img> */}
           
           {/* {props.postDate && getDateTime(props.postDate)} */}
