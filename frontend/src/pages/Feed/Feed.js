@@ -237,6 +237,9 @@ class Feed extends Component {
       selectedCreatorName: creatorName
      }, () => {
        console.log(this.state.selectedCreatorId, this.state.selectedCreatorName)
+       if (this.state.selectedCreatorId) {
+         this.resetPostPage();
+       }
      });
 
     //  this.props.history.replace('/');
