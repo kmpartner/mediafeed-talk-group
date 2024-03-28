@@ -217,22 +217,28 @@ const UserModalContents = props => {
                 src={SampleImage} alt=""
               />
             } */}
-            {props.nameData?.imageUrl && (
+            {localStorage.getItem('userId') && props.nameData?.imageUrl && (
               <img className="post__AuthorImageElement"
                 // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
                 src={props.nameData.imageUrl} 
               />
             )}
-            {!props.nameData?.imageUrl && (
+            {localStorage.getItem('userId') && !props.nameData?.imageUrl && (
               <img className="post__AuthorImageElement"
                 src={SampleImage} alt=""
               />
             )}
+            {!localStorage.getItem('userId') && (
+              <span></span>
+            )}
           </span>
           <span className="post__AuthorName">
             {/* {props.author} */}
-            {props.nameData && (
+            {localStorage.getItem('userId') && props.nameData && (
               <span>{props.nameData.name}</span>
+            )}
+            {!localStorage.getItem('userId') && (
+              <span>login is required for user name</span>
             )}
           </span>
           <span>

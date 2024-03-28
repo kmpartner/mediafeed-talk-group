@@ -635,18 +635,21 @@ class SinglePost extends Component {
                   }}
                 >
                   {/* {t('feed.text9', 'Created by')} {this.state.author}  */}
-                  {nameData && (
+                  {localStorage.getItem('userId') && nameData && (
                     <span> 
                       {t('feed.text8', 'Posted by')} {nameData.name}
                     </span>
                   )}
                   {' '}
-                  {nameData?.imageUrl && (
+                  {localStorage.getItem('userId') && nameData?.imageUrl && (
                     <img 
 
                       style={{height: "1rem", width: "1rem", objectFit: "cover"}}
                       src={nameData.imageUrl} 
                     />
+                  )}
+                  {!localStorage.getItem('userId') && (
+                    <span>user information will be shown after login</span>
                   )}
                   <br/>
                   ({getDate(this.state.postDate)})

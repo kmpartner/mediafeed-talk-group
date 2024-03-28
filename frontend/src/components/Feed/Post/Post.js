@@ -26,7 +26,7 @@ import { BASE_URL } from '../../../App';
 
 
 const Post = props => {
-  // console.log('prop-Post.js', props)
+  console.log('prop-Post.js', props)
   
   const { t } = props;
   // console.log(t);
@@ -361,18 +361,20 @@ const Post = props => {
           <span className="post__meta"
             onClick={showSmallModalHandler}
           >
-            {nameData && (
+            {localStorage.getItem('userId') && nameData && (
               <span> 
                 {t('feed.text8', 'Posted by')} {nameData.name}
               </span>
             )}
             {' '}
-            {nameData?.imageUrl && (
+            {localStorage.getItem('userId') && nameData?.imageUrl && (
               <img 
-
                 style={{height: "1rem", width: "1rem", objectFit: "cover"}}
                 src={nameData.imageUrl} 
               />
+            )}
+            {!localStorage.getItem('userId') && (
+              <span></span>
             )}
           </span>
           <br/> 
