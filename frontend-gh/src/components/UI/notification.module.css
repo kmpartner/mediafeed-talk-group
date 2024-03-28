@@ -1,0 +1,61 @@
+.notification {
+  position: fixed;
+  /* bottom: 0; */
+  bottom: 0.5rem;
+  /* left: 0; */
+  /* left: 10%; */
+  /* height: 5rem; */
+  /* width: 100%; */
+  /* width: 80%; */
+  max-width: 90%;
+  background-color: #1b1b1b;
+  /* display: flex;
+  justify-content: space-between; */
+  /* align-items: center; */
+  color: white;
+  /* padding: 0.5rem 10%; */
+  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.2);
+  margin: 5% auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  border-radius: 2.5px;
+  z-index: 200;
+}
+
+.notification h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.pending {
+  background-color: #177cbe;
+  background-color: #333;
+}
+
+.success {
+  background-color: #10be58;
+}
+
+.error {
+  background-color: #e65035;
+}
+
+.notificationCloseButton {
+  text-align: right;
+  margin-top: 0.25rem;
+  margin-right: 0.5rem;
+}
+
+.notificationCloseButtonX {
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .notification {
+    width: 30rem;
+    margin: 1rem;
+  }
+}

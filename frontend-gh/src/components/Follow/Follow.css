@@ -1,0 +1,11 @@
+.follow__loader {
+  /* font-size: 1rem; */
+  text-align: center;
+   margin-top: 2rem;
+}
+
+.follow__FollowUsersTitle {
+  /* margin-top: 2rem;
+  margin-bottom: 1rem; */
+  cursor: pointer;
+}

@@ -1,0 +1,99 @@
+.rightAdsContainer {
+  display: none;
+}
+
+.rightAdsItem {
+  display: none;
+}
+
+.groupTalkRightElements {
+  display: none;
+}
+
+.groupTalkRightElements2 {
+  display: none;
+}
+
+.groupTalkRightElement {
+  display: none;
+}
+
+.groupTalkTopBarElementContainer {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -35px;
+  margin-bottom: 15px;
+    /* width: 200px; */
+}
+
+.groupTalkTopBarElement {
+  width: 300px;
+  height: 100%;
+  border: 0.2px solid gray;
+}
+
+.groupTalkRightElementLink {
+  text-decoration: none;
+  color: var(--color);
+}
+
+@media (min-width: 768px) {
+  .rightAdsContainer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 55px;
+    /* border: 3px solid red; */
+    height: 700px;
+    max-height: calc(100vh - 70px);
+    width: 330px;
+    overflow-y: auto;
+  }
+
+  .rightAdsItem {
+    display: block;
+    width: 305px;
+    /* border: 3px solid green; */
+  }
+
+  .groupTalkRightElements {
+    display: block;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 55px;
+    border: 0.2px solid gray;
+    height: 300px;
+    width: 300px;
+  }
+
+  .groupTalkRightElements2 {
+    display: block;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 355px;
+    border: 0.2px solid gray;
+    height: 300px;
+    width: 300px;
+  }
+
+  .groupTalkRightElement {
+    width: 100%;
+    height: 200px;
+    border: solid;
+  }
+
+  .groupTalkTopBarElementContainer {
+    display: none;
+  }
+
+  .groupTalkTopBarElement {
+    display: none;
+  }
+
+}

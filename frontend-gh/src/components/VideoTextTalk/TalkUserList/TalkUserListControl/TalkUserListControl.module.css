@@ -1,0 +1,26 @@
+.infoButton {
+  /* position: fixed;
+  top: 50px;
+  right: 5%; */
+  font-size: 1.5rem;
+  text-align: right;
+  font-weight: bold;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+
+  position: fixed;
+  top: 80px;
+  right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .infoButton {
+    /* position: fixed; */
+    /* top: 50px; */
+    margin-right: 50px;
+    /* left: 31rem; */
+
+    margin-right: 330px;
+  }
+}

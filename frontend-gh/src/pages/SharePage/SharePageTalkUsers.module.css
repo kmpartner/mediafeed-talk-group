@@ -1,0 +1,39 @@
+.infoButton {
+  /* position: fixed;
+  top: 50px;
+  right: 5%; */
+  font-size: 1.5rem;
+  text-align: right;
+  font-weight: bold;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+
+  position: fixed;
+  top: 80px;
+  right: 1rem;
+}
+
+.shareUserInfoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shareUserImageElement {
+  height: 2rem;
+  width: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+@media (min-width: 768px) {
+  .infoButton {
+    /* position: fixed; */
+    /* top: 50px; */
+    margin-right: 50px;
+    /* left: 31rem; */
+
+    margin-right: 330px;
+  }
+}

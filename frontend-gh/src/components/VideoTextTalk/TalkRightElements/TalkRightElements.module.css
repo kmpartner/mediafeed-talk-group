@@ -1,0 +1,46 @@
+.talkRightElements {
+  display: none;
+}
+
+.talkTopBarElementContainer {
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -40px;
+  margin-bottom: 15px;
+    /* width: 200px; */
+}
+
+.talkTopBarElement {
+  width: 300px;
+  height: 100%;
+  border: 0.2px solid gray;
+}
+
+.talkRightElementLink {
+  text-decoration: none;
+  color: var(--color);
+}
+
+@media (min-width: 768px) {
+  .talkRightElements {
+    display: block;
+    position: fixed;
+    /* left: 34rem; */
+    right: 0px;
+    top: 55px;
+    border: 0.2px solid gray;
+    height: 300px;
+    width: 300px;
+  }
+
+  .talkTopBarElementContainer {
+    display: none;
+  }
+
+  .talkTopBarElement {
+    display: none;
+  }
+
+}

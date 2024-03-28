@@ -1,0 +1,47 @@
+.feed__status {
+  width: 90%;
+  margin: 1rem auto;
+}
+
+.feed__status form {
+  display: flex;
+  align-items: center;
+}
+
+.feed__status form * {
+  margin: 0 0.5rem;
+}
+
+.feed__control {
+  text-align: center;
+}
+
+.new-post__preview-image {
+  width: 15rem;
+  height: 7rem;
+  margin-top:0.25rem;
+}
+
+.modal__actions {
+  padding: 1rem;
+  text-align: right;
+}
+
+.userImageUpload__ButtonsContainer {
+  display: flex;
+}
+
+.userImageUpload__ImageButtons {
+  margin-left: 20px;
+}
+
+.userImageUpload__confirmContent {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .feed__status {
+    width: 30rem;
+  }
+}

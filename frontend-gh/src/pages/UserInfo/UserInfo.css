@@ -1,0 +1,38 @@
+.userInfo__infoContent {
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+  gap: 0.5rem;
+}
+
+.userInfo__userImage {
+  margin-left: 1rem;
+}
+
+.userInfo__userImageFile {
+  margin-left: 1rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.userInfo__userDescription {
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.userInfo__editText {
+  margin-left: 1rem;
+  text-decoration: underline;
+}
+
+.userInfo__actions {
+  text-align: right;
+}
+
+.userInfo__closeModalButton {
+  text-align: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

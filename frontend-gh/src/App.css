@@ -1,0 +1,9 @@
+.AppStretch {
+  min-height: 100vh;
+}
+
+.AppContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
