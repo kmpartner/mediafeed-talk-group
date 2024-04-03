@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const User = require('../../models/user/user');
 const TalkPermission = require('../../models/user/talk-permission');
 
+const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
+
 const getUserTalkPermission = async (req, res, next) => {
   try {
 
@@ -29,7 +31,37 @@ const getUserTalkPermission = async (req, res, next) => {
       await talkPermission.save();
     }
 
-    res.status(200).json({ message: 'get user talkPermission success', data: talkPermission });
+    let userNameDataList = [];
+    let token;
+    const authHeader = req.get('Authorization');
+    
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    }
+
+    const combinedIds = talkPermission.talkRequestedUserIds
+      .concat(talkPermission.talkRequestingUserIds)
+      .concat(talkPermission.talkAcceptUserIds)
+      .concat(talkPermission.talkAcceptedUserIds);
+
+    const userIdsForNameList = [];
+
+    if (combinedIds.length > 0) {
+      for (const id of combinedIds) {
+        if (id.userId) {
+          userIdsForNameList.push(id.userId);
+        }
+      }
+    }
+
+    userNameDataList = await getUserNameDataListByUserIds(token, userIdsForNameList);
+
+
+    res.status(200).json({ 
+      message: 'get user talkPermission success', 
+      data: talkPermission,
+      userNameDataList: userNameDataList,
+    });
 
   } catch (err) {
       if (!err.statusCode) {

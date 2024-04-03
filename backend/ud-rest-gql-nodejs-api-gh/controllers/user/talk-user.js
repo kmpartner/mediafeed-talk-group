@@ -4,6 +4,8 @@ const _ = require('lodash');
 const User = require('../../models/user/user');
 const TalkPermission = require('../../models/user/talk-permission');
 
+const { getUserNameDataList } = require('../../util/user-name-data/user-name-data-util.js');
+
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
 aws.config.update({
@@ -53,9 +55,20 @@ const getTalkAcceptedUsers = async (req, res, next) => {
       }
     }
 
+    let userNameDataList = [];
+    let token;
+    const authHeader = req.get('Authorization');
+    
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    }
+
+    userNameDataList = await getUserNameDataList(token, acceptedUsers);
+
     res.status(200).json({
       message: 'get user talk accepted users success', 
       data: acceptedUsers,
+      userNameDataList: userNameDataList,
     });
 
   } catch (err) {
@@ -123,9 +136,22 @@ const getTalkPermissionUsers = async (req, res, next) => {
       }
     }
 
+
+    let userNameDataList = [];
+    let token;
+    const authHeader = req.get('Authorization');
+    
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    }
+
+    userNameDataList = await getUserNameDataList(token, permissionUsers);
+
+
     res.status(200).json({
       message: 'get talk permission users success', 
       data: permissionUsers,
+      userNameDataList: userNameDataList,
     });
 
   } catch (err) {
@@ -214,9 +240,23 @@ const getTalkDisplayUsers = async (req, res, next) => {
 
     console.log('returnUsers.length', returnUsers.length);
 
+
+    let userNameDataList = [];
+    let token;
+    const authHeader = req.get('Authorization');
+    
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    }
+
+    //// permissionUsers nameData is in talk-permission
+    userNameDataList = await getUserNameDataList(token, onlySuggestUsers);
+
+
     res.status(200).json({
       message: 'get talk display users success', 
       data: returnUsers,
+      userNameDataList: userNameDataList,
     });
 
   } catch (err) {
@@ -278,9 +318,9 @@ const createTalkSuggestUsers = async (userId) => {
       }
 
 
-      if (suggestUserList.length < 10000) {
+      if (suggestUserList.length < 25) {
         const userList = await User.find()
-          .limit(100000);
+          .limit(25);
 
         suggestUserList = suggestUserList.concat(userList);
       }
@@ -292,7 +332,7 @@ const createTalkSuggestUsers = async (userId) => {
       // console.log('uniqList', uniqList);
 
       const userList = await User.find()
-        .limit(100000);
+        .limit(25);
 
       const suggestUsers = [];
 
