@@ -36,7 +36,10 @@ import {
   getTalkPermissionUsers,
   getTalkSuggestUsers,
   getTalkDisplayUsers,
- } from '../../util/talk/talk-user';
+} from '../../util/talk/talk-user';
+import { 
+  updateLsNameDataList 
+} from '../../util/user-name-data/user-name-data-util';
 
 import { useStore } from '../../hook-store/store';
 
@@ -232,24 +235,27 @@ const VideoTextTalk = (props) => {
         let userList = [];
         
         getTalkDisplayUsers(BASE_URL, localStorage.getItem('token'))
-        .then(result => {
-          console.log(result);
+          .then(result => {
+            console.log(result);
 
-          userList = result.data;
+            userList = result.data;
 
-          // setUsersData(userList);
-  
-          // dispatch('SET_USERSDATA', userList);
-          dispatch('SET_TALKUSERSDATA', userList);
-  
-          // setIsLoading(false);
+            // setUsersData(userList);
+    
+            // dispatch('SET_USERSDATA', userList);
+            dispatch('SET_TALKUSERSDATA', userList);
+    
+            if (result.userNameDataList?.length > 0) {
+              updateLsNameDataList(result.userNameDataList);
+            }
+            // setIsLoading(false);
 
-        })
-        .catch(err => {
-          console.log(err);
-          setIsLoading(false);
-          // setNoUserMessage('need to login');
-        })
+          })
+          .catch(err => {
+            console.log(err);
+            setIsLoading(false);
+            // setNoUserMessage('need to login');
+          })
       }
     }
 
@@ -526,6 +532,15 @@ const VideoTextTalk = (props) => {
   const textPostHandler = (text) => {
 
     if (socketState) {
+      const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+      let fromUserNameData;
+      if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+        fromUserNameData = JSON.parse(lsNameDataList).find(ele => {
+          return ele.userId === userId;
+        });
+      }
+
       socketState.emit('text-send', {
         from: userSocketId,
         fromUserId: userId,
@@ -536,6 +551,7 @@ const VideoTextTalk = (props) => {
         sendAt: Date.now(),
         language: navigator.languages[0],
         geolocation: JSON.parse(localStorage.getItem('userLocation')),
+        fromUserNameData: fromUserNameData,
       });
     }
 
@@ -582,6 +598,16 @@ const VideoTextTalk = (props) => {
   };
 
   const noconnectTextPostHandler = (text, toUserId, filePaths, fileSizes) => {
+    
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+    let fromUserNameData;
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      fromUserNameData = JSON.parse(lsNameDataList).find(ele => {
+        return ele.userId === userId;
+      });
+    }
+
     socketState.emit('text-send', {
       from: userSocketId,
       fromUserId: userId,
@@ -599,6 +625,7 @@ const VideoTextTalk = (props) => {
       fileSizes: fileSizes ? fileSizes : [],
 
       getMoreNum: getMoreNum,
+      fromUserNameData: fromUserNameData,
     });
 
     deleteDraftInput('talk', textTalkId);

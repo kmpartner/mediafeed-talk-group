@@ -66,6 +66,8 @@ const VideoTextTalkSocket = (props) => {
 
     const lsToken = localStorage.getItem('token');
 
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     // socket = openSocket.connect("localhost:4001");
     // socket = openSocket.connect(SOCKET_SURL);
     // socket = openSocket('/your-namespace');
@@ -387,13 +389,22 @@ const VideoTextTalkSocket = (props) => {
     socket.on('send-text-forPush', data => {
       console.log('send-text-forPush data', data);
 
+
+      let fromUserNameData;
+      if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+        fromUserNameData = JSON.parse(lsNameDataList).find(ele => {
+          return ele.userId === data.text.fromUserId;
+        });
+      }
+      
       socket.emit('send-text-forPush-recieved', {
         textData: data.text,
         user: {
           userId: userId,
           socketId: userSocketId,
           userName: userName
-        }
+        },
+        fromUserNameData: fromUserNameData,
       });
 
     });

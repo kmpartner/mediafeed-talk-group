@@ -107,6 +107,8 @@ const TalkUserList = props => {
   // if (props.usersData.length > 0) {
   if (userTrimList.length > 0) {
 
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     talkUserList = <ul>
       {userTrimList.map((element) => {
 
@@ -158,6 +160,14 @@ const TalkUserList = props => {
         // console.log(userInfo);
         // if (element._id !== props.userId) {
         if (element.userId !== props.userId) {
+
+          let nameData;
+          if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+            nameData = JSON.parse(lsNameDataList).find(ele => {
+              return ele.userId === element.userId;
+            });
+          }
+
           return (
             <div key={element._id}>
               <TalkUserListItem 
@@ -166,6 +176,7 @@ const TalkUserList = props => {
                 showNoconnectTextTalkHandler={props.showNoconnectTextTalkHandler}
                 noconnectDestUserIdHandler={props.noconnectDestUserIdHandler}
                 addVisitUserIdHandler={addVisitUserIdHandler}
+                nameData={nameData}
               />
             </div>
 

@@ -59,6 +59,23 @@ const VideoTextTalkTextList = (props) => {
   let textListBody;
 
   if (textInputList.length > 0) {
+
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+    let lsDestUserNameData;
+    let lsUserNameData;
+  
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      lsDestUserNameData = JSON.parse(lsNameDataList).find(ele => {
+        return ele.userId === noconnectDestUserId;
+      });
+     
+      lsUserNameData = JSON.parse(lsNameDataList).find(ele => {
+        return ele.userId === userId;
+      });
+      
+    }
+
     textListBody = (
       <ul className="textTalk-list">
         {textInputList.map((inputData, index) => {
@@ -71,6 +88,8 @@ const VideoTextTalkTextList = (props) => {
                 userId={userId}
                 destUser={destUser}
                 noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                lsDestUserNameData={lsDestUserNameData}
+                lsUserNameData={lsUserNameData}
                 isLoading={isLoading}
               />
             </div>
@@ -83,6 +102,8 @@ const VideoTextTalkTextList = (props) => {
                 userId={userId}
                 destUser={destUser}
                 noconnectTextDeleteHandler={noconnectTextDeleteHandler}
+                lsDestUserNameData={lsDestUserNameData}
+                lsUserNameData={lsUserNameData}
                 isLoading={isLoading}
               />
             </div>

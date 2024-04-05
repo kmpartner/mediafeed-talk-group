@@ -2,8 +2,10 @@ import React from 'react';
 import { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 
-import { getUserAccessPermission } from '../../../util/talk/talk-permission';
 import { useStore } from '../../../hook-store/store';
+import { getUserAccessPermission } from '../../../util/talk/talk-permission';
+import { updateLsNameDataList } from '../../../util/user-name-data/user-name-data-util';
+
 import { BASE_URL } from '../../../App';
 // import './VideoTextTalk.css'
 
@@ -41,6 +43,9 @@ const TalkAccessPermission = props => {
       console.log(result);
       dispatch('SET_TALKPERMISSION', result.data);
 
+      if (result.userNameDataList?.length > 0) {
+        updateLsNameDataList(result.userNameDataList);
+      }
       // if (!result.ok) {
       //   throw new Error('error occured');
       // }

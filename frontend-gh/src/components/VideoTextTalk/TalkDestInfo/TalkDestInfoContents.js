@@ -45,7 +45,16 @@ const TalkDestInfoContents = (props) => {
   const isInFavorite = favoriteUsers.find((favorite) => {
     return favorite.userId === noconnectDestUserId;
   });
-  console.log(isInFavorite);
+  // console.log(isInFavorite);
+
+  const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+  let nameData;
+  if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+    nameData = JSON.parse(lsNameDataList).find(ele => {
+      return ele.userId === noconnectDestUserId;
+    });
+  }
 
   let destInfoContentsBody;
 
@@ -57,17 +66,14 @@ const TalkDestInfoContents = (props) => {
       </div>
       <div className={classes.userInfoContainer}>
         <span className={classes.userInfoContent}>
-          {DestUserInfo.name}
+          {/* {DestUserInfo.name} */}
+          {localStorage.getItem('userId') && nameData && (
+            <span> 
+              {nameData.name}
+            </span>
+          )}
         </span>
-          {/* <img className="textTalk__UserImageElement" style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
-                src={element.imageUrl ? 
-                  // BASE_URL + '/' + element.imageUrl
-                  element.imageUrl
-                  : SampleImage
-                  }
-                alt='user-img'
-              ></img> */}
-        <Img
+        {/* <Img
           className={classes.userImageElement}
           style={!DestUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
           src={
@@ -77,7 +83,19 @@ const TalkDestInfoContents = (props) => {
               : SampleImage
           }
           alt="user-img"
-        />
+        /> */}
+        {localStorage.getItem('userId') && nameData?.imageUrl && (
+          <Img className={classes.userImageElement}
+            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+            src={nameData.imageUrl} 
+          />
+        )}
+        {localStorage.getItem('userId') && !nameData?.imageUrl && (
+          <Img className={classes.userImageElement}
+            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+            src={SampleImage} 
+          />
+        )}
       </div>
 
       {isInFavorite ? (

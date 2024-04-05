@@ -16,15 +16,17 @@ import classes from './VideoTextTalkTextItem.module.css';
 
 
 const VideoTextTalkTextItem = (props) => {
-  // console.log('VideoTextTalkTextListItem.js props', props);
   const {
     textInputList,
     inputData,
     userId,
     destUser,
     noconnectTextDeleteHandler,
+    lsDestUserNameData,
+    lsUserNameData,
     isLoading,
   } = props;
+  // console.log('VideoTextTalkTextListItem.js props', props);
   
 
   const [t] = useTranslation('translation');
@@ -124,6 +126,15 @@ const VideoTextTalkTextItem = (props) => {
     );
   }
 
+  if (inputData.fromUserId !== userId && lsDestUserNameData?.imageUrl) {
+    destUserImage = (
+      <Img 
+        className={classes.groupTalkTextItmeDestUserImage}
+        src={lsDestUserNameData.imageUrl}
+      />
+    );
+  }
+
 
   let [month, date, year] = (new Date(inputData.sendAt)).toLocaleDateString().split("/")
   let [hour, minute, second] = (new Date(inputData.sendAt)).toLocaleTimeString().slice(0, 7).split(":")
@@ -150,9 +161,15 @@ const VideoTextTalkTextItem = (props) => {
       </div>
 
       <div className={classes.groupTalkTextItmeNameElement}>
-        <span>
+        {/* <span>
           {inputData.fromName} 
-        </span>
+        </span> */}
+        {lsDestUserNameData && inputData.fromUserId !== userId && (
+          <span>{lsDestUserNameData.name}</span>
+        )}
+        {lsUserNameData && inputData.fromUserId === userId && (
+          <span>{lsUserNameData.name}</span>
+        )}
         <span>
           {destUserImage}
         </span>

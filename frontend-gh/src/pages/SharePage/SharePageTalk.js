@@ -12,6 +12,7 @@ import FeedEdit from "../../components/Feed/FeedEdit/FeedEdit";
 import { useStore } from "../../hook-store/store";
 // import { getUserDataForStore } from "../../util/user";
 import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 
 import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
 import SharePageTalkUsers from "./SharePageTalkUsers";
@@ -59,6 +60,10 @@ const SharePageTalk = (props) => {
 
       if (resData && resData.data && resData.data.length > 0) {
         setAcceptedUsers(resData.data);
+      }
+
+      if (resData?.userNameDataList?.length > 0) {
+        updateLsNameDataList(resData.userNameDataList);
       }
 
       setIsLoading(false);

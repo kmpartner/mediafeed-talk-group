@@ -1,8 +1,8 @@
 import React from "react";
 import { Fragment, useEffect, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next/hooks";
-import axios from "axios";
+// import axios from "axios";
 import Img from "react-cool-img";
 
 import Backdrop from "../../components/Backdrop/Backdrop";
@@ -13,9 +13,9 @@ import SmallModal from "../../components/Modal/SmallModal";
 
 import { useStore } from "../../hook-store/store";
 // import { getUserDataForStore } from "../../util/user";
-import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
+// import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
 
-import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
+// import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
 
 import SampleImage from '../../components/Image/person-icon-50.jpg';
 // import SampleImage from "../Image/person-icon-50.jpg";

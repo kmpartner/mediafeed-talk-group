@@ -24,6 +24,7 @@ const TalkUserListItem = props => {
     showNoconnectTextTalkHandler,
     noconnectDestUserIdHandler,
     addVisitUserIdHandler,
+    nameData,
     // isAccepted,
   } = props;
 
@@ -72,9 +73,9 @@ const TalkUserListItem = props => {
   }
 
   const startWriteTextHandler = () => {
-    props.noconnectGetUserDestTalkHandler(element.userId);
-    props.showNoconnectTextTalkHandler();
-    props.noconnectDestUserIdHandler(element.userId);
+    noconnectGetUserDestTalkHandler(element.userId);
+    showNoconnectTextTalkHandler();
+    noconnectDestUserIdHandler(element.userId);
 
     addVisitUserIdHandler(element.userId);
   };
@@ -95,7 +96,6 @@ const TalkUserListItem = props => {
     startWriteTextHandler();
   }
 
-
   let talkUserListItemBody
 
   talkUserListItemBody = (
@@ -103,15 +103,7 @@ const TalkUserListItem = props => {
     <li className="textTalk-OnlineUser-list">
 
       <span className="textTalk__UserImageContainer">
-        {/* <img className="textTalk__UserImageElement" style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
-          src={element.imageUrl ? 
-            // BASE_URL + '/' + element.imageUrl
-            element.imageUrl
-            : SampleImage
-            }
-          alt='user-img'
-        ></img> */}
-        <Img className="textTalk__UserImageElement" 
+        {/* <Img className="textTalk__UserImageElement" 
           // style={!element.imageUrl ? { paddingTop:"0.5rem" } : null} 
           src={element.imageUrl ? 
             // BASE_URL + '/' + element.imageUrl
@@ -119,11 +111,28 @@ const TalkUserListItem = props => {
             : SampleImage
             }
           alt='user-img'
-         />
+        /> */}
+        {localStorage.getItem('userId') && nameData?.imageUrl && (
+          <Img className="textTalk__UserImageElement"
+            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+            src={nameData.imageUrl} 
+          />
+        )}
+        {localStorage.getItem('userId') && !nameData?.imageUrl && (
+          <Img className="textTalk__UserImageElement"
+            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+            src={SampleImage} 
+          />
+        )}
       </span>
 
       <span className="textTalk__UserName">
-        {element.name} 
+        {/* {element.name}  */}
+        {localStorage.getItem('userId') && nameData && (
+          <span> 
+            {nameData.name}
+          </span>
+        )}
       </span>
 
       <span>

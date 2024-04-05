@@ -96,7 +96,7 @@ const PostMessageRecieve = (props) => {
   function messageProcessHandler(event) {
     const token = '12345';
 
-    console.log("message-event", event.data.token, event.data);
+    // console.log("message-event", event.data.token, event.data);
     const isOriginExist = SHAREURLS.find(
       (url) => url === event.origin
     );

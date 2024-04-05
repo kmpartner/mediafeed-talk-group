@@ -86,6 +86,8 @@ const TalkUserListControlAccept = (props) => {
   let acceptListBody = <div>{t('videoTalk.text25', 'no user')}</div>
 
   if (talkPermission && talkPermission.talkAcceptUserIds.length > 0) {
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     acceptListBody = (
       <ul>
         {talkPermission.talkAcceptUserIds.map((favorite) => {
@@ -99,14 +101,25 @@ const TalkUserListControlAccept = (props) => {
           });
         
           // console.log(isAccepted);
+          let nameData;
+          if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+            nameData = JSON.parse(lsNameDataList).find(ele => {
+              return ele.userId === favorite.userId;
+            });
+          }
 
           return (
             <div key={favorite.userId}>
               <div className={classes.userInfoContainer}>
                 <span className={classes.userInfoContent}>
-                  {favoriteUserInfo.name}
+                  {/* {favoriteUserInfo.name} */}
+                  {localStorage.getItem('userId') && nameData && (
+                    <span> 
+                      {nameData.name}
+                    </span>
+                  )}
                 </span>
-                <Img
+                {/* <Img
                   className={classes.userImageElement}
                   // style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
                   src={
@@ -116,7 +129,19 @@ const TalkUserListControlAccept = (props) => {
                       : SampleImage
                   }
                   alt="user-img"
-                />
+                /> */}
+                {localStorage.getItem('userId') && nameData?.imageUrl && (
+                  <Img className={classes.userImageElement}
+                    // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                    src={nameData.imageUrl} 
+                  />
+                )}
+                {localStorage.getItem('userId') && !nameData?.imageUrl && (
+                  <Img className={classes.userImageElement}
+                    // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                    src={SampleImage} 
+                  />
+                )}
               </div>
 
               <div className={classes.smallButtons} >

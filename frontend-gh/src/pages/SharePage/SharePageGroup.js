@@ -5,18 +5,18 @@ import { useTranslation } from "react-i18next/hooks";
 import axios from "axios";
 
 import Button from "../../components/Button/Button";
-import Loader from "../../components/Loader/Loader";
-import FeedEdit from "../../components/Feed/FeedEdit/FeedEdit";
+// import Loader from "../../components/Loader/Loader";
+// import FeedEdit from "../../components/Feed/FeedEdit/FeedEdit";
 // import PostMessageRecieve from "./PostMessageRecieve";
 import SharePageGroupList from "./SharePageGroupList";
 
 import { useStore } from "../../hook-store/store";
 // import { getUserDataForStore } from "../../util/user";
-import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
+// import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
 import { getUserFavoriteGroups } from '../../util/group/group-user';
 
-import { authPageLink, authSignupPageLink, BASE_URL, SOCKET_GROUP_URL } from "../../App";
-import SharePageTalkUsers from "./SharePageTalkUsers";
+import { SOCKET_GROUP_URL } from "../../App";
+// import SharePageTalkUsers from "./SharePageTalkUsers";
 
 
 const SharePageGroup = (props) => {

@@ -84,6 +84,8 @@ const TalkUserListNotifyRequest = (props) => {
   let requestedBody = <div>{t('videoTalk.text25', 'no user')}</div>;
 
   if (talkPermission && talkPermission.talkRequestedUserIds.length > 0) {
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     requestedBody = (
       <ul>
         {talkPermission.talkRequestedUserIds.map((favorite) => {
@@ -95,17 +97,28 @@ const TalkUserListNotifyRequest = (props) => {
           const isAccepted = talkPermission.talkAcceptedUserIds.find(user => {
             return user.userId === favorite.userId;
           });
-        
           // console.log(isAccepted);
+
+          let nameData;
+          if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+            nameData = JSON.parse(lsNameDataList).find(ele => {
+              return ele.userId === favorite.userId;
+            });
+          }
 
           return (
             <div key={favorite.userId}>
               <div className={classes.userInfoContainer}>
                 <span className={classes.userInfoContent}>
-                  {favoriteUserInfo.name}
+                  {/* {favoriteUserInfo.name} */}
+                  {localStorage.getItem('userId') && nameData && (
+                    <span> 
+                      {nameData.name}
+                    </span>
+                  )}
                 </span>
                 <span className={classes.userImageContainer}>
-                  <Img
+                  {/* <Img
                     className={classes.userImageElement}
                     style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
                     src={
@@ -115,7 +128,19 @@ const TalkUserListNotifyRequest = (props) => {
                         : SampleImage
                     }
                     alt="user-img"
-                  />
+                  /> */}
+                  {localStorage.getItem('userId') && nameData?.imageUrl && (
+                    <Img className={classes.shareUserImageElement}
+                      // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                      src={nameData.imageUrl} 
+                    />
+                  )}
+                  {localStorage.getItem('userId') && !nameData?.imageUrl && (
+                    <Img className={classes.shareUserImageElement}
+                      // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                      src={SampleImage} 
+                    />
+                  )}
                 </span>
               </div>
 
