@@ -4,7 +4,11 @@ const { getUserNameData } = require('./get-user-name-data-util');
 
 require('dotenv').config();
 
-export const addPageNotificationData = async (textData: any, textId: any) => {
+export const addPageNotificationData = async (
+  textData: any, 
+  textId: any,
+  fromUserNameData: any,
+) => {
   try {
 
     let modifyContent = textData.text;
@@ -12,7 +16,7 @@ export const addPageNotificationData = async (textData: any, textId: any) => {
       modifyContent = textData.text.slice(0,100) + '.....'
     } 
 
-    const userNameData = await getUserNameData(textData, textData.fromUserId);
+    // const userNameData = await getUserNameData(textData, textData.fromUserId);
 
     const result = await fetch(process.env.UDRESTAPI_URL + 
       `/page-notification/add-page-notification-data-for-talk-group`, {
@@ -25,7 +29,7 @@ export const addPageNotificationData = async (textData: any, textId: any) => {
         storeUserId: textData.toUserId,
         page: 'talk',
         // title: `new text from user ${textData.fromName}`,
-        title: `new text from user ${userNameData?.name}`,
+        title: `new text from user ${fromUserNameData?.name}`,
         message: modifyContent,
         dataForNotification: {
           fromUserId: textData.fromUserId,
@@ -34,7 +38,7 @@ export const addPageNotificationData = async (textData: any, textId: any) => {
           sendAt: textData.sendAt,
           textId: textId,
           filePaths: textData.filePaths,
-          fromName: userNameData?.name,
+          fromName: fromUserNameData?.name,
         },
       }),
     });

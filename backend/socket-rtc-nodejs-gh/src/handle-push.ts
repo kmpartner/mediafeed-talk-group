@@ -15,6 +15,7 @@ exports.handlePushNotification = (socket: any) => {
       const pushResult = await pushTextToUser2(
         data.user.userId,
         data.textData,
+        data.fromUserNameData,
       );
       
       // console.log('pushResult', pushResult);

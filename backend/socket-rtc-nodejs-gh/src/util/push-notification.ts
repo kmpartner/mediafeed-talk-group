@@ -159,7 +159,11 @@ const vapidData = {
 // }
 
 
-export const pushTextToUser2 = (userId: string, textData: any) => {
+export const pushTextToUser2 = (
+  userId: string, 
+  textData: any,
+  fromUserNameData: any,
+) => {
   return new Promise( async (resolve, reject) => {
   // console.log('req.body', req.body);
   // const userId = req.body.userId;
@@ -201,14 +205,15 @@ export const pushTextToUser2 = (userId: string, textData: any) => {
       modifyContent = textData.text.slice(0,100) + '.....'
     } 
 
-    const userNameData = await getUserNameData(textData, textData.fromUserId);
+    // const userNameData = await getUserNameData(textData, textData.fromUserId);
 
     const pushContent = {
-      title: `new text from user ${userNameData?.name}`,
+      title: `new text from user ${fromUserNameData?.name}`,
       content: `${modifyContent}`,
       // openUrl: `/talk-page/?grouptotalk=${textData.fromName}`,
       openUrl: `/talk-page/?pageNotificationUserId=${textData.fromName}`,
       // postData: postData
+      fromUserNameData: fromUserNameData,
     };
     
     const sendPushData: any = await sendPush(pushData, pushContent);

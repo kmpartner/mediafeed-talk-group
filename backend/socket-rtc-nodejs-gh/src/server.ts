@@ -1127,6 +1127,7 @@ export class Server {
         addPageNotificationData(
           data,
           destUserTalk.text[userDestTalk.text.length -1]._id.toString(),
+          data.fromUserNameData,
         );
 
       });
