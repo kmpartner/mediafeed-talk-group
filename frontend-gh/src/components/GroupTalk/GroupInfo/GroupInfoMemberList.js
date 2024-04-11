@@ -128,6 +128,8 @@ const GroupInfoMemberList = (props) => {
 
   let allMembers;
   if (props.groupAllMemberList.length > 0) {
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     allMembers = (
       <div>
         {/* <div onClick={hideAllMembersHandler}>hide-member</div> */}
@@ -163,16 +165,16 @@ const GroupInfoMemberList = (props) => {
                 userImageUrl = imageUser.imageUrl;
               }
             }
+
+            let nameData;
+            if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+              nameData = JSON.parse(lsNameDataList).find(ele => {
+                return ele.userId === member.userId;
+              });
+            }
+
             return (
               <div>
-                {/* <GroupInfoMemberItem
-                  member={member}
-                  groupAllMemberList={props.groupAllMemberList}
-                  joinGroupOnlineMember={props.joinGroupOnlineMember}
-                  usersData={props.usersData}
-                  allMemberUserIds={props.allMemberUserIds}
-                  userId
-                /> */}
                 <div>
                   <div
                     key={member.userId}
@@ -182,19 +184,34 @@ const GroupInfoMemberList = (props) => {
                       setSelectedUserIdHandler(member.userId);
                     }}
                   >
-                    {/* {member.userId}  */}
                     <div className="groupTalkTextList-memberListElement">
-                      {member.name}
+                      {/* {member.name} */}
+                      {localStorage.getItem('userId') && nameData && (
+                        <span> 
+                          {nameData.name}
+                        </span>
+                      )}
                     </div>
                     <div className="groupTalkTextList-memberListElement">
-                      {/* <img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
-                      {/* <Img src={userInfo.imageUrl? userInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
-                      <Img
+                      {/* <Img
                         className={classes.grupInfoMemberListImage}
                         src={userImageUrl ? userImageUrl : SampleImage}
                         // height="25"
                         alt="user-img"
-                      />
+                      /> */}
+                      {localStorage.getItem('userId') && nameData?.imageUrl && (
+                        <Img className={classes.grupInfoMemberListImage}
+                          // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                          src={nameData.imageUrl} 
+                        />
+                      )}
+                      {localStorage.getItem('userId') && !nameData?.imageUrl && (
+                        <Img className={classes.grupInfoMemberListImage}
+                          // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                          src={SampleImage} 
+                        />
+                      )}
+
                     </div>
                     <div className="groupTalkTextList-memberListElement">
                       {isOnline ? " (online)" : ""}
@@ -210,10 +227,9 @@ const GroupInfoMemberList = (props) => {
                       {/* <div>user-created-at: {userCreateDate}</div> */}
                       <div className="groupTalkTextList-descriptionDate">
                         group join date: {joinDate}
-
                       </div>
 
-                      {props.isAuth && member.userId !== props.userId && (
+                      {props.isAuth && member.userId !== props.userId && nameData?.name && (
                         <div>
                           <div className="groupTalkTextList-TalkPageButton">
                             <Link
@@ -226,7 +242,6 @@ const GroupInfoMemberList = (props) => {
                                 design=""
                                 // disabled={!props.replyInput || props.commentLoading}
                               >
-                                {/* send text in Talk */}
                                 {t("groupTalk.text33", "Send text")} in Talk
                               </Button>
                             </Link>
@@ -310,7 +325,6 @@ const GroupInfoMemberList = (props) => {
             showSmallModalHandler();
           }}
         >
-          {/* Display Group Members &#9662; */}
           {t("groupTalk.text19", "Display Group Members")} &#9662;
         </div>
       }

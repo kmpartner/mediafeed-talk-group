@@ -89,7 +89,7 @@ const peerConnection = new RTCPeerConnection();
 
 
 const GroupTalk = (props) => {
-  console.log('GroupTalk.js-props', props);
+  // console.log('GroupTalk.js-props', props);
   // const videoRef = React.createRef();
   const currentUrl = new URL(window.location.href);
   const queryParams = currentUrl.searchParams;
@@ -212,30 +212,31 @@ const GroupTalk = (props) => {
 
     if (!userId) {
 
-      //// get users data if there is not in store
-      if (store.groupUsersData.length === 0) {
-        // getUsersRest(BASE_URL, localStorage.getItem('token'))
-        getUsersForGroup(BASE_URL, localStorage.getItem('token'))
-        .then(result => {
-          console.log(result);
+      // //// get users data if there is not in store
+      // if (store.groupUsersData.length === 0) {
 
-          setUsersData(result.usersData);
+      //   getUsersForGroup(BASE_URL, localStorage.getItem('token'))
+      //   // getUsersForGroup(SOCKET_GROUP_URL, localStorage.getItem('token'))
+      //     .then(result => {
+      //       console.log(result);
 
-          dispatch('SET_GROUP_USERSDATA', result.usersData);
+      //       setUsersData(result.usersData);
+
+      //       dispatch('SET_GROUP_USERSDATA', result.usersData);
 
 
-          // const onlyUserList = result.usersData.filter(user => {
-          //   return user.userId === localStorage.getItem('userId');
-          // })
+      //       // const onlyUserList = result.usersData.filter(user => {
+      //       //   return user.userId === localStorage.getItem('userId');
+      //       // })
 
-          // setUsersData(onlyUserList);
-          // dispatch('SET_GROUP_USERSDATA', onlyUserList);
+      //       // setUsersData(onlyUserList);
+      //       // dispatch('SET_GROUP_USERSDATA', onlyUserList);
 
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      }
+      //     })
+      //     .catch(err => {
+      //       console.log(err);
+      //     });
+      // }
 
       // // set local usersData state when users data exist in store
       if (store.groupUsersData.length > 0 && usersData.length === 0) {
@@ -584,6 +585,15 @@ const GroupTalk = (props) => {
   };
 
   const groupTextPostHandler = (text, groupRoomId, filePaths, fileSizes) => {
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+    let fromUserNameData;
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      fromUserNameData = JSON.parse(lsNameDataList).find(ele => {
+        return ele.userId === userId;
+      });
+    }
+    
     if (props.isAuth) {
       if (userSocketId && userId) {
       
@@ -604,10 +614,13 @@ const GroupTalk = (props) => {
           filePaths: filePaths ? filePaths : [],
     
           fileSizes: fileSizes ? fileSizes : [],
+
+          fromUserNameData: fromUserNameData,
         });
   
         deleteDraftInput('group', groupTalkId);
-        setIsTextPosting(true);
+        // setIsTextPosting(true);
+        setGroupTextInput('');
 
       }
     }

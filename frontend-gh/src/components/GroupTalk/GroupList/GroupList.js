@@ -17,7 +17,7 @@ import { letterBlocks } from '../../../util/color-style';
 
 
 const GroupList = (props) => {
-  console.log('grouplist.js props', props);
+  // console.log('grouplist.js props', props);
 
   const currentUrl = new URL(window.location.href);
   const queryParams = currentUrl.searchParams;
@@ -151,21 +151,21 @@ const GroupList = (props) => {
 
 
 
-  useEffect(() => {
-    if (!selectedSuggest && sortedGroupList.length > 0) {
-      const groupsForCreator = sortedGroupList.slice(0, initialListNum * (moreClickNum + 1));
-      getCreatorInfoListHandler(groupsForCreator, groupCreatorInfoList);
-    }
+  // useEffect(() => {
+  //   if (!selectedSuggest && sortedGroupList.length > 0) {
+  //     const groupsForCreator = sortedGroupList.slice(0, initialListNum * (moreClickNum + 1));
+  //     getCreatorInfoListHandler(groupsForCreator, groupCreatorInfoList);
+  //   }
 
-    if (selectedSuggest) {
-      const suggestGroupInfo = sortedGroupList.find(element => {
-        return selectedSuggest.groupRoomId === element.groupRoomId;
-      });
+  //   if (selectedSuggest) {
+  //     const suggestGroupInfo = sortedGroupList.find(element => {
+  //       return selectedSuggest.groupRoomId === element.groupRoomId;
+  //     });
 
-      getCreatorInfoListHandler([suggestGroupInfo], groupCreatorInfoList);
-    }
+  //     getCreatorInfoListHandler([suggestGroupInfo], groupCreatorInfoList);
+  //   }
 
-  },[sortedGroupList, selectedSuggest]);
+  // },[sortedGroupList, selectedSuggest]);
 
 
 
@@ -208,41 +208,41 @@ const GroupList = (props) => {
   }
 
 
-  const getCreatorInfoListHandler = async (displayGroups, creatorInfoList) => {
-    try {
-      const creatorIds = [];
+  // const getCreatorInfoListHandler = async (displayGroups, creatorInfoList) => {
+  //   try {
+  //     const creatorIds = [];
 
-      for (const group of displayGroups) {
-        const isInInfoList = creatorInfoList.find(user => {
-          return user.userId === group.creatorUserId;
-        });
+  //     for (const group of displayGroups) {
+  //       const isInInfoList = creatorInfoList.find(user => {
+  //         return user.userId === group.creatorUserId;
+  //       });
 
-        if (!isInInfoList) {
-          creatorIds.push(group.creatorUserId);
-        }
-      }
+  //       if (!isInInfoList) {
+  //         creatorIds.push(group.creatorUserId);
+  //       }
+  //     }
 
-      if (creatorIds.length === 0) {
-        return;
-      }
+  //     if (creatorIds.length === 0) {
+  //       return;
+  //     }
 
-      const resData = await getUsersForGroup(
-        BASE_URL,
-        localStorage.getItem('token'),
-        creatorIds,
-      );
+  //     const resData = await getUsersForGroup(
+  //       BASE_URL,
+  //       localStorage.getItem('token'),
+  //       creatorIds,
+  //     );
   
-      console.log('resData', resData);
+  //     console.log('resData', resData);
       
-      if (resData && resData.usersData && resData.usersData.length > 0) {
-        const addedList = creatorInfoList.concat(resData.usersData);
+  //     if (resData && resData.usersData && resData.usersData.length > 0) {
+  //       const addedList = creatorInfoList.concat(resData.usersData);
 
-        dispatch('SET_GROUPCREATORINFOLIST', addedList);
-      }
-    } catch(err) {
-      console.log(err);
-    }
-  };
+  //       dispatch('SET_GROUPCREATORINFOLIST', addedList);
+  //     }
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // };
   
 
   

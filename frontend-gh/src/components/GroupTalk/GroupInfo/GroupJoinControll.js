@@ -14,7 +14,7 @@ import classes from './GroupJoinControll.module.css'
 
 
 const GroupJoinControll = (props) => {
-  // console.log('GroupJoinControll-props', props);
+  console.log('GroupJoinControll-props', props);
 
   const [t] = useTranslation('translation');
 
@@ -85,8 +85,7 @@ const GroupJoinControll = (props) => {
               }
             }}
           >
-            {/* Join Group */}
-            {t('groupTalk.text7')}
+            {t('groupTalk.text7', 'Join group')}
           </Button>
         </div>
         
@@ -102,8 +101,7 @@ const GroupJoinControll = (props) => {
         <Button mode="flat" design="" type="submit"
         onClick={showDeleteMemberModalHandler}
         >
-          {/* Leave from Member */}
-          {t('groupTalk.text6')}
+          {t('groupTalk.text6', 'Leave from menber')}
         </Button>
 
         <div>

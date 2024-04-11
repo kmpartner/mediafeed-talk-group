@@ -312,14 +312,15 @@ export const getUsers = (url, token) => {
   })
 };
 
-export const getUsersForGroup = (url, token, groupMemberIds) => {
+export const getUsersForGroup = (url, token, groupRoomId, groupMemberIds) => {
   return new Promise((resolve, reject) => {
 
-    let fullUrl = url + '/auth/getusers-for-group';
+    // let fullUrl = url + '/auth/getusers-for-group';
+    let fullUrl = url + `/group-user/users-for-group?groupRoomId=${groupRoomId}`;
 
-    if (groupMemberIds) {
-      fullUrl = url + `/auth/getusers-for-group?groupMemberIds=${JSON.stringify(groupMemberIds)}`;
-    }
+    // if (groupMemberIds) {
+    //   fullUrl = url + `/auth/getusers-for-group?groupMemberIds=${JSON.stringify(groupMemberIds)}`;
+    // }
 
     fetch(fullUrl, {
       method: 'GET',
@@ -335,7 +336,12 @@ export const getUsersForGroup = (url, token, groupMemberIds) => {
       })
       .then(resData => {
         // console.log(resData);
-        resolve({ message: 'Get Users Data for group.', usersData: resData.data });
+        resolve({ 
+          message: 'Get Users Data for group success.', 
+          data: resData.data,
+          groupInfo: resData.groupInfo,
+          userNameDataList: resData.userNameDataList,
+        });
 
       })
       .catch(err => {

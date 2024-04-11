@@ -106,7 +106,15 @@ const GroupInfoContents = (props) => {
     return element.userId === groupInfo.creatorUserId;
   });
 
-  // console.log(creatorInfo);
+
+  const lsNameDataList = localStorage.getItem('lsNameDataList');
+
+  let nameData;
+  if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+    nameData = JSON.parse(lsNameDataList).find(ele => {
+      return ele.userId === groupInfo.creatorUserId;
+    });
+  }
 
 
   const groupInfoContentsBody = (
@@ -139,7 +147,6 @@ const GroupInfoContents = (props) => {
 
       <div className={classes.listElement}>
         <div>
-          {/* Keywords: */}
           {t('groupTalk.text22', 'Keywords')}:
         </div>
         <div>
@@ -157,15 +164,32 @@ const GroupInfoContents = (props) => {
       <div className={classes.listElement}>
         {t('groupTalk.text1', 'Creator')}:
         <div className="groupTalkTextList-joinModalCreator">
-            <Img 
+            {/* <Img 
               className={classes.groupCreatorImage}
               src={creatorImageUrl ? creatorImageUrl : SampleImage} 
               // height="25" 
               alt='user-img'
-            />
-            <div className={classes.listElementContent}>{creatorInfo.name} </div>
-            {/* <img src={creatorInfo.imageUrl? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
-            {/* <Img src={creatorInfo.imageUrl? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
+            /> */}
+            {localStorage.getItem('userId') && nameData?.imageUrl && (
+              <Img className={classes.groupCreatorImage}
+                // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={nameData.imageUrl} 
+              />
+            )}
+            {localStorage.getItem('userId') && !nameData?.imageUrl && (
+              <Img className={classes.groupCreatorImage}
+                // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={SampleImage} 
+              />
+            )}
+            <div className={classes.listElementContent}>
+              {/* {creatorInfo.name} */}
+              {localStorage.getItem('userId') && nameData && (
+                <span>
+                  {nameData.name}
+                </span>
+              )}
+            </div>
         </div>
       </div>
 

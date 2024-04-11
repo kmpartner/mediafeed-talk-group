@@ -283,8 +283,8 @@ const GroupListItem = (props) => {
           </div>
 
           <div className="groupList-listElement">
-            {/* Members: {group.allMemberUserIds.length}, Total Visits: {group.totalVisits} */}
-            {t('groupTalk.text23', 'Members')}:{' '}{group.allMemberUserIds.length},{' '}{t('groupTalk.text24', 'Total visits')}:{' '}{group.totalVisits}
+            {t('groupTalk.text23', 'Members')}:{' '}{group.allMemberUserIds.length},
+            {' '}{t('groupTalk.text24', 'Total visits')}:{' '}{group.totalVisits}
           </div>
 
           <div className="groupList-listElement">

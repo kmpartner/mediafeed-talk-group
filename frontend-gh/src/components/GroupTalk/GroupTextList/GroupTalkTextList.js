@@ -205,6 +205,8 @@ const GroupTalkTextList = (props) => {
       refIndex = refIndex + initialLength;
     }
     // refIndex = initialLength -1;
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+
     textList = (
       <ul className="textTalk-list">
         {displayList.map((inputData, index) => {
@@ -219,6 +221,7 @@ const GroupTalkTextList = (props) => {
                 groupTextReactions={props.groupTextReactions}
                 createGroupTextReactionHandler={props.createGroupTextReactionHandler}
                 groupTextDeleteHandler={props.groupTextDeleteHandler}
+                lsNameDataList={lsNameDataList}
                 isLoading={props.isLoading}
               />
             </div>

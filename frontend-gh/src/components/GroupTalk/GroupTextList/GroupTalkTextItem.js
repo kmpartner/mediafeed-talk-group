@@ -26,6 +26,7 @@ const GroupTalkTextItem = (props) => {
     groupTextReactions,
     createGroupTextReactionHandler,
     groupTextDeleteHandler,
+    lsNameDataList,
     isLoading,
    } = props;
 
@@ -113,6 +114,16 @@ const GroupTalkTextItem = (props) => {
   let [hour, minute, second] = (new Date(inputData.sendAt)).toLocaleTimeString().slice(0, 7).split(":")
   let xm = (new Date(inputData.sendAt)).toLocaleTimeString().split(' ')[1];
   
+
+  let nameData;
+  if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+    nameData = JSON.parse(lsNameDataList).find(ele => {
+      return ele.userId === inputData.fromUserId;
+    });
+  }
+
+  // console.log(nameData, inputData)
+
   const componentDecorator = (href, text, key) => (
     <a href={href} key={key} target="_blank" rel="noopener noreferrer" style={{color: 'gray', fontWeight: ''}}>
         {text}
@@ -194,17 +205,37 @@ const GroupTalkTextItem = (props) => {
       </div>
 
       <div className={classes.groupTalkTextItmeName}>
-        <span className={classes.groupTalkTextItmeNameElement}>{inputData.fromName}</span>
+        <span className={classes.groupTalkTextItmeNameElement}>
+          {/* {inputData.fromName} */}
+          {localStorage.getItem('userId') && nameData && (
+            <span> 
+              {nameData.name}
+            </span>
+          )}
+        </span>
         {userImageSrc &&
           <span className={classes.groupTalkTextItmeNameElement}>
-          <Img
-            className={classes.groupTalkTextItmeNameImage}
-            src={userImageSrc} 
-            // height="12.5" 
-            alt='user-img' 
-          /> 
+            {/* <Img
+              className={classes.groupTalkTextItmeNameImage}
+              src={userImageSrc} 
+              // height="12.5" 
+              alt='user-img' 
+            />  */}
+            {localStorage.getItem('userId') && nameData?.imageUrl && (
+              <Img className={classes.groupTalkTextItmeNameImage}
+                // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={nameData.imageUrl} 
+              />
+            )}
+            {/* {localStorage.getItem('userId') && !nameData?.imageUrl && (
+              <Img className={classes.grupInfoMemberListImage}
+                // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                src={SampleImage} 
+              />
+            )} */}
           </span>
         }
+
         {/* <span className={classes.groupTalkTextItmeTimeElement}>
           ({month}/{date} {hour}:{minute} {xm})
         </span> */}

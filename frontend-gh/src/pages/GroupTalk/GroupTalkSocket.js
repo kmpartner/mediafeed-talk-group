@@ -8,9 +8,11 @@ import openSocket from 'socket.io-client';
 
 import { useStore } from '../../hook-store/store';
 import { getUsersForGroup } from '../../util/user';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 
 import { 
   SOCKET_GROUP_SURL, 
+  SOCKET_GROUP_URL,
   BASE_URL,
 } from '../../App';
 
@@ -91,14 +93,25 @@ const GroupTalkSocket = (props) => {
   useEffect(() => {
     setIsLoading(true);
 
-    if (userId && usersData.length > 0 && userName) {
+    // if (userId && usersData.length > 0 && userName) {
+    //   setIsLoading(false);
+    // }
+
+    // if (!userSocketId && userId && userName && usersData.length > 0) {
+    //   console.log(userId, userName);
+    //   socketConnectHandler();
+    // }
+
+    if (userId && userName) {
       setIsLoading(false);
     }
 
-    if (!userSocketId && userId && userName && usersData.length > 0) {
+    if (!userSocketId && userId && userName) {
       console.log(userId, userName);
       socketConnectHandler();
     }
+
+
   }, [userId, usersData, userSocketId, userName]);
 
 
@@ -395,17 +408,30 @@ const GroupTalkSocket = (props) => {
             memberIdList.push(id.userId);
           }
   
+          // const resData = await getUsersForGroup(
+          //   BASE_URL,
+          //   localStorage.getItem('token'),
+          //   memberIdList,
+          // );
           const resData = await getUsersForGroup(
-            BASE_URL,
+            SOCKET_GROUP_URL,
             localStorage.getItem('token'),
-            memberIdList,
+            data.group.groupRoomId,
           );
   
           console.log('resData', resData);
           
-          if (resData.usersData) {
-            setGroupAllMemberList(resData.usersData);
+          if (resData.userNameDataList?.length > 0) {
+            updateLsNameDataList(resData.userNameDataList);
           }
+
+          if (resData.groupInfo?.allMemberUserIds?.length > 0) {
+            setGroupAllMemberList(resData.groupInfo.allMemberUserIds);
+          }
+
+          // if (resData.usersData) {
+          //   setGroupAllMemberList(resData.usersData);
+          // }
   
   
           // if (groupAllMemberList.length === 0) {
@@ -477,19 +503,19 @@ const GroupTalkSocket = (props) => {
     });
 
 
-    socket.on('group-text-send-result', data => {
-      console.log('group-text-send-result', data);
+    // socket.on('group-text-send-result', data => {
+    //   console.log('group-text-send-result', data);
 
-      setIsTextPosting(false);
+    //   // setIsTextPosting(false);
 
-      if (data.textData) {
-        setGroupTextInput('');
+    //   if (data.textData) {
+    //     setGroupTextInput('');
 
-        socket.emit('group-text-send-result-recieved', data);
+    //     // socket.emit('group-text-send-result-recieved', data);
 
-      }
+    //   }
 
-    });
+    // });
 
     socket.on('group-text-delete-result', data => {
       console.log('group-text-delete-result', data);
