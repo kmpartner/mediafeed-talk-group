@@ -23,7 +23,7 @@ const groupUserRoutes = require('./routes/group-user');
 
 const { authUserId } = require('./util/auth');
 
-const { handlePushNotification } = require('./handle-push');
+// const { handlePushNotification } = require('./handle-push');
 const { 
   handleGroupTextSend,
   handleGroupTextDelete, 
@@ -1061,8 +1061,8 @@ export class Server {
       handleCreateGroupTextReaction(socket);
       handleGetGroupTextReactions(socket);
 
-      //// handle push notification when text send success.
-      handlePushNotification(socket);
+      // //// handle push notification when text send success.
+      // handlePushNotification(socket);
 
       //// handle delete group member
       handleDeleteGroupMember(socket);

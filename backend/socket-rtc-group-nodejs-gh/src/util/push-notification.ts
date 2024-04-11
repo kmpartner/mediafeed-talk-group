@@ -1,8 +1,8 @@
 const webpush = require('web-push');
 
 // const PushSubscription = require('../models/push-subscription');
-const groupPush = require('../models/group-push');
-const { getUserNameData } = require('./get-user-name-data-util');
+// const groupPush = require('../models/group-push');
+// const { getUserNameData } = require('./get-user-name-data-util');
 
 require('dotenv').config();
 
@@ -19,249 +19,23 @@ const vapidData = {
     }
 };
 
-// exports.getTest = async(req: any, res: any, next: any) => {
-//   res.status(200).json({ message: 'get success'});
-// }
 
-// exports.pushTest = async (req: any, res: any, next: any) => {
-//   console.log('req.body', req.body);
-//   const userId = req.body.userId;
-//   const textData = req.body.textData;
-
-//   if (!userId) {
-//     const error = new Error('userId not found');
-//     // error.statusCode = 400;
-//     throw error;
-//   }
-
-//   try {
-
-//     webpush.setVapidDetails(
-//       vapidData.mailto,
-//       vapidData.vapidKeys.publicKey,
-//       vapidData.vapidKeys.privateKey
-//     );
-    
-//     // const pushData = await PushSubscription.find({});
-//     const pushData = await db.getDb().collection("pushsubscriptions").find().toArray();
-//     console.log('pushData', pushData);
-    
-//     const pushContent = {
-//       // title: `new text from ${textData.fromName}`,
-//       // content: `${textData.text}`,
-//       // openUrl: `/talk-page`,
-//       title: `test push `,
-//       content: `test push content`,
-//       openUrl: `/talk-page`,
-//       // postData: postData
-//     };
-    
-//     const sendPushData: any = await sendPush(pushData, pushContent);
-//     // console.log('sendPushData', sendPushData);
-
-//     const pushNotifyRecord = new groupPush({
-//       pushTime: Date.now(),
-//       pushContent: pushContent,
-//       pushUserIds: sendPushData.sendIdList,
-//       clientUserId: userId,
-//     });
-//     await pushNotifyRecord.save();
-
-//     // console.log('pushNotifyRecord', pushNotifyRecord);
-
-//     res.status(200).json({ 
-//       message: 'Push notification send', 
-//       data: pushNotifyRecord
-//       });
-
-//   }  catch (err) {
-//     if (!err.statusCode) {
-//         err.statusCode = 500;
-//     }
-//     next(err);
-//   }
-// }
-
-
-// exports.pushTextToUser = async (req, res, next) => {
-//   console.log('req.body', req.body);
-//   const userId = req.body.userId;
-//   const textData = req.body.textData;
-
-//   if (!userId) {
-//     const error = new Error('userId not found');
-//     error.statusCode = 400;
-//     throw error;
-//   }
-
-//   try {
-
-//     webpush.setVapidDetails(
-//       vapidData.mailto,
-//       vapidData.vapidKeys.publicKey,
-//       vapidData.vapidKeys.privateKey
-//     );
-    
-//     const pushData = await PushSubscription.find({ userId: textData.toUserId });
-//     // const pushData = await db.getDb()
-//     //   .collection("pushsubscriptions")
-//     //   .find({ userId: textData.toUserId })
-//     //   .toArray();
-//     console.log('pushData', pushData);
-    
-//     if (!pushData || pushData.length === 0) {
-//       return;
-//       res.status(404).json({ message: 'push subscription for toUserId not found' });
-//       // const error = new Error('push subscripton of toUserId not found');
-//       // error.statusCode = 404;
-//       // throw error;
-//     }
-
-
-//     let modifyContent = textData.text;
-//     if (textData.text.length > 100) {
-//       modifyContent = textData.text.slice(0,100) + '.....'
-//     } 
-
-//     const pushContent = {
-//       title: `new text from user ${textData.fromName}`,
-//       content: `${modifyContent}`,
-//       openUrl: `/talk-page/?grouptotalk=${textData.fromName}`,
-//       // postData: postData
-//     };
-    
-//     const sendPushData = await sendPush(pushData, pushContent);
-//     // console.log('sendPushData', sendPushData);
-
-//     const pushNotifyRecord = new talkPush({
-//       pushTime: Date.now(),
-//       pushContent: pushContent,
-//       pushUserIds: sendPushData.sendIdList,
-//       clientUserId: userId,
-//     });
-//     await pushNotifyRecord.save();
-
-//     // console.log('pushNotifyRecord', pushNotifyRecord);
-
-//     res.status(200).json({ 
-//       message: 'Push notification send', 
-//       data: pushNotifyRecord
-//       });
-
-//   }  catch (err) {
-//     if (!err.statusCode) {
-//         err.statusCode = 500;
-//     }
-//     next(err);
-//   }
-// }
-
-// exports.pushTextToUsers = async (req: any, res: any, next: any) => {
-//   console.log('req.body', req.body);
-//   const userId = req.body.userId;
-//   const sendIds = req.body.sendIds;
-//   const textData = req.body.textData;
-//   const groupRoomId = req.body.textData.groupRoomId
-
-//   if (sendIds.length === 0) {
-//     return
-//     const error = new Error('userId not found');
-//     // error.statusCode = 400;
-//     throw error;
-//   }
-
-//   try {
-
-//     webpush.setVapidDetails(
-//       vapidData.mailto,
-//       vapidData.vapidKeys.publicKey,
-//       vapidData.vapidKeys.privateKey
-//     );
-    
-//     // const pushData = await pushSubscription.find({ userId: textData.toUserId });
-//     // const pushData = await db.getDb()
-//     //   .collection("pushsubscriptions")
-//     //   .find({ userId: textData.toUserId })
-//     //   .toArray();
-
-//     // const allSubscriptions = await PushSubscription.find({});
-//     let pushData: any[] = [];
-
-//     for (const id of sendIds) {
-//       // const userInSubscriptions = await PushSubscription.find({ userId: id });
-//       const userInSubscriptions = await db.getDb().collection("pushsubscriptions").find({ userId: id }).toArray();
-//       // console.log('userInSubscriptions', userInSubscriptions,)
-      
-//       if (userInSubscriptions.length > 0) {
-//         pushData = pushData.concat(userInSubscriptions);
-//         // console.log('pushData', pushData);
-//       }
-//     }
-
-//     console.log('pushData', pushData);
-    
-//     if (!pushData || pushData.length === 0) {
-//       return;
-//       res.status(404).json({ message: 'push subscription for toUserId not found' });
-//       // const error = new Error('push subscripton of toUserId not found');
-//       // error.statusCode = 404;
-//       // throw error;
-//     }
-
-
-//     let modifyContent = textData.text;
-//     if (textData.text.length > 100) {
-//       modifyContent = textData.text.slice(0,100) + '.....'
-//     } 
-
-//     const pushContent = {
-//       title: `new text in Group`,
-//       content: `${modifyContent}`,
-//       openUrl: `/group-talk-page/?groupRoomIdPush=${groupRoomId}`,
-//       // postData: postData
-//     };
-    
-//     const sendPushData: any = await sendPush(pushData, pushContent);
-//     // console.log('sendPushData', sendPushData);
-
-//     const pushNotifyRecord = new groupPush({
-//       pushTime: Date.now(),
-//       pushContent: pushContent,
-//       pushUserIds: sendPushData.sendIdList,
-//       clientUserId: userId,
-//     });
-//     await pushNotifyRecord.save();
-
-//     // console.log('pushNotifyRecord', pushNotifyRecord);
-
-//     res.status(200).json({ 
-//       message: 'Push notification send', 
-//       data: pushNotifyRecord
-//       });
-
-//   }  catch (err) {
-//     if (!err.statusCode) {
-//         err.statusCode = 500;
-//     }
-//     next(err);
-//   }
-// }
-
-
-export const pushTextToUsers2 = (
+export const pushTextToUsers2 = async (
   userId: string, 
   sendIds: string[], 
   textData: any, 
-  groupRoomId: string
+  groupRoomId: string,
+  fromUserNameData: any,
 ) => {
-  return new Promise( async (resolve, reject) => {
     try {
       if (sendIds.length === 0) {
-        // return;
-        const error = new Error('sned userIds not found');
-        // error.statusCode = 400;
-        throw error;
+        return;
+        // const error = new Error('sned userIds not found');
+        // // error.statusCode = 400;
+        // throw error;
       }
+  
+      // console.log('sendIds', sendIds);
 
       webpush.setVapidDetails(
         vapidData.mailto,
@@ -269,15 +43,6 @@ export const pushTextToUsers2 = (
         vapidData.vapidKeys.privateKey
       );
       
-      // const pushData = await pushSubscription.find({ userId: textData.toUserId });
-      // const pushData = await db.getDb()
-      //   .collection("pushsubscriptions")
-      //   .find({ userId: textData.toUserId })
-      //   .toArray();
-
-      const userNameData = await getUserNameData(textData, textData.fromUserId);
-
-      // const allSubscriptions = await PushSubscription.find({});
       let pushData: any[] = [];
   
       for (const id of sendIds) {
@@ -294,11 +59,10 @@ export const pushTextToUsers2 = (
       // console.log('pushData', pushData);
       
       if (!pushData || pushData.length === 0) {
-        // return;
-        // res.status(404).json({ message: 'push subscription for toUserId not found' });
-        const error = new Error('push subscripton of toUserId not found');
-        // error.statusCode = 404;
-        throw error;
+        return;
+        // const error = new Error('push subscripton of toUserId not found');
+        // // error.statusCode = 404;
+        // throw error;
       }
   
   
@@ -308,58 +72,37 @@ export const pushTextToUsers2 = (
       } 
   
       const pushContent = {
-        title: `new text in Group by ${userNameData?.name}`,
+        title: `new text in Group by ${fromUserNameData?.name}`,
         content: `${modifyContent}`,
         // openUrl: `/group-talk-page/?groupRoomIdPush=${groupRoomId}`,
         openUrl: `/group-talk-page/?pageNotificationGroupRoomId=${groupRoomId}`,
         // postData: postData
+        fromUserNameData: fromUserNameData,
       };
       
-      const sendPushData: any = await sendPush(pushData, pushContent);
+      sendPush(pushData, pushContent);
+      // await sendPush(pushData, pushContent);
+
       // console.log('sendPushData', sendPushData);
   
-      // const pushNotifyRecord = new groupPush({
-      //   pushTime: Date.now(),
-      //   pushContent: pushContent,
-      //   pushUserIds: sendPushData.sendIdList,
-      //   clientUserId: userId,
-      // });
-      // await pushNotifyRecord.save();
-
-      // const pushNotifyRecord = {
-      //   pushTime: Date.now(),
-      //   pushContent: pushContent,
-      //   pushUserIds: sendPushData.sendIdList,
-      //   clientUserId: userId,
-      // }
-  
-      // console.log('pushNotifyRecord', pushNotifyRecord);
-  
-      resolve({ 
-        message: 'Push notification send', 
-        // data: pushNotifyRecord,
-        data: pushContent,
-      });
-      // res.status(200).json({ 
+      // resolve({ 
       //   message: 'Push notification send', 
-      //   data: pushNotifyRecord
+      //   // data: pushNotifyRecord,
+      //   data: pushContent,
       // });
-  
-    }  catch (err) {
+
+    }  catch (err: any) {
+      console.log(err);
       if (!err.statusCode) {
           err.statusCode = 500;
       }
-      reject(err);
+      // reject(err);
       // next(err);
     }
-  });
-
-  
-}
+};
 
 const sendPush = (subscriptions: any, payloadObj: any) => {
   return new Promise(async (resolve, reject) => {
-
     let processNum = 0;
     const sendIdList: any[] = [];
     const subArray: any[] = [];

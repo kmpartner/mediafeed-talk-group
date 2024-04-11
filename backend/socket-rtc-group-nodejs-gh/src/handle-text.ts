@@ -122,12 +122,12 @@ exports.handleGroupTextSend = (socket: any) => {
 
       // console.log('last talks', groupTalk.talks[groupTalk.talks.length -1]);
 
-      socket.emit('group-text-send-result', {
-        message: 'group text send success',
-        idsForPush: idsForPush,
-        // textData: textData,
-        textData: createReturnPost(groupTalk.talks[groupTalk.talks.length -1]),
-      });
+      // socket.emit('group-text-send-result', {
+      //   message: 'group text send success',
+      //   idsForPush: idsForPush,
+      //   // textData: textData,
+      //   textData: createReturnPost(groupTalk.talks[groupTalk.talks.length -1]),
+      // });
 
 
       addPageNotificationData(
@@ -143,10 +143,10 @@ exports.handleGroupTextSend = (socket: any) => {
     catch(err: any) {
       console.log(err);
 
-      socket.emit('group-text-send-result', {
-        message: 'group text send failed',
-        error: { message: err.message, name: err.name }
-      });
+      // socket.emit('group-text-send-result', {
+      //   message: 'group text send failed',
+      //   error: { message: err.message, name: err.name }
+      // });
     }
 
   });

@@ -13,6 +13,11 @@ router.get('/user-favorite-groups',
   groupUserController.getUserFavoriteGroups
 );
 
+router.get('/users-for-group', 
+  isAuth,
+  groupUserController.getUsersForGroup,
+);
+
 // router.post('/', textTalkController.postTextTalk);
 
 // router.delete('/', textTalkController.deleteTextTalk);

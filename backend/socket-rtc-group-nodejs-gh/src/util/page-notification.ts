@@ -1,11 +1,16 @@
 const fetch = require('node-fetch');
 
 import { GroupTextInfo } from '../server';
-import { getUserNameData } from './get-user-name-data-util';
+// import { getUserNameData } from './get-user-name-data-util';
+import { pushTextToUsers2 } from './push-notification';
 
 require('dotenv').config();
 
-export const addPageNotificationData = async (textData: GroupTextInfo, idsForPush: string[]) => {
+export const addPageNotificationData = async (
+  textData: GroupTextInfo, 
+  idsForPush: string[],
+  fromUserNameData: any,
+) => {
   try {
 
     let modifyContent = textData.text;
@@ -13,7 +18,7 @@ export const addPageNotificationData = async (textData: GroupTextInfo, idsForPus
       modifyContent = textData.text.slice(0,100) + '.....'
     } 
 
-    const userNameData = await getUserNameData(textData, textData.fromUserId);
+    // const userNameData = await getUserNameData(textData, textData.fromUserId);
 
     for (const uid of idsForPush) {
 
@@ -27,7 +32,7 @@ export const addPageNotificationData = async (textData: GroupTextInfo, idsForPus
         body: JSON.stringify({
           storeUserId: uid,
           page: 'group',
-          title: `new text from user ${userNameData?.name}`,
+          title: `new text from user ${fromUserNameData?.name}`,
           message: modifyContent,
           dataForNotification: {
             fromUserId: textData.fromUserId,
@@ -37,7 +42,7 @@ export const addPageNotificationData = async (textData: GroupTextInfo, idsForPus
             
             textId: textData.textId,
             filePaths: textData.filePaths,
-            fromName: userNameData?.name,
+            fromName: fromUserNameData?.name,
           },
         }),
       });
@@ -46,6 +51,14 @@ export const addPageNotificationData = async (textData: GroupTextInfo, idsForPus
       console.log(resData);
       // return resData;
     }
+
+    pushTextToUsers2(
+      '', 
+      idsForPush,
+      textData,
+      textData.groupRoomId,
+      fromUserNameData,
+    );
 
 
   } catch(err) {
