@@ -136,7 +136,8 @@ exports.handleGroupTextSend = (socket: any) => {
           groupName: groupTalk.groupName,
           textId: groupTalk.talks[groupTalk.talks.length - 1]._id.toString(),
         }, 
-        idsForPush
+        idsForPush,
+        data.fromUserNameData,
       );
 
     } 
