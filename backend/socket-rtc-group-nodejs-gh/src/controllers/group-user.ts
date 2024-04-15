@@ -85,7 +85,7 @@ const getUsersForGroup = async (req: any, res: any, next: any) => {
     return res.status(200).json({
       message: 'get users name data for group success',
       data: userNameDataList,
-      groupInfo: groupInfo,
+      // groupInfo: groupInfo,
       userNameDataList: userNameDataList,
     });
 
