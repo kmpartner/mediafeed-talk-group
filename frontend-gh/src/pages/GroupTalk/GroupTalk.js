@@ -54,6 +54,8 @@ import {
   getDraftInput, 
   deleteDraftInput 
 } from '../../util/style';
+import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
+
 import { useStore } from '../../hook-store/store';
 
 import { 
@@ -803,20 +805,48 @@ const GroupTalk = (props) => {
   };
 
   const showGroupTalkTextHandler = (groupRoomId, shareGroupId, shareFileType) => {
-    if (!showGroupTalkText) {
-      if (shareGroupId && shareFileType) {
-        props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}&shareGroupId=${shareGroupId}&shareFileType=${shareFileType}`);  
-      } else {
-        props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}`);
-      }
-      // props.history.push(`/group-talk-page/${groupRoomId}`);
-    }
-    else {
-      props.history.push('/group-talk-page');
-    }
+      if (!showGroupTalkText) {
+        if (shareGroupId && shareFileType) {
+          props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}&shareGroupId=${shareGroupId}&shareFileType=${shareFileType}`);  
+        } else {
+          props.history.push(`/group-talk-page/?groupRoomId=${groupRoomId}`);
+        }
+        // props.history.push(`/group-talk-page/${groupRoomId}`);
+  
+        //// get group member info for nameDataList and memberList
+        getUsersDataForGroupHander(groupRoomId);
 
-    setShowGroupTalkText(!showGroupTalkText);
+      }
+      else {
+        props.history.push('/group-talk-page');
+      }
+  
+      setShowGroupTalkText(!showGroupTalkText);
   };
+
+  const getUsersDataForGroupHander = async (groupRoomId) => {
+    try {
+        //// get group member info for nameDataList and memberList
+        const resData = await getUsersForGroup(
+          SOCKET_GROUP_URL,
+          localStorage.getItem('token'),
+          groupRoomId,
+        );
+  
+        console.log('resData', resData);
+        
+        if (resData.userNameDataList?.length > 0) {
+          updateLsNameDataList(resData.userNameDataList);
+        }
+  
+        // if (resData.groupInfo?.allMemberUserIds?.length > 0) {
+        //   setGroupAllMemberList(resData.groupInfo.allMemberUserIds);
+        // }
+  
+    } catch(err) {
+      console.log(err);
+    }
+  }
 
   const showGroupTextInputElementHandler = () => {
     setShowGroupTextInputElement(!showGroupTextInputElement);

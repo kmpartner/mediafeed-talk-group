@@ -7,8 +7,8 @@ import openSocket from 'socket.io-client';
 // import WebStream from './WebStream';
 
 import { useStore } from '../../hook-store/store';
-import { getUsersForGroup } from '../../util/user';
-import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
+// import { getUsersForGroup } from '../../util/user';
+// import { updateLsNameDataList } from '../../util/user-name-data/user-name-data-util';
 
 import { 
   SOCKET_GROUP_SURL, 
@@ -402,37 +402,15 @@ const GroupTalkSocket = (props) => {
             groupRoomId: data.group.groupRoomId,
           });
           
-          const memberIdList = [];
-  
-          for (const id of data.group.allMemberUserIds) {
-            memberIdList.push(id.userId);
-          }
-  
-          // const resData = await getUsersForGroup(
-          //   BASE_URL,
-          //   localStorage.getItem('token'),
-          //   memberIdList,
-          // );
-          const resData = await getUsersForGroup(
-            SOCKET_GROUP_URL,
-            localStorage.getItem('token'),
-            data.group.groupRoomId,
-          );
-  
-          console.log('resData', resData);
-          
-          if (resData.userNameDataList?.length > 0) {
-            updateLsNameDataList(resData.userNameDataList);
+          if (data.group.allMemberUserIds) {
+            setGroupAllMemberList(data.group.allMemberUserIds);
           }
 
-          if (resData.groupInfo?.allMemberUserIds?.length > 0) {
-            setGroupAllMemberList(resData.groupInfo.allMemberUserIds);
-          }
-
-          // if (resData.usersData) {
-          //   setGroupAllMemberList(resData.usersData);
+          // const memberIdList = [];
+  
+          // for (const id of data.group.allMemberUserIds) {
+          //   memberIdList.push(id.userId);
           // }
-  
   
           // if (groupAllMemberList.length === 0) {
     

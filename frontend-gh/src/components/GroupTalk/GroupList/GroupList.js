@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import AutoSuggestGroupList from '../../AutoSuggest/AutoSuggestGroupList'
 import GroupListItem from './GroupListItem';
 import { useStore } from '../../../hook-store/store';
-import { getUsersForGroup } from '../../../util/user';
+// import { getUsersForGroup } from '../../../util/user';
 
 import { BASE_URL } from '../../../App';
 import '../../../pages/GroupTalk/GroupTalk.css';
