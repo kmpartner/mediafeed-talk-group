@@ -231,7 +231,7 @@ const GroupInfoMemberList = (props) => {
 
                       {props.isAuth && member.userId !== props.userId && nameData?.name && (
                         <div>
-                          <div className="groupTalkTextList-TalkPageButton">
+                          {/* <div className="groupTalkTextList-TalkPageButton">
                             <Link
                               to={`/talk-page/?grouptotalk=${member.name}`}
                               className=""
@@ -245,7 +245,7 @@ const GroupInfoMemberList = (props) => {
                                 {t("groupTalk.text33", "Send text")} in Talk
                               </Button>
                             </Link>
-                          </div>
+                          </div> */}
 
                           {/* {isCreator &&
                             props.groupInfo &&

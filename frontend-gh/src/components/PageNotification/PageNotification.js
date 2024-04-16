@@ -72,11 +72,15 @@ const PageNotification = (props) => {
         </div>
         <ul className="pageNotifyList">
           {pageNotification.pageNotificationList.reverse().map((notify) => {
+            
+            const lsNameDataList = localStorage.getItem('lsNameDataList');
+
             return (
               <li key={notify.creationTime}>
                 <PageNotificationItem 
                   notify={notify}
-                  setShowPageNotification={setShowPageNotification}
+                  lsNameDataList={lsNameDataList}
+                  // setShowPageNotification={setShowPageNotification}
                 />
               </li>
             );

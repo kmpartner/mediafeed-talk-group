@@ -23,3 +23,17 @@
   text-decoration: none;
   color: inherit;
 }
+
+.pageNotifyUserTitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pageNotifyUserImage {
+  height: 2rem;
+  width: 2rem;
+  object-fit: cover;
+  border-radius: 2px;
+}

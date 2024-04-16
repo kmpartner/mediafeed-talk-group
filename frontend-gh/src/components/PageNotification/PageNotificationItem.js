@@ -11,8 +11,14 @@ import { BASE_URL } from "../../App";
 
 import './PageNotification.css';
 
+// import SampleImage from '../Image/person-icon-50.jpg';
+
 const PageNotificationItem = (props) => {
-  const { notify, setShowPageNotification } = props;
+  const { 
+    notify, 
+    lsNameDataList,
+    // setShowPageNotification,
+   } = props;
 
   const [t] = useTranslation("translation");
 
@@ -25,6 +31,7 @@ const PageNotificationItem = (props) => {
 
   let displayPage;
   let pageNotifyItemBody;
+  let nameData;
 
   if (notify) {
     const currentPath = window.location.pathname + window.location.search;
@@ -34,6 +41,27 @@ const PageNotificationItem = (props) => {
       notifyLink = `/feed/${notify.dataForNotification.postId}`;
       // console.log(notify.dataForNotification.postId)
       displayPage = 'Feed';
+
+      //// set nameData for comment creator from lsNameDataList
+      if (notify.dataForNotification?.commentCreatorId) {
+        if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+          nameData = JSON.parse(lsNameDataList).find(ele => {
+            return ele.userId === notify.dataForNotification.commentCreatorId;
+          });
+        }
+      }
+
+      //// set nameData for post creator from lsNameDataList
+      if (!notify.dataForNotification?.commentCreatorId && 
+            notify.dataForNotification?.postCreatorId
+      ) {
+        if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+          nameData = JSON.parse(lsNameDataList).find(ele => {
+            return ele.userId === notify.dataForNotification.postCreatorId;
+          });
+        }
+      }
+      
     }
 
     if (notify.page === 'talk' ) {
@@ -44,10 +72,16 @@ const PageNotificationItem = (props) => {
       }
       // console.log(notify.dataForNotification.postId)
       displayPage = 'talk';
+
+      if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+        nameData = JSON.parse(lsNameDataList).find(ele => {
+          return ele.userId === notify.dataForNotification?.fromUserId;
+        });
+      }
+
     }
 
     if (notify.page === 'group' ) {
-
       notifyLink = `/group-talk-page`;
 
       if (notify.dataForNotification?.groupRoomId) { 
@@ -62,7 +96,16 @@ const PageNotificationItem = (props) => {
       if (notify.dataForNotification?.groupName) {
         displayPage = `group, ${notify.dataForNotification.groupName}`;
       }
+
+      if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+        nameData = JSON.parse(lsNameDataList).find(ele => {
+          return ele.userId === notify.dataForNotification?.fromUserId;
+        });
+      }
+
     }
+
+    // console.log('nameData', nameData, displayPage)
 
 
     pageNotifyItemBody = (
@@ -75,9 +118,22 @@ const PageNotificationItem = (props) => {
               // setShowPageNotification(false);
             }}
           >
-            <strong>
-              {notify.title}
-            </strong>
+            <span className="pageNotifyUserTitle">
+              <strong>
+                {notify.title}
+              </strong>
+              {nameData?.imageUrl && (
+                <img className="pageNotifyUserImage"
+                  // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                  src={nameData.imageUrl} 
+                />
+              )}
+              {/* {!nameData?.imageUrl && (
+                <img className="pageNotifyUserImage"
+                  src={SampleImage} alt=""
+                />
+              )} */}
+            </span>
           </Link>
         </div>
         <div>
