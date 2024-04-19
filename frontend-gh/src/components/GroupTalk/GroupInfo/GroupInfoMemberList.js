@@ -128,185 +128,124 @@ const GroupInfoMemberList = (props) => {
 
   let allMembers;
   if (props.groupAllMemberList.length > 0) {
-    const lsNameDataList = localStorage.getItem('lsNameDataList');
 
-    allMembers = (
-      <div>
-        {/* <div onClick={hideAllMembersHandler}>hide-member</div> */}
-        <ul>
-          {props.groupAllMemberList.map((member) => {
-            // console.log(member);
-            const isOnline = props.joinGroupOnlineMember.find((element) => {
-              return element.userId === member.userId;
-            });
+    if (!localStorage.getItem('userId')) {
+      allMembers = (
+        <div>Group members info will be shown after login.</div>
+      );
+    } else {
 
-            // const userInfo = props.usersData.find(element => {
-            //   return element.userId === member.userId;
-            // });
-
-            const userInfo2 = props.allMemberUserIds.find((element) => {
-              return element.userId === member.userId;
-            });
-
-            const userCreateDate = getLocalTimeElements(member.createdAt)
-              .dateDisplay;
-            // console.log(userCreateDate);
-
-            const joinDate = getLocalTimeElements(userInfo2.addAt).dateDisplay;
-            // console.log(getLocalTimeElements(joinDate));
-
-            let userImageUrl;
-            if (memberImageUrlList.length > 0) {
-              const imageUser = memberImageUrlList.find((ele) => {
-                return ele.userId === member.userId;
+      const lsNameDataList = localStorage.getItem('lsNameDataList');
+  
+      allMembers = (
+        <div>
+          <ul>
+            {props.groupAllMemberList.map((member) => {
+              // console.log(member);
+              const isOnline = props.joinGroupOnlineMember.find((element) => {
+                return element.userId === member.userId;
               });
-              // console.log('imageUser', imageUser);
-              if (imageUser) {
-                userImageUrl = imageUser.imageUrl;
+  
+              // const userInfo = props.usersData.find(element => {
+              //   return element.userId === member.userId;
+              // });
+  
+              const userInfo2 = props.allMemberUserIds.find((element) => {
+                return element.userId === member.userId;
+              });
+  
+              const userCreateDate = getLocalTimeElements(member.createdAt)
+                .dateDisplay;
+              // console.log(userCreateDate);
+  
+              const joinDate = getLocalTimeElements(userInfo2.addAt).dateDisplay;
+              // console.log(getLocalTimeElements(joinDate));
+  
+              let userImageUrl;
+              if (memberImageUrlList.length > 0) {
+                const imageUser = memberImageUrlList.find((ele) => {
+                  return ele.userId === member.userId;
+                });
+                // console.log('imageUser', imageUser);
+                if (imageUser) {
+                  userImageUrl = imageUser.imageUrl;
+                }
               }
-            }
-
-            let nameData;
-            if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
-              nameData = JSON.parse(lsNameDataList).find(ele => {
-                return ele.userId === member.userId;
-              });
-            }
-
-            return (
-              <div>
-                <div>
-                  <div
-                    key={member.userId}
-                    className="groupTalkTextList-allMemberElement"
-                    onClick={() => {
-                      getUserDescriptionHandler(member.userId);
-                      setSelectedUserIdHandler(member.userId);
-                    }}
-                  >
-                    <div className="groupTalkTextList-memberListElement">
-                      {/* {member.name} */}
-                      {localStorage.getItem('userId') && nameData && (
-                        <span> 
-                          {nameData.name}
-                        </span>
-                      )}
-                    </div>
-                    <div className="groupTalkTextList-memberListElement">
-                      {/* <Img
-                        className={classes.grupInfoMemberListImage}
-                        src={userImageUrl ? userImageUrl : SampleImage}
-                        // height="25"
-                        alt="user-img"
-                      /> */}
-                      {localStorage.getItem('userId') && nameData?.imageUrl && (
-                        <Img className={classes.grupInfoMemberListImage}
-                          // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
-                          src={nameData.imageUrl} 
-                        />
-                      )}
-                      {localStorage.getItem('userId') && !nameData?.imageUrl && (
-                        <Img className={classes.grupInfoMemberListImage}
-                          // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
-                          src={SampleImage} 
-                        />
-                      )}
-
-                    </div>
-                    <div className="groupTalkTextList-memberListElement">
-                      {isOnline ? " (online)" : ""}
-                    </div>
-
-                    <div>&#9662;</div>
-                  </div>
-
-                  {selectedUserId && selectedUserId === member.userId && (
-                    <div className="groupTalkTextList-descriptionContainer">
-                      {userDescription}
-
-                      {/* <div>user-created-at: {userCreateDate}</div> */}
-                      <div className="groupTalkTextList-descriptionDate">
-                        group join date: {joinDate}
+  
+              let nameData;
+              if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+                nameData = JSON.parse(lsNameDataList).find(ele => {
+                  return ele.userId === member.userId;
+                });
+              }
+  
+              return (
+                  <div>
+                    <div
+                      key={member.userId}
+                      className="groupTalkTextList-allMemberElement"
+                      onClick={() => {
+                        getUserDescriptionHandler(member.userId);
+                        setSelectedUserIdHandler(member.userId);
+                      }}
+                    >
+                      <div className="groupTalkTextList-memberListElement">
+                        {/* {member.name} */}
+                        {localStorage.getItem('userId') && nameData && (
+                          <span> 
+                            {nameData.name}
+                          </span>
+                        )}
                       </div>
-
-                      {props.isAuth && member.userId !== props.userId && nameData?.name && (
-                        <div>
-                          {/* <div className="groupTalkTextList-TalkPageButton">
-                            <Link
-                              to={`/talk-page/?grouptotalk=${member.name}`}
-                              className=""
-                            >
-                              <Button
-                                mode="flat"
-                                type="submit"
-                                design=""
-                                // disabled={!props.replyInput || props.commentLoading}
-                              >
-                                {t("groupTalk.text33", "Send text")} in Talk
-                              </Button>
-                            </Link>
-                          </div> */}
-
-                          {/* {isCreator &&
-                            props.groupInfo &&
-                            props.groupInfo.creatorUserId !== member.userId && (
-                              <div className={classes.buttonSmall}>
-                                <Button mode="flat" type="submit"
-                                  onClick={() => {
-                                    setConfirmMemberDelete(!confirmMemberDelete);
-                                  }}
-                                >
-                                  {t("groupTalk.text34", "Delete Member as Creator")}
-                                </Button>
-                                {confirmMemberDelete && (
-                                  <div>
-                                    <div className={classes.confirmMessage}>
-                                      {t("groupTalk.text35", "Do you want to delete this member as creator?")}
-                                    </div>
-                                    <div className={classes.buttonsContainer}>
-                                      <Button mode="flat" type="submit"
-                                        disabled={props.isLoading}
-                                        onClick={() => {
-                                          setConfirmMemberDelete(false);
-                                        }}
-                                      >
-                                        {t("general.text1", "Cancel")}
-                                      </Button>
-                                      <Button mode="raised" type="submit"
-                                        disabled={props.isLoading}
-                                        onClick={() => {
-                                          props.deleteGroupMemberHandler(
-                                            props.groupInfo.groupRoomId,
-                                            member.userId
-                                          );
-                                        }}
-                                      >
-                                        {t("general.text3", "Delete")}
-                                      </Button>
-                                    </div>
-
-                                    {props.isLoading && <div><Loader /></div>}
-                              
-                                    <div className={classes.resultMessage}>
-                                      {props.deleteMemberResult}
-                                    </div>
-                                    
-                                  </div>
-                                )}
-                              </div>
-                            )} */}
-                        </div>
-                      )}
+                      <div className="groupTalkTextList-memberListElement">
+                        {/* <Img
+                          className={classes.grupInfoMemberListImage}
+                          src={userImageUrl ? userImageUrl : SampleImage}
+                          // height="25"
+                          alt="user-img"
+                        /> */}
+                        {localStorage.getItem('userId') && nameData?.imageUrl && (
+                          <Img className={classes.grupInfoMemberListImage}
+                            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                            src={nameData.imageUrl} 
+                          />
+                        )}
+                        {localStorage.getItem('userId') && !nameData?.imageUrl && (
+                          <Img className={classes.grupInfoMemberListImage}
+                            // style={{height: "1rem", width: "1rem", objectFit: "cover"}}
+                            src={SampleImage} 
+                          />
+                        )}
+  
+                      </div>
+                      <div className="groupTalkTextList-memberListElement">
+                        {isOnline ? " (online)" : ""}
+                      </div>
+  
+                      <div>&#9662;</div>
                     </div>
-                  )}
-                </div>
-
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-    );
+  
+                    {selectedUserId && selectedUserId === member.userId && (
+                      <div className="groupTalkTextList-descriptionContainer">
+                        {userDescription}
+  
+                        {/* <div>user-created-at: {userCreateDate}</div> */}
+                        <div className="groupTalkTextList-descriptionDate">
+                          group join date: {joinDate}
+                        </div>
+  
+                        {props.isAuth && member.userId !== props.userId && nameData?.name && (
+                          <div></div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    }
   }
 
   let groupMemberBody;

@@ -749,6 +749,19 @@ class Feed extends Component {
     formData.append('public', postData.public);
 
 
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+    let nameData;
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      nameData = JSON.parse(lsNameDataList).find(element => {
+        return element.userId === localStorage.getItem('userId');
+      });
+    }
+
+    if (nameData) {
+      formData.append('userNameData', nameData);
+    }
+
+
     if (!postData.image || postData.image.length > 1 || postData.image.length === 1) {
       
       if (postData.image && postData.image.length > 0) {

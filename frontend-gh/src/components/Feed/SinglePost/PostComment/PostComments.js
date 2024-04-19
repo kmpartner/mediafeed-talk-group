@@ -210,39 +210,39 @@ const PostComments = props => {
     // console.log('Clicked');
     setCommentLoading(true);
 
-    let graphqlQuery = {
-      query: `
-          mutation CreateNewComment(
-            $content: String!, 
-            $postId: ID!,
-            $parentCommentId: ID
-            $locationData: GeolocationInputData
-          ) {
-            createPostComment(commentInput: {
-              content: $content, 
-              postId: $postId,
-              parentCommentId: $parentCommentId,
-              locationData: $locationData
-            }) {
-              _id
-              content
-              postId
-              parentCommentId
-              creatorId
-              creator_id
-              creatorName
-              creatorImageUrl
-              createdAt
-            }
-        }
-        `,
-      variables: {
-        content: commentContent,
-        postId: props.postId,
-        parentCommentId: parentCommentId,
-        locationData: JSON.parse(localStorage.getItem('userLocation'))
-      }
-    };
+    // let graphqlQuery = {
+    //   query: `
+    //       mutation CreateNewComment(
+    //         $content: String!, 
+    //         $postId: ID!,
+    //         $parentCommentId: ID
+    //         $locationData: GeolocationInputData
+    //       ) {
+    //         createPostComment(commentInput: {
+    //           content: $content, 
+    //           postId: $postId,
+    //           parentCommentId: $parentCommentId,
+    //           locationData: $locationData
+    //         }) {
+    //           _id
+    //           content
+    //           postId
+    //           parentCommentId
+    //           creatorId
+    //           creator_id
+    //           creatorName
+    //           creatorImageUrl
+    //           createdAt
+    //         }
+    //     }
+    //     `,
+    //   variables: {
+    //     content: commentContent,
+    //     postId: props.postId,
+    //     parentCommentId: parentCommentId,
+    //     locationData: JSON.parse(localStorage.getItem('userLocation'))
+    //   }
+    // };
 
     // fetch(GQL_URL, {
     //   method: 'POST',
@@ -252,6 +252,14 @@ const PostComments = props => {
     //   },
     //   body: JSON.stringify(graphqlQuery),
     // })
+
+    const lsNameDataList = localStorage.getItem('lsNameDataList');
+    let nameData;
+    if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+      nameData = JSON.parse(lsNameDataList).find(element => {
+        return element.userId === localStorage.getItem('userId');
+      });
+    }
 
     fetch(BASE_URL + `/comment?postId=${props.postId}`, {
       method: 'POST',
@@ -264,6 +272,7 @@ const PostComments = props => {
         postId: props.postId,
         parentCommentId: parentCommentId,
         locationData: localStorage.getItem('userLocation'),
+        userNameData: nameData ? nameData : '',
       }),
     })
       .then(res => {

@@ -50,27 +50,30 @@ const MobileNavigation = props => {
 
   },[props.isAuth, props.userUpdateAction]);
 
+  const lsNameDataList = localStorage.getItem('lsNameDataList');
+  let nameData;
+  if (lsNameDataList && JSON.parse(lsNameDataList).length > 0) {
+    nameData = JSON.parse(lsNameDataList).find(element => {
+      return element.userId === localStorage.getItem('userId');
+    });
+  }
+
   return (
     <nav className={['mobile-nav', props.open ? 'open' : ''].join(' ')}>
       {/* <div className="navigation-item">{props.name}</div> */}
       <div>
 
-        {props.isAuth ? 
+        {props.isAuth && nameData &&
           <span>
-            {userData.imageUrl ?
-              // <img className="userImage" src={BASE_URL + '/' + userData.imageUrl} alt="" height="25" />
-              <span className="mobile-nav__userImageContainer">
-                <img className="mobile-nav__userImage" src={userData.imageUrl} alt="" height="25" />
-                <span className="mobile-nav__name">{userData.name}</span>
-              </span>
-              : <span className="mobile-nav__name">{userData.name}</span>
-            }
+            <span className="mobile-nav__name">
+                {nameData.name}
+            </span>
           </span>
-          : <NavLink to="/login"><span className="name">
-            {/* Login */}
-            {t('nav.text2')}
-          </span></NavLink>
-          }
+          // : <NavLink to="/login"><span className="name">
+          //   {/* Login */}
+          //   {t('nav.text2')}
+          // </span></NavLink>
+        }
 
         <ul
           className={['mobile-nav__items', props.mobile ? 'mobile' : ''].join(' ')}
