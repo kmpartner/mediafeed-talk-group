@@ -87,7 +87,7 @@ router.delete('/image', isAuth, authController.deleteUserImage);
 
 // router.get('/getusers', authController.getUsers);
 
-router.get('/getusers-for-group', authController.getUsersForGroup);
+// router.get('/getusers-for-group', authController.getUsersForGroup);
 
 router.get('/user-imageurl', authController.getUserImageUrl);
 

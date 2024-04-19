@@ -21,7 +21,11 @@ const vapidData = {
 };
 
 
-const sendMessagePushNotification = async (userId, postData) => {
+const sendMessagePushNotification = async (
+  userId, 
+  postData,
+  userNameData,
+) => {
   try {
     // console.log('req.body', req.body);
     // const userId = req.body.userId;
@@ -57,7 +61,7 @@ const sendMessagePushNotification = async (userId, postData) => {
       }
     }
 
-    console.log('candidateIds', candidateIds);
+    // console.log('candidateIds', candidateIds);
 
     if (candidateIds.length === 0) {
       return;
@@ -68,7 +72,7 @@ const sendMessagePushNotification = async (userId, postData) => {
     }
 
     var uniqueIds = candidateIds.filter(onlyUnique);
-    console.log('uniqueIds', uniqueIds);
+    // console.log('uniqueIds', uniqueIds);
 
 
   // try {
@@ -93,14 +97,14 @@ const sendMessagePushNotification = async (userId, postData) => {
       }
     }
 
-    console.log('subPushData', subPushData);
+    // console.log('subPushData', subPushData);
     if (subPushData.length === 0) {
       return;
     }
 
 
     const pushContent = {
-      title: `post update by user ${postData.creatorName}`,
+      title: `post update by user ${userNameData?.name}`,
       content: `${postData.title}`,
       openUrl: `/feed/${postData ? postData._id : 'posts'}`,
       // postData: postData

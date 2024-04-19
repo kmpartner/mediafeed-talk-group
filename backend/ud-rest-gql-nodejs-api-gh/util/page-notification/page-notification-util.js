@@ -72,7 +72,11 @@ const storePageNotificationData = async (
 };
 
 
-const addFeedPostPageNotification = async (userId, postData) => {
+const addFeedPostPageNotification = async (
+  userId, 
+  postData,
+  userNameData,
+) => {
   try {
     if (postData.public !== 'public') {
       return;
@@ -138,7 +142,7 @@ const addFeedPostPageNotification = async (userId, postData) => {
             postId: postData._id.toString(),
             isImageFile: isImageFile,
             postCreatorId: postData.creatorId,
-            postCreatorName: postData.creatorName,
+            postCreatorName: userNameData?.name,
           },
           'feed',
         );
@@ -156,7 +160,11 @@ const addFeedPostPageNotification = async (userId, postData) => {
 
 
 
-const addFeedPostCommentPageNotification = async (commentData, postCreatorId) => {
+const addFeedPostCommentPageNotification = async (
+  commentData, 
+  postCreatorId,
+  userNameData,
+) => {
   try {
 
     const postId = commentData.postId;
@@ -183,7 +191,7 @@ const addFeedPostCommentPageNotification = async (commentData, postCreatorId) =>
               postId: postId,
               commentCreatorId: commentData.creatorId,
               commentId: commentData._id.toString(),
-              commentCreatorName: commentData.creatorName,
+              commentCreatorName: userNameData?.name,
               // isImageFile: isImageFile,
             },
             'feed',

@@ -23,12 +23,7 @@ const { testAuth } = require('../../util/auth');
 const { clearImage, isAudioFile } = require('../../util/file');
 const { createReturnPost } = require('./feed');
 
-const { 
-    addFeedPostPageNotification,
-} = require('../../util/page-notification/page-notification-util.js');
-const {
-    sendMessagePushNotification,    
-} = require('../../util/push-notification/message-push-notification-util.js');
+const { sendFeedPostNotifications } = require('../../util/feed/feed-post-utils.js');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -173,8 +168,21 @@ exports.createMultiImagesPost = async (req, res, next) => {
                 // }
             })
 
-            addFeedPostPageNotification(req.userId, post);
-            sendMessagePushNotification(req.userId, post);
+            if (post.public === 'public') {
+                //// send notification about post
+                let userNameData = req.body.userNameData;
+    
+                let token;
+                const authHeader = req.get('Authorization');
+                
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'pageAndPush',
+                );
+            }
             
         } catch (err) {
             if (!err.statusCode) {
@@ -549,13 +557,33 @@ exports.updateMutiImagesPost = async (req, res, next) => {
             post: returnPost,
         });
 
-        if (post.public === 'public' && !post.pageNotificationSend) {
-            addFeedPostPageNotification(req.userId, post);
+        if (post.public === 'public') {
+            //// send notification about post
+            let userNameData = req.body.userNameData;
+
+            const authHeader = req.get('Authorization');
+            
+            if (!post.pageNotificationSend) {
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'page',
+                );
+            }
+    
+            if (!post.pushNotificationSend) {
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'push',
+                );
+            }
         }
 
-        if (post.publc === 'public' && !post.pushNotificationSend) {
-            sendMessagePushNotification(req.userId, post);
-        }
 
     } catch (err) {
         if (!err.statusCode) {

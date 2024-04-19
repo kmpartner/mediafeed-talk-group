@@ -22,6 +22,7 @@ const { s3Upload, s3DeleteOne, s3DeleteMany } = require('../../util/image');
 const { testAuth } = require('../../util/auth');
 const { clearImage, isAudioFile } = require('../../util/file');
 const { createReturnPost } = require('./feed');
+const { sendFeedPostNotifications } = require('../../util/feed/feed-post-utils.js');
 
 const spacesEndpoint = new aws.Endpoint(process.env.DO_SPACE_ENDPOINT);
 aws.config.setPromisesDependency();
@@ -151,6 +152,23 @@ exports.createAudioPost = async (req, res, next) => {
                 //     name: user.name 
                 // }
             })
+
+
+            if (post.public === 'public') {
+                //// send notification about post
+                let userNameData = req.body.userNameData;
+    
+                let token;
+                const authHeader = req.get('Authorization');
+                
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'pageAndPush',
+                );
+            }
 
         } catch (err) {
             if (!err.statusCode) {
@@ -535,6 +553,35 @@ exports.updateAudioPost = async (req, res, next) => {
             // post: result 
             post: returnPost,
         });
+
+
+        if (post.public === 'public') {
+            //// send notification about post
+            let userNameData = req.body.userNameData;
+
+            const authHeader = req.get('Authorization');
+            
+            if (!post.pageNotificationSend) {
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'page',
+                );
+            }
+    
+            if (!post.pushNotificationSend) {
+                sendFeedPostNotifications(
+                    post,
+                    req.userId,
+                    authHeader,
+                    userNameData,
+                    'push',
+                );
+            }
+        }
+        
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

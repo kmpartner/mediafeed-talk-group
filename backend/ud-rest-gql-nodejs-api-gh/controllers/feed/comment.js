@@ -10,7 +10,10 @@ const Comment = require('../../models/feed/comment');
 
 const { addFeedPostCommentPageNotification } = require('../../util/page-notification/page-notification-util.js');
 const { sendCommentPushNotification } = require('../../util/push-notification/comment-push-notification-util.js');
-const { getUserNameDataListByUserIds } = require('../../util/user-name-data/user-name-data-util.js');
+const { 
+    getUserNameDataListByUserIds,
+    getUserNameData,
+ } = require('../../util/user-name-data/user-name-data-util.js');
 
 exports.commentAction = async (req, res, next) => {
     // console.log(req.body);
@@ -112,23 +115,23 @@ exports.getPostComment = async (req, res, next) => {
 }
 
 exports.createPostComment = async (req, res, next) => {
-    console.log('req.body', req.body);
-    console.log('req.query.postId', req.query.postId, 'req.body.content', req.body.content);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = new Error('Validation failed, entered data incorrect.');
-        error.statusCode = 422;
-        throw error;
-    }
-
-    const postId = req.query.postId;
-    const parentCommentId = req.body.parentCommentId;
-    const language = req.headers['accept-language'];
-    const headers = req.headers;
-    const location = JSON.parse(req.body.locationData);
-    console.log('ParentCommentId', parentCommentId);
-    
     try {
+        console.log('req.body', req.body);
+        console.log('req.query.postId', req.query.postId, 'req.body.content', req.body.content);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new Error('Validation failed, entered data incorrect.');
+            error.statusCode = 422;
+            throw error;
+        }
+
+        const postId = req.query.postId;
+        const parentCommentId = req.body.parentCommentId;
+        const language = req.headers['accept-language'];
+        const headers = req.headers;
+        const location = JSON.parse(req.body.locationData);
+        console.log('ParentCommentId', parentCommentId);
+    
         const post = await Post.findById(postId);
         // const user = await User.findById(req.userId);
         const user = await User.findOne({ userId: req.userId });
@@ -136,6 +139,12 @@ exports.createPostComment = async (req, res, next) => {
 
         if (!post) {
             const error = new Error('Could not find post.');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        if (!user) {
+            const error = new Error('user not found.');
             error.statusCode = 404;
             throw error;
         }
@@ -160,19 +169,45 @@ exports.createPostComment = async (req, res, next) => {
 
         // io.getIO().emit('comments', { action: 'comment-action', comment: comment });
 
-        res.status(200).json({ message: 'Comment Created.', data: comment });
+        res.status(200).json({ 
+            message: 'Comment Created.', 
+            data: comment 
+        });
+
+        
+        let userNameData = req.body.userNameData;
+
+        // let userNameDataList = [];
+        let token;
+        const authHeader = req.get('Authorization');
+        
+        if (authHeader) {
+          token = authHeader.split(' ')[1];
+        }
+
+        if (!userNameData || userNameData.userId !== req.userId || 
+            !userNameData.name
+        ) {
+            userNameData = await getUserNameData(
+                token, 
+                req.userId,
+                user,
+            )
+        }
 
         addFeedPostCommentPageNotification(
             comment,
             post.creatorId,
+            userNameData,
         );
         
         if (comment.creatorId !== post.creatorId) {
             sendCommentPushNotification(
                 comment,
                 post.creatorId,
+                userNameData,
             );
-          }
+        }
         
     } catch (err) {
         if (!err.statusCode) {

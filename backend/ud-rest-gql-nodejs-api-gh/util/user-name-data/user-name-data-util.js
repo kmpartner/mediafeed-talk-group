@@ -5,8 +5,8 @@ const User = require('../../models/user/user');
 const getUserNameData = async (token, userId, user) => {
   try {
     return {
-      userId: user.userId,
-      name: user.name,
+      userId: userId,
+      name: user?.name || '',
     };
     
   } catch(err) {

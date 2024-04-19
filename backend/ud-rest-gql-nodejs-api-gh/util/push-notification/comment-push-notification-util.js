@@ -17,7 +17,11 @@ const vapidData = {
 
 
 //// send push notification to post creator, about comment on post by other users
-const sendCommentPushNotification = async (commentData, postCreatorId) => {
+const sendCommentPushNotification = async (
+  commentData, 
+  postCreatorId,
+  userNameData,
+) => {
   try {
     // console.log(req.body);
     // const userId = req.body.userId;
@@ -57,7 +61,7 @@ const sendCommentPushNotification = async (commentData, postCreatorId) => {
     } 
 
     const pushContent = {
-      title: `new comment by user ${commentData.creatorName}`,
+      title: `new comment by user ${userNameData?.name}`,
       content: `${modifyContent}`,
       openUrl: `/feed/${commentData.postId ? commentData.postId : 'posts'}`,
       // postData: postData
