@@ -1,6 +1,6 @@
 import { BASE_URL, GQL_URL } from '../App';
-import jwt from 'jsonwebtoken';
-
+// import jwt from 'jsonwebtoken';
+import { isExpired, decodeToken } from "react-jwt";
 // // import * as firebase from "firebase/app";
 
 // // // Add the Firebase services that you want to use
@@ -802,7 +802,8 @@ export const getAuthInfo = () => {
       localStorage.setItem('TGTexp', queryParams.get('TGTexp'));
       // localStorage.setItem('casUserId', queryParams.get('casUserId'));
   
-      const jwtdecoded = jwt.decode(token);
+      // const jwtdecoded = jwt.decode(token);
+      const jwtdecoded = decodeToken(token);
       console.log(jwtdecoded);
   
       const userId = jwtdecoded.userId;

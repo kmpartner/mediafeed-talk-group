@@ -19,6 +19,7 @@ import {
   FacebookIcon,
   WhatsappShareButton,
   WhatsappIcon,
+  XIcon,
 
 
   // GabShareButton,
@@ -154,6 +155,17 @@ const ShareButtons = (props) => {
         >
           <WhatsappIcon size={size} round={round} />
         </WhatsappShareButton>
+
+        <TwitterShareButton
+          url={shareUrl}
+          title={`${postContent}`}
+          // via='via content'
+          // hashtag={'#portfolio...'}
+
+          // quote={'Title or jo bhi aapko likhna ho'}
+        >
+          <XIcon size={size} round={round} />
+        </TwitterShareButton>
 
         <TwitterShareButton
           url={shareUrl}
