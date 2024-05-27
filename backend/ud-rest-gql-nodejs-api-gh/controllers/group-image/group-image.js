@@ -36,44 +36,52 @@ exports.getGroupImages = async (req, res, next) => {
             throw error;
         }
 
+        const groupRoomIds = req.query.groupRoomIds ? JSON.parse(req.query.groupRoomIds) : [];
     
-        const groupImages = await GroupImage.find({});
+        // const groupImages = await GroupImage.find({});
+        const groupImages = await GroupImage.find({
+            'groupRoomId': { $in: groupRoomIds }
+        });
 
+        // console.log('groupImages', groupImages);
         const returnList = [];
 
         for (const image of groupImages) {
-            // console.log('image', image);
-            let returnImageUrl;
-
-            const port = process.env.PORT || 8083;
-            
-            if (!process.env.S3NOTUSE) {
-                returnImageUrl = s3.getSignedUrl('getObject', {
-                    Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                    Key: image.imageUrl ? image.imageUrl : 'dummy-key',
-                    Expires: 60 * 60 * 24 * 365
-                }); 
-            }
-
-            if (process.env.S3NOTUSE) {
-                returnImageUrl = `http://localhost:${port}/${image.imageUrl}`;
-            }
-            // console.log('returnImageUrl', returnImageUrl);
-
+ 
             if (image.imageUrl) {
+                // console.log('image', image);
+                let returnImageUrl;
+    
+                const port = process.env.PORT || 8083;
+                
+                if (!process.env.S3NOTUSE) {
+                    returnImageUrl = s3.getSignedUrl('getObject', {
+                        Bucket: process.env.DO_SPACE_BUCKET_NAME,
+                        Key: image.imageUrl ? image.imageUrl : 'dummy-key',
+                        Expires: 60 * 60 * 24 * 365
+                    }); 
+                }
+    
+                if (process.env.S3NOTUSE) {
+                    returnImageUrl = `http://localhost:${port}/${image.imageUrl}`;
+                }
+                // console.log('returnImageUrl', returnImageUrl);
+    
                 returnList.push({
                     groupRoomId: image.groupRoomId,
                     imagePath: image.imagePath,
-                    // imageUrl: image.imageUrl 
-                    //     ? s3.getSignedUrl('getObject', {
-                    //         Bucket: process.env.DO_SPACE_BUCKET_NAME,
-                    //         Key: image.imageUrl ? image.imageUrl : 'dummy-key',
-                    //         Expires: 60 * 60 * 24 * 365
-                    //     }) 
-                    //     : null,
                     imageUrl: returnImageUrl,
-                })
+                });
+                
             }
+            else {
+                returnList.push({
+                    groupRoomId: image.groupRoomId,
+                    imageUrl: null,
+                    imagePath: null,
+                });
+            }
+
         }
 
         // const groupImageUrlsData = groupImages.map(image => {
@@ -94,7 +102,10 @@ exports.getGroupImages = async (req, res, next) => {
         //     }
         // });
 
-        res.status(200).json({ message: 'group images get success', data: returnList });
+        res.status(200).json({ 
+            message: 'group images get success', 
+            data: returnList 
+        });
         
     } catch (err) {
         if (!err.statusCode) {
