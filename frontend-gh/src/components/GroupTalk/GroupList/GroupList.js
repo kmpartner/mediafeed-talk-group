@@ -30,8 +30,10 @@ const GroupList = (props) => {
 
   const [store, dispatch] = useStore();
   const { shareFile } = store.shareStore;
+  const { groupImageUrls } = store;
   const { 
     groupCreatorInfoList,
+
    } = store.groupStore;
   // console.log('store in groupList.js', store);
 
@@ -42,6 +44,7 @@ const GroupList = (props) => {
   const [sortedGroupList, setSortedGroupList] = useState([]);
 
   const initialListNum = 50;
+  // const initialListNum = 2;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -102,21 +105,55 @@ const GroupList = (props) => {
   },[props.groupList]);
 
   useEffect(() => {
-    if (props.groupList 
-        && props.groupList.length > 0 
-        && store.groupImageUrls.length === 0
+    if (sortedGroupList.length > 0 && 
+      props.groupList && props.groupList.length > 0
     ) {
-      getGroupImages(BASE_URL, localStorage.getItem)
+      
+      let sortedGList = sortedGroupList;
+      // console.log(sortedGroupList);
+      
+      if (selectedSuggest) {
+        const suggestGroupInfo = sortedGList.find(element => {
+          return selectedSuggest.groupRoomId === element.groupRoomId;
+        });
+  
+        sortedGList = [suggestGroupInfo];
+        // console.log(sortedGroupList);
+      }
+
+      const newDisplayGList = sortedGList.slice(initialListNum * moreClickNum, initialListNum * (moreClickNum + 1));
+
+      const requestIdList = [];
+
+      for (const group of newDisplayGList) {
+        const isInList = groupImageUrls.find(ele => {
+          return ele.groupRoomId === group.groupRoomId;
+        });
+
+        if (!isInList) {
+          requestIdList.push(group.groupRoomId);
+        }
+      }
+
+      if (requestIdList.length === 0) {
+        return;
+      }
+
+
+
+      getGroupImages(BASE_URL, localStorage.getItem('token'), requestIdList)
         .then(result => {
           console.log(result);
 
-          dispatch('SET_GROUP_IMAGEURLS', result.data);
+          const addedList = groupImageUrls.concat(result.data);
+          const uniqList = _.uniqBy(addedList, 'groupRoomId');
+          dispatch('SET_GROUP_IMAGEURLS', uniqList);
         })
         .catch(err => {
           console.log(err);
         });
     }
-  },[props.groupList]);
+  },[props.groupList, sortedGroupList, moreClickNum, selectedSuggest]);
 
 
   useEffect(() => {
@@ -178,10 +215,10 @@ const GroupList = (props) => {
     setSelectedSuggest(obj);
   };
 
-  const getGroupImages = (url, token) => {
+  const getGroupImages = (url, token, groupRoomIds) => {
     return new Promise((resolve, reject) => {
 
-      fetch(url + '/group-image/group-images', {
+      fetch(url + `/group-image/group-images?groupRoomIds=${JSON.stringify(groupRoomIds)}`, {
         method: 'GET',
         headers: {
           Authorization: 'Bearer ' + token
