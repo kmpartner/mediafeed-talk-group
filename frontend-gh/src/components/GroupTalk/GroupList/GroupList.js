@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next/hooks';
 import AutoSuggestGroupList from '../../AutoSuggest/AutoSuggestGroupList'
 import GroupListItem from './GroupListItem';
 import { useStore } from '../../../hook-store/store';
+import { getGroupImages } from '../../../util/group/group-user';
 // import { getUsersForGroup } from '../../../util/user';
 
 import { BASE_URL } from '../../../App';
@@ -215,36 +216,7 @@ const GroupList = (props) => {
     setSelectedSuggest(obj);
   };
 
-  const getGroupImages = (url, token, groupRoomIds) => {
-    return new Promise((resolve, reject) => {
-
-      fetch(url + `/group-image/group-images?groupRoomIds=${JSON.stringify(groupRoomIds)}`, {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + token
-        }
-      })
-        .then(res => {
-          if (res.status !== 200 && res.status !== 201) {
-            throw new Error('Getting group images failed!');
-          }
-          return res.json();
-        })
-        .then(resData => {
-          // console.log(resData);
-          resolve({ message: 'Get group images.', data: resData.data });
-  
-        })
-        .catch(err => {
-          console.log(err);
-          reject({ message: 'Get group images failed.',  error: err })
-        });
-  
-        // return Promise;
-    })
-  }
-
-
+ 
   // const getCreatorInfoListHandler = async (displayGroups, creatorInfoList) => {
   //   try {
   //     const creatorIds = [];

@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next/hooks";
 // import axios from "axios";
+import _ from 'lodash';
 import Img from "react-cool-img";
 
 import Backdrop from "../../components/Backdrop/Backdrop";
@@ -12,10 +13,9 @@ import SmallModal from "../../components/Modal/SmallModal";
 // import PostMessageRecieve from "./PostMessageRecieve";
 
 import { useStore } from "../../hook-store/store";
-// import { getUserDataForStore } from "../../util/user";
-// import { getTalkAcceptedUsers } from '../../util/talk/talk-user';
+import { getGroupImages } from '../../util/group/group-user';
 
-// import { authPageLink, authSignupPageLink, BASE_URL } from "../../App";
+import { BASE_URL } from "../../App";
 
 import SampleImage from '../../components/Image/person-icon-50.jpg';
 // import SampleImage from "../Image/person-icon-50.jpg";
@@ -39,13 +39,45 @@ const SharePageGroupList = (props) => {
   console.log('sharepageGroupList-props', props);
 
   const [store, dispatch] = useStore();
-  const { shareFile } = store.shareStore;
+  // const { shareFile } = store.shareStore;
+  const { groupImageUrls } = store;
+
 
   // const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (joinedGroups?.length > 0) {
+      const groupRoomIds = [];
 
-  },[]);
+      for (const group of joinedGroups) {
+        groupRoomIds.push(group._id);
+      }
+
+      // console.log(groupRoomIds);
+
+    getGroupImages(
+      BASE_URL, 
+      localStorage.getItem('token'), 
+      groupRoomIds,
+    )
+      .then(result => {
+        console.log(result);
+
+        if (result?.data?.length > 0) {
+          const addedList = groupImageUrls.concat(result.data);
+          const uniqList = _.uniqBy(addedList, 'groupRoomId');
+          dispatch('SET_GROUP_IMAGEURLS', uniqList);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    }
+    
+  },[joinedGroups]);
+
+
 
 
   let joinedGroupListBody = (
@@ -60,18 +92,26 @@ const SharePageGroupList = (props) => {
         <div>Your favorite groups</div>
         <ul>
           {joinedGroups.map((group) => {
+
+            const groupImageUrlObj = groupImageUrls.find(element => {
+              return element.groupRoomId === group._id;
+            });
+
+            let groupImageUrl = SampleImage;
+
+            if (groupImageUrlObj?.imageUrl) {
+              groupImageUrl = groupImageUrlObj.imageUrl;
+            }
+
+            // console.log(groupImageUrlObj)
+
             return (
               <div key={group._id}>
                 <div className={classes.shareUserInfoContainer}>
                   <Img
                     className={classes.shareUserImageElement}
                     // style={!favoriteUserInfo.imageUrl ? { paddingTop: "0.25rem" } : null}
-                    src={
-                      group.imageUrl
-                        ? // BASE_URL + '/' + element.imageUrl
-                          group.imageUrl
-                        : SampleImage
-                    }
+                    src={groupImageUrl}
                     alt="user-img"
                   />
                   <span >

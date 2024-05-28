@@ -23,3 +23,33 @@ export const getUserFavoriteGroups = async (url, token) => {
     throw err;
   }
 };
+
+
+export const getGroupImages = (url, token, groupRoomIds) => {
+  return new Promise((resolve, reject) => {
+
+    fetch(url + `/group-image/group-images?groupRoomIds=${JSON.stringify(groupRoomIds)}`, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Getting group images failed!');
+        }
+        return res.json();
+      })
+      .then(resData => {
+        // console.log(resData);
+        resolve({ message: 'Get group images.', data: resData.data });
+
+      })
+      .catch(err => {
+        console.log(err);
+        reject({ message: 'Get group images failed.',  error: err })
+      });
+
+      // return Promise;
+  })
+};
