@@ -2,18 +2,20 @@ import React, { Fragment } from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next/hooks';
 import Img from "react-cool-img";
+import _ from 'lodash';
 
 import Button from '../../Button/Button';
 import DeleteGroupForm from '../EditGroup/DeleteGroupForm';
 import GroupImageControll from './GroupImageControll';
-import GroupImageUpload from './GroupImageUpload';
+// import GroupImageUpload from './GroupImageUpload';
 import { getUserImageUrl } from '../../../util/user';
 import { getLocalTimeElements } from '../../../util/timeFormat';
 import { addRecentVisitGroupId } from '../../../util/user-recent-visit';
 
 import { useStore } from '../../../hook-store/store';
+import { getGroupCreatorNameData } from '../../../util/group/group-user';
 
-import { BASE_URL } from '../../../App';
+import { BASE_URL, SOCKET_GROUP_URL } from '../../../App';
 import SampleImage from '../../Image/person-icon-50.jpg';
 import GroupImage from '../../../images/group-image-50.jpg';
 
@@ -53,32 +55,9 @@ const GroupListItem = (props) => {
   const [selectedGroupId, setSelectedGroupId] = useState('');
   const [showKeywords, setShowKeywords] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [creatorInfo, setCreatorInfo] = useState();
-  const [creatorImageUrl, setCreataorImageUrl] = useState('');
+  // const [creatorInfo, setCreatorInfo] = useState();
+  // const [creatorImageUrl, setCreataorImageUrl] = useState('');
   const [groupImageUrl, setGroupImageUrl] = useState('');
-
-  useEffect(() => {
-    if (!creatorInfo && groupCreatorInfoList && 
-        groupCreatorInfoList.length > 0 && showDescription
-    ) {
-      // const creatorInfo = usersData.find(element => {
-      //   return element.userId === group.creatorUserId
-      // });
-
-      const creatorInfo = groupCreatorInfoList.find(element => {
-        return element.userId === group.creatorUserId
-      });
-
-      setCreatorInfo(creatorInfo);
-      // console.log('creatorInfo', creatorInfo);
-
-      if (creatorInfo && creatorInfo.imagePath && !creatorImageUrl) {
-        getCreatorImageUrlHandler(
-          creatorInfo.userId,
-        );
-      }
-    }
-  },[groupCreatorInfoList, showDescription]);
 
 
   useEffect(() => {
@@ -104,6 +83,13 @@ const GroupListItem = (props) => {
   },[group, store.groupImageUrls]);
 
 
+  useEffect(() => {
+    if (localStorage.getItem('userId') && selectedGroupId && showDescription) {
+      getGroupCreatorNameDataHandler(group);
+    }
+  },[selectedGroupId, showDescription]);
+
+
   const showDescriptionHandler = (id) => {
     if (!showDescription) {
       setSelectedGroupId(id);
@@ -125,26 +111,6 @@ const GroupListItem = (props) => {
     setShowDeleteModal(!showDeleteModal);
   }
 
-
-  const getCreatorImageUrlHandler = async (creatorId) => {
-    try {
-      const creatorImageUrl = await getUserImageUrl(
-        BASE_URL,
-        localStorage.getItem('token'),
-        creatorId,
-      );
-
-      // console.log(creatorImageUrl)
-  
-      if (creatorImageUrl) {
-        
-        setCreataorImageUrl(creatorImageUrl.imageUrl);
-      }
-    } catch(err) {
-      console.log(err);
-    }
-
-  };
 
 
   const addVisitGroupIdHandler = async (groupId, creatorId) => {
@@ -173,10 +139,51 @@ const GroupListItem = (props) => {
   };
 
 
+  const getGroupCreatorNameDataHandler = async (group) => {
+    try {
+
+      const isInNameList = groupCreatorInfoList.find(element => {
+        return element.userId === group.creatorUserId;
+      });
+
+      if (isInNameList) {
+        return;
+      }
+
+      const resData = await getGroupCreatorNameData(
+        SOCKET_GROUP_URL,
+        localStorage.getItem('token'),
+        group.creatorUserId,
+      );
+
+      console.log(resData);
+
+      if (resData?.data?.length > 0) {
+        const addedList = groupCreatorInfoList.concat(resData.data);
+        const uniqList = _.uniqBy(addedList, 'userId');
+        dispatch('SET_GROUPCREATORINFOLIST', uniqList);
+      }
+
+    } catch(err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
+
 
   const createDate = getLocalTimeElements(group.createdAt)
   // console.log(createDate);
   const displayTime = createDate.year + '-' + createDate.month + '-' + createDate.day;
+
+  let creatorInfo;
+
+  if (group) {
+    creatorInfo = groupCreatorInfoList.find(element => {
+      return element.userId === group.creatorUserId;
+    });
+  }
+
 
 
 
@@ -257,16 +264,14 @@ const GroupListItem = (props) => {
       {creatorInfo && 
         <span className="groupList-creatorContainer groupList-listElement">
           <span>
-            {/* creator: {creatorInfo.name} */}
-            {t('groupTalk.text1')}:  
+            {t('groupTalk.text1', 'creator')}:  
           </span>
           <span className="groupList-creatorImage">
             {/* <img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img'></img> */}
             {/* <Img src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} height="25" alt='user-img' /> */}
             <Img 
               className={classes.groupListCreatorImage}
-              src={creatorImageUrl ? creatorImageUrl : SampleImage} 
-              // src={cImageUrl ? cImageUrl: SampleImage}
+              src={creatorInfo.imageUrl ? creatorInfo.imageUrl : SampleImage} 
               // height="25" 
               alt='user-img' 
             />

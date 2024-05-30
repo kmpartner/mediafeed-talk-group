@@ -217,44 +217,8 @@ const GroupList = (props) => {
   };
 
  
-  // const getCreatorInfoListHandler = async (displayGroups, creatorInfoList) => {
-  //   try {
-  //     const creatorIds = [];
 
-  //     for (const group of displayGroups) {
-  //       const isInInfoList = creatorInfoList.find(user => {
-  //         return user.userId === group.creatorUserId;
-  //       });
 
-  //       if (!isInInfoList) {
-  //         creatorIds.push(group.creatorUserId);
-  //       }
-  //     }
-
-  //     if (creatorIds.length === 0) {
-  //       return;
-  //     }
-
-  //     const resData = await getUsersForGroup(
-  //       BASE_URL,
-  //       localStorage.getItem('token'),
-  //       creatorIds,
-  //     );
-  
-  //     console.log('resData', resData);
-      
-  //     if (resData && resData.usersData && resData.usersData.length > 0) {
-  //       const addedList = creatorInfoList.concat(resData.usersData);
-
-  //       dispatch('SET_GROUPCREATORINFOLIST', addedList);
-  //     }
-  //   } catch(err) {
-  //     console.log(err);
-  //   }
-  // };
-  
-
-  
   let groupListBody
   if (props.groupList.length > 0 && sortedGroupList.length > 0) {
     // console.log(props.groupList);
