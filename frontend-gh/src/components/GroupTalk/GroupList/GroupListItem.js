@@ -256,9 +256,10 @@ const GroupListItem = (props) => {
       </div>
       
       {showDescription && selectedGroupId === group.groupRoomId ? 
-        <div className="groupList-listElement"  onClick={() => {
-           showDescriptionHandler(group.groupRoomId)
-          }}
+        <div className="groupList-listElement"  
+          // onClick={() => {
+          //   showDescriptionHandler(group.groupRoomId)
+          // }}
         >
       
       {creatorInfo && 
