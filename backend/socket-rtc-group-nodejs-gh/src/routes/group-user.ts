@@ -18,6 +18,11 @@ router.get('/users-for-group',
   groupUserController.getUsersForGroup,
 );
 
+router.get('/group-creator-name-data', 
+  isAuth,
+  groupUserController.getGroupCreatorNameData,
+);
+
 // router.post('/', textTalkController.postTextTalk);
 
 // router.delete('/', textTalkController.deleteTextTalk);

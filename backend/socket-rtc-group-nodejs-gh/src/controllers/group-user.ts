@@ -97,7 +97,38 @@ const getUsersForGroup = async (req: any, res: any, next: any) => {
   }
 };
 
+
+const getGroupCreatorNameData = async (req: any, res: any, next: any) => {
+  try { 
+    const creatorUserId = req.query.creatorUserId;
+
+    let userNameDataList = [];
+    let token;
+    const authHeader = req.get('Authorization');
+    
+    if (authHeader) {
+      token = authHeader.split(' ')[1];
+    }
+
+    userNameDataList = await getUserNameDataListByUserIds(token, [creatorUserId]);
+
+    return res.status(200).json({
+      message: 'get group creator name data success',
+      data: userNameDataList,
+      // groupInfo: groupInfo,
+      userNameDataList: userNameDataList,
+    });
+
+  } catch(err: any) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 module.exports = {
   getUserFavoriteGroups,
   getUsersForGroup,
+  getGroupCreatorNameData,
 }
