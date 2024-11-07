@@ -1,0 +1,30 @@
+
+.drawDreamerInfoSection {
+  padding-bottom: 2rem; 
+}
+
+.drawDreamerClose {
+  text-align: right;
+  padding-bottom: 1rem; 
+}
+
+.drawDreamerCloseButton {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.drawDreamerInfoImageContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.drawDreamerInfoImage {
+  max-height: 150px;
+  max-width: 100%;  
+}
+
+.drawDreamerInfoDexcription {
+  padding-bottom: 1rem; 
+}

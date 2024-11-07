@@ -2,10 +2,17 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next/hooks";
 
+import DrawDreamerInfo from "../../ExternalLinkInfo/DrawDreamerInfo";
+
 import { appInstallHandler } from '../../../util/ui-util';
 import { useStore } from "../../../hook-store/store";
 
-import { authSignupPageLink, authPageLink } from "../../../App";
+import { 
+  authSignupPageLink, 
+  authPageLink,
+  DRAWDREAMER_URL,
+} from "../../../App";
+import { marks } from '../../../images/marks';
 import "./NavigationItems.css";
 
 import GroupIcon from "../../../images/icons/groupIcon-48.png";
@@ -31,7 +38,10 @@ const NavigationItems = (props) => {
 
   const [store, dispatch] = useStore();
   console.log('NavigationItems-store', store);
-  const { deferredPrompt } = store;
+  const { 
+    deferredPrompt,
+    showDrawDreamerModal,
+   } = store;
 
   const navItems = [
     {
@@ -97,6 +107,20 @@ const NavigationItems = (props) => {
       // text: 'Group',
       text: t("general.text25", "Group Talk"),
       link: "/group-talk-page",
+      auth: false,
+    },
+    {
+      id: "draw-dreamer-link",
+      // text: 'Group',
+      text: "Generate Image",
+      link: DRAWDREAMER_URL,
+      auth: true,
+    },
+    {
+      id: "draw-dreamer-link",
+      // text: 'Group',
+      text: "Generate Image",
+      link: DRAWDREAMER_URL,
       auth: false,
     },
     {
@@ -178,6 +202,48 @@ const NavigationItems = (props) => {
 
           if (item.id === "home") {
             titleIconImage = <img src={HomeIcon} alt="icon" />;
+          }
+
+          if (item.id === "draw-dreamer-link") {
+            titleIconImage = <img src={FeedIcon} alt="icon" />;
+            
+            return (
+              <li
+                key={item.id}
+                className={["navigation-item", props.mobile ? "mobile" : ""].join(
+                  " "
+                )}
+              >
+                <span className="navigation-item-mobile-titleContainer">
+                  <span className="navigation-item-mobile-titleIcon">
+                    {titleIconImage}
+                  </span>
+                  <span>
+                    <a 
+                      onClick={props.onChoose}
+                      title="At Kura Draw Dreamer, user can generate images using various generation tools."
+                      href={item.link}
+                      target="_blank" noopener noreferrer
+                    >
+                      {item.text}
+                    </a>
+                  </span>
+                  <span
+                    style={{paddingLeft:"1rem", cursor:"pointer"}} 
+                    onClick={() => {
+                    props.onChoose();
+                    dispatch('SET_SHOWDRAWDREAMERMODAL', true);
+                  }
+                    }
+                  >
+                    {marks.infoCircle}
+                  </span>
+                </span>
+                {showDrawDreamerModal && (
+                  <DrawDreamerInfo />
+                )}
+              </li>
+            );
           }
 
           return (

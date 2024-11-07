@@ -111,6 +111,12 @@ const configureStore = () => {
         nameDataList: payload,
       }
     },
+    SET_SHOWDRAWDREAMERMODAL: (state, payload) => {
+      return {
+        ...state,
+        showDrawDreamerModal: payload,
+      }
+    },
 
     // SET_I18NEXT: (state, payload) => {
     //   return { 
@@ -138,6 +144,7 @@ const configureStore = () => {
     deferredPrompt: null,
     userNameData: null,
     nameDataList: [],
+    showDrawDreamerModal: false,
     // lastPage: 0,
     // notification: {
     //   status: null,

@@ -7,6 +7,7 @@ import axios from 'axios';
 import AutoSuggestHook from '../../components/AutoSuggest/AutoSuggestHook';
 import Post from '../../components/Feed/Post/Post';
 import Button from '../../components/Button/Button';
+import DrawDreamerInfo from '../../components/ExternalLinkInfo/DrawDreamerInfo';
 import FeedEdit from '../../components/Feed/FeedEdit/FeedEdit';
 import FeedImages from '../../components/Feed/UserPost/FeedImages';
 import FeedSocketAction from '../../components/Feed/FeedSocketAction/FeedSocketAction';
@@ -29,8 +30,12 @@ import GetWindowData from '../../components/UI/getWindowData';
 
 import './Feed.css';
 
-import { BASE_URL, PUSH_URL } from '../../App';
-
+import { 
+  BASE_URL, 
+  PUSH_URL,
+  DRAWDREAMER_URL,
+ } from '../../App';
+ import { marks } from '../../images/marks';
 
 class Feed extends Component {
   state = {
@@ -82,6 +87,8 @@ class Feed extends Component {
     uploadProgress: 0,
 
     newLiveStart: false,
+
+    showDrawDreamerModal: false,
   };
 
   componentDidMount() {
@@ -1750,6 +1757,27 @@ class Feed extends Component {
               {this.state.newLiveStart && (
                 <StartNewLive 
                   onClose={() => { this.setState({ newLiveStart: false }); }}
+                />
+              )}
+              <Button mode="raised" design="accent"
+              >
+                <a style={{textDecoration:"none"}}
+                  title="At Kura Draw Dreamer, user can generate images using various generation tools."
+                  href={DRAWDREAMER_URL}
+                  target="_blank" noopener noreferrer
+                >
+                    Generate Image 
+                </a>
+                {' '}
+                <span
+                  onClick={() => { this.setState({ showDrawDreamerModal: true });}}
+                >
+                  {marks.infoCircle} 
+                </span>
+              </Button>
+              {this.state.showDrawDreamerModal && (
+                <DrawDreamerInfo 
+                  onClose={() => { this.setState({ showDrawDreamerModal: false }) }}
                 />
               )}
             </section>
